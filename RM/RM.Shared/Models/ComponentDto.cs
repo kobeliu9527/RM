@@ -1,6 +1,5 @@
 ﻿using RM.Shared.Core;
-using System;
-using System.Collections.Generic;
+using RM.Shared.Extensions;
 
 namespace RM.Shared.Models
 {
@@ -10,23 +9,26 @@ namespace RM.Shared.Models
     public class ComponentDto : ComponentBaseDto
     {
         /// <summary>
-        /// 
         /// </summary>
         public ComponentDto()
         {
-           // Type = ComponentType.SingleLine;
+            // Type = ComponentType.SingleLine;
             //Label = $"{Type.GetName()}-{Guid.NewGuid()}";
         }
 
+        /// <summary>
+        /// 根据控件类型创建控件 <see cref="PaletteWidgetDtoExtensions.CreateComponent(PaletteWidgetDto)"/>
+        /// </summary>
+        /// <param name="type"></param>
         public ComponentDto(ComponentType type)
         {
             InitializeComponent(type);
         }
 
-        public ComponentDto(Guid id, ComponentType type) : base(id)
-        {
-            InitializeComponent(type);
-        }
+        //public ComponentDto(Guid id, ComponentType type) : base(id)
+        //{
+        //    InitializeComponent(type);
+        //}
 
         internal void InitializeComponent(ComponentType type)
         {
@@ -45,8 +47,13 @@ namespace RM.Shared.Models
             }
         }
 
+        /// <summary>
+        /// 控件的属性
+        /// </summary>
+        public Dictionary<string, Property> Props { get; set; } = new();
+
         public ComponentDto? Parent { get; set; }
-        public ComponentType Type { get;  set; }
+        public ComponentType Type { get; set; }
 
         public string? Label { get; set; }
 
@@ -61,6 +68,7 @@ namespace RM.Shared.Models
         public List<ContainerDto>? ChildContainers { get; set; }
 
         private int width = ComponentUtils.MaxColumnWidth;
+
         public int Width
         {
             get { return width; }

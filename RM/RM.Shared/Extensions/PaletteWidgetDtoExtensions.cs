@@ -12,6 +12,7 @@ namespace RM.Shared.Extensions
         public static ComponentDto CreateComponent(this PaletteWidgetDto paletteWidget)
         {
             var componentData = new ComponentDto(paletteWidget.ComponentType);
+            componentData.Props = paletteWidget.Props;
             return componentData;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BootstrapBlazor.Components;
 
 namespace RM.Shared.Models
 {
@@ -14,6 +14,102 @@ namespace RM.Shared.Models
         public int Order { get; set; }
         public string Icon { get; set; }
         public bool Visible { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public Dictionary<string, Property> Props { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 属性信息
+    /// </summary>
+    public class Property
+    {
+        private string val = "";
+
+        /// <summary>
+        /// 属性类型,用于控制
+        /// </summary>
+        public PType PType { get; set; }
+
+        /// <summary>
+        /// 属性值
+        /// </summary>
+        public string Value
+        {
+            get => val;
+            set
+            {
+                switch (PType)
+                {
+                    case PType.String:
+                        break;
+
+                    case PType.SingleColor:
+                        if (Enum.TryParse(value, out Color color))
+                        {
+                            val = value;
+                        }
+                        else
+                        {
+                            val = "None";
+                        }
+                        return;
+
+                    case PType.Bool:
+                        if (bool.TryParse(value, out bool aa))
+                        {
+                            val = value;
+                        }
+                        else
+                        {
+                            val = "False";
+                        }
+                        return;
+
+                    case PType.Int:
+                        break;
+
+                    case PType.Double:
+                        break;
+
+                    default:
+                        break;
+                }
+                val = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 属性类型
+    /// </summary>
+    public enum PType
+    {
+        /// <summary>
+        /// 字符串
+        /// </summary>
+        String,
+
+        /// <summary>
+        /// 颜色
+        /// </summary>
+        SingleColor,
+
+        /// <summary>
+        /// 布尔量
+        /// </summary>
+        Bool,
+
+        /// <summary>
+        /// 整数
+        /// </summary>
+        Int,
+
+        /// <summary>
+        /// 小数
+        /// </summary>
+        Double
     }
 }
 

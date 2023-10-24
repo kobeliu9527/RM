@@ -13,11 +13,16 @@ namespace RM.Shared.Core
                 new PaletteWidgetDto()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Single Line",
+                    Name = "文本框",
                     ComponentType = ComponentType.SingleLine,
-                    Description = "This is a single line component",
+                    Description = "文本框控件",
                     Order = 1,
                     Visible = true,
+                    Props=new Dictionary<string, Property>(){
+                        {"DisplayText",new Property(){  Value="111"} },
+                        {"ShowLabel",new Property(){  Value="True", PType= PType.Bool} },
+                        {"Color",new Property(){  Value="None", PType= PType.SingleColor} }
+                    },
                     Icon = @"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path d='M 1,19 1,1 49,1 49,19 Z M 0,0 0,20 50,20 50,0 Z' style='fill:#000000'/></g><path style='fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1' d='m 5.4382875,15.181544 3.838384,0 0,0.707071 -3.838384,0 z m -0.112826,-11.259453 3.838384,0 0,0.707071 -3.838384,0 z m 2.429338,11.975342 -1.062012,0 0,-11.889647 1.062012,0 z'/></svg>",
                 },
                 new PaletteWidgetDto()

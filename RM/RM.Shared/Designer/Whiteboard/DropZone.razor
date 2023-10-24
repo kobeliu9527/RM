@@ -45,9 +45,14 @@
 
     [Parameter]
     public int ComponentIndex { get; set; }
-
+    /// <summary>
+    /// 拖放发生前
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     private async Task DropBeforeComponentAsync()
     {
+        //拖放的是工具箱里面的
         if (FormDesigner.IsDraggedItemPaletteWidget())
         {
             // you are trying to drag and drop a new widget
@@ -57,7 +62,7 @@
             await DropWidgetAtPositionAsync(newComponentData, null);
             await FormDesigner.SelectComponentAsync(newComponentData);
         }
-        else if (FormDesigner.IsDraggedItemComponent())
+        else if (FormDesigner.IsDraggedItemComponent()) //拖放的是设计器中定义好了的
         {
             // you are trying to drag and drop a widget already defined
             var componentData = await FormDesigner.GetDraggedComponentDataAsync();
@@ -67,7 +72,7 @@
         }
         else
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("DropBeforeComponentAsync()方法出错");
         }
     }
 

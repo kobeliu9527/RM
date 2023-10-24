@@ -39,34 +39,34 @@
     private async Task RunDemoPredefinedContainer()
     {
 
-        List<List<ComponentDto>> Rows = new List<List<ComponentDto>>()
-            {
-                new List<ComponentDto>()
-                {
-                    new ComponentDto(ComponentType.SingleLine)
-                    {
-                        Label = "Singel Line 1",
-                        Width = 5
-                    },
-                    new ComponentDto(ComponentType.MultiLine)
-                    {
-                        Label = "Multi Line 1",
-                        Width = 3
-                    }
-                },
-                new List<ComponentDto>()
-                {
-                    new ComponentDto(ComponentType.Number)
-                    {
-                        Label = "Number 1",
-                        Width = 12
-                    }
-                }
-            };
+        //List<List<ComponentDto>> Rows = new List<List<ComponentDto>>()
+        //    {
+        //        new List<ComponentDto>()
+        //        {
+        //            new ComponentDto(ComponentType.SingleLine)
+        //            {
+        //                Label = "Singel Line 1",
+        //                Width = 5
+        //            },
+        //            new ComponentDto(ComponentType.MultiLine)
+        //            {
+        //                Label = "Multi Line 1",
+        //                Width = 3
+        //            }
+        //        },
+        //        new List<ComponentDto>()
+        //        {
+        //            new ComponentDto(ComponentType.Number)
+        //            {
+        //                Label = "Number 1",
+        //                Width = 12
+        //            }
+        //        }
+        //    };
        // var ss = Newtonsoft.Json.JsonConvert.SerializeObject(Rows);
        // List<List<ComponentDto>> sss = Newtonsoft.Json.JsonConvert.DeserializeObject<List<List<ComponentDto>>>(ss);
-        FunctionPage page = new FunctionPage();
-        page.ContainerData = new ContainerDto(Rows);
+      //  FunctionPage page = new FunctionPage();
+       // page.ContainerData = new ContainerDto(Rows);
        // var ssss=    db.Insertable(page).ExecuteCommand();
         var ss2 = db.Queryable<FunctionPage>().ToList();
         ContainerData = ss2[0].ContainerData;
