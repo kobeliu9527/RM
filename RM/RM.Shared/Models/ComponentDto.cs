@@ -9,10 +9,13 @@ namespace RM.Shared.Models
     /// </summary>
     public class ComponentDto : ComponentBaseDto
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ComponentDto()
         {
-            Type = ComponentType.SingleLine;
-            Label = $"{Type.GetName()}-{Guid.NewGuid()}";
+           // Type = ComponentType.SingleLine;
+            //Label = $"{Type.GetName()}-{Guid.NewGuid()}";
         }
 
         public ComponentDto(ComponentType type)
@@ -43,7 +46,7 @@ namespace RM.Shared.Models
         }
 
         public ComponentDto? Parent { get; set; }
-        public ComponentType Type { get; private set; }
+        public ComponentType Type { get;  set; }
 
         public string? Label { get; set; }
 

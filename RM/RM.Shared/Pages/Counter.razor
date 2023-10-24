@@ -1,4 +1,6 @@
 ﻿@page "/counter"
+
+@inject ISqlSugarClient db
 @attribute [TabItemOption(Text = "Counter")]
 <PageTitle>Counter</PageTitle>
 
@@ -13,6 +15,8 @@
 
     private void IncrementCount()
     {
-        currentCount++;
+        //建表
+      //  db.CodeFirst.InitTables(typeof(FunctionPage));
+
     }
 }

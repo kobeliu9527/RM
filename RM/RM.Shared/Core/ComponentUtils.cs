@@ -1,7 +1,4 @@
 ﻿using RM.Shared.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RM.Shared.Core
 {
@@ -19,6 +16,7 @@ namespace RM.Shared.Core
         {
             return componentData?.Width ?? MaxColumnWidth;
         }
+
         /// <summary>
         /// todo 重新计算一行中每个控件所占用的大小
         /// </summary>
@@ -62,6 +60,7 @@ namespace RM.Shared.Core
                 }
             }
         }
+
         public static string GetIconDataString(string iconAsString)
         {
             var encodedIconDataString = Uri.EscapeDataString(string.IsNullOrEmpty(iconAsString) ? BlankIconDataString : iconAsString);

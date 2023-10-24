@@ -1,7 +1,4 @@
 ﻿using RM.Shared.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace RM.Shared.Core
 {
@@ -35,8 +32,7 @@ namespace RM.Shared.Core
                     // Add item to begining of the root component list
                     rootComponents.Insert(0, componentList[index]);
 
-                    // remove item from component list to decrease iterations 
-                    // for further operations
+                    // remove item from component list to decrease iterations for further operations
                     componentList.RemoveAt(index);
                 }
             }

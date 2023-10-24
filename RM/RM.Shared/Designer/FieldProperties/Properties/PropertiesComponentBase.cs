@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using RM.Shared.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace RM.Shared.Designer.FieldProperties.Properties
 {

@@ -32,7 +32,7 @@
     private readonly Guid rightDropZoneId = Guid.NewGuid();
 
     [CascadingParameter(Name = "FormDesigner")]
-    public FormDesigner FormDesigner { get; set; }
+    public FormDesigner? FormDesigner { get; set; }
 
     [Parameter]
     public ContainerDto Container { get; set; }

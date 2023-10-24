@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using System.Net.Http;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
-
+﻿using Microsoft.AspNetCore.Components;
 using RM.Shared.Models;
 
 namespace RM.Shared.Designer.Palette
@@ -33,7 +23,7 @@ namespace RM.Shared.Designer.Palette
         /// <summary>
         /// 控件开始拖动的时候会触发
         /// </summary>
-        /// <param name = "widgetItem"></param>
+        /// <param name="widgetItem"></param>
         /// <returns></returns>
         private async Task DragStartAsync(PaletteWidgetDto widgetItem)
         {
