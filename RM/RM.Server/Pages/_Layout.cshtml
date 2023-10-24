@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace RM.Server.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en" class="h-100 w-100 fd-scrollbar">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css">
+    <link rel="stylesheet" href="_content/BootstrapBlazor/css/motronic.min.css">
+    <link rel="stylesheet" href="_content/RM.Shared/css/site.css">
+    <link rel="stylesheet" href="_content/RM.Shared/css/motronic.css">
+
+    <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!--Custom css files-->
+    <link href="_content/RM.Shared/css/app.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/layout.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/toolbar.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/general.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/palette.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/field-properties.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/whiteboard/component.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/whiteboard/container.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/whiteboard/drag-drop.css" rel="stylesheet" />
+    <link href="_content/RM.Shared/css/whiteboard/tabs.css" rel="stylesheet" />
+    <title>Bootstrap Blazor Server App</title>
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body class="container-fluid h-100 w-100">
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <!--JS Libraries-->
+    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
+    @*<link href="_content/RM.Shared/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />*@
+
+    <!--Cutom JS Libraries-->
+    <script src="_content/RM.Shared/js/form-designer.js"></script>
+
+    <script src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+   
+</body>
+</html>
