@@ -32,11 +32,11 @@
                     </div>
                 }
 
-                @{
+               @* @{
                     int rowSize = CalculateRowSize(currentRow);
-                }
+                }*@
 
-                @if (rowSize < ComponentUtils.MaxColumnWidth)
+         @*       @if (rowSize < ComponentUtils.MaxColumnWidth)
                 {
                     int columnSize = ComponentUtils.MaxColumnWidth - rowSize;
                     Guid divId = Guid.NewGuid();
@@ -44,16 +44,16 @@
                          class="widget-placeholder drop-container col-@columnSize d-flex justify-content-center text-center"
                          data-col="@columnSize">
                     </div>
-                }
+                }*@
 
             </div>
 
-            @if (!ContainerData.IsEmpty())
+        @*    @if (!ContainerData.IsEmpty())
             {
                 Guid divId = Guid.NewGuid();
                 var isLastDropRow = currentRowIndex == ContainerData?.Rows.Count - 1 ? "dropRow--last" : "";
               
-            }
+            }*@
         }
 
     </div>
