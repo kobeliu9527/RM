@@ -1,5 +1,5 @@
 ﻿:root {
-    --fd-primary-color: #fe7109; /* Orange: #fe7109, Blue: #87CEFA */
+    --fd-primary-color: #fe7109; /* Orange: #fe7109, Blue: #87CEFA   鼠标悬浮时候的边框颜色*/
 }
 
 .no-padding {

@@ -5,7 +5,9 @@ namespace RM.Shared.Core
     public static class PaletteWidgetSeeder
     {
         private static List<PaletteWidgetDto> _paletteWidgetList;
-
+        /// <summary>
+        /// ufo 1.在这里声明一个控件,添加他的所有属性
+        /// </summary>
         static PaletteWidgetSeeder()
         {
             _paletteWidgetList = new List<PaletteWidgetDto>()
@@ -14,13 +16,14 @@ namespace RM.Shared.Core
                 {
                     Id = Guid.NewGuid(),
                     Name = "文本框",
-                    ComponentType = ComponentType.SingleLine,
+                    ComponentType = ComponentType.SingleLine,//控制界面生成
                     Description = "文本框控件",
                     Order = 1,
                     Visible = true,
                     Props=new Dictionary<string, Property>(){
                         {"DisplayText",new Property(){  Value="111"} },
                         {"ShowLabel",new Property(){  Value="True", PType= PType.Bool} },
+                        {"Text",new Property(){  Value="请输入...", PType= PType.String} },
                         {"Color",new Property(){  Value="None", PType= PType.SingleColor} }
                     },
                     Icon = @"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path d='M 1,19 1,1 49,1 49,19 Z M 0,0 0,20 50,20 50,0 Z' style='fill:#000000'/></g><path style='fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1' d='m 5.4382875,15.181544 3.838384,0 0,0.707071 -3.838384,0 z m -0.112826,-11.259453 3.838384,0 0,0.707071 -3.838384,0 z m 2.429338,11.975342 -1.062012,0 0,-11.889647 1.062012,0 z'/></svg>",
@@ -34,6 +37,25 @@ namespace RM.Shared.Core
                     Order = 2,
                     Visible = true,
                     Icon = @"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g fill='#000'><path d='M1 19V1h48v18H1zM0 0v20h50V0H0z'/><path d='m 47,17 1,0 0,1 -1,0 z m 0,-3 1,0 0,1 -1,0 z m -1,1 1,0 0,1 -1,0 z m -1,1 1,0 0,1 -1,0 z m -1,1 1,0 0,1 -1,0 z m -2,-1 1,0 0,1 -1,0 z m -1,1 1,0 0,1 -1,0 z m 2,-2 1,0 0,1 -1,0 z m 1,-1 1,0 0,1 -1,0 z m 1,-1 1,0 0,1 -1,0 z m 1,-1 1,0 0,1 -1,0 z m 1,-1 1,0 0,1 -1,0 z'/></g><path style='fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1' d='m 5.9480411,15.443605 3.838384,0 0,0.707071 -3.838384,0 z m -0.112826,-11.259453 3.838384,0 0,0.7070707 -3.838384,0 z m 2.429338,11.975342 -1.062012,0 0,-11.8896472 1.062012,0 z'/></svg>",
+                },
+                new PaletteWidgetDto()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "选择框",
+                    ComponentType = ComponentType.Select,//控制界面生成
+                    Description = "提供一个下拉列表,用于选择",
+                    Order = 1,
+                    Visible = true,
+                    Props=new Dictionary<string, Property>(){
+                        {"DisplayText",new Property(){  Value="请选择", PType= PType.String}},
+                        {"ShowLabel",new Property(){  Value="True", PType= PType.Bool} },
+                        {"Text",new Property(){  Value="请输入...", PType= PType.String} },
+                        {"Color",new Property(){  Value="None", PType= PType.SingleColor} },
+                        {"Value",new Property(){  Value="北京", PType= PType.String} },
+                        {"StoreName",new Property(){  Value="SelectDemo", PType= PType.String} },
+                        {"DataSourse",new Property(){  PType= PType.DataSourse} }
+                    },
+                    Icon = @"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path d='M 1,19 1,1 49,1 49,19 Z M 0,0 0,20 50,20 50,0 Z' style='fill:#000000'/></g><path style='fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1' d='m 5.4382875,15.181544 3.838384,0 0,0.707071 -3.838384,0 z m -0.112826,-11.259453 3.838384,0 0,0.707071 -3.838384,0 z m 2.429338,11.975342 -1.062012,0 0,-11.889647 1.062012,0 z'/></svg>",
                 },
                 new PaletteWidgetDto()
                 {
@@ -63,6 +85,13 @@ namespace RM.Shared.Core
                     Description = "This is a checkbox component",
                     Order = 5,
                     Visible = true,
+                    Props=new Dictionary<string, Property>(){
+                        {"DisplayText",new Property(){  Value="111"} },
+                        {"ShowLabel",new Property(){  Value="True", PType= PType.Bool} },
+                        {"Text",new Property(){  Value="True", PType= PType.String} },
+                        {"Color",new Property(){  Value="None", PType= PType.SingleColor} },
+                        {"BoolVal",new Property(){BoolVal=false,  Value="None", PType= PType.Bool} }
+                    },
                     Icon = @"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g transform='matrix(0.99916422,0,0,1.1015534,0.60342786,-1.0355393)' style='fill:#000000;fill-opacity:1;stroke-width:0.09531885;stroke-miterlimit:4;stroke-dasharray:none'><path d='m 0.35714286,18.45 -0.0714286,-16.6428571 48.35714274,0 L 48.5,18.468404 Z m -1.00511228,-17.5280889 0.005112,18.1377729 50.00511242,0.01841 0.0316,-18.0138043 z m 19.87759142,9.3892209 4,4.000001 8,-7.0000007 -1.7,-1.7 -6.5,6.2000007 -2.8,-2.8000007 z' style='fill:#000000;fill-opacity:1;stroke-width:0.09531885;stroke-miterlimit:4;stroke-dasharray:none'/></g><rect style='fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.10000002;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1' width='14.772384' height='12.169996' x='18.369804' y='3.7733393' /><g style='stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke:#000000;stroke-opacity:1'><path d='M 1,19 1,1 49,1 49,19 Z M 0,0 0,20 50,20 50,0 Z' style='fill:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke:#000000;stroke-opacity:1'/></g></svg>"
                 },
                 new PaletteWidgetDto()

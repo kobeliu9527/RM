@@ -37,7 +37,8 @@ namespace RM.Shared.Designer.FieldProperties.Properties
 
         [Parameter]
         public EventCallback<ChangeEventArgs> OnWidthChanged { get; set; }
-
+        [Parameter]
+        public EventCallback<ChangeEventArgs> OnHeightChanged { get; set; }
 
         /// <summary>
         /// Primary / Secondary / Success / Danger / Warning / Info / Dark
@@ -57,6 +58,20 @@ namespace RM.Shared.Designer.FieldProperties.Properties
                 new SelectedItem("False", "False"),
                
                 };
+        private SelectedItem? VirtualItem1 { get; set; }
+        private async Task<QueryData<SelectedItem>> OnQueryAsync(VirtualizeQueryOption option)
+        {
+            await Task.Delay(200);
+            return new QueryData<SelectedItem>
+            {
+                Items = new List<SelectedItem>()
+                        {
+                    new SelectedItem("北京", "北京"),
+                    new SelectedItem("上海", "上海") { Active = true },
+                },
+                TotalCount = 2
+            };
+        }
         public void sa()
         {
             

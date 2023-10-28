@@ -16,6 +16,7 @@ namespace RM.Shared.Models
         public bool Visible { get; set; }
 
         /// <summary>
+        /// 这个控件所拥有的所有属性
         /// </summary>
         public Dictionary<string, Property> Props { get; set; } = new();
     }
@@ -28,10 +29,24 @@ namespace RM.Shared.Models
         private string val = "";
 
         /// <summary>
-        /// 属性类型,用于控制
+        /// 属性类型,用于控制在属性面板中的展示方式
         /// </summary>
         public PType PType { get; set; }
 
+        private bool boolVal;
+
+        public bool BoolVal
+        {
+            get { return boolVal; }
+            set { boolVal = value; }
+        }
+        private string dataSourse;
+
+        public string DataSourse
+        {
+            get { return dataSourse; }
+            set { dataSourse = value; }
+        }
         /// <summary>
         /// 属性值
         /// </summary>
@@ -109,7 +124,11 @@ namespace RM.Shared.Models
         /// <summary>
         /// 小数
         /// </summary>
-        Double
+        Double,
+        /// <summary>
+        /// 数据源
+        /// </summary>
+        DataSourse
     }
 }
 

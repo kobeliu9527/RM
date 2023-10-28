@@ -53,7 +53,9 @@
                     case ComponentType.Tabs:
                         <TabsProperties ComponentData="@ComponentData" />
                         break;
-
+                    case ComponentType.Select:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
                     default:
                         throw new NotImplementedException();
                 }

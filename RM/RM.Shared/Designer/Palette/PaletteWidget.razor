@@ -7,7 +7,9 @@
 
         @if (!string.IsNullOrEmpty(WidgetItem.Icon))
         {
-            <img class="fd-palette-widget-icon" src="@ComponentUtils.GetIconDataString(WidgetItem.Icon)" />
+            @*<Avatar IsCircle="true" IsBorder="true" IsIcon="true" Icon="fas fa-plane-circle-exclamation" />*@
+            @*<img class="fd-palette-widget-icon" src="@ComponentUtils.GetIconDataString(WidgetItem.Icon)" />*@
+            <i class="fas fa-plane-circle-exclamation" style="font-size:40px;color:red;"></i>
         }
         <h5 class="fd-palette-widget-label">@WidgetItem.Name</h5>
 

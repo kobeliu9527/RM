@@ -30,7 +30,13 @@
     margin: .3em 0;
     padding: 1px;
 }
-
+.component-elementruning {
+    display: block;
+    border: 1px transparent solid;
+    margin: .3em 0;
+    padding: 1px;
+}
+/*当鼠标悬浮在组件上的时候,增加一个边框效果*/
 .component-element--hover {
     border-color: var(--fd-primary-color) !important;
     -webkit-transition: opacity .3s ease !important;
@@ -53,13 +59,16 @@
     display: inline-flex;
     vertical-align: middle;
 }
-
+/*行元素的样式*/
 .row-element {
     border: 1px transparent solid;
     border-left: #eee 5px solid;
     position: relative;
 }
-
+.row-element-runing {
+    border: 1px transparent solid;
+    position: relative;
+}
     .row-element.component-element--hover {
         border: 1px solid #888;
         border-left: #888 5px solid;

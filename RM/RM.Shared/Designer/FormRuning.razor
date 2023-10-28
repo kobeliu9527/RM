@@ -1,34 +1,20 @@
 ﻿@inject IJSRuntime JSRuntime
 
-<CascadingValue Value="this" Name="FormDesigner">
-    <div class="d-flex flex-column h-100 w-100">
-        <div class="d-flex flex-row h-100 w-100">
 
-            <div class="d-flex flex-column">
-                @if (LeftName == "Tbox")
-                {
-                    <PalettePanel />
-                }
-
-            </div>
-
-            <div class="d-flex flex-column flex-grow-1 container-space fd-scrollbar"
-            @onclick="@(async () =>
-            await SelectComponentAsync(null))"
-            @onclick:stopPropagation="true">
-                <Container ContainerData="ContainerData"
-                           OnClickCallback="@(async (e) =>
-                           await SelectContainerAsync(ContainerData))" />
-            </div>
-
-            <div class="d-flex flex-column">
-                <FieldPropertiesPanel />
-            </div>
+<div class="d-flex flex-column h-100 w-100">
+    <div class="d-flex flex-row h-100 w-100">
+        <div class="d-flex flex-column flex-grow-1 container-space fd-scrollbar">
+            <CascadingValue Value="this" Name="FormDesigner">
+                <ContainerRuning ContainerData="ContainerData" />
+            </CascadingValue>
         </div>
     </div>
-</CascadingValue>
+</div>
+
 
 @code {
+    [Parameter]
+    public FormDesigner FormDesigner { get; set; }
     /// <summary>
     /// 左侧面板
     /// </summary>
@@ -64,11 +50,7 @@
     ///
     /// </summary>
     private ContainerDto DraggedComponentOriginContainer = null;
-    /// <summary>
-    /// 点击容器后会触发,实际点击行也会触发
-    /// </summary>
-    /// <param name="containerData"></param>
-    /// <returns></returns>
+
     public async Task SelectContainerAsync(ContainerDto containerData)
     {
         SelectedContainer = containerData;
@@ -84,11 +66,7 @@
     {
         return SelectedContainer != null && SelectedContainer == containerData;
     }
-    /// <summary>
-    /// 选中设计器中的组件的时候会触发
-    /// </summary>
-    /// <param name="componentData"></param>
-    /// <returns></returns>
+
     public async Task SelectComponentAsync(ComponentDto componentData)
     {
         SelectedComponent = componentData;

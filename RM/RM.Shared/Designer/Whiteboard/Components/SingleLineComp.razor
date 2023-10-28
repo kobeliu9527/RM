@@ -3,17 +3,18 @@
 <form>
     <div class="form-group">
         @*<label for="@Component.Id"
-               class="col-form-label">
-            @Component.Label+22222
+        class="col-form-label">
+        @Component.Label+22222
         </label>*@
-      @*  <input id="@Component.Id"
-               type="text"
-               class="form-control" />*@
+        @*  <input id="@Component.Id"
+        type="text"
+        class="form-control" />*@
         <BootstrapInput DisplayText="@(Component.Props.ContainsKey("DisplayText")?Component.Props["DisplayText"].Value.ToString():"文本框")"
                         ShowLabel="@(Component.Props.ContainsKey("ShowLabel")?Convert.ToBoolean(Component.Props["ShowLabel"].Value):true)" class="form-control"
                         Id="@Component.Id.ToString()"
+
                         Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
-                        Value="@(Component.Props.ContainsKey("Text")?Component.Props["Text"].Value:"111111")"></BootstrapInput>
+                        @bind-Value="@(Component.ValueInfo.StringValue)"></BootstrapInput>
     </div>
 </form>
 

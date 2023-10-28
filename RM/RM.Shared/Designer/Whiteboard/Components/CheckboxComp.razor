@@ -1,20 +1,41 @@
-﻿@inherits WidgetComponentBase
+﻿@using System.Data;
+@inherits WidgetComponentBase
 
 <form>
     <div class="form-group">
-        <label for="@Component.Id"
-               class="col-form-label">
-            @Component.Label
+        @*    <label for="@Component.Id"
+        class="col-form-label">
+        @Component.Label
         </label>
         <div class="justify-content-start">
-            <input id="@Component.Id"
-                   type="checkbox"
-                   class="form-control" />
-        </div>
+        <input id="@Component.Id"
+        type="checkbox"
+        class="form-control" />
+        </div>*@
+        <Checkbox TValue="bool" DisplayText="@(Component.Props.ContainsKey("DisplayText")?Component.Props["DisplayText"].Value.ToString():"文本框")"
+                  ShowLabel="@(Component.Props.ContainsKey("ShowLabel")?Convert.ToBoolean(Component.Props["ShowLabel"].Value):true)" class="form-control"
+                  Id="@Component.Id.ToString()"
+                  Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
+                  @bind-Value="@(Component.Props["BoolVal"].BoolVal)"></Checkbox>
     </div>
 </form>
 
 
 @code {
 
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+    
+    public void aaa()
+    {
+        
+        DataTable aa = new DataTable();
+        foreach (var item in aa.Rows)
+        {
+
+        }
+
+    }
 }

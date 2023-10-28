@@ -6,7 +6,11 @@ namespace RM.Shared.Core
     {
         public const int MaxColumnWidth = 12;
         public const string BlankIconDataString = @"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 50 20""></svg>";
-
+        /// <summary>
+        /// 根据控件的width属性,生成col-xxx
+        /// </summary>
+        /// <param name="componentData"></param>
+        /// <returns></returns>
         public static string GetComponentColumnCssClasses(ComponentDto componentData)
         {
             return $@"col-{CalculateColumnWidth(componentData)}";

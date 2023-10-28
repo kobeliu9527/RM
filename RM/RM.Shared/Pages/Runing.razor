@@ -1,0 +1,96 @@
+﻿@inject ISqlSugarClient db
+@inject NavigationManager Navigation
+@page "/runing"
+@using RM.Shared.Designer
+@using RM.Shared.Main
+@using System.Diagnostics.CodeAnalysis;
+@layout RM.Shared.Main.MainLayout
+
+<div class="d-flex flex-column h-100 w-100">
+    <MainToolbar />
+
+    <div>
+        <Button OnClick="aaa">保存到数据库</Button>
+        <Button OnClick="Update">模拟更新</Button>
+        <Button OnClick="ChangeP">切换面板</Button>
+        <Button OnClick="BackMain">返回主页面</Button>
+        <Button OnClick="Find">找到自定控件</Button>
+        <Button OnClick="() => SmallFullScreenModal.Toggle()">全屏弹窗</Button>
+
+    </div>
+
+    <div class="d-flex flex-row h-100">
+        <FormRuning ContainerData="@ContainerData"/>
+    </div>
+</div>
+
+@code {
+    private FormDesigner FormDesigner; //自定义组件，类型就是组件名
+    [NotNull]
+    private Modal? SmallFullScreenModal { get; set; }
+    public ContainerDto? ContainerData { get; set; }
+    public string LeftName { get; set; } = "Tbox";
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await RunDemoPredefinedContainer();
+    }
+
+    private async Task RunDemoDatasource()
+    {
+
+    }
+    public void aaa()
+    {
+
+        FunctionPage page = new FunctionPage() { Id = 1 };
+        page.ContainerData = ContainerData;
+        var ssss = db.Updateable(page).ExecuteCommand();
+        var ss2 = db.Queryable<FunctionPage>().ToList();
+        var ss = Newtonsoft.Json.JsonConvert.SerializeObject(page);
+
+    }
+    public void Update()
+    {
+        foreach (var item in ContainerData.Rows)
+        {
+            foreach (var item2 in item)
+            {
+                foreach (var item3 in item2.Props)
+                {
+                    if (item3.Key == "Text")
+                    {
+                        item3.Value.Value = "asdfghjkl";
+                    }
+                }
+            }
+        }
+    }
+    public void ChangeP()
+    {
+        if (LeftName == "Tbox")
+        {
+            LeftName = "";
+        }
+        else
+        {
+            LeftName = "Tbox";
+        }
+    }
+    public void Find()
+    {
+        var ss = ContainerData?.FindFirst((x) => { return x.Label == "aaa"; });
+    }
+    public void BackMain()
+    {
+        Navigation.NavigateTo("");
+    }
+    private async Task RunDemoPredefinedContainer()
+    {
+        var ss2 = db.Queryable<FunctionPage>().ToList();
+        ContainerData = ss2[0].ContainerData;
+        await Task.CompletedTask;
+    }
+
+}

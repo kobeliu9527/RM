@@ -17,7 +17,8 @@ namespace RM.Shared.Models
         DateTime = 7,
         Image = 8,
         Choice = 9,
-        Tabs = 10
+        Tabs = 10,
+        Select=11
     }
 
     public static class ComponentTypeExtensions
@@ -30,23 +31,24 @@ namespace RM.Shared.Models
         /// <exception cref="NotImplementedException"></exception>
         public static string GetName(this ComponentType componentType)
         {
-
-            var result = componentType switch
-            {
-                ComponentType.SingleLine => "Single Line",
-                ComponentType.MultiLine => "Multi Line",
-                ComponentType.Link => "Link",
-                ComponentType.Email => "Email",
-                ComponentType.Checkbox => "Check",
-                ComponentType.Number => "Number",
-                ComponentType.File => "File",
-                ComponentType.DateTime => "DateTime",
-                ComponentType.Image => "Image",
-                ComponentType.Choice => "Choice",
-                ComponentType.Tabs => "Tabs",
-                _ => throw new NotImplementedException(@$"There is no defined name for '{componentType}'"),
-            };
-            return result;
+            return componentType.ToString();
+            //var result = componentType switch
+            //{
+            //    ComponentType.SingleLine => "Single Line",
+            //    ComponentType.MultiLine => "Multi Line",
+            //    ComponentType.Link => "Link",
+            //    ComponentType.Email => "Email",
+            //    ComponentType.Checkbox => "Check",
+            //    ComponentType.Number => "Number",
+            //    ComponentType.File => "File",
+            //    ComponentType.DateTime => "DateTime",
+            //    ComponentType.Image => "Image",
+            //    ComponentType.Choice => "Choice",
+            //    ComponentType.Tabs => "Tabs",
+            //    ComponentType.Select => "Select",
+            //    _ => throw new NotImplementedException(@$"There is no defined name for '{componentType}'"),
+            //};
+            //return result;
         }
     }
 }

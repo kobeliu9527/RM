@@ -28,8 +28,15 @@ namespace RM.Shared.Designer.FieldProperties.Properties
             {
                 ComponentData.Width = w;
             }
-            //ComponentData.Width = Convert.ToInt32(e.Value);
-
+            await FormDesigner.StateHasChangedAsync();
+        }
+        public async Task OnHeightChangedAsync(ChangeEventArgs e)
+        {
+            //if (int.TryParse(e.Value.ToString(), out var w))
+            //{
+            //    ComponentData.Width = w;
+            //}
+            var ss = ComponentData.Height;
             await FormDesigner.StateHasChangedAsync();
         }
     }

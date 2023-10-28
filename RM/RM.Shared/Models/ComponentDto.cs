@@ -51,7 +51,10 @@ namespace RM.Shared.Models
         /// 控件的属性
         /// </summary>
         public Dictionary<string, Property> Props { get; set; } = new();
-
+        /// <summary>
+        /// 控件的值信息,不同的控件,值类型不一样
+        /// </summary>
+        public ValueInfo  ValueInfo { get; set; }=new ValueInfo();
         public ComponentDto? Parent { get; set; }
         public ComponentType Type { get; set; }
 
@@ -68,6 +71,7 @@ namespace RM.Shared.Models
         public List<ContainerDto>? ChildContainers { get; set; }
 
         private int width = ComponentUtils.MaxColumnWidth;
+        private int height=0;
 
         public int Width
         {
@@ -88,5 +92,37 @@ namespace RM.Shared.Models
                 }
             }
         }
+
+        public int Height
+        {
+            get { return height; }
+            set
+            {
+                height = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ValueInfo
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int IntValue { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StringValue { get; set; } = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool BoolValue { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DoubleValue { get; set; }
     }
 }

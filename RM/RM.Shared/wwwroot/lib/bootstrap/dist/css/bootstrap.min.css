@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Bootstrap v4.5.0 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
@@ -6118,7 +6118,7 @@ a.close.disabled {
 
 @media (min-width:576px) {
     .modal-dialog {
-        max-width: 500px;
+        /*max-width: 500px;*//*为例适应全部弹窗*/
         margin: 1.75rem auto
     }
 

@@ -10,10 +10,12 @@
     /// </remarks>
     public class ContainerDto : ContainerBaseDto
     {
-        private List<List<ComponentDto>>? rows=new List<List<ComponentDto>>();
+        private List<List<ComponentDto>> rows=new List<List<ComponentDto>>();
 
         #region Public Constructors
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ContainerDto()
         {
             //InitEmptyContainer(ref rows);
@@ -57,7 +59,7 @@
         /// <summary>
         /// 容器中,所有行的集合
         /// </summary>
-        public List<List<ComponentDto>>? Rows { get => rows; set => rows = value; }
+        public List<List<ComponentDto>> Rows { get => rows; set => rows = value; }
 
         public string? Label { get; set; }
 

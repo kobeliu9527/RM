@@ -7,7 +7,20 @@
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
+<div class="component-elementruning ">
+    <div class="widget-wrapper">
+        <div class="widget-content" @onclick="()=>{
+;
+}">
+            <form>
+                <div class="form-group">
+                    <BootstrapInput TValue="string"></BootstrapInput>
 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
@@ -16,7 +29,7 @@
     private void IncrementCount()
     {
         //建表
-      //  db.CodeFirst.InitTables(typeof(FunctionPage));
-
+        //  db.CodeFirst.InitTables(typeof(FunctionPage));
+        currentCount++;
     }
 }

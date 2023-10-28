@@ -32,6 +32,18 @@
                                    value="@ComponentData.Width"
                             @oninput="OnWidthChanged" />
                         </div>
+                        <div class="form-group">
+                            <label for="@ComponentData.Id-height"
+                                   class="col-form-label">
+                                Height
+                            </label>
+                            <input id="@ComponentData.Id-height"
+                                   class="form-control"
+                                   type="number"
+                                   required
+                                  @bind-value="@ComponentData.Height"
+                            @oninput="OnHeightChanged" />
+                        </div>
                     </div>
                 </CollapseItem>
 
@@ -43,20 +55,27 @@
                             @switch (item.Value.PType)
                             {
                                 case PType.String:
+                                    <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.Value"></BootstrapInput>
                                     break;
                                 case PType.SingleColor:
-                                        <Select ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.Value"></Select>
+                                    <Select ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.Value"></Select>
                                     break;
                                 case PType.Bool:
-                                    <Select ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="BoolItems" @bind-Value="@item.Value.Value"></Select>
+                                    <Checkbox TValue="bool" DisplayText="@item.Key"
+                                              ShowLabel="true" class="form-control"
+                                              Color="Color.Danger"
+                                              @bind-Value="@(item.Value.BoolVal)"></Checkbox>
                                     break;
                                 case PType.Int:
                                     break;
                                 case PType.Double:
                                     break;
+                                case PType.DataSourse:
+                                    @*<Select IsVirtualize="true" @bind-Value="@(ComponentData.Props[""].Value)" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>*@
+                                    <Select IsVirtualize="true" @bind-Value="@item.Value.Value" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>
+                                    break;
                                 default:
                                     <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.Value"></BootstrapInput>
-
                                     break;
                             }
                         }
