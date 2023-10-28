@@ -15,7 +15,7 @@
                                    class="form-control"
                                    type="text"
                                    required
-                                   value="@ComponentData.Label"
+                                   value="@ComponentData.DisplayText"
                             @oninput="OnLabelChanged" />
                         </div>
                         <div class="form-group">
@@ -41,7 +41,7 @@
                                    class="form-control"
                                    type="number"
                                    required
-                                  @bind-value="@ComponentData.Height"
+                            @bind-value="@ComponentData.Height"
                             @oninput="OnHeightChanged" />
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                             @switch (item.Value.PType)
                             {
                                 case PType.String:
-                                    <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.Value"></BootstrapInput>
+                                    <BootstrapInput OnValueChanged="(e)=>{OnPropChanged.InvokeAsync(new PInof(){key=item.Key,Value=e});return Task.CompletedTask;}" ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.Value"></BootstrapInput>
                                     break;
                                 case PType.SingleColor:
                                     <Select ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.Value"></Select>
@@ -64,7 +64,7 @@
                                     <Checkbox TValue="bool" DisplayText="@item.Key"
                                               ShowLabel="true" class="form-control"
                                               Color="Color.Danger"
-                                              @bind-Value="@(item.Value.BoolVal)"></Checkbox>
+                                    @bind-Value="@(item.Value.BoolVal)"></Checkbox>
                                     break;
                                 case PType.Int:
                                     break;

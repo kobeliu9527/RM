@@ -9,6 +9,9 @@ namespace RM.Shared.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        /// <summary>
+        /// 控件的类型,用于区分是文本框还是下拉框等等
+        /// </summary>
         public ComponentType ComponentType { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }

@@ -58,4 +58,8 @@
     <PackageReference Include="SqlSugarCore" Version="5.1.4.112" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\新文件夹\" />
+  </ItemGroup>
+
 </Project>

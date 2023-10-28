@@ -3,7 +3,7 @@
 namespace RM.Shared.Models
 {
     /// <summary>
-    /// 组件类型/控件类型
+    /// 控件的类型,用于区分是文本框还是下拉框等等
     /// </summary>
     public enum ComponentType
     {

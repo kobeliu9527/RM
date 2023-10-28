@@ -39,7 +39,8 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         public EventCallback<ChangeEventArgs> OnWidthChanged { get; set; }
         [Parameter]
         public EventCallback<ChangeEventArgs> OnHeightChanged { get; set; }
-
+        [Parameter]
+        public EventCallback<PInof> OnPropChanged { get; set; }
         /// <summary>
         /// Primary / Secondary / Success / Danger / Warning / Info / Dark
         /// </summary>
@@ -72,7 +73,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
                 TotalCount = 2
             };
         }
-        public void sa()
+        public void OnValueChanged(MouseEventArgs e)
         {
             
            //Color.Dark

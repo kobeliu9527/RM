@@ -16,6 +16,8 @@
         <Button OnClick="BackMain">返回主页面</Button>
         <Button OnClick="Find">找到自定控件</Button>
         <Button OnClick="() => SmallFullScreenModal.Toggle()">全屏弹窗</Button>
+        <BootstrapInput TValue="string" OnEnterAsync="OnEnterAsync" OnEscAsync="OnEnterAsync"
+                        OnValueChanged="OnValueChanged"></BootstrapInput>
 
     </div>
 
@@ -25,6 +27,23 @@
 </div>
 
 @code {
+    /// <summary>
+    /// 回车后执行
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public async Task OnEnterAsync(string value)
+    {
+        await Task.Delay(100);
+        ;
+
+    }
+    public async Task OnValueChanged(string value)
+    {
+        await Task.Delay(100);
+        ;
+
+    }
     private FormDesigner FormDesigner; //自定义组件，类型就是组件名
     [NotNull]
     private Modal? SmallFullScreenModal { get; set; }
@@ -80,7 +99,7 @@
     }
     public void Find()
     {
-        var ss = ContainerData?.FindFirst((x) => { return x.Label == "aaa"; });
+        var ss = ContainerData?.FindFirst((x) => { return x.DisplayText == "aaa"; });
     }
     public void BackMain()
     {

@@ -1,27 +1,19 @@
 ﻿@using RM.Shared.Designer.Whiteboard.Components
 @{
-    bool isSelectedComponent =
-        FormDesigner.IsSelectedComponent(ComponentData);
-    string selectedComponentClass = isSelectedComponent ? "component-element--selected" : "";
     string tabsContainerClass = ComponentData?.Type == ComponentType.Tabs ? "container-element" : "";
 }
-
-<div class="component-elementruning @Class">
-    <div class="widget-wrapper" @onclick="()=>{
-;
-}">
+<div class="component-elementruning">
+    <div class="widget-wrapper">
 
         @{
             string h = "auto";
             h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
         }
-        <div class="widget-content" style="height:@h" @onclick="()=>{
-;
-}">
+        <div class="widget-content" style="height:@h">
             @switch (ComponentData?.Type)
             {
                 case ComponentType.SingleLine:
-                    <SingleLineComp Component="@ComponentData" />
+                    <SingleLineCompRuning Component="@ComponentData" />
                     break;
 
                 case ComponentType.MultiLine:
@@ -65,7 +57,7 @@
             }
         </div>
 
-  
+
 
     </div>
 </div>

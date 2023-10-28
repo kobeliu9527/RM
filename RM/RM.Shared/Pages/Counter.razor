@@ -7,25 +7,17 @@
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
-<div class="component-elementruning ">
-    <div class="widget-wrapper">
-        <div class="widget-content" @onclick="()=>{
-;
-}">
-            <form>
-                <div class="form-group">
-                    <BootstrapInput TValue="string"></BootstrapInput>
-
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<BootstrapInput TValue="string" OnEnterAsync="OnEnterAsync"></BootstrapInput>
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
     private int currentCount = 0;
+    public async Task OnEnterAsync(string value)
+    {
+        await Task.Delay(100);
+        ;
 
+    }
     private void IncrementCount()
     {
         //建表

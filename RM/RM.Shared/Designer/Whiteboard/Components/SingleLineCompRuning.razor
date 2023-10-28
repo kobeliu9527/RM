@@ -1,0 +1,38 @@
+﻿@inherits WidgetComponentBase
+
+@*<form>*@
+<div class="form-group">
+    @if (Component is not null)
+    {
+        <BootstrapInput TValue="string"
+                        DisplayText="@(Component.MutLanguage.GetLanguage())"
+                        ShowLabel="@(Component.ShowLabel)"
+                        OnEnterAsync="OnEnterAsync"
+                        OnValueChanged="OnValueChanged"
+                        Id="@(string.IsNullOrEmpty(Component.Name)?"aa":Component.Name)"
+                        Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
+                        @bind-Value="@(Component.ValueInfo.StringValue)"></BootstrapInput>
+    }
+
+</div>
+@*</form>*@
+@code {
+    /// <summary>
+    /// 回车后执行,执行这个控件带的参数
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public async Task OnEnterAsync(string value)
+    {
+
+        await Task.Delay(100);
+        ;
+
+    }
+    public async Task OnValueChanged(string value)
+    {
+        await Task.Delay(100);
+        ;
+
+    }
+}

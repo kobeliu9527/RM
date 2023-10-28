@@ -8,7 +8,6 @@
 
 <div class="d-flex flex-column h-100 w-100">
     <MainToolbar />
-
     <div>
         <Button OnClick="aaa">保存到数据库</Button>
         <Button OnClick="Update">模拟更新</Button>
@@ -100,7 +99,7 @@
     }
     public void Find()
     {
-        var ss = ContainerData?.FindFirst((x) => { return x.Label == "aaa"; });
+        var ss = ContainerData?.FindFirst((x) => { return x.DisplayText == "aaa"; });
     }
     public void BackMain()
     {

@@ -24,11 +24,11 @@
                     ComponentUtils.GetComponentColumnCssClasses(currentComponent);
 
                     <div class="draggable  @componentColumnWidth">
-                        <CascadingValue Value="this" Name="Container">
+                        @*<CascadingValue Value="this" Name="Container">*@
                             <ComponentRuning ComponentData="@currentComponent"
                                              ComponentRow="@currentRow"
                                              ComponentIndex="@currentComponentIndex" />
-                        </CascadingValue>
+                        @*</CascadingValue>*@
                     </div>
                 }
 
