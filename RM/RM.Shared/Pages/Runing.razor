@@ -16,8 +16,6 @@
         <Button OnClick="BackMain">返回主页面</Button>
         <Button OnClick="Find">找到自定控件</Button>
         <Button OnClick="() => SmallFullScreenModal.Toggle()">全屏弹窗</Button>
-        <BootstrapInput TValue="string" OnEnterAsync="OnEnterAsync" OnEscAsync="OnEnterAsync"
-                        OnValueChanged="OnValueChanged"></BootstrapInput>
 
     </div>
 
@@ -80,7 +78,7 @@
                 {
                     if (item3.Key == "Text")
                     {
-                        item3.Value.Value = "asdfghjkl";
+                        item3.Value.StringValue = "asdfghjkl";
                     }
                 }
             }

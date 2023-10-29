@@ -29,74 +29,37 @@ namespace RM.Shared.Models
     /// </summary>
     public class Property
     {
-        private string val = "";
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public string DisplayName { get; set; } = "";
         /// <summary>
         /// 属性类型,用于控制在属性面板中的展示方式
         /// </summary>
         public PType PType { get; set; }
-
-        private bool boolVal;
-
-        public bool BoolVal
-        {
-            get { return boolVal; }
-            set { boolVal = value; }
-        }
-        private string dataSourse;
-
-        public string DataSourse
-        {
-            get { return dataSourse; }
-            set { dataSourse = value; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool BoolVal { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int IntlVal { get; set; }
         /// <summary>
         /// 属性值
         /// </summary>
-        public string Value
-        {
-            get => val;
-            set
-            {
-                switch (PType)
-                {
-                    case PType.String:
-                        break;
+        public string StringValue { get; set; } = "";
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ////public string StringVal { get; set; } = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string DataSourse { get; set; } = "";
 
-                    case PType.SingleColor:
-                        if (Enum.TryParse(value, out Color color))
-                        {
-                            val = value;
-                        }
-                        else
-                        {
-                            val = "None";
-                        }
-                        return;
 
-                    case PType.Bool:
-                        if (bool.TryParse(value, out bool aa))
-                        {
-                            val = value;
-                        }
-                        else
-                        {
-                            val = "False";
-                        }
-                        return;
 
-                    case PType.Int:
-                        break;
-
-                    case PType.Double:
-                        break;
-
-                    default:
-                        break;
-                }
-                val = value;
-            }
-        }
     }
 
     /// <summary>

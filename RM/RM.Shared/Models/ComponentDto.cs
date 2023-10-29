@@ -11,15 +11,12 @@ namespace RM.Shared.Models
     /// </summary>
     public class ComponentDto
     {
-
         #region Public Constructors
 
         /// <summary>
-        /// 
         /// </summary>
         public ComponentDto()
         {
-
         }
 
         /// <summary>
@@ -51,17 +48,17 @@ namespace RM.Shared.Models
         /// <summary>
         /// 唯一值
         /// </summary>
-        [DisplayName("页面唯一标识"),Required(ErrorMessage ="控件的名字,必须全局唯一")]
-        public string Id { get;  set; }
+        [DisplayName("页面唯一标识"), Required(ErrorMessage = "控件的名字,必须全局唯一")]
+        public string Id { get; set; }
 
-  
         /// <summary>
         /// 外观颜色
         /// </summary>
         [DisplayName("外观颜色")]
         public Color Color { get; set; }
+
         /// <summary>
-        /// 控件的类型,用于区分是文本框还是下拉框等等--  
+        /// 控件的类型,用于区分是文本框还是下拉框等等--
         /// </summary>
 
         public ComponentType Type { get; set; }
@@ -86,35 +83,50 @@ namespace RM.Shared.Models
         /// </summary>
         [DisplayName("是否禁用")] public bool IsDisabled { get; set; }
 
-        /// <summary>
-        /// 是否自动获取焦点
-        /// </summary>
-        [DisplayName("是否自动获取焦点")] public bool IsAutoFocus { get; set; }
+        ///// <summary>
+        ///// 是否自动获取焦点
+        ///// </summary>
+        //[DisplayName("是否自动获取焦点")] public bool IsAutoFocus { get; set; }
 
-        /// <summary>
-        /// 获得焦点后自动选择输入框内所有字符串
-        /// </summary>
-        [DisplayName("是否默认选中所有文本")] public bool IsSelectAllTextOnFocus { get; set; }=true;
+        ///// <summary>
+        ///// 获得焦点后自动选择输入框内所有字符串
+        ///// </summary>
+        //[DisplayName("是否默认选中所有文本")] public bool IsSelectAllTextOnFocus { get; set; } = true;
 
         /// <summary>
         /// 控件的属性
         /// </summary>
         public Dictionary<string, Property> Props { get; set; } = new();
-
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("回车后是否执行存储过程")] public bool IsExecuteForEnter { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("要执行的存储过程名")] public string StoreName { get; set; } = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("执行存储过程需要的参数")] public List<string> Parameters { get; set; } = new();
+       
         /// <summary>
         /// 控件的值信息,不同的控件,值类型不一样
         /// </summary>
         public ValueInfo ValueInfo { get; set; } = new ValueInfo();
 
         public ComponentDto? Parent { get; set; }
+
         /// <summary>
         /// 前置标签显示文本(应该支持多语言显示)
         /// </summary>
         public string? DisplayText { get; set; }
+
         /// <summary>
         /// 如果这个组件是容器组件,那么他还有子组件
         /// </summary>
         public List<ContainerDto>? ChildContainers { get; set; }
+
         /// <summary>
         /// 宽,参考bootstarp中设计,1-12
         /// </summary>
@@ -141,6 +153,7 @@ namespace RM.Shared.Models
                 }
             }
         }
+
         /// <summary>
         /// 小于等于0,会被转换为auto
         /// </summary>
@@ -179,35 +192,30 @@ namespace RM.Shared.Models
         }
 
         #endregion Internal 方法
-
     }
 
     /// <summary>
-    /// 
     /// </summary>
     public class ValueInfo
     {
-
         #region 属性
 
         /// <summary>
-        /// 
         /// </summary>
         public int IntValue { get; set; }
+
         /// <summary>
-        /// 
         /// </summary>
         public string StringValue { get; set; } = "";
+
         /// <summary>
-        /// 
         /// </summary>
         public bool BoolValue { get; set; }
+
         /// <summary>
-        /// 
         /// </summary>
         public double DoubleValue { get; set; }
 
         #endregion 属性
-
     }
 }

@@ -84,13 +84,14 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         }
         public void OnFieldValueChanged(string key, object value)
         {//lstNames.GroupBy(n => n).Any(c => c.Count() > 1);
-            if (key =="Id") {
+            if (key == "Id")
+            {
 
                 if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
                 {
-                    ValidateForm.SetError("Id","数据库中已存在");
+                    ValidateForm.SetError("Id", "数据库中已存在");
                 }
-             
+
             }
             //return Task.CompletedTask;
         }
@@ -106,12 +107,12 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         /// <returns></returns>
         public Task IdOnValueChanged(string v)
         {
-         
+
             if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
             {
                 ComponentData.Id = "";
             }
-            return Task.CompletedTask; 
+            return Task.CompletedTask;
         }
         /// <summary>
         /// 当设置控件的Id属性的时候
@@ -120,7 +121,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         /// <returns></returns>
         public async Task OnValueChangedForBool(bool v)
         {
-           await FormDesigner.StateHasChangedAsync();
+            await FormDesigner.StateHasChangedAsync();
         }
         /// <summary>
         /// 当设置控件外观颜色的时候

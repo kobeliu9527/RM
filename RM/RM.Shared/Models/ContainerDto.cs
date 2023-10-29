@@ -14,7 +14,14 @@
         public Guid Id { get; private set; }
         public ContainerType Type { get; private set; }
         private List<List<ComponentDto>> rows=new List<List<ComponentDto>>();
-
+        /// <summary>
+        /// 控件的属性
+        /// </summary>
+        public Dictionary<string, Property> Props { get; set; } = new();
+        /// <summary>
+        /// 多语言
+        /// </summary>
+        public MutLanguage MutLanguage { get; set; } = new();
         #region Public Constructors
         /// <summary>
         /// 

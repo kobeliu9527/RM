@@ -12,7 +12,20 @@ namespace RM.Shared.Extensions
         public static ComponentDto CreateComponent(this PaletteWidgetDto paletteWidget)
         {
             var componentData = new ComponentDto(paletteWidget.ComponentType);
-            componentData.Props = paletteWidget.Props;
+            foreach (var item in paletteWidget.Props)
+            {
+                Property p = new Property()
+                {
+                    DisplayName=item.Value.DisplayName,
+                    PType = item.Value.PType,
+                    StringValue = item.Value.StringValue,
+                    DataSourse = item.Value.DataSourse,
+                    BoolVal = item.Value.BoolVal,
+                    IntlVal = item.Value.IntlVal,
+                };
+                componentData.Props.Add(item.Key, p);
+            }
+            //componentData.Props = paletteWidget.Props;
             componentData.Id = $"{paletteWidget.ComponentType}-{DateTime.Now.ToString("F")}";
             return componentData;
         }

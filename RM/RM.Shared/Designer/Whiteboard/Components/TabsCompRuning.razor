@@ -21,7 +21,7 @@
                 @onclick:preventDefault="true"
                 @onclick:stopPropagation="true">
                   
-                    <span class="tab-title">@tabContainer.Label</span>
+                    <span class="tab-title">@(tabContainer.MutLanguage.GetLanguage())</span>
              
                 </a>
             </li>

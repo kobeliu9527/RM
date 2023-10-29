@@ -4,9 +4,6 @@
 
     <Tab>
         <TabItem Text="控件属性">
-            @*<div class="fd-field-properties-panel h-100">*@
-            @*<div class="d-flex flex-row h-100 fd-scrollbar">*@
-            @*<div class="d-flex flex-column h-100 w-100 widget-properties-panel">*@
             <ChildContent>
                 @*<div class="asdfsdfafdsf"> 解决不铺满*@
                 @{
@@ -49,7 +46,7 @@
 
                         case ComponentType.Tabs:
                             ;
-                            @*<TabProperties Container="@ContainerData" />*@
+                            <TabsProperties ComponentData="@ComponentData" />
                             break;
                         case ComponentType.Select:
                             <SingelLineProperties ComponentData="@ComponentData" />
@@ -64,10 +61,10 @@
                     {
                         case ContainerType.Base://嵌套的第一个Tab,父级Tab
                             // Do nothing
-                            @*<TabProperties Container="@ContainerData" />*@
+                            <TabProperties ComponentData="@ContainerData" />
                             break;
                         case ContainerType.Tab://添加Tab中的一个tab页面时候,点击一个tab的时候
-                            <TabsProperties Container="@ContainerData" />
+                            <TabProperties ComponentData="@ContainerData" />
                             break;
                         default:
                             throw new NotImplementedException();
@@ -102,9 +99,11 @@
 
 
 @code {
+   
     [CascadingParameter(Name = "FormDesigner")]
-    public FormDesigner FormDesigner { get; set; }
+    [NotNull]
+    public FormDesigner? FormDesigner { get; set; }
 
-    private ComponentDto ComponentData = null;
-    private ContainerDto ContainerData = null;
+    private ComponentDto? ComponentData = null;
+    private ContainerDto? ContainerData = null;
 }

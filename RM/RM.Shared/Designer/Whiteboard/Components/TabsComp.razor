@@ -36,7 +36,7 @@
                                        Class="component-mover-icon tab-color"
                                        title="Move Right" />
                     }
-                    <span class="tab-title">@tabContainer.Label</span>
+                    <span class="tab-title">@(tabContainer.MutLanguage.GetLanguage())</span>
                     @if (IsRemoveTabVisible(tabContainer))
                     {
                         <MatIconButton Icon="@MatIconNames.Cancel"

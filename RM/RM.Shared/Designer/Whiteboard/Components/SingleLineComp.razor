@@ -1,13 +1,14 @@
 ﻿@inherits WidgetComponentBase
 
-<form>
-    <div class="form-group">
-        @if (Component!=null)
+@*<form>
+    <div class="form-group">*@
+        @if (Component != null)
         {
-            <BootstrapInput class="form-control"
+            <BootstrapInput Id="@Component.Id"
+                            PlaceHolder="@(Component.Props["PlaceHolder"].StringValue)"
+                            IsSelectAllTextOnFocus="@(Component.Props["IsSelectAllTextOnFocus"].BoolVal)"
                             DisplayText="@(Component.MutLanguage.GetLanguage())"
                             ShowLabel="@(Component.ShowLabel)"
-                            Id="@Component.Id"
                             Color="@(Component.Color)"
                             IsDisabled="@Component.IsDisabled"
             @bind-Value="@(Component.ValueInfo.StringValue)"></BootstrapInput>
@@ -19,8 +20,8 @@
             </div>
         }
 
-    </div>
-</form>
+@*    </div>
+</form>*@
 @code {
 
 }

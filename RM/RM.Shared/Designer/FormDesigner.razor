@@ -50,7 +50,7 @@
     /// </summary>
     private PaletteWidgetDto? DraggedPaletteWidget = null;
     /// <summary>
-    ///
+    /// 设计器中被拖动的项目
     /// </summary>
     private ComponentDto? DraggedComponentData = null;
     /// <summary>
@@ -120,6 +120,10 @@
     {
         return await Task.FromResult(DraggedPaletteWidget);
     }
+    /// <summary>
+    /// 拖动的是工具箱中的组件
+    /// </summary>
+    /// <returns></returns>
     public bool IsDraggedItemPaletteWidget()
     {
         return DraggedPaletteWidget != null && DraggedComponentData == null;
@@ -146,6 +150,10 @@
     {
         return await Task.FromResult(DraggedComponentOriginContainer);
     }
+    /// <summary>
+    /// 拖动的是设计器中的组件实例
+    /// </summary>
+    /// <returns></returns>
     public bool IsDraggedItemComponent()
     {
         return DraggedComponentData != null && DraggedPaletteWidget == null;

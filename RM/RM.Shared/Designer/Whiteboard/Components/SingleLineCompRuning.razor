@@ -1,20 +1,22 @@
 ﻿@inherits WidgetComponentBase
 
 @*<form>*@
-<div class="form-group">
-    @if (Component is not null)
-    {
-        <BootstrapInput TValue="string"
-                        DisplayText="@(Component.MutLanguage.GetLanguage())"
-                        ShowLabel="@(Component.ShowLabel)"
-                        OnEnterAsync="OnEnterAsync"
-                        OnValueChanged="OnValueChanged"
-                        Id="@(Component.Id)"
-                        Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
-                        @bind-Value="@(Component.ValueInfo.StringValue)"></BootstrapInput>
-    }
+@*<div class="form-group">*@
+@if (Component is not null)
+{
+    <BootstrapInput Id="@(Component.Id)"
+                    PlaceHolder="@(Component.Props["PlaceHolder"].StringValue)"
+                    IsSelectAllTextOnFocus="@(Component.Props["IsSelectAllTextOnFocus"].BoolVal)"
+                    DisplayText="@(Component.MutLanguage.GetLanguage())"
+                    ShowLabel="@(Component.ShowLabel)"
+                    IsDisabled="@Component.IsDisabled"
+                    Color="@(Component.Color)"
+                    OnEnterAsync="OnEnterAsync"
+                    OnValueChanged="OnValueChanged"
+    @bind-Value="@(Component.ValueInfo.StringValue)"></BootstrapInput>
+}
 
-</div>
+@*</div>*@
 @*</form>*@
 @code {
     /// <summary>
@@ -24,7 +26,11 @@
     /// <returns></returns>
     public async Task OnEnterAsync(string value)
     {
-
+        if (Component.IsExecuteForEnter)
+        {
+            ;
+        }
+        var ss = Component;
         await Task.Delay(100);
         ;
 

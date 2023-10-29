@@ -12,10 +12,10 @@
         type="checkbox"
         class="form-control" />
         </div>*@
-        <Checkbox TValue="bool" DisplayText="@(Component.Props.ContainsKey("DisplayText")?Component.Props["DisplayText"].Value.ToString():"文本框")"
-                  ShowLabel="@(Component.Props.ContainsKey("ShowLabel")?Convert.ToBoolean(Component.Props["ShowLabel"].Value):true)" class="form-control"
+        <Checkbox TValue="bool" DisplayText="@(Component.Props.ContainsKey("DisplayText")?Component.Props["DisplayText"].StringValue.ToString():"文本框")"
+                  ShowLabel="@(Component.Props.ContainsKey("ShowLabel")?Convert.ToBoolean(Component.Props["ShowLabel"].StringValue):true)" class="form-control"
                   Id="@Component.Id.ToString()"
-                  Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
+                  Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].StringValue):Color.Danger)"
                   @bind-Value="@(Component.Props["BoolVal"].BoolVal)"></Checkbox>
     </div>
 @*</form>*@
