@@ -1,7 +1,7 @@
 ﻿@using System.Data;
 @inherits WidgetComponentBase
 
-<form>
+@*<form>*@
     <div class="form-group">
         @*    <label for="@Component.Id"
         class="col-form-label">
@@ -18,7 +18,7 @@
                   Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
                   @bind-Value="@(Component.Props["BoolVal"].BoolVal)"></Checkbox>
     </div>
-</form>
+@*</form>*@
 
 
 @code {

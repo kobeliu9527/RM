@@ -5,7 +5,13 @@
     /// </summary>
     public enum ContainerType
     {
+        /// <summary>
+        /// 一个TabPage页面
+        /// </summary>
         Base = 0,
+        /// <summary>
+        /// 总的Tab
+        /// </summary>
         Tab = 1
     }
 }

@@ -24,14 +24,18 @@ using RM.Shared.Designer.Palette;
 using RM.Shared.Designer.Whiteboard;
 using MatBlazor;
 using SqlSugar;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RM.Shared.Designer.FieldProperties.Properties
 {
     public partial class DefaultPropertiesComp
     {
+        [CascadingParameter(Name = "FormDesigner")]
+        public FormDesigner FormDesigner { get; set; }
         [Parameter]
         public ComponentDto? ComponentData { get; set; }
-
+        [NotNull]
+        private ValidateForm? ValidateForm { get; set; }
         [Parameter]
         public EventCallback<ChangeEventArgs> OnLabelChanged { get; set; }
 
@@ -57,7 +61,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         List<SelectedItem> BoolItems = new List<SelectedItem>() {
                 new SelectedItem("True", "True"),
                 new SelectedItem("False", "False"),
-               
+
                 };
         private SelectedItem? VirtualItem1 { get; set; }
         private async Task<QueryData<SelectedItem>> OnQueryAsync(VirtualizeQueryOption option)
@@ -75,8 +79,66 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         }
         public void OnValueChanged(MouseEventArgs e)
         {
-            
-           //Color.Dark
+
+            //Color.Dark
+        }
+        public void OnFieldValueChanged(string key, object value)
+        {//lstNames.GroupBy(n => n).Any(c => c.Count() > 1);
+            if (key =="Id") {
+
+                if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+                {
+                    ValidateForm.SetError("Id","数据库中已存在");
+                }
+             
+            }
+            //return Task.CompletedTask;
+        }
+        private Task OnValidComplexModel(EditContext context)
+        {
+            ValidateForm.SetError("Id", "数据库中已存在");
+            return Task.CompletedTask;
+        }
+        /// <summary>
+        /// 当设置控件的Id属性的时候
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public Task IdOnValueChanged(string v)
+        {
+         
+            if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
+            {
+                ComponentData.Id = "";
+            }
+            return Task.CompletedTask; 
+        }
+        /// <summary>
+        /// 当设置控件的Id属性的时候
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public async Task OnValueChangedForBool(bool v)
+        {
+           await FormDesigner.StateHasChangedAsync();
+        }
+        /// <summary>
+        /// 当设置控件外观颜色的时候
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public async Task OnValueChangedForColor(Color v)
+        {
+            await FormDesigner.StateHasChangedAsync();
+        }
+        /// <summary>
+        /// 当设置控件外观颜色的时候
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public async Task OnValueChangedForInt(int v)
+        {
+            await FormDesigner.StateHasChangedAsync();
         }
     }
 }

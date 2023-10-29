@@ -82,7 +82,7 @@ namespace RM.Shared.Extensions
         /// <param name="container"></param>
         /// <param name="match"></param>
         /// <returns></returns>
-        public static List<ComponentDto> FindAll(this ContainerDto container, Func<ComponentDto, bool> match)
+        public static List<ComponentDto> FindAll(this ContainerDto container, Func<ComponentDto, bool>? match=null)
         {
             List<ComponentDto> res = new List<ComponentDto>();
             FindAll(container, match, res);

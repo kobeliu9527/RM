@@ -22,7 +22,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         {
             //ComponentData.Props.TryAdd
             // ComponentData.Label = e.Value.ToString();
-            ComponentData.Props[e.key].Value = e.Value.ToString();
+            //ComponentData.Props[e.key].Value = e.Value.ToString();
              await FormDesigner.StateHasChangedAsync();
         }
         public async Task OnLabelChangedAsync(ChangeEventArgs e)

@@ -13,7 +13,7 @@
             var currentRowIndex = rowIndex;
             var currentRow = ContainerData.Rows[currentRowIndex];
 
-            @if (currentRowIndex == 0 && !ContainerData.IsEmpty())
+            @if (currentRowIndex == 0 && !ContainerData.IsEmpty())//当拖动到页面的最上面的时候,会触发伪类元素生成
             {
                 Guid divId = Guid.NewGuid();
                 <div id="@divId"
@@ -139,6 +139,9 @@
     [CascadingParameter(Name = "FormDesigner")]
     public FormDesigner FormDesigner { get; set; }
 
+    /// <summary>
+    /// SelectContainerAsync();赋值当前选中的容器
+    /// </summary>
     [Parameter]
     public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
     /// <summary>
@@ -182,7 +185,7 @@
         await FormDesigner.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
     }
     /// <summary>
-    /// 在拖动一行组件完成前
+    /// 在拖动一个控件,并且要放到一个新行的时候(前置伪元素)
     /// </summary>
     /// <param name="rowIndex"></param>
     /// <param name="currentContainer"></param>
@@ -195,7 +198,12 @@
 
         await DropComponentToEndOfRowAsync(currentContainer, newRow);
     }
-
+    /// <summary>
+    /// 在拖动一个控件,并且要放到一个新行的时候(后置伪元素)
+    /// </summary>
+    /// <param name="rowIndex"></param>
+    /// <param name="currentContainer"></param>
+    /// <returns></returns>
     private async Task DropComponentAfterRowAsync(int rowIndex,
         ContainerDto currentContainer)
     {
@@ -206,7 +214,7 @@
         await DropComponentToEndOfRowAsync(currentContainer, newRow);
     }
     /// <summary>
-    /// 拖拽一行数据完成时候触发
+    /// 拖拽一个组件到一个已经存在的行的时候触发
     /// </summary>
     /// <param name="containerData"></param>
     /// <param name="destinationRow"></param>
@@ -215,7 +223,7 @@
     private async Task DropComponentToEndOfRowAsync(ContainerDto containerData,
         List<ComponentDto> destinationRow)
     {
-        if (FormDesigner.IsDraggedItemPaletteWidget())
+        if (FormDesigner.IsDraggedItemPaletteWidget())//从工具箱中拖动的
         {
             // you are trying to drag and drop a new widget from Palette
             var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
@@ -251,7 +259,11 @@
             throw new NotImplementedException();
         }
     }
-
+    /// <summary>
+    /// 移除拖动添加控件的样式
+    /// </summary>
+    /// <param name="elementId"></param>
+    /// <returns></returns>
     private async Task OnDropFinishedAsync(Guid elementId)
     {
         await JSRuntime.InvokeVoidAsync("formDesigner.utils.removeClassById",

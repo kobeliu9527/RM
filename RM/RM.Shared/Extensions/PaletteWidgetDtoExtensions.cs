@@ -13,6 +13,7 @@ namespace RM.Shared.Extensions
         {
             var componentData = new ComponentDto(paletteWidget.ComponentType);
             componentData.Props = paletteWidget.Props;
+            componentData.Id = $"{paletteWidget.ComponentType}-{DateTime.Now.ToString("F")}";
             return componentData;
         }
     }

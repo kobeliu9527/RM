@@ -1,87 +1,105 @@
 ﻿@using RM.Shared.Designer.FieldProperties.Properties
-<div class="fd-field-properties-panel h-100">
-    <div class="d-flex flex-row">
-        <div class="d-flex flex-column w-100 section-header">
-            <div class="section-header-title">
-                Field Properties(属性设置)
-            </div>
-        </div>
-    </div>
-    <div class="d-flex flex-row h-100 fd-scrollbar">
-        <div class="d-flex flex-column h-100 w-100 widget-properties-panel">
-            @{
-                ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
-                ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
-            }
 
-            @if (ComponentData != null)
-            {
-                @switch (ComponentData.Type)
-                {
-                    case ComponentType.Checkbox:
-                        <CheckboxProperties ComponentData="@ComponentData" />
-                        break;
-                    case ComponentType.DateTime:
-                        <DateTimeProperties ComponentData="@ComponentData" />
-                        break;
-                    case ComponentType.Email:
-                        <EmailProperties ComponentData="@ComponentData" />
-                        break;
-                    case ComponentType.File:
-                        <FileProperties ComponentData="@ComponentData" />
-                        break;
+<div class="fd-field-properties-panel h-100 ppp">
 
-                    case ComponentType.Link:
-                        <LinkProperties ComponentData="@ComponentData" />
-                        break;
-
-                    case ComponentType.MultiLine:
-                        <MultiLineProperties ComponentData="@ComponentData" />
-                        break;
-
-                    case ComponentType.Number:
-                        <NumberProperties ComponentData="@ComponentData" />
-                        break;
-
-                    case ComponentType.SingleLine:
-                        <SingelLineProperties ComponentData="@ComponentData" />
-                        break;
-
-                    case ComponentType.Tabs:
-                        <TabsProperties ComponentData="@ComponentData" />
-                        break;
-                    case ComponentType.Select:
-                        <SingelLineProperties ComponentData="@ComponentData" />
-                        break;
-                    default:
-                        throw new NotImplementedException();
+    <Tab>
+        <TabItem Text="控件属性">
+            @*<div class="fd-field-properties-panel h-100">*@
+            @*<div class="d-flex flex-row h-100 fd-scrollbar">*@
+            @*<div class="d-flex flex-column h-100 w-100 widget-properties-panel">*@
+            <ChildContent>
+                @*<div class="asdfsdfafdsf"> 解决不铺满*@
+                @{
+                    ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
+                    ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
                 }
-            }
-            else if(ContainerData != null)
-            {
-                @switch (ContainerData.Type)
+
+                @if (ComponentData != null)
                 {
-                    case ContainerType.Base:
-                        // Do nothing
-                        break;
-                    case ContainerType.Tab:
-                        <TabProperties Container="@ContainerData" />
-                        break;
-                    default:
-                        throw new NotImplementedException();
+                    @switch (ComponentData.Type)
+                    {
+                        case ComponentType.Checkbox:
+                            <CheckboxProperties ComponentData="@ComponentData" />
+                            break;
+                        case ComponentType.DateTime:
+                            <DateTimeProperties ComponentData="@ComponentData" />
+                            break;
+                        case ComponentType.Email:
+                            <EmailProperties ComponentData="@ComponentData" />
+                            break;
+                        case ComponentType.File:
+                            <FileProperties ComponentData="@ComponentData" />
+                            break;
+
+                        case ComponentType.Link:
+                            <LinkProperties ComponentData="@ComponentData" />
+                            break;
+
+                        case ComponentType.MultiLine:
+                            <MultiLineProperties ComponentData="@ComponentData" />
+                            break;
+
+                        case ComponentType.Number:
+                            <NumberProperties ComponentData="@ComponentData" />
+                            break;
+
+                        case ComponentType.SingleLine:
+                            <SingelLineProperties ComponentData="@ComponentData" />
+                            break;
+
+                        case ComponentType.Tabs:
+                            ;
+                            @*<TabProperties Container="@ContainerData" />*@
+                            break;
+                        case ComponentType.Select:
+                            <SingelLineProperties ComponentData="@ComponentData" />
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
                 }
-            }
-            else
-            {
-                <div class="h-100 w-100">
-                    Select an element on the whiteboard, then set its properties here
-                    <br/>
-                    选中一个控件,然后在此处设置他的属性
-                </div>
-            }
-        </div>
-    </div>
+                else if (ContainerData != null)
+                {
+                    @switch (ContainerData.Type)
+                    {
+                        case ContainerType.Base://嵌套的第一个Tab,父级Tab
+                            // Do nothing
+                            @*<TabProperties Container="@ContainerData" />*@
+                            break;
+                        case ContainerType.Tab://添加Tab中的一个tab页面时候,点击一个tab的时候
+                            <TabsProperties Container="@ContainerData" />
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+                else
+                {
+                    <div class="h-100 w-100">
+                        Select an element on the whiteboard, then set its properties here
+                        <br />
+                        选中一个控件,然后在此处设置他的属性
+                    </div>
+                }
+                @*</div>*@
+            </ChildContent>
+
+            @*</div>*@
+            @*</div>*@
+
+        </TabItem>
+        <TabItem Text="菜单管理">
+            <div>菜单管理</div>
+        </TabItem>
+        <TabItem Text="角色">
+            <div class="fd-field-properties-panel h-100">角色</div>
+        </TabItem>
+    </Tab>
+
 </div>
+
+
+
 
 @code {
     [CascadingParameter(Name = "FormDesigner")]

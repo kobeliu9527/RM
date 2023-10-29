@@ -46,7 +46,7 @@ formDesigner.utils.removeClass = function (element, classList) {
         element.classList.remove(classArr[i]);
     }
 }
-
+//移除拖动添加控件的样式
 formDesigner.utils.removeClassById = function (elementId, classList) {
     let element = document.getElementById(elementId);
     if (element === null || element === {} || element === undefined) {

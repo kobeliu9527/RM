@@ -18,7 +18,6 @@
                            OnClickCallback="@(async (e) =>
                            await SelectContainerAsync(ContainerData))" />
             </div>
-
             <div class="d-flex flex-column">
                 <FieldPropertiesPanel />
             </div>
@@ -63,19 +62,18 @@
     /// </summary>
     private ContainerDto DraggedComponentOriginContainer = null;
     /// <summary>
-    /// 点击容器后会触发,实际点击行也会触发
+    /// 点击容器后会触发,实际就是给SelectedContainer赋值!(实际点击行也会触发)
     /// </summary>
     /// <param name="containerData"></param>
     /// <returns></returns>
-    public async Task SelectContainerAsync(ContainerDto containerData)
+    public async Task SelectContainerAsync(ContainerDto? containerData)
     {
         SelectedContainer = containerData;
         SelectedComponent = null;
         await StateHasChangedAsync();
     }
-    public async Task<ContainerDto> GetSelectedContainerAsync()
+    public async Task<ContainerDto?> GetSelectedContainerAsync()
     {
-
         return await Task.FromResult(SelectedContainer);
     }
     public bool IsSelectedContainer(ContainerDto containerData)
@@ -87,7 +85,7 @@
     /// </summary>
     /// <param name="componentData"></param>
     /// <returns></returns>
-    public async Task SelectComponentAsync(ComponentDto componentData)
+    public async Task SelectComponentAsync(ComponentDto? componentData)
     {
         SelectedComponent = componentData;
         SelectedContainer = null;

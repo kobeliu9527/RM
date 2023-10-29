@@ -41,3 +41,7 @@
     padding-right: 8px;
     padding-left: 8px;
 }
+.ppp .tabs .tabs-body {
+    padding: 0px;
+    flex: 1
+}

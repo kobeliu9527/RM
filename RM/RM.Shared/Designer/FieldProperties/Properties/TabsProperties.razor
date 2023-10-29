@@ -1,28 +1,34 @@
-﻿@inherits PropertiesComponentBase
-
-<form class="d-flex flex-column" novalidate>
+﻿<form class="d-flex flex-column" novalidate>
     <div class="prop-group-box">
         <div class="box-header">Defaults</div>
         <div class="padding-8">
             <div class="form-group">
-                <label for="@ComponentData.Id-width"
+                <label for="@Container.Id-label"
                        class="col-form-label">
-                    Width
+                    Label
                 </label>
-                <input id="@ComponentData.Id-width"
+                <input id="@Container.Id-label"
                        class="form-control"
-                       type="number"
-                       min="1"
-                       max="@ComponentUtils.MaxColumnWidth"
+                       type="text"
                        required
-                       value="@ComponentData.Width"
-                       @oninput="OnWidthChangedAsync" />
+                       value="@Container.Label"
+                @oninput="OnLabelChangedAsync" />
             </div>
         </div>
     </div>
 </form>
 
-
 @code {
+    [CascadingParameter(Name = "FormDesigner")]
+    public FormDesigner FormDesigner { get; set; }
 
+    [Parameter]
+    public ContainerDto Container { get; set; }
+
+    public async Task OnLabelChangedAsync(ChangeEventArgs e)
+    {
+        Container.Label = e.Value.ToString();
+
+        await FormDesigner.StateHasChangedAsync();
+    }
 }

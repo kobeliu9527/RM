@@ -9,7 +9,7 @@
                         ShowLabel="@(Component.ShowLabel)"
                         OnEnterAsync="OnEnterAsync"
                         OnValueChanged="OnValueChanged"
-                        Id="@(string.IsNullOrEmpty(Component.Name)?"aa":Component.Name)"
+                        Id="@(Component.Id)"
                         Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].Value):Color.Danger)"
                         @bind-Value="@(Component.ValueInfo.StringValue)"></BootstrapInput>
     }

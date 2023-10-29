@@ -1,5 +1,8 @@
-﻿using RM.Shared.Core;
+﻿using BootstrapBlazor.Components;
+using RM.Shared.Core;
 using RM.Shared.Extensions;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace RM.Shared.Models
 {
@@ -8,7 +11,9 @@ namespace RM.Shared.Models
     /// </summary>
     public class ComponentDto
     {
+
         #region Public Constructors
+
         /// <summary>
         /// 
         /// </summary>
@@ -44,18 +49,21 @@ namespace RM.Shared.Models
         #region 属性
 
         /// <summary>
-        /// 
+        /// 唯一值
         /// </summary>
-        public Guid Id { get;  set; }
+        [DisplayName("页面唯一标识"),Required(ErrorMessage ="控件的名字,必须全局唯一")]
+        public string Id { get;  set; }
 
+  
         /// <summary>
-        /// 页面唯一名字
+        /// 外观颜色
         /// </summary>
-        public string Name { get;  set; } = "";
+        [DisplayName("外观颜色")]
+        public Color Color { get; set; }
+        /// <summary>
+        /// 控件的类型,用于区分是文本框还是下拉框等等--  
+        /// </summary>
 
-        /// <summary>
-        /// 控件的类型,用于区分是文本框还是下拉框等等
-        /// </summary>
         public ComponentType Type { get; set; }
 
         ///// <summary>
@@ -71,22 +79,22 @@ namespace RM.Shared.Models
         /// <summary>
         /// 是否显示前置标签
         /// </summary>
-        public bool ShowLabel { get; set; }
+        [DisplayName("是否显示标题")] public bool ShowLabel { get; set; } = true;
 
         /// <summary>
         /// 是否禁用
         /// </summary>
-        public bool IsDisabled { get; set; }
+        [DisplayName("是否禁用")] public bool IsDisabled { get; set; }
 
         /// <summary>
         /// 是否自动获取焦点
         /// </summary>
-        public bool IsAutoFocus { get; set; }
+        [DisplayName("是否自动获取焦点")] public bool IsAutoFocus { get; set; }
 
         /// <summary>
         /// 获得焦点后自动选择输入框内所有字符串
         /// </summary>
-        public bool IsSelectAllTextOnFocus { get; set; }
+        [DisplayName("是否默认选中所有文本")] public bool IsSelectAllTextOnFocus { get; set; }=true;
 
         /// <summary>
         /// 控件的属性
@@ -103,11 +111,17 @@ namespace RM.Shared.Models
         /// 前置标签显示文本(应该支持多语言显示)
         /// </summary>
         public string? DisplayText { get; set; }
-
+        /// <summary>
+        /// 如果这个组件是容器组件,那么他还有子组件
+        /// </summary>
         public List<ContainerDto>? ChildContainers { get; set; }
         /// <summary>
         /// 宽,参考bootstarp中设计,1-12
         /// </summary>
+        /// <remarks>
+        ///<para><see cref="ComponentUtils.GetComponentColumnCssClasses"/>方法,根据组件的with计算大小</para>
+        /// </remarks>
+        [DisplayName("宽度:参考bootstarp中设计,值范围1-12")]
         public int Width
         {
             get { return width; }
@@ -130,6 +144,10 @@ namespace RM.Shared.Models
         /// <summary>
         /// 小于等于0,会被转换为auto
         /// </summary>
+        /// <remarks>
+        ///<para>如果大于0,会转换为带px的像素,否则auto</para>
+        /// </remarks>
+        [DisplayName("高度:0表示系统自动,否则就是对应像素")]
         public int Height
         {
             get { return height; }
@@ -146,8 +164,8 @@ namespace RM.Shared.Models
         internal void InitializeComponent(ComponentType type)
         {
             Type = type;
-            DisplayText = $"{Type.GetName()}-{Guid.NewGuid()}";
-
+            //DisplayText = $"{Type.GetName()}-{Guid.NewGuid()}";
+            MutLanguage.zh_CN = $"{Type.GetName()}";
             if (Type == ComponentType.Tabs)
             {
                 ChildContainers = new List<ContainerDto>()
@@ -161,6 +179,7 @@ namespace RM.Shared.Models
         }
 
         #endregion Internal 方法
+
     }
 
     /// <summary>
@@ -168,6 +187,7 @@ namespace RM.Shared.Models
     /// </summary>
     public class ValueInfo
     {
+
         #region 属性
 
         /// <summary>
@@ -188,5 +208,6 @@ namespace RM.Shared.Models
         public double DoubleValue { get; set; }
 
         #endregion 属性
+
     }
 }

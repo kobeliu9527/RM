@@ -29,26 +29,38 @@ namespace RM.Shared.Models
         /// <returns></returns>
         public string GetLanguage()
         {
+            string res = "";
             switch (Global.Language)
             {
                 case MutLanguageEnum.中文:
-                    return zh_CN == null ? "??" : zh_CN;
+                    res = zh_CN == null ? "" : zh_CN;
+                    break;
                 case MutLanguageEnum.中文繁体:
-                    return zh_TW == null ? "??" : zh_TW;
+                    res = zh_TW == null ? "" : zh_TW;
+                    break;
                 case MutLanguageEnum.英文:
-                    return en_US == null ? "??" : en_US;
+                    res = en_US == null ? "" : en_US;
+                    break;
                 case MutLanguageEnum.日文:
-                    return ja_JP == null ? "??" : ja_JP;
+                    res = ja_JP == null ? "" : ja_JP;
+                    break;
                 case MutLanguageEnum.泰文:
-                    return th_TH == null ? "??" : th_TH; ;
+                    res = th_TH == null ? "" : th_TH;
+                    break;
                 case MutLanguageEnum.法文:
-                    return fr_FR == null ? "??" : fr_FR; ;
+                    res = fr_FR == null ? "" : fr_FR;
+                    break;
                 case MutLanguageEnum.德文:
-                    return zh_CN == null ? "??" : zh_CN;
+                    res = zh_CN == null ? "" : zh_CN;
+                    break;
                 default:
                     break;
             }
-            return "??";
+            if (string.IsNullOrWhiteSpace(res))
+            {
+                //todo 后续根据中文或者英文为key,查询出对应的语言
+            }
+            return res;
         }
 
 
