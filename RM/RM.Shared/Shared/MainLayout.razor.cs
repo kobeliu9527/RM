@@ -45,7 +45,8 @@ namespace RM.Shared.Shared
             new MenuItem() { Text = "Table", Icon = "fa-solid fa-fw fa-table", Url = "table" },
             new MenuItem() { Text = "花名册", Icon = "fa-solid fa-fw fa-users", Url = "users" },
             new MenuItem() { Text = "设计器", Icon = "fa-solid fa-fw fa-users", Url = "designer" },
-            new MenuItem() { Text = "运行时", Icon = "fa-solid fa-fw fa-users", Url = "runing" }
+            new MenuItem() { Text = "运行时", Icon = "fa-solid fa-fw fa-users", Url = "runing" },
+            new MenuItem() { Text = "运行时2", Icon = "fa-solid fa-fw fa-users", Url = "runing2" }
         };
 
             return menus;

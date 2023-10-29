@@ -16,3 +16,6 @@
     right: 0.75rem;
     top: 0.5rem;
 }
+.tabs-body:has(.qqqqqq) {
+    padding:0px;
+}
