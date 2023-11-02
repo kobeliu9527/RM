@@ -51,8 +51,11 @@
                         case ComponentType.Select:
                             <SingelLineProperties ComponentData="@ComponentData" />
                             break;
+                        case ComponentType.Table:
+                            <SingelLineProperties ComponentData="@ComponentData" />
+                            break;
                         default:
-                            throw new NotImplementedException();
+                            throw new NotImplementedException("为设置属性");
                     }
                 }
                 else if (ContainerData != null)

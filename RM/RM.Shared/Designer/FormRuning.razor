@@ -57,7 +57,7 @@
         SelectedComponent = null;
         await StateHasChangedAsync();
     }
-    public async Task<ContainerDto> GetSelectedContainerAsync()
+    public async Task<ContainerDto?> GetSelectedContainerAsync()
     {
 
         return await Task.FromResult(SelectedContainer);
@@ -73,7 +73,7 @@
         SelectedContainer = null;
         await StateHasChangedAsync();
     }
-    public async Task<ComponentDto> GetSelectedComponentAsync()
+    public async Task<ComponentDto?> GetSelectedComponentAsync()
     {
         return await Task.FromResult(SelectedComponent);
     }
@@ -98,7 +98,7 @@
     /// 返回工具箱中正在被拖动的项
     /// </summary>
     /// <returns></returns>
-    public async Task<PaletteWidgetDto> GetDraggedPaletteWidgetAsync()
+    public async Task<PaletteWidgetDto?> GetDraggedPaletteWidgetAsync()
     {
         return await Task.FromResult(DraggedPaletteWidget);
     }

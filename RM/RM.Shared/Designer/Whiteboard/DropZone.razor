@@ -1,6 +1,6 @@
 ﻿@inject IJSRuntime JSRuntime
 
-<div id="@leftDropZoneId"
+<div id="@leftDropZoneId" 
      class="dropZone"
      ondragover="event.preventDefault();"
      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
@@ -12,7 +12,7 @@
                 })"
      @ondrop:preventDefault="true">
 </div>
-<div id="@rightDropZoneId"
+<div id="@rightDropZoneId" 
      class="dropZone dropZone--right"
      ondragover="event.preventDefault();"
      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"

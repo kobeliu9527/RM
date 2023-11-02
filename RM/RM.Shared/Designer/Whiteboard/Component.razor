@@ -57,6 +57,9 @@
                 case ComponentType.Select:
                     <SelectComp Component="@ComponentData" />
                     break;
+                case ComponentType.Table:
+                    <DataGridViewComp Component="@ComponentData" />
+                    break;
                 case ComponentType.Tabs:
                     <TabsComp ComponentData="@ComponentData"
                               ComponentRow="@ComponentRow"
@@ -67,7 +70,7 @@
                     throw new NotImplementedException(@$"ComponentType: '{ComponentData?.Type}' is not implemented");
             }
         </div>
-      
+
         @if (ComponentData?.Type != ComponentType.Tabs)
         {
             //用于拖拽时候
@@ -75,31 +78,48 @@
                       ComponentRow="@ComponentRow"
                       ComponentIndex="@ComponentIndex"
                       ComponentData="@ComponentData" />
-
         }
 
     </div>
 </div>
 
 @code {
+    /// <summary>
+    /// 整个设计界面
+    /// </summary>
+    [NotNull]
     [CascadingParameter(Name = "FormDesigner")]
-    public FormDesigner FormDesigner { get; set; }
-
+    public FormDesigner? FormDesigner { get; set; }
+    /// <summary>
+    /// 父级容器
+    /// </summary>
     [Parameter]
-    public ContainerDto Container { get; set; }
+    public ContainerDto? Container { get; set; }
 
+    /// <summary>
+    /// 组件的数据
+    /// </summary>
     [Parameter]
-    public ComponentDto ComponentData { get; set; }
+    public ComponentDto? ComponentData { get; set; }
 
+    /// <summary>
+    /// 这个组件所在的行
+    /// </summary>
     [Parameter]
-    public List<ComponentDto> ComponentRow { get; set; }
-
+    public List<ComponentDto>? ComponentRow { get; set; }
+    /// <summary>
+    /// 表示他是这一行中第几的一个组件
+    /// </summary>
     [Parameter]
     public int ComponentIndex { get; set; }
 
     [Parameter]
     public string Class { get; set; }
 
+    /// <summary>
+    /// 设置本组件为FormDesigner中被选中的控件,并且刷新界面
+    /// </summary>
+    /// <returns></returns>
     private async Task SelectComponentAsync()
     {
         await FormDesigner.SelectComponentAsync(ComponentData);

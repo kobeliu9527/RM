@@ -98,15 +98,15 @@ namespace RM.Shared.Models
         /// </summary>
         public Dictionary<string, Property> Props { get; set; } = new();
         /// <summary>
-        /// 
+        /// 回车后是否执行存储过程
         /// </summary>
         [DisplayName("回车后是否执行存储过程")] public bool IsExecuteForEnter { get; set; }
         /// <summary>
-        /// 
+        /// 要执行的存储过程名
         /// </summary>
         [DisplayName("要执行的存储过程名")] public string StoreName { get; set; } = "";
         /// <summary>
-        /// 
+        /// 执行存储过程需要的参数
         /// </summary>
         [DisplayName("执行存储过程需要的参数")] public List<string> Parameters { get; set; } = new();
        

@@ -46,6 +46,9 @@
                 case ComponentType.Select:
                     <SelectComp Component="@ComponentData" />
                     break;
+                case ComponentType.Table:
+                    <DataGridViewComp Component="@ComponentData" />
+                    break;
                 case ComponentType.Tabs:
                     <TabsCompRuning ComponentData="@ComponentData"
                                     ComponentRow="@ComponentRow"

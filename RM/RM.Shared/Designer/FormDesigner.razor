@@ -95,7 +95,12 @@
     {
         return await Task.FromResult(SelectedComponent);
     }
-    public bool IsSelectedComponent(ComponentDto component)
+    /// <summary>
+    /// 判断一个组件是否处于被选中的状态
+    /// </summary>
+    /// <param name="component"></param>
+    /// <returns></returns>
+    public bool IsSelectedComponent(ComponentDto? component)
     {
         return SelectedComponent != null && SelectedComponent == component;
     }

@@ -18,7 +18,8 @@ namespace RM.Shared.Models
         Image = 8,
         Choice = 9,
         Tabs = 10,
-        Select=11
+        Select=11,
+        Table
     }
 
     public static class ComponentTypeExtensions

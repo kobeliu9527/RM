@@ -3,15 +3,6 @@
 
 @*<form>*@
     <div class="form-group">
-        @*    <label for="@Component.Id"
-        class="col-form-label">
-        @Component.Label
-        </label>
-        <div class="justify-content-start">
-        <input id="@Component.Id"
-        type="checkbox"
-        class="form-control" />
-        </div>*@
         <Checkbox TValue="bool" DisplayText="@(Component.Props.ContainsKey("DisplayText")?Component.Props["DisplayText"].StringValue.ToString():"文本框")"
                   ShowLabel="@(Component.Props.ContainsKey("ShowLabel")?Convert.ToBoolean(Component.Props["ShowLabel"].StringValue):true)" class="form-control"
                   Id="@Component.Id.ToString()"

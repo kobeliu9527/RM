@@ -14,7 +14,6 @@
         @foreach (var tabContainer in TabContainerList)
         {
             var activeTabClass = IsTabOpened(tabContainer) ? "active" : "";
-
             <li class="nav-item">
                 <a class="nav-link d-flex flex-row clickable @activeTabClass"
                 @onclick="@(async () => await OpenTabAsync(tabContainer))"
@@ -70,19 +69,37 @@
 
 @code {
     [CascadingParameter(Name = "FormDesigner")]
-    public FormDesigner FormDesigner { get; set; }
-
+    [NotNull]
+    public FormDesigner? FormDesigner { get; set; }
+    /// <summary>
+    /// 控件本身的数据
+    /// </summary>
     [Parameter]
-    public ComponentDto ComponentData { get; set; }
-
+    [NotNull]
+    public ComponentDto? ComponentData { get; set; }
+    /// <summary>
+    /// 这个组件所在的行
+    /// </summary>
     [Parameter]
-    public List<ComponentDto> ComponentRow { get; set; }
+    [NotNull]
+    public List<ComponentDto>? ComponentRow { get; set; }
 
+    /// <summary>
+    /// 对于一个容器控件,会有一个容器集合属性
+    /// </summary>
     [Parameter]
-    public List<ContainerDto> TabContainerList { get; set; }
-
+    [NotNull]
+    public List<ContainerDto>? TabContainerList { get; set; }
+    /// <summary>
+    /// 处于被激活的容器
+    /// </summary>
     private ContainerDto ActiveTabContainer = null;
 
+    /// <summary>
+    /// 设置正在被激活的
+    /// </summary>ContainerDto
+    /// <param name="tabContainer"></param>
+    /// <returns></returns>
     private async Task OpenTabAsync(ContainerDto tabContainer)
     {
         ActiveTabContainer = tabContainer;
