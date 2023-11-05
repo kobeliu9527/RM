@@ -1,0 +1,60 @@
+﻿@inject IJSRuntime JSRuntime
+
+@page "/designer"
+@using Auto.Shared.Designer
+@layout BlankLayout
+@attribute [Authorize]
+
+<PageTitle>designer</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <div class="d-flex flex-column h-100 w-100">
+            <Button>adf</Button>
+            <div class="d-flex flex-row h-100">
+                wo shi shejiqi
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <CascadingValue Value="this" Name="Root">
+            <div class="d-flex flex-column h-100 w-100">
+                <div class="d-flex flex-row h-8">
+                    <Button>adf</Button>
+                </div>
+                <div class="d-flex flex-row h-100">
+                    <div class="border" style="width:100%">
+                        <Split Basis="90%">
+                            <FirstPaneTemplate>
+                                <Split Basis="15%">
+                                    <FirstPaneTemplate>
+                                        <div class="d-flex justify-content-center align-items-center h-100">
+                                            <PalettePanel></PalettePanel>
+                                        </div>
+                                    </FirstPaneTemplate>
+                                    <SecondPaneTemplate>
+                                        <div class="d-flex justify-content-center align-items-center h-100">中间面板</div>
+                                    </SecondPaneTemplate>
+                                </Split>
+                            </FirstPaneTemplate>
+                            <SecondPaneTemplate>
+                                <div class="d-flex justify-content-center align-items-center h-100">
+                                    <FieldPropertiesPanel />
+                                </div>
+                            </SecondPaneTemplate>
+                        </Split>
+                    </div>
+                </div>
+            </div>
+        </CascadingValue>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
+
+
+
+
+
+

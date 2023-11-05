@@ -14,7 +14,9 @@ namespace RM.Shared.Models
     public class FunctionPage: EntityBase
     {
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         [SqlSugar.SugarColumn(IsJson =true, ColumnDataType = "nvarchar(max)")]
         public ContainerDto? ContainerData { get; set; }
     }

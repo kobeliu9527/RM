@@ -22,50 +22,45 @@
                     var currentComponent = currentRow[componentIndex];
                     string componentColumnWidth =
                     ComponentUtils.GetComponentColumnCssClasses(currentComponent);
-
-                    <div class="draggable  @componentColumnWidth">
-                        @*<CascadingValue Value="this" Name="Container">*@
+                    @if (currentComponent.IsAbsPosition)
+                    {
+                        //z-index:@(currentComponent.Zindex)
+                        <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;"
+                             draggable="true">
+                            <CascadingValue Value="this" Name="Container">
+                                <ComponentRuning ComponentData="@currentComponent"
+                                           ComponentRow="@currentRow"
+                                           ComponentIndex="@currentComponentIndex" />
+                            </CascadingValue>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="draggable  @componentColumnWidth">
+                            @*<CascadingValue Value="this" Name="Container">*@
                             <ComponentRuning ComponentData="@currentComponent"
                                              ComponentRow="@currentRow"
                                              ComponentIndex="@currentComponentIndex" />
-                        @*</CascadingValue>*@
-                    </div>
+                            @*</CascadingValue>*@
+                        </div>
+
+                    }
+
                 }
-
-               @* @{
-                    int rowSize = CalculateRowSize(currentRow);
-                }*@
-
-         @*       @if (rowSize < ComponentUtils.MaxColumnWidth)
-                {
-                    int columnSize = ComponentUtils.MaxColumnWidth - rowSize;
-                    Guid divId = Guid.NewGuid();
-                    <div id="@divId"
-                         class="widget-placeholder drop-container col-@columnSize d-flex justify-content-center text-center"
-                         data-col="@columnSize">
-                    </div>
-                }*@
-
             </div>
-
-        @*    @if (!ContainerData.IsEmpty())
-            {
-                Guid divId = Guid.NewGuid();
-                var isLastDropRow = currentRowIndex == ContainerData?.Rows.Count - 1 ? "dropRow--last" : "";
-              
-            }*@
         }
-
     </div>
 </div>
 
 @code {
-    [CascadingParameter(Name = "FormDesigner")]
-    public FormRuning FormDesigner { get; set; }
+    [CascadingParameter(Name = "Root")]
+    [NotNull]
+    public FormRuning? Root { get; set; }
     /// <summary>
     /// 跟容器数据
     /// </summary>
     [Parameter]
+    [NotNull]
     public ContainerDto? ContainerData { get; set; }
 
     private const string ComponentHighlighterCssClass = @"'component-element--hover'";
@@ -100,7 +95,7 @@
     private async Task DragComponentStartAsync(ComponentDto draggedItemData,
         List<ComponentDto> currentRow, ContainerDto currentContainer)
     {
-        await FormDesigner.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
+        await Root.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
     }
     /// <summary>
     /// 在拖动一行组件完成前
@@ -136,19 +131,19 @@
     private async Task DropComponentToEndOfRowAsync(ContainerDto containerData,
         List<ComponentDto> destinationRow)
     {
-        if (FormDesigner.IsDraggedItemPaletteWidget())
+        if (Root.IsDraggedItemPaletteWidget())
         {
             // you are trying to drag and drop a new widget from Palette
-            var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
+            var paletteWidgetData = await Root.GetDraggedPaletteWidgetAsync();
             var newComponentData = paletteWidgetData.CreateComponent();
             await AddComponentToRowAsync(newComponentData, destinationRow);
-            await FormDesigner.SelectComponentAsync(newComponentData);
+            await Root.SelectComponentAsync(newComponentData);
         }
-        else if (FormDesigner.IsDraggedItemComponent())
+        else if (Root.IsDraggedItemComponent())
         {
             // you are trying to drag and drop a widget already defined in whiteboard
-            var componentData = await FormDesigner.GetDraggedComponentDataAsync();
-            var originRow = await FormDesigner.GetDraggedComponentOriginRowAsync();
+            var componentData = await Root.GetDraggedComponentDataAsync();
+            var originRow = await Root.GetDraggedComponentOriginRowAsync();
 
             // de-attach widget from its previous position in origin row
             await DetachComponentFromPreviousRowAsync(componentData, originRow);
@@ -160,12 +155,12 @@
 
             if (originRow.Count == 0)
             {
-                var originContainer = await FormDesigner.GetDraggedComponentOriginContainerAsync();
+                var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
                 originContainer.Rows.Remove(originRow);
                 originRow = null;
             }
 
-            await FormDesigner.SelectComponentAsync(componentData);
+            await Root.SelectComponentAsync(componentData);
         }
         else
         {
@@ -199,12 +194,12 @@
     private async Task DetachComponentFromPreviousRowAsync(ComponentDto componentData,
         List<ComponentDto> destinationRow)
     {
-        var originRow = await FormDesigner.GetDraggedComponentOriginRowAsync();
+        var originRow = await Root.GetDraggedComponentOriginRowAsync();
 
         // remove component from origin row
         originRow.Remove(componentData);
 
-        var originContainer = await FormDesigner.GetDraggedComponentOriginContainerAsync();
+        var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
 
         if (destinationRow?.Count == 0 && destinationRow != originRow)
         {
@@ -216,7 +211,7 @@
             await originContainer.RemoveRowAsync(originRow);
         }
 
-        await FormDesigner.SelectComponentAsync(null);
+        await Root.SelectComponentAsync(null);
     }
 
     /// <summary>

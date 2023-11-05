@@ -18,7 +18,7 @@ namespace RM.Shared.Designer.Whiteboard.Components
         /// <summary>
         /// 表示跟页面
         /// </summary>
-        [CascadingParameter(Name = "FormDesigner")]
+        [CascadingParameter(Name = "Root")]
         public FormRuning? FormDesigner { get; set; }
         /// <summary>
         /// 组件基类

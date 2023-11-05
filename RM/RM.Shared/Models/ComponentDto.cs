@@ -11,6 +11,7 @@ namespace RM.Shared.Models
     /// </summary>
     public class ComponentDto
     {
+
         #region Public Constructors
 
         /// <summary>
@@ -126,7 +127,13 @@ namespace RM.Shared.Models
         /// 如果这个组件是容器组件,那么他还有子组件
         /// </summary>
         public List<ContainerDto>? ChildContainers { get; set; }
-
+        /// <summary>
+        /// shifou
+        /// </summary>
+        public bool IsAbsPosition { get; set; }
+        public int Zindex { get; set; }
+        public int Top { get; set; }
+        public int Left { get; set; }
         /// <summary>
         /// 宽,参考bootstarp中设计,1-12
         /// </summary>
@@ -192,12 +199,14 @@ namespace RM.Shared.Models
         }
 
         #endregion Internal 方法
+
     }
 
     /// <summary>
     /// </summary>
     public class ValueInfo
     {
+
         #region 属性
 
         /// <summary>
@@ -217,5 +226,6 @@ namespace RM.Shared.Models
         public double DoubleValue { get; set; }
 
         #endregion 属性
+
     }
 }

@@ -12,7 +12,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         {
         }
 
-        [CascadingParameter(Name = "FormDesigner")]
+        [CascadingParameter(Name = "Root")]
         public FormDesigner FormDesigner { get; set; }
 
         [Parameter]

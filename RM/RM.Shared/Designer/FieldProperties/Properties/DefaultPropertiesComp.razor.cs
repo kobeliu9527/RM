@@ -30,7 +30,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
 {
     public partial class DefaultPropertiesComp
     {
-        [CascadingParameter(Name = "FormDesigner")]
+        [CascadingParameter(Name = "Root")]
         public FormDesigner FormDesigner { get; set; }
         [Parameter]
         public ComponentDto? ComponentData { get; set; }

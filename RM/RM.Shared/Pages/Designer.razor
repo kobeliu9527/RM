@@ -38,8 +38,6 @@
             </ModalDialog>
         </Modal>
 
-
-
     </div>
 </div>
 
@@ -137,8 +135,11 @@
         //  FunctionPage page = new FunctionPage();
         // page.ContainerData = new ContainerDto(Rows);
         // var ssss=    db.Insertable(page).ExecuteCommand();
-        var ss2 = db.Queryable<FunctionPage>().ToList();
-        ContainerData = ss2[0].ContainerData;
+         var ss2 = db.Queryable<FunctionPage>().ToList();
+         ContainerData = ss2[0].ContainerData;
+        //ContainerData = new ContainerDto();
+        //ContainerData.Rows.Add(new List<ComponentDto>());
+        //ContainerData.Rows.Add(new List<ComponentDto>());
         //ContainerData = new ContainerDto(sss);
         await Task.CompletedTask;
     }

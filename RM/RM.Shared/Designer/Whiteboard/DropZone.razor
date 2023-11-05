@@ -31,7 +31,7 @@
     private readonly Guid leftDropZoneId = Guid.NewGuid();
     private readonly Guid rightDropZoneId = Guid.NewGuid();
 
-    [CascadingParameter(Name = "FormDesigner")]
+    [CascadingParameter(Name = "Root")]
     public FormDesigner? FormDesigner { get; set; }
 
     [Parameter]

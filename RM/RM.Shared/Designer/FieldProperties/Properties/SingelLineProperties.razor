@@ -36,6 +36,19 @@
                                     </div>
                                  </EditTemplate>
                             </EditorItem>
+                             <EditorItem @bind-Field="@context">
+                                   <EditTemplate Context="value">
+                                    <Collapse>
+                                        <CollapseItems>
+                                            <CollapseItem Text="外观参数">
+                                                <BootstrapInputNumber @bind-Value="value.Width" Max="12" Min="1" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+
+                                            </CollapseItem>
+                                        </CollapseItems>
+                                    </Collapse>
+                                   </EditTemplate>
+                             </EditorItem>
                             <EditorItem @bind-Field="@context.Width">
                                 <EditTemplate Context="value">
                                     <BootstrapInputNumber @bind-Value="value.Width" Max="12" Min="1" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
@@ -44,6 +57,26 @@
                             <EditorItem @bind-Field="@context.Height">
                                 <EditTemplate Context="value">
                                     <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.IsAbsPosition">
+                                <EditTemplate Context="value">
+                                    <Switch @bind-Value="value.IsAbsPosition" OnValueChanged="OnValueChangedForBool"></Switch>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Top">
+                                <EditTemplate Context="value">
+                                    <BootstrapInputNumber @bind-Value="value.Top"  ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Left">
+                                <EditTemplate Context="value">
+                                    <BootstrapInputNumber @bind-Value="value.Left" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Zindex">
+                                <EditTemplate Context="value">
+                                    <BootstrapInputNumber @bind-Value="value.Zindex" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
                                 </EditTemplate>
                             </EditorItem>
                             <EditorItem @bind-Field="@context.Color">
@@ -125,7 +158,7 @@
     [NotNull]
     private Modal? Modal { get; set; }
 
-    [CascadingParameter(Name = "FormDesigner")]
+    [CascadingParameter(Name = "Root")]
     public FormDesigner? FormDesigner { get; set; }
 
     [Parameter]
@@ -234,7 +267,7 @@
         return Task.CompletedTask;
     }
     /// <summary>
-    /// 当设置控件的Id属性的时候
+    /// 仅仅是手动触发界面刷新
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>
@@ -252,7 +285,7 @@
         await FormDesigner.StateHasChangedAsync();
     }
     /// <summary>
-    /// 当设置控件外观颜色的时候
+    /// 仅仅是手动触发界面刷新
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>

@@ -13,7 +13,7 @@
         @if (isSelectedComponent)
         {
             <ComponentMover Component="@ComponentData"
-                            ComponentsInParentRow="ComponentRow" />
+                            ComponentsInParentRow="@ComponentRow" />
 
         }
         @{
@@ -73,6 +73,7 @@
 
         @if (ComponentData?.Type != ComponentType.Tabs)
         {
+            var ss = @Container;
             //用于拖拽时候
             <DropZone Container="@Container"
                       ComponentRow="@ComponentRow"
@@ -88,7 +89,7 @@
     /// 整个设计界面
     /// </summary>
     [NotNull]
-    [CascadingParameter(Name = "FormDesigner")]
+    [CascadingParameter(Name = "Root")]
     public FormDesigner? FormDesigner { get; set; }
     /// <summary>
     /// 父级容器

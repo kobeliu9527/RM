@@ -17,7 +17,7 @@ namespace RM.Shared.Designer.Palette
         /// <summary>
         /// 由3部分组成,左侧工具箱,中间设计器,右侧属性栏
         /// </summary>
-        [CascadingParameter(Name = "FormDesigner")]
+        [CascadingParameter(Name = "Root")]
         public FormDesigner FormDesigner { get; set; }
 
         /// <summary>

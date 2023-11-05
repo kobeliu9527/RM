@@ -3,9 +3,9 @@
 <div class="container-wrapper"
      onmouseover="formDesigner.highlihter.activate(event, @ComponentHighlighterCssClass)">
     <div class="widget-wrapper"
-         @onclick="OnClickCallback"
-         @onclick:preventDefault="true"
-         @onclick:stopPropagation="true"
+    @onclick="OnClickCallback"
+    @onclick:preventDefault="true"
+    @onclick:stopPropagation="true"
          onmouseout="formDesigner.highlihter.deactivate(event, @ComponentHighlighterCssClass)">
 
         @for (int rowIndex = 0; rowIndex < ContainerData?.Rows.Count; rowIndex++)
@@ -21,23 +21,23 @@
                      ondragover="event.preventDefault();"
                      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
                      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-                     @ondrop="@(async (e) =>
+                @ondrop="@(async (e) =>
                                 {
                                     await DropComponentBeforeRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
                                 })"
-                     @ondrop:preventDefault="true">
+                @ondrop:preventDefault="true">
                 </div>
             }
 
             bool isMoveRowUpVisible = IsMoveRowUpVisible(currentRow);
             bool isMoveRowDownVisible = IsMoveRowDownVisible(currentRow);
             bool isRowElement = isMoveRowUpVisible ||
-                isMoveRowDownVisible ||
-                ContainerData?.Rows.Count > 0;
+            isMoveRowDownVisible ||
+            ContainerData?.Rows.Count > 0;
             string rowElementClass = isRowElement ? "row-element" : "";
             string rowSeparatorClass = currentRowIndex == ContainerData.Rows.Count - 1 ?
-                "row-separator" : "";
+            "row-separator" : "";
 
             <div class="row row-builder @rowElementClass @rowSeparatorClass">
 
@@ -72,20 +72,38 @@
                     var currentComponentIndex = componentIndex;
                     var currentComponent = currentRow[componentIndex];
                     string componentColumnWidth =
-                        ComponentUtils.GetComponentColumnCssClasses(currentComponent);
-
-                    <div class="draggable  @componentColumnWidth"
-                         draggable="true"
-                         @ondragstart="@(async () =>
+                    ComponentUtils.GetComponentColumnCssClasses(currentComponent);
+                    @if (currentComponent.IsAbsPosition)
+                    {
+                        //z-index:@(currentComponent.Zindex)
+                        <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;"
+                             draggable="true"
+                        @ondragstart="@(async () =>
                                          {
                                              await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
                                          })">
-                        <CascadingValue Value="this" Name="Container">
-                            <Component ComponentData="@currentComponent"
-                                       ComponentRow="@currentRow"
-                                       ComponentIndex="@currentComponentIndex" />
-                        </CascadingValue>
-                    </div>
+                            <CascadingValue Value="this" Name="Container">
+                                <Component ComponentData="@currentComponent"
+                                           ComponentRow="@currentRow"
+                                           ComponentIndex="@currentComponentIndex" />
+                            </CascadingValue>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="draggable  @componentColumnWidth"
+                             draggable="true"
+                        @ondragstart="@(async () =>
+                                         {
+                                             await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
+                                         })">
+                            <CascadingValue Value="this" Name="Container">
+                                <Component ComponentData="@currentComponent"
+                                           ComponentRow="@currentRow"
+                                           ComponentIndex="@currentComponentIndex" />
+                            </CascadingValue>
+                        </div>
+                    }
                 }
 
                 @{
@@ -102,12 +120,12 @@
                          ondragover="event.preventDefault();"
                          ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
                          ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-                         @ondrop="@(async () =>
+                    @ondrop="@(async () =>
                                     {
                                         await DropComponentToEndOfRowAsync(ContainerData, currentRow);
                                         await OnDropFinishedAsync(divId);
                                     })"
-                         @ondrop:preventDefault="true">
+                    @ondrop:preventDefault="true">
                     </div>
                 }
 
@@ -122,16 +140,15 @@
                      ondragover="event.preventDefault();"
                      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, 'bo-dropzone-hover bo-drag-enter')"
                      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, 'bo-dropzone-hover bo-drag-enter')"
-                     @ondrop="@(async () =>
+                @ondrop="@(async () =>
                                 {
                                     await DropComponentAfterRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
                                 })"
-                     @ondrop:preventDefault="true">
+                @ondrop:preventDefault="true">
                 </div>
             }
         }
-
     </div>
 </div>
 

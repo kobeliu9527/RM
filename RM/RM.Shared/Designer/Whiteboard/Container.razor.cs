@@ -29,19 +29,19 @@ using System.Diagnostics.CodeAnalysis;
 namespace RM.Shared.Designer.Whiteboard
 {
     /// <summary>
-    /// 行容器,参考bootstarp设计
+    /// 行容器,参考bootstarp设计;他把自己整个传下去了,名字叫Container,用于删除他里面的控件
     /// </summary>
     public partial class Container
     {
         /// <summary>
         /// 每一个组件都应该有这个属性
         /// </summary>
-        [CascadingParameter(Name = "FormDesigner")]
+        [CascadingParameter(Name = "Root")]
         [NotNull]
-        public FormDesigner? FormDesigner { get; set; }
+        public FormDesigner? Root { get; set; }
 
         /// <summary>
-        /// SelectContainerAsync();赋值当前选中的容器
+        /// SelectContainerAsync();赋值当前选中的容器,早期逻辑,后期应该可以优化掉
         /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
@@ -82,7 +82,7 @@ namespace RM.Shared.Designer.Whiteboard
 #region Drag and Drop Methods
         private async Task DragComponentStartAsync(ComponentDto draggedItemData, List<ComponentDto> currentRow, ContainerDto currentContainer)
         {
-            await FormDesigner.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
+            await Root.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace RM.Shared.Designer.Whiteboard
         }
 
         /// <summary>
-        /// 在拖动一个控件,并且要放到一个新行的时候(后置伪元素)
+        /// 在拖动一个控件,并且要放到一个新行的时候(后置伪元素),会new一个新的行出来,并Insert到Rows中
         /// </summary>
         /// <param name = "rowIndex"></param>
         /// <param name = "currentContainer"></param>
@@ -121,19 +121,19 @@ namespace RM.Shared.Designer.Whiteboard
         /// <exception cref = "NotImplementedException"></exception>
         private async Task DropComponentToEndOfRowAsync(ContainerDto containerData, List<ComponentDto> destinationRow)
         {
-            if (FormDesigner.IsDraggedItemPaletteWidget()) //从工具箱中拖动的
+            if (Root.IsDraggedItemPaletteWidget()) //从工具箱中拖动的
             {
                 // you are trying to drag and drop a new widget from Palette
-                var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
+                var paletteWidgetData = await Root.GetDraggedPaletteWidgetAsync();
                 var newComponentData = paletteWidgetData.CreateComponent();
                 await AddComponentToRowAsync(newComponentData, destinationRow);
-                await FormDesigner.SelectComponentAsync(newComponentData);
+                await Root.SelectComponentAsync(newComponentData);
             }
-            else if (FormDesigner.IsDraggedItemComponent())
+            else if (Root.IsDraggedItemComponent())
             {
                 // you are trying to drag and drop a widget already defined in whiteboard
-                var componentData = await FormDesigner.GetDraggedComponentDataAsync();
-                var originRow = await FormDesigner.GetDraggedComponentOriginRowAsync();
+                var componentData = await Root.GetDraggedComponentDataAsync();
+                var originRow = await Root.GetDraggedComponentOriginRowAsync();
                 // de-attach widget from its previous position in origin row
                 await DetachComponentFromPreviousRowAsync(componentData, originRow);
                 // TODO: Check is component movable
@@ -141,12 +141,12 @@ namespace RM.Shared.Designer.Whiteboard
                 await AddComponentToRowAsync(componentData, destinationRow);
                 if (originRow.Count == 0)
                 {
-                    var originContainer = await FormDesigner.GetDraggedComponentOriginContainerAsync();
+                    var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
                     originContainer.Rows.Remove(originRow);
                     originRow = null;
                 }
 
-                await FormDesigner.SelectComponentAsync(componentData);
+                await Root.SelectComponentAsync(componentData);
             }
             else
             {
@@ -181,10 +181,10 @@ namespace RM.Shared.Designer.Whiteboard
 
         private async Task DetachComponentFromPreviousRowAsync(ComponentDto componentData, List<ComponentDto> destinationRow)
         {
-            var originRow = await FormDesigner.GetDraggedComponentOriginRowAsync();
+            var originRow = await Root.GetDraggedComponentOriginRowAsync();
             // remove component from origin row
             originRow.Remove(componentData);
-            var originContainer = await FormDesigner.GetDraggedComponentOriginContainerAsync();
+            var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
             if (destinationRow?.Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
@@ -195,7 +195,7 @@ namespace RM.Shared.Designer.Whiteboard
                 await originContainer.RemoveRowAsync(originRow);
             }
 
-            await FormDesigner.SelectComponentAsync(null);
+            await Root.SelectComponentAsync(null);
         }
 
         /// <summary>

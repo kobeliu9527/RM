@@ -1,9 +1,8 @@
 ﻿@inject IJSRuntime JSRuntime
 
-<CascadingValue Value="this" Name="FormDesigner">
+<CascadingValue Value="this" Name="Root">
     <div class="d-flex flex-column h-100 w-100">
         <div class="d-flex flex-row h-100 w-100">
-
             <div class="d-flex flex-column">
                 @if (LeftName == "Tbox")
                 {
@@ -30,7 +29,7 @@
     /// 左侧面板
     /// </summary>
     [Parameter]
-    public string LeftName { get; set; }
+    public string? LeftName { get; set; }
 
     /// <summary>
     /// 跟容器数据
@@ -50,7 +49,7 @@
     /// </summary>
     private PaletteWidgetDto? DraggedPaletteWidget = null;
     /// <summary>
-    /// 设计器中被拖动的项目
+    /// 设计器中被拖动的项目的Dto数据
     /// </summary>
     private ComponentDto? DraggedComponentData = null;
     /// <summary>
@@ -121,9 +120,17 @@
     /// 返回工具箱中正在被拖动的项
     /// </summary>
     /// <returns></returns>
-    public async Task<PaletteWidgetDto> GetDraggedPaletteWidgetAsync()
+    public async Task<PaletteWidgetDto?> GetDraggedPaletteWidgetAsync()
     {
         return await Task.FromResult(DraggedPaletteWidget);
+    }
+    /// <summary>
+    /// 拖动的是设计器中的组件实例:所有设计器中被拖动的Dto不为null,为工具箱中的Dto必须为null
+    /// </summary>
+    /// <returns></returns>
+    public bool IsDraggedItemComponent()
+    {
+        return DraggedComponentData != null && DraggedPaletteWidget == null;
     }
     /// <summary>
     /// 拖动的是工具箱中的组件
@@ -143,7 +150,7 @@
         DraggedPaletteWidget = null;
         await Task.CompletedTask;
     }
-    public async Task<ComponentDto> GetDraggedComponentDataAsync()
+    public async Task<ComponentDto?> GetDraggedComponentDataAsync()
     {
         return await Task.FromResult(DraggedComponentData);
     }
@@ -155,15 +162,11 @@
     {
         return await Task.FromResult(DraggedComponentOriginContainer);
     }
+  
     /// <summary>
-    /// 拖动的是设计器中的组件实例
+    /// 刷新整个页面
     /// </summary>
     /// <returns></returns>
-    public bool IsDraggedItemComponent()
-    {
-        return DraggedComponentData != null && DraggedPaletteWidget == null;
-    }
-
     public async Task StateHasChangedAsync()
     {
         StateHasChanged();
