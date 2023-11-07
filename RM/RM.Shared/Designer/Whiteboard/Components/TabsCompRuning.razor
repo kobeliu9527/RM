@@ -70,7 +70,8 @@
     {
         var newTabContainer = new ContainerDto(ContainerType.Tab)
             {
-                Label = @$"Tab {TabContainerList?.Count + 1}"
+                MutLanguage = new MutLanguage() { zh_CN = $"Tab {TabContainerList?.Count + 1}" }
+
             };
 
         TabContainerList.Add(newTabContainer);

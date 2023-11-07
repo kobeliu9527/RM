@@ -49,6 +49,10 @@ namespace RM.Shared.Models
         /// 属性值
         /// </summary>
         public string StringValue { get; set; } = "";
+        /// <summary>
+        /// 属性值
+        /// </summary>
+        public List<string> StringListValue { get; set; } = new();
         ///// <summary>
         ///// 
         ///// </summary>
@@ -94,7 +98,15 @@ namespace RM.Shared.Models
         /// <summary>
         /// 数据源
         /// </summary>
-        DataSourse
+        DataSourse,
+        /// <summary>
+        /// string集合
+        /// </summary>
+        StringList,
+        /// <summary>
+        /// 下拉选择框
+        /// </summary>
+        Select
     }
 }
 

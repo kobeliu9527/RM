@@ -19,11 +19,15 @@ namespace RM.Shared.Models
         Choice = 9,
         Tabs = 10,
         Select=11,
-        Table,
+        Table=12,
         /// <summary>
         /// 绝对定位容器控件
         /// </summary>
-        AbsPanel
+        AbsPanel=13,
+        /// <summary>
+        /// 按钮
+        /// </summary>
+        Button=14,
     }
 
     public static class ComponentTypeExtensions

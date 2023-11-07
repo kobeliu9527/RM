@@ -73,10 +73,12 @@
                     var currentComponent = currentRow[componentIndex];
                     string componentColumnWidth =
                     ComponentUtils.GetComponentColumnCssClasses(currentComponent);
+                    string h = "auto";
+                    h = currentComponent?.Height <= 0 ? "auto" : currentComponent?.Height + "px";
                     @if (currentComponent.IsAbsPosition)
                     {
                         //z-index:@(currentComponent.Zindex)
-                        <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;"
+                        <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;width:@h;"
                              draggable="true"
                         @ondragstart="@(async () =>
                                          {

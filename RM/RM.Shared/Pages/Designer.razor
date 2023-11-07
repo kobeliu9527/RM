@@ -135,8 +135,9 @@
         //  FunctionPage page = new FunctionPage();
         // page.ContainerData = new ContainerDto(Rows);
         // var ssss=    db.Insertable(page).ExecuteCommand();
-         var ss2 = db.Queryable<FunctionPage>().ToList();
-         ContainerData = ss2[0].ContainerData;
+        var ss2 = db.Queryable<FunctionPage>().ToList();
+        ContainerData = ss2[0].ContainerData;
+        ContainerData.MutLanguage.zh_CN = "根页面";
         //ContainerData = new ContainerDto();
         //ContainerData.Rows.Add(new List<ComponentDto>());
         //ContainerData.Rows.Add(new List<ComponentDto>());

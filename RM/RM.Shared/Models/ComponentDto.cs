@@ -3,6 +3,7 @@ using RM.Shared.Core;
 using RM.Shared.Extensions;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace RM.Shared.Models
 {
@@ -146,18 +147,11 @@ namespace RM.Shared.Models
             get { return width; }
             set
             {
-                if (value <= 0)
-                {
+              
                     width = 1;
-                }
-                else if (value > 12)
-                {
-                    width = 12;
-                }
-                else
-                {
+            
                     width = value;
-                }
+               
             }
         }
 
@@ -192,7 +186,8 @@ namespace RM.Shared.Models
                 {
                     new ContainerDto(ContainerType.Tab)
                     {
-                        Label = "Tab 1"
+                MutLanguage = new MutLanguage() { zh_CN = "Tab 1" }
+
                     }
                 };
             }
@@ -224,6 +219,7 @@ namespace RM.Shared.Models
         /// <summary>
         /// </summary>
         public double DoubleValue { get; set; }
+        public DataTable? DataTable { get; set; }
 
         #endregion 属性
 

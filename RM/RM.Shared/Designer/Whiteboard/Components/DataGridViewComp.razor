@@ -1,160 +1,373 @@
 ﻿@using System.Data;
+@inject IJSRuntime JSRuntime
 @inherits WidgetComponentBase
-@if (Component != null)
-{
-    <Table ShowToastAfterSaveOrDeleteModel="false" EditMode="EditMode.EditForm" TItem="DynamicObject" DynamicContext="DataTableDynamicContext" ModelEqualityComparer="ModelEqualityComparer"
-           IsMultipleSelect="true" IsBordered="true" IsStriped="true"
+<div class="mytab">
+    @if (Component != null && PageDataTable != null)
+    {
+        @*RebuildPaginationDataTable();*@
+        <div>
+            <BootstrapInput TValue="string" OnValueChanged="OnQueryAsync"></BootstrapInput>
+            <Button>按钮</Button>
+        </div>
+        ;
+        // OnDoubleClickCellCallback = "OnDoubleClickCellCallback"
+        //
+        <ContextMenuZone>
+            <Table @ref=TableRef ShowToastAfterSaveOrDeleteModel="false" EditMode="EditMode.EditForm"
+                   TItem="DynamicObject" DynamicContext="DataTableDynamicContext"
+                   ModelEqualityComparer="ModelEqualityComparer" ShowAddButton="false"
+                   IsMultipleSelect="false" IsBordered="true" IsStriped="true" ShowSearch="false"
+                   ShowFilterHeader="false" ClickToSelect="true"
+                   ShowToolbar="false" ShowExtendButtons="false"
+                   SelectedRowsChanged="SelectedRowsChanged"
+                   OnAfterSaveAsync="OnAfterSaveAsync"
+                   OnEditAsync="(e)=>{
+    return Task.FromResult(true);}">
+            </Table>
+            <ContextMenu>
+                <ContextMenuItem Text="拷贝" OnClick="OnCopy"></ContextMenuItem>
+                <ContextMenuItem Icon="fa-solid fa-paste" Text="粘贴" OnClick="OnPaste"></ContextMenuItem>
+            </ContextMenu>
+        </ContextMenuZone>
+        <Pagination PageCount="@PageCount" PageIndex="@PageIndex" OnPageLinkClick="@OnPageLinkClick" class="mt-3" />
+    }
 
-           EditDialogCloseAsync="async (e,ee)=>{
-await Task.FromResult(true);
-}" 
-            OnSaveAsync="(q,w)=>{
-    return Task.FromResult(true);
+</div>
 
-    }" OnAfterSaveAsync="(e)=>{
-    return Task.FromResult(true);}"
-           OnEditAsync="(e)=>{
-
-    return Task.FromResult(true);}"
-           ShowToolbar="true" ShowExtendButtons="true" SelectedRowsChanged="SelectedRowsChanged" />
-
-}
 @code {
+    private AggregateType Aggregate { get; set; } = AggregateType.Sum;
+    private DataTable? userData;
+    /// <summary>
+    /// 源数据
+    /// </summary>
+    [Parameter]
+    public DataTable? UserData
+    {
+        get { return userData; }
+        set
+        {
+
+            userData = value;
+            QueryTable = UserData;
+            RebuildPaginationDataTable();
+        }
+    }
+
+
+    /// <summary>
+    /// 搜索后的数据
+    /// </summary>
+    private DataTable? QueryTable { get; set; }
+    /// <summary>
+    /// 分页数据
+    /// </summary>
+    private DataTable? PageDataTable { get; set; }
+    /// <summary>
+    /// 本组件的引用
+    /// </summary>
+    public Table<DynamicObject> TableRef { get; set; }
+    /// <summary>
+    /// 一共有多少页
+    /// </summary>
+    private int PageCount { get; set; }
+    /// <summary>
+    /// 显示第多少页
+    /// </summary>
+    private int PageIndex { get; set; } = 1;
+    /// <summary>
+    /// 每页显示多少条
+    /// </summary>
+    private int PageItems { get; set; } = 4;
     [NotNull]
     private DataTableDynamicContext? DataTableDynamicContext { get; set; }
-    private DataTable UserData { get; } = new DataTable();
-    private static bool ModelEqualityComparer(IDynamicObject x, IDynamicObject y) => x.GetValue("Id")?.ToString() == y.GetValue("Id")?.ToString();
 
+    /// <summary>
+    /// 双击单元格,复制单元格类容
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="o"></param>
+    /// <returns></returns>
+    public async Task OnDoubleClickCellCallback(string a, DynamicObject b, object? o)
+    {
+        //var text = await JSRuntime.InvokeAsync<string>("navigator.clipboard.readText");
+        if (o != null)
+        {
+            var xx = await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", o.ToString());
+            await ToastService.Success("复制成功", $"内容:{o.ToString()}:", autoHide: true);
+        }
+
+
+    }
+    /// <summary>
+    /// 重要,用于判断两个行是否相同
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    private static bool ModelEqualityComparer(IDynamicObject x, IDynamicObject y)
+    {
+        return x.GetValue("Id")?.ToString() == y.GetValue("Id")?.ToString();
+    }
+    /// <summary>
+    /// 点击保存按钮后会触发这个方法
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    private async Task OnAfterSaveAsync(DynamicObject obj)
+    {
+        //1.插入数据
+        //2.判断插入是否成功
+        //3.重新搜索
+        await ToastService.Success("执行成功", $"返回:", autoHide: true);
+    }
+    public async Task OnCopy(ContextMenuItem item, object value)
+    {
+        var ss = value.GetType().FullName;
+        var ss2 = value.ToString();
+        string aa = "";
+        if (value is DynamicObject ddd)
+        {
+            foreach (DataColumn item2 in PageDataTable.Columns)
+            {
+                aa += ddd.GetValue(item2.ColumnName).ToString() + "\t";
+            }
+        }
+        var xx = await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", aa);
+        await ToastService.Success("整行复制成功", $"内容:{aa}:", autoHide: true);
+    }
+
+    private static Task OnPaste(ContextMenuItem item, object value)
+    {
+        var ss = value.GetType().FullName;
+        return Task.CompletedTask;
+    }
+    /// <summary>
+    /// 查询触发的
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    //private async Task<QueryData<DynamicObject>> OnQueryAsync(QueryPageOptions obj)
+    //{
+    //    var sssss = new QueryData<DynamicObject>();
+    //    sssss.Items = new List<DynamicObject>() { new DynamicObject() { }, new DynamicObject() { }, new DynamicObject() { } };
+    //    await Task.Delay(100);
+    //    return sssss;
+    //}
+    /// <summary>
+    /// 根据条件过滤后的,生成一个新的QueryTable
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    private async Task OnQueryAsync(string obj)
+    {
+        if (UserData != null)
+        {
+            QueryTable = UserData.Queryable(obj);
+            RebuildPaginationDataTable();
+        }
+        await Task.CompletedTask;
+    }
+    /// <summary>
+    /// 点击页码处理函数,会重新为DataTableDynamicContext赋值
+    /// </summary>
+    /// <param name = "pageIndex"></param>
+    /// <returns></returns>
+    private Task OnPageLinkClick(int pageIndex)
+    {
+        PageIndex = pageIndex;
+        RebuildPaginationDataTable();
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    /// <summary>
+    /// 重新为DataTableDynamicContext赋值,当点击页码的时候会触发这个
+    /// </summary>
+    private void RebuildPaginationDataTable()
+    {
+        if (QueryTable != null)
+        {
+            // PageDataTable.Rows.Clear();
+            //PageCount = QueryTable.Rows.Count / PageItems + 1;
+            PageCount = (int)Math.Ceiling(QueryTable.Rows.Count / 2.0);
+            if (PageCount == 0)
+            {
+                PageCount = 1;
+            }
+            PageDataTable = QueryTable.Clone();
+            var ss = QueryTable.AsEnumerable().Skip((PageIndex - 1) * PageItems).Take(PageItems);
+            foreach (var item in ss)
+            {
+                PageDataTable.Rows.Add(item.ItemArray);
+            }
+            foreach (DataColumn item in PageDataTable.Columns)
+            {
+                var s1s = item;
+            }
+            //foreach (var f in PageFoos.Skip((PageIndex - 1) * PageItems).Take(PageItems).ToList())
+            //{
+            //    UserData.Rows.Add(f.Id, f.DateTime, f.Name, f.Count);
+            //}
+            PageDataTable.AcceptChanges();
+            CreateContext();
+        }
+
+    }
     /// <summary>
     /// OnInitialized 方法
     /// </summary>
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
-
-
         // 初始化 DataTable
-        InitDataTable();
+        //InitDataTable();
         // 初始化分页表格
         //  InitPageDataTable();
     }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await OnQueryAsync("");
+        RebuildPaginationDataTable();
+    }
+    /// <summary>
+    /// 当选中一行的时候
+    /// </summary>
+    /// <param name="obj"></param>
     private async void SelectedRowsChanged(List<DynamicObject> obj)
     {
         if (obj.Count <= 0)
         {
             return;
         }
-        var o = obj.First();
-        foreach (DataColumn item in UserData.Columns)
+        if (FormDesigner.SelectedContainer != null)
         {
-            var name = (item.ColumnName);
-            var ss = o.GetValue(item.ColumnName);
-            var ssss = Component.Parameters;
-            var c = FormDesigner.ContainerData.FindFirst(x => x.Type == ComponentType.SingleLine);
-            c.ValueInfo.StringValue = DateTime.Now.ToString();
-            await FormDesigner.StateHasChangedAsync();
-
+            var o = obj.First();
+            if (UserData != null)
+            {
+                foreach (DataColumn item in UserData.Columns)
+                {
+                    var ss = o.GetValue(item.ColumnName);
+                    var ssss = Component.Parameters;
+                    var control = FormDesigner.SelectedContainer.FindFirst(x => x.MutLanguage.zh_CN == item.ColumnName);
+                    if (control != null && ss != null)
+                    {
+                        control.ValueInfo.StringValue = ss.ToString();
+                    }
+                }
+                await FormDesigner.StateHasChangedAsync();
+                foreach (var item in obj)
+                {
+                    var ss = item;
+                }
+            }
         }
-        foreach (var item in obj)
-        {
-            var ss = item;
 
-        }
+
     }
+    /// <summary>
+    /// 根据PageDataTable生成DataTableDynamicContext
+    /// </summary>
     private void CreateContext()
     {
-        // 初始化动态类型上下文实例
-        DataTableDynamicContext = new DataTableDynamicContext(UserData, (context, col) =>
+        if (PageDataTable != null)
         {
-            
-            var propertyName = col.GetFieldName();
-            if (propertyName == nameof(Foo.DateTime))
-            {
-                context.AddRequiredAttribute(nameof(Foo.DateTime));
-                // 使用 AutoGenerateColumnAttribute 设置显示名称示例
-                //   context.AddAutoGenerateColumnAttribute(nameof(Foo.DateTime), new KeyValuePair<string, object?>[] { new(nameof(AutoGenerateColumnAttribute.Text), Localizer[nameof(Foo.DateTime)].Value) });
-            }
-            else if (propertyName == nameof(Foo.Name))
-            {
-                // context.AddRequiredAttribute(nameof(Foo.Name), Localizer["Name.Required"]);
-                // 使用 Text 设置显示名称示例
-                col.Text = nameof(Foo.Name);
-            }
-            else if (propertyName == nameof(Foo.Count))
-            {
-                context.AddRequiredAttribute(nameof(Foo.Count));
-                // 使用 DisplayNameAttribute 设置显示名称示例
-                context.AddDisplayNameAttribute(nameof(Foo.Count), nameof(Foo.Count));
-            }
-            else if (propertyName == nameof(Foo.Complete))
-            {
-                col.Filterable = true;
-                // 使用 DisplayAttribute 设置显示名称示例
-                //  context.AddDisplayAttribute(nameof(Foo.Complete), new KeyValuePair<string, object?>[] { new(nameof(DisplayAttribute.Name), Localizer[nameof(Foo.Complete)].Value) });
-            }
-            else if (propertyName == nameof(Foo.Id))
-            {
-                col.Editable = false;
-                col.Visible = false;
-            }
-        })
-            {
-                OnDeleteAsync = items =>
+            DataTableDynamicContext = new DataTableDynamicContext(PageDataTable, (context, col) =>
+          {
+              col.Filterable = true;
+              var propertyName = col.GetFieldName();
+              if (propertyName == nameof(Foo.DateTime))
+              {
+                  context.AddRequiredAttribute(nameof(Foo.DateTime));
+                  // 使用 AutoGenerateColumnAttribute 设置显示名称示例
+                  //   context.AddAutoGenerateColumnAttribute(nameof(Foo.DateTime), new KeyValuePair<string, object?>[] { new(nameof(AutoGenerateColumnAttribute.Text), Localizer[nameof(Foo.DateTime)].Value) });
+              }
+              else if (propertyName == nameof(Foo.Name))
+              {
+                  // context.AddRequiredAttribute(nameof(Foo.Name), Localizer["Name.Required"]);
+                  // 使用 Text 设置显示名称示例
+                  col.Text = nameof(Foo.Name);
+              }
+              else if (propertyName == nameof(Foo.Count))
+              {
+                  context.AddRequiredAttribute(nameof(Foo.Count));
+                  // 使用 DisplayNameAttribute 设置显示名称示例
+                  context.AddDisplayNameAttribute(nameof(Foo.Count), nameof(Foo.Count));
+              }
+              else if (propertyName == nameof(Foo.Complete))
+              {
+                  col.Filterable = true;
+                  // 使用 DisplayAttribute 设置显示名称示例
+                  //  context.AddDisplayAttribute(nameof(Foo.Complete), new KeyValuePair<string, object?>[] { new(nameof(DisplayAttribute.Name), Localizer[nameof(Foo.Complete)].Value) });
+              }
+              else if (propertyName == nameof(Foo.Id))
+              {
+                  col.Editable = false;
+                  col.Visible = false;
+              }
+          })
                 {
-                    // 数据源中移除
-                    foreach (var item in items)
+                    OnDeleteAsync = items =>
                     {
-                        var id = item.GetValue(nameof(Foo.Id));
-                        if (id != null)
+                        // 数据源中移除
+                        foreach (var item in items)
                         {
-                            var row = UserData.Rows.Find(id);
-                            if (row != null)
+                            var id = item.GetValue(nameof(Foo.Id));
+                            if (id != null)
                             {
-                                UserData.Rows.Remove(row);
+                                var row = PageDataTable.Rows.Find(id);
+                                if (row != null)
+                                {
+                                    PageDataTable.Rows.Remove(row);
+                                }
                             }
                         }
-                    }
 
-                    UserData.AcceptChanges();
-                    return Task.FromResult(true);
-                },
-                OnChanged = args =>
-                {
-                    if (args.ChangedType == DynamicItemChangedType.Add)
+                        PageDataTable.AcceptChanges();
+                        return Task.FromResult(true);
+                    }
+                                                                              ,
+                    OnChanged = args =>
                     {
-                        var item = args.Items.First();
-                        item.SetValue(nameof(Foo.DateTime), DateTime.Today);
-                        item.SetValue(nameof(Foo.Name), "新建值");
+                        if (args.ChangedType == DynamicItemChangedType.Add)
+                        {
+                            PageDataTable.Rows.Add();
+
+                            //  var item = args.Items.First();
+                            // item.SetValue("Id", (System.Int64)1111);
+                            //item.SetValue(nameof(Foo.Name), "新建值");
+                        }
+
+                        return Task.FromResult(true);
                     }
+                    //,
+                    //OnValueChanged=(e,r,t)=>
+                    //{
+                    //    return Task.CompletedTask;
+                    //}
 
-                    return Task.FromResult(true);
-                }
-                //,
-                //OnValueChanged=(e,r,t)=>
-                //{
-                //    return Task.CompletedTask;    
-                //}
+                };
+        }
+        // 初始化动态类型上下文实例
+        this.StateHasChanged();
 
-            };
-          
     }
 
     private void InitDataTable()
     {
-        UserData.Columns.Add(nameof(Foo.Id), typeof(int));
-        UserData.Columns.Add(nameof(Foo.DateTime), typeof(DateTime));
-        UserData.Columns.Add(nameof(Foo.Name), typeof(string));
-        UserData.Columns.Add(nameof(Foo.Count), typeof(int));
-        UserData.PrimaryKey = new DataColumn[]
-        {
-            UserData.Columns[0]
-        };
-        UserData.Columns[0].AutoIncrement = true;
+        //UserData.Columns.Add(nameof(Foo.Id), typeof(int));
+        //UserData.Columns.Add(nameof(Foo.DateTime), typeof(DateTime));
+        //UserData.Columns.Add(nameof(Foo.Name), typeof(string));
+        //UserData.Columns.Add(nameof(Foo.Count), typeof(int));
+        //UserData.PrimaryKey = new DataColumn[]
+        //{
+        //    UserData.Columns[0]
+        //};
+        //UserData.Columns[0].AutoIncrement = true;
 
-        UserData.Rows.Add(1, DateTime.Now, "df1", 12);
-        UserData.Rows.Add(2, DateTime.Now, "df2", 121);
-        UserData.Rows.Add(3, DateTime.Now, "df3", 122);
+        //UserData.Rows.Add(1, DateTime.Now, "df1", 12);
+        //UserData.Rows.Add(2, DateTime.Now, "df2", 121);
+        //UserData.Rows.Add(3, DateTime.Now, "df3", 122);
 
         CreateContext();
     }

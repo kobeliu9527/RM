@@ -13,92 +13,35 @@
                                     <BootstrapInput IsSelectAllTextOnFocus="true" @bind-Value="value.Id" OnValueChanged="IdOnValueChanged"></BootstrapInput>
                                 </EditTemplate>
                             </EditorItem>
-                            <EditorItem @bind-Field="@context.IsExecuteForEnter">
+                        
+                            <EditorItem @bind-Field="@context">
                                 <EditTemplate Context="value">
-                                    <Switch @bind-Value="value.IsExecuteForEnter" OnValueChanged="OnValueChangedForBool"></Switch>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.StoreName">
-                                <EditTemplate Context="value">
-                                    <Select TValue="string" Items="GetProList()" @bind-Value="value.StoreName" ShowSearch="true" />
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.Parameters">
-                                <EditTemplate Context="value">
-                                    <div class="ppp2">
-                                    <Collapse>
-                                        <CollapseItems>
-                                            <CollapseItem Text="过程参数">
-                                                <CheckboxList @bind-Value="@value.Parameters" Items="@Parameters" Color="Color.Danger"></CheckboxList>
-                                            </CollapseItem>
-                                        </CollapseItems>
-                                    </Collapse>
-                                    </div>
-                                 </EditTemplate>
-                            </EditorItem>
-                             <EditorItem @bind-Field="@context">
-                                   <EditTemplate Context="value">
                                     <Collapse>
                                         <CollapseItems>
                                             <CollapseItem Text="外观参数">
-                                                <BootstrapInputNumber @bind-Value="value.Width" Max="12" Min="1" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                <Switch @bind-Value="value.IsAbsPosition" OnValueChanged="OnValueChangedForBool"></Switch>
+                                                @if (@context.IsAbsPosition)
+                                                {
+                                                    <BootstrapInputNumber @bind-Value="value.Top" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                    <BootstrapInputNumber @bind-Value="value.Left" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                    <BootstrapInputNumber @bind-Value="value.Zindex" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                }
+                                                <BootstrapInputNumber @bind-Value="value.Width"  ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
                                                 <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                <Select @bind-Value="value.Color" OnValueChanged="OnValueChangedForColor"></Select>
+                                                <Switch @bind-Value="value.ShowLabel" OnValueChanged="OnValueChangedForBool"></Switch>
+                                                <Switch @bind-Value="value.IsDisabled" OnValueChanged="OnValueChangedForBool"></Switch>
 
                                             </CollapseItem>
                                         </CollapseItems>
                                     </Collapse>
-                                   </EditTemplate>
-                             </EditorItem>
-                            <EditorItem @bind-Field="@context.Width">
-                                <EditTemplate Context="value">
-                                    <BootstrapInputNumber @bind-Value="value.Width" Max="12" Min="1" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.Height">
-                                <EditTemplate Context="value">
-                                    <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.IsAbsPosition">
-                                <EditTemplate Context="value">
-                                    <Switch @bind-Value="value.IsAbsPosition" OnValueChanged="OnValueChangedForBool"></Switch>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.Top">
-                                <EditTemplate Context="value">
-                                    <BootstrapInputNumber @bind-Value="value.Top"  ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.Left">
-                                <EditTemplate Context="value">
-                                    <BootstrapInputNumber @bind-Value="value.Left" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.Zindex">
-                                <EditTemplate Context="value">
-                                    <BootstrapInputNumber @bind-Value="value.Zindex" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.Color">
-                                <EditTemplate Context="value">
-                                    <Select @bind-Value="value.Color" OnValueChanged="OnValueChangedForColor"></Select>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.ShowLabel">
-                                <EditTemplate Context="value">
-                                    <Switch @bind-Value="value.ShowLabel" OnValueChanged="OnValueChangedForBool"></Switch>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.IsDisabled">
-                                <EditTemplate Context="value">
-                                    <Switch @bind-Value="value.IsDisabled" OnValueChanged="OnValueChangedForBool"></Switch>
                                 </EditTemplate>
                             </EditorItem>
                             <EditorItem @bind-Field="@context.MutLanguage">
                                 <EditTemplate Context="value">
                                     <Collapse>
                                         <CollapseItems>
-                                            <CollapseItem Text="多语言设置">
+                                            <CollapseItem Text="标题设置(多语言)">
                                                 <BootstrapInput @bind-Value="value.MutLanguage.zh_CN" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
                                                 <BootstrapInput @bind-Value="value.MutLanguage.zh_TW" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
                                                 <BootstrapInput @bind-Value="value.MutLanguage.en_US" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
@@ -126,14 +69,23 @@
                                 <BootstrapInput OnValueChanged="OnValueChangedForString" ShowLabel="true" DisplayText="@item.Value.DisplayName" @bind-Value="@item.Value.StringValue"></BootstrapInput>
                                 break;
                             case PType.SingleColor:
-                                <Select ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.StringValue"></Select>
+                                <Select DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.StringValue" ShowLabel="true"></Select>
                                 break;
                             case PType.Bool:
-                                <Switch ShowLabel="true" DisplayText="@item.Value.DisplayName" @bind-Value="item.Value.BoolVal" OnValueChanged="OnValueChangedForBool"></Switch>
+                                <Switch @bind-Value="item.Value.BoolVal" OnValueChanged="OnValueChangedForBool" ShowLabel="true" DisplayText="@item.Value.DisplayName"></Switch>
                                 break;
                             case PType.Int:
                                 break;
                             case PType.Double:
+                                break;
+                            case PType.StringList:
+                              <div class="ppp2">
+                                <CheckboxList @bind-Value="@item.Value.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true" DisplayText="@item.Value.DisplayName"></CheckboxList>
+                                </div>
+                                break;
+                            case PType.Select:
+                                <Select TValue="string" Items="GetProList()" @bind-Value="@item.Value.StringValue" ShowSearch="true" ShowLabel="true" DisplayText="@item.Value.DisplayName" />
+
                                 break;
                             case PType.DataSourse:
                                 @*<Select IsVirtualize="true" @bind-Value="@(ComponentData.Props[""].Value)" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>*@
@@ -294,7 +246,7 @@
         await FormDesigner.StateHasChangedAsync();
     }
     /// <summary>
-    /// 当设置控件外观颜色的时候
+    /// 刷新主界面
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>

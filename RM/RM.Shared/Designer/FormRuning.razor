@@ -20,11 +20,11 @@
     /// <summary>
     /// 选中的容器
     /// </summary>
-    private ContainerDto? SelectedContainer = null;
+    public ContainerDto? SelectedContainer = null;
     /// <summary>
     /// 选中的控件
     /// </summary>
-    private ComponentDto? SelectedComponent = null;
+    public ComponentDto? SelectedComponent = null;
     /// <summary>
     /// 工具箱中正在被拖动的项的数据,ondragstart会触发
     /// </summary>
@@ -41,7 +41,11 @@
     ///
     /// </summary>
     private ContainerDto DraggedComponentOriginContainer = null;
-
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SelectedContainer = ContainerData;
+    }
     public async Task SelectContainerAsync(ContainerDto containerData)
     {
         SelectedContainer = containerData;

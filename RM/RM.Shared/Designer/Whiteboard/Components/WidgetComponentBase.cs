@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BootstrapBlazor.Components;
+using Microsoft.AspNetCore.Components;
 using RM.Shared.Models;
 using System.Diagnostics.CodeAnalysis;
 
@@ -9,6 +10,9 @@ namespace RM.Shared.Designer.Whiteboard.Components
     /// </summary>
     public partial class WidgetComponentBase : ComponentBase
     {
+        [Inject]
+        [NotNull]
+        public ToastService? ToastService { get; set; }
         /// <summary>
         /// 组件数据
         /// </summary>
@@ -19,6 +23,7 @@ namespace RM.Shared.Designer.Whiteboard.Components
         /// 表示跟页面
         /// </summary>
         [CascadingParameter(Name = "Root")]
+        [NotNull]
         public FormRuning? FormDesigner { get; set; }
         /// <summary>
         /// 组件基类

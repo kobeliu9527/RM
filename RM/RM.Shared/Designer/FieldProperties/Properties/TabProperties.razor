@@ -5,11 +5,7 @@
                 <ValidateForm @ref="ValidateForm" Model="@ComponentData" OnValidSubmit="@OnValidComplexModel" OnFieldValueChanged="OnFieldValueChanged">
                     <EditorForm TModel="ContainerDto" ItemsPerRow="1" AutoGenerateAllItem="false">
                         <FieldItems>
-                            <EditorItem @bind-Field="@context.Label">
-                                <EditTemplate Context="value">
-                                    <BootstrapInput @bind-Value="value.Label" OnValueChanged="OnValueChangedForString"></BootstrapInput>
-                                </EditTemplate>
-                            </EditorItem>
+                   
 
                             <EditorItem @bind-Field="@context.MutLanguage">
                                 <EditTemplate Context="value">

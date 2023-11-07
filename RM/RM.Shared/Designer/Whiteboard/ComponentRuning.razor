@@ -47,7 +47,7 @@
                     <SelectComp Component="@ComponentData" />
                     break;
                 case ComponentType.Table:
-                    <DataGridViewComp Component="@ComponentData" />
+                    <DataGridViewComp Component="@ComponentData"  UserData="@ComponentData.ValueInfo.DataTable"/>
                     break;
                 case ComponentType.Tabs:
                     <TabsCompRuning ComponentData="@ComponentData"
