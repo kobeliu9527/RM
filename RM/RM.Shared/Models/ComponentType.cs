@@ -19,6 +19,9 @@ namespace RM.Shared.Models
         Choice = 9,
         Tabs = 10,
         Select=11,
+        /// <summary>
+        /// DataGridView
+        /// </summary>
         Table=12,
         /// <summary>
         /// 绝对定位容器控件

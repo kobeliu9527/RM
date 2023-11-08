@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Furion" Version="4.8.8.53" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RM.Shared\RM.Shared.csproj" />
   </ItemGroup>
 

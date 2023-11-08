@@ -13,11 +13,7 @@
                                     <BootstrapInput IsSelectAllTextOnFocus="true" @bind-Value="value.Id" OnValueChanged="IdOnValueChanged"></BootstrapInput>
                                 </EditTemplate>
                             </EditorItem>
-                            <EditorItem @bind-Field="@context.IsExecuteForEnter">
-                                <EditTemplate Context="value">
-                                    <Switch @bind-Value="value.IsExecuteForEnter" OnValueChanged="OnValueChangedForBool"></Switch>
-                                </EditTemplate>
-                            </EditorItem>
+                  
                             <EditorItem @bind-Field="@context.StoreName">
                                 <EditTemplate Context="value">
                                     <Select TValue="string" Items="GetProList()" @bind-Value="value.StoreName" ShowSearch="true" />

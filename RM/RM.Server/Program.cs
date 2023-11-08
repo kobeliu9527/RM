@@ -4,11 +4,13 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args).Inject(); ;
 
 // Add services to the container.
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
+builder.Services.AddControllersWithViews().AddInject();
+builder.Services.AddAuthentication();
+builder.Services.AddRemoteRequest();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
@@ -75,6 +77,7 @@ else
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseInject();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

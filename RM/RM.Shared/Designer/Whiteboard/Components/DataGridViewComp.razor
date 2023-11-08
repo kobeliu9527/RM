@@ -1,12 +1,12 @@
 ﻿@using System.Data;
 @inject IJSRuntime JSRuntime
 @inherits WidgetComponentBase
-<div class="mytab">
+<div class="mytab" style="min-height:20px;min-width:20px">
     @if (Component != null && PageDataTable != null)
     {
         @*RebuildPaginationDataTable();*@
         <div>
-            <BootstrapInput TValue="string" OnValueChanged="OnQueryAsync"></BootstrapInput>
+            <BootstrapInput TValue="string" OnValueChanged="OnFilterAsync"></BootstrapInput>
             <Button>按钮</Button>
         </div>
         ;
@@ -46,7 +46,6 @@
         get { return userData; }
         set
         {
-
             userData = value;
             QueryTable = UserData;
             RebuildPaginationDataTable();
@@ -96,8 +95,6 @@
             var xx = await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", o.ToString());
             await ToastService.Success("复制成功", $"内容:{o.ToString()}:", autoHide: true);
         }
-
-
     }
     /// <summary>
     /// 重要,用于判断两个行是否相同
@@ -121,10 +118,14 @@
         //3.重新搜索
         await ToastService.Success("执行成功", $"返回:", autoHide: true);
     }
+    /// <summary>
+    /// 复制一行
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public async Task OnCopy(ContextMenuItem item, object value)
     {
-        var ss = value.GetType().FullName;
-        var ss2 = value.ToString();
         string aa = "";
         if (value is DynamicObject ddd)
         {
@@ -159,7 +160,7 @@
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    private async Task OnQueryAsync(string obj)
+    private async Task OnFilterAsync(string obj)
     {
         if (UserData != null)
         {
@@ -187,8 +188,6 @@
     {
         if (QueryTable != null)
         {
-            // PageDataTable.Rows.Clear();
-            //PageCount = QueryTable.Rows.Count / PageItems + 1;
             PageCount = (int)Math.Ceiling(QueryTable.Rows.Count / 2.0);
             if (PageCount == 0)
             {
@@ -204,14 +203,9 @@
             {
                 var s1s = item;
             }
-            //foreach (var f in PageFoos.Skip((PageIndex - 1) * PageItems).Take(PageItems).ToList())
-            //{
-            //    UserData.Rows.Add(f.Id, f.DateTime, f.Name, f.Count);
-            //}
             PageDataTable.AcceptChanges();
             CreateContext();
         }
-
     }
     /// <summary>
     /// OnInitialized 方法
@@ -219,15 +213,11 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        // 初始化 DataTable
-        //InitDataTable();
-        // 初始化分页表格
-        //  InitPageDataTable();
     }
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await OnQueryAsync("");
+        await OnFilterAsync("");
         RebuildPaginationDataTable();
     }
     /// <summary>
