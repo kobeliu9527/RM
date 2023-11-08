@@ -8,16 +8,24 @@ var builder = WebApplication.CreateBuilder(args).Inject(); ;
 
 // Add services to the container.
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+builder.Services.AddCorsAccessor();
+
 builder.Services.AddControllersWithViews().AddInject();
 builder.Services.AddAuthentication();
 builder.Services.AddRemoteRequest();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-
 builder.Services.AddBootstrapBlazor();
 
 builder.Services.AddSingleton<WeatherForecastService>();
-
+builder.Services.AddHttpClient(name: "HttpClient", c =>
+{
+    //https://kjkqffn5-5000.asse.devtunnels.ms/
+    //http://localhost:5000
+    // 192.168.125.13
+    c.BaseAddress = new Uri("https://kjkqffn5-5000.asse.devtunnels.ms/");
+}
+);
 builder.Services.AddSingleton<ISqlSugarClient>(s =>
 {
     SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
@@ -77,8 +85,9 @@ else
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCorsAccessor();
 app.UseInject();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
+app.MapDefaultControllerRoute();
 app.Run();

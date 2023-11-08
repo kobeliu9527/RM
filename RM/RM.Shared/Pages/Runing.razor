@@ -1,4 +1,4 @@
-﻿@inject ISqlSugarClient db
+﻿@*@inject ISqlSugarClient db*@
 @inject NavigationManager Navigation
 @page "/runing"
 @using RM.Shared.Designer
@@ -63,9 +63,9 @@
 
         FunctionPage page = new FunctionPage() { Id = 1 };
         page.ContainerData = ContainerData;
-        var ssss = db.Updateable(page).ExecuteCommand();
-        var ss2 = db.Queryable<FunctionPage>().ToList();
-        var ss = Newtonsoft.Json.JsonConvert.SerializeObject(page);
+       // var ssss = db.Updateable(page).ExecuteCommand();
+       // var ss2 = db.Queryable<FunctionPage>().ToList();
+      //  var ss = Newtonsoft.Json.JsonConvert.SerializeObject(page);
 
     }
     public void Update()
@@ -105,8 +105,8 @@
     }
     private async Task RunDemoPredefinedContainer()
     {
-        var ss2 = db.Queryable<FunctionPage>().ToList();
-        ContainerData = ss2[0].ContainerData;
+       // var ss2 = db.Queryable<FunctionPage>().ToList();
+      //  ContainerData = ss2[0].ContainerData;
         await Task.CompletedTask;
     }
 

@@ -60,6 +60,7 @@
 
   <ItemGroup>
     <Folder Include="Models\新文件夹\" />
+    <Folder Include="IServices\" />
   </ItemGroup>
 
 </Project>

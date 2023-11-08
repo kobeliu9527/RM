@@ -17,7 +17,13 @@ namespace MobileClient
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddBootstrapBlazor();
-
+            builder.Services.AddHttpClient(name: "HttpClient", c =>
+            {
+                //https://kjkqffn5-5000.asse.devtunnels.ms/
+               // c.BaseAddress = new Uri("http://192.168.125.13:5000");
+                c.BaseAddress = new Uri("https://kjkqffn5-5000.asse.devtunnels.ms/");
+            }
+);
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
