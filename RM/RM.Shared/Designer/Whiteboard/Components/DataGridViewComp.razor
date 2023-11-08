@@ -47,7 +47,7 @@
         set
         {
             userData = value;
-            QueryTable = UserData;
+            QueryTable = userData;
             RebuildPaginationDataTable();
         }
     }
@@ -217,6 +217,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
         await OnFilterAsync("");
         RebuildPaginationDataTable();
     }

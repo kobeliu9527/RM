@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MobileClient.Data;
-
+using RM.Shared;
 namespace MobileClient
 {
     public static class MauiProgram
@@ -16,9 +16,10 @@ namespace MobileClient
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddBootstrapBlazor();
 
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
 
