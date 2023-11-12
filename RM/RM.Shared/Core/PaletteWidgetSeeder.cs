@@ -24,7 +24,7 @@ namespace RM.Shared.Core
                     Props=new Dictionary<string, Property>(){
                         {"IsExecuteForEnter",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="回车后是否执行存储过程"} },
                         {"StoreName",new Property(){PType= PType.Select, StringValue="",DisplayName="执行存储过程的名称"} },
-                        {"Parameters",new Property(){PType= PType.StringList, StringListValue=new List<string>(),DisplayName="执行存储过程需要的参数"} },
+                        {"Parameters",new Property(){PType= PType.MutilPropter, MutilProperties=new List<MutilProperty>(),DisplayName="执行存储过程需要的参数"} },
                         {"IsSelectAllTextOnFocus",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="是否自动选中所有文字"} },
                         {"IsAutoFocus",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="是否自动获取焦点"} },
                         {"PlaceHolder",new Property(){PType= PType.String, StringValue="请输入..",DisplayName="提示信息"} },

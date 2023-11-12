@@ -52,7 +52,10 @@ namespace RM.Shared.Models
         /// </summary>
         [DisplayName("页面唯一标识"), Required(ErrorMessage = "控件的名字,必须全局唯一")]
         public string Id { get; set; }
-
+        /// <summary>
+        /// 父级容器的ID
+        /// </summary>
+        public string ParentId { get; set; }
         /// <summary>
         /// 外观颜色
         /// </summary>
@@ -63,12 +66,12 @@ namespace RM.Shared.Models
         /// 控件的类型,用于区分是文本框还是下拉框等等--
         /// </summary>
 
-        public ComponentType Type { get; set; }
+        public ComponentType ComponentType { get; set; }
 
-        ///// <summary>
-        ///// 前置标签显示文本(应该支持多语言显示)
-        ///// </summary>
-        //public int DisplayText { get; set; }
+        ///  <summary>
+        /// 前置标签显示文本(应该支持多语言显示)
+        /// </summary>
+        /// public int DisplayText { get; set; }
 
         /// <summary>
         /// 多语言
@@ -177,10 +180,10 @@ namespace RM.Shared.Models
 
         internal void InitializeComponent(ComponentType type)
         {
-            Type = type;
+            ComponentType = type;
             //DisplayText = $"{Type.GetName()}-{Guid.NewGuid()}";
-            MutLanguage.zh_CN = $"{Type.GetName()}";
-            if (Type == ComponentType.Tabs)
+            MutLanguage.zh_CN = $"{ComponentType.GetName()}";
+            if (ComponentType == ComponentType.Tabs)
             {
                 ChildContainers = new List<ContainerDto>()
                 {

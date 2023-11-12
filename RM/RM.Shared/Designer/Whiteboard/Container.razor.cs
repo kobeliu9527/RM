@@ -104,7 +104,7 @@ namespace RM.Shared.Designer.Whiteboard
         /// <param name = "rowIndex"></param>
         /// <param name = "currentContainer"></param>
         /// <returns></returns>
-        private async Task DropComponentAfterRowAsync(int rowIndex, ContainerDto currentContainer)
+        private async Task DropComponentAfterRowAsync(int rowIndex, ContainerDto?currentContainer)
         {
             var newRow = new List<ComponentDto>();
             var newRowIndex = rowIndex + 1;
@@ -126,6 +126,7 @@ namespace RM.Shared.Designer.Whiteboard
                 // you are trying to drag and drop a new widget from Palette
                 var paletteWidgetData = await Root.GetDraggedPaletteWidgetAsync();
                 var newComponentData = paletteWidgetData.CreateComponent();
+                newComponentData.ParentId=containerData.Id;
                 await AddComponentToRowAsync(newComponentData, destinationRow);
                 await Root.SelectComponentAsync(newComponentData);
             }

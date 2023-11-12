@@ -2,11 +2,12 @@
     <Collapse OnCollapseChanged="(aa)=>{   return Task.CompletedTask;}" IsAccordion="true">
         <CollapseItems>
             <CollapseItem Text="通用属性" IsCollapsed="false">
+
                 <ValidateForm @ref="ValidateForm" Model="@ComponentData" OnValidSubmit="@OnValidComplexModel" OnFieldValueChanged="OnFieldValueChanged">
                     <EditorForm TModel="ContainerDto" ItemsPerRow="1" AutoGenerateAllItem="false">
-                        <FieldItems>
-                   
 
+                        <FieldItems>
+                            <EditorItem @bind-Field="@context.Id"></EditorItem>
                             <EditorItem @bind-Field="@context.MutLanguage">
                                 <EditTemplate Context="value">
                                     <Collapse>
@@ -21,6 +22,7 @@
                                     </Collapse>
                                 </EditTemplate>
                             </EditorItem>
+                           
                         </FieldItems>
                     </EditorForm>
                 </ValidateForm>
@@ -128,7 +130,7 @@
         if (key == "Id")
         {
 
-            if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+            if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
             {
                 ValidateForm.SetError("Id", "数据库中已存在");
             }

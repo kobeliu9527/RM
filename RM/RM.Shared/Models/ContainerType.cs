@@ -6,7 +6,7 @@
     public enum ContainerType
     {
         /// <summary>
-        /// 一个TabPage页面
+        /// 一个TabPage页面,一个普通的容器页面,跟页面也是base
         /// </summary>
         Base = 0,
         /// <summary>

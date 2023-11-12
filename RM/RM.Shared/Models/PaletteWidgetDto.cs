@@ -23,7 +23,11 @@ namespace RM.Shared.Models
         /// </summary>
         public Dictionary<string, Property> Props { get; set; } = new();
     }
-
+    public class MutilProperty
+    {
+        public string ContainerName { get; set; }
+        public List<string> StringListValue { get; set; }
+    }
     /// <summary>
     /// 属性信息
     /// </summary>
@@ -53,6 +57,10 @@ namespace RM.Shared.Models
         /// 属性值
         /// </summary>
         public List<string> StringListValue { get; set; } = new();
+        /// <summary>
+        /// 多个参数值
+        /// </summary>
+        public List<MutilProperty>  MutilProperties { get; set; } = new();
         ///// <summary>
         ///// 
         ///// </summary>
@@ -106,7 +114,11 @@ namespace RM.Shared.Models
         /// <summary>
         /// 下拉选择框
         /// </summary>
-        Select
+        Select,
+        /// <summary>
+        /// 多参数
+        /// </summary>
+        MutilPropter
     }
 }
 

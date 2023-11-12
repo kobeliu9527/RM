@@ -240,7 +240,8 @@
                 {
                     var ss = o.GetValue(item.ColumnName);
                     var ssss = Component.Parameters;
-                    var control = FormDesigner.SelectedContainer.FindFirst(x => x.MutLanguage.zh_CN == item.ColumnName);
+                    //  var control = FormDesigner.SelectedContainer.FindFirst(x => x.MutLanguage.zh_CN == item.ColumnName);
+                    var control = FormDesigner.SelectedContainer.FindAllComponent(x => x.MutLanguage.zh_CN == item.ColumnName).FirstOrDefault();
                     if (control != null && ss != null)
                     {
                         control.ValueInfo.StringValue = ss.ToString();

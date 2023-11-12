@@ -87,7 +87,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
             if (key == "Id")
             {
 
-                if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+                if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
                 {
                     ValidateForm.SetError("Id", "数据库中已存在");
                 }
@@ -108,7 +108,7 @@ namespace RM.Shared.Designer.FieldProperties.Properties
         public Task IdOnValueChanged(string v)
         {
 
-            if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
+            if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
             {
                 ComponentData.Id = "";
             }

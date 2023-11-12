@@ -44,12 +44,13 @@ namespace RM.Shared.Extensions
             await Task.CompletedTask;
         }
         /// <summary>
-        /// 找到容器中符合条件的控件
+        /// 递归找到容器中符合条件的控件
         /// </summary>
         /// <param name="container"></param>
-        /// <param name="match">Predicate<T> </param>
+        /// <param name="match">Predicate{</param>
+        /// <param name="result"></param>
         /// <returns></returns>
-        private static void FindAll(ContainerDto container, Func<ComponentDto, bool>? match, List<ComponentDto> result)
+        private static void FindAllComponent(ContainerDto container, Func<ComponentDto, bool>? match, List<ComponentDto> result)
         {
             foreach (var row in container.Rows)
             {
@@ -70,7 +71,41 @@ namespace RM.Shared.Extensions
                     {
                         foreach (var c in component.ChildContainers)
                         {
-                            FindAll(c, match, result);
+                            FindAllComponent(c, match, result);
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// 递归找到容器中符合条件的所有子容器,包括本身
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="match">Predicate{</param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private static void FindAllContainer(ContainerDto container, Func<ContainerDto, bool>? match, List<ContainerDto> result)
+        {
+            if (match != null)
+            {
+                if (match(container))
+                {
+                    result.Add(container);
+                }
+            }
+            else
+            {
+                result.Add(container);
+            }
+            foreach (var row in container.Rows)
+            {
+                foreach (var component in row)
+                {
+                    if (component.ChildContainers?.Count > 0)
+                    {
+                        foreach (var c in component.ChildContainers)
+                        {
+                            FindAllContainer(c, match, result);
                         }
                     }
                 }
@@ -82,10 +117,22 @@ namespace RM.Shared.Extensions
         /// <param name="container"></param>
         /// <param name="match"></param>
         /// <returns></returns>
-        public static List<ComponentDto> FindAll(this ContainerDto container, Func<ComponentDto, bool>? match=null)
+        public static List<ComponentDto> FindAllComponent(this ContainerDto container, Func<ComponentDto, bool>? match=null)
         {
             List<ComponentDto> res = new List<ComponentDto>();
-            FindAll(container, match, res);
+            FindAllComponent(container, match, res);
+            return res;
+        }
+        /// <summary>
+        /// 递归找到所有符合条件的ContainerDto
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        public static List<ContainerDto> FindAllContainer(this ContainerDto container, Func<ContainerDto, bool>? match = null)
+        {
+            List<ContainerDto> res = new List<ContainerDto>();
+            FindAllContainer(container, match, res);
             return res;
         }
         /// <summary>
@@ -97,7 +144,7 @@ namespace RM.Shared.Extensions
         public static ComponentDto? FindFirst(this ContainerDto container, Func<ComponentDto, bool> match)
         {
             List<ComponentDto> res = new List<ComponentDto>();
-            FindAll(container, match, res);
+            FindAllComponent(container, match, res);
             return res.FirstOrDefault();
         }
     }

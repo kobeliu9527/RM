@@ -9,15 +9,13 @@
 <div class="d-flex flex-column h-100 w-100">
     <MainToolbar />
     <div>
-        <Button OnClick="aaa">保存到数据库</Button>
+        <Button  OnClick="aaa">保存到数据库</Button>
         <Button OnClick="Update">模拟更新</Button>
         <Button OnClick="ChangeP">切换面板</Button>
         <Button OnClick="BackMain">返回主页面</Button>
         <Button OnClick="Find">找到自定控件</Button>
         <Button OnClick="() => SmallFullScreenModal.Toggle()">全屏弹窗</Button>
-
     </div>
-
     <div class="d-flex flex-row h-100">
         <FormDesigner ContainerData="@ContainerData" LeftName="@LeftName" @ref="FormDesigner" />
 

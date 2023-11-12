@@ -13,7 +13,7 @@
                                     <BootstrapInput IsSelectAllTextOnFocus="true" @bind-Value="value.Id" OnValueChanged="IdOnValueChanged"></BootstrapInput>
                                 </EditTemplate>
                             </EditorItem>
-                        
+
                             <EditorItem @bind-Field="@context">
                                 <EditTemplate Context="value">
                                     <Collapse>
@@ -26,7 +26,7 @@
                                                     <BootstrapInputNumber @bind-Value="value.Left" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
                                                     <BootstrapInputNumber @bind-Value="value.Zindex" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
                                                 }
-                                                <BootstrapInputNumber @bind-Value="value.Width"  ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                <BootstrapInputNumber @bind-Value="value.Width" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
                                                 <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
                                                 <Select @bind-Value="value.Color" OnValueChanged="OnValueChangedForColor"></Select>
                                                 <Switch @bind-Value="value.ShowLabel" OnValueChanged="OnValueChangedForBool"></Switch>
@@ -79,8 +79,8 @@
                             case PType.Double:
                                 break;
                             case PType.StringList:
-                              <div class="ppp2">
-                                <CheckboxList @bind-Value="@item.Value.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true" DisplayText="@item.Value.DisplayName"></CheckboxList>
+                                <div class="ppp2">
+                                    <CheckboxList @bind-Value="@item.Value.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true" DisplayText="@item.Value.DisplayName"></CheckboxList>
                                 </div>
                                 break;
                             case PType.Select:
@@ -88,8 +88,31 @@
 
                                 break;
                             case PType.DataSourse:
-                                @*<Select IsVirtualize="true" @bind-Value="@(ComponentData.Props[""].Value)" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>*@
                                 <Select IsVirtualize="true" @bind-Value="@item.Value.StringValue" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>
+                                break;
+                            case PType.MutilPropter:
+                                <Collapse>
+                                    <CollapseItems>
+                                        @for (int i = 0; i < Containers.Count; i++)
+                                        {
+                                            <CollapseItem Text="@Containers[i].Id">
+                                                @*   @foreach (var ite in @item.Value.MutilProperties)
+                            {*@
+                                                <div class="ppp2">
+                                                    @*<CheckboxList @bind-Value="@item.Value.MutilProperties[i].StringListValue" Items="@Parameters"></CheckboxList>*@
+                                                    @*<CheckboxList @bind-Value="@ite.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true"></CheckboxList>*@
+                                                </div>
+                                                @*}*@
+                                            </CollapseItem>
+                                        }
+                                        @foreach (var container in Containers)
+                                        {
+                                           
+                                        }
+
+                                    </CollapseItems>
+                                </Collapse>
+
                                 break;
                             default:
                                 <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.StringValue"></BootstrapInput>
@@ -167,14 +190,16 @@
             };
     }
     public List<SelectedItem> Parameters { get; set; } = new List<SelectedItem>() { new SelectedItem() { Value = "1", Text = "22" }, new SelectedItem() { Value = "2", Text = "22" } };
+    public List<ContainerDto> Containers;
     protected override Task OnInitializedAsync()
     {
-        Parameters = FormDesigner.ContainerData.FindAll().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id }).ToList();
+        Parameters = FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.ParentId+x.Id, Value = x.Id }).ToList();
+        Containers = FormDesigner.ContainerData.FindAllContainer();
         return base.OnInitializedAsync();
     }
     private IEnumerable<SelectedItem> GetParameters()
     {
-        return FormDesigner.ContainerData.FindAll().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
+        return FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
 
     }
     private IEnumerable<SelectedItem> GetProList()
@@ -191,7 +216,7 @@
         if (key == "Id")
         {
 
-            if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+            if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
             {
                 ValidateForm.SetError("Id", "数据库中已存在");
             }
@@ -212,7 +237,7 @@
     public Task IdOnValueChanged(string v)
     {
 
-        if (FormDesigner.ContainerData.FindAll(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
+        if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
         {
             ComponentData.Id = "";
         }

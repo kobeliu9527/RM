@@ -1,6 +1,6 @@
 ﻿@inject IJSRuntime JSRuntime
 @*行属性容器*@
-<div class="container-wrapper"
+<div class="container-wrapper qqqqqq" 
      onmouseover="formDesigner.highlihter.activate(event, @ComponentHighlighterCssClass)">
     <div class="widget-wrapper"
     @onclick="OnClickCallback"
@@ -12,7 +12,7 @@
         {
             var currentRowIndex = rowIndex;
             var currentRow = ContainerData.Rows[currentRowIndex];
-
+            //如果为第一行
             @if (currentRowIndex == 0 && !ContainerData.IsEmpty())//当拖动到页面的最上面的时候,会触发伪类元素生成
             {
                 Guid divId = Guid.NewGuid();
@@ -122,7 +122,7 @@
                          ondragover="event.preventDefault();"
                          ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
                          ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-                    @ondrop="@(async () =>
+                    @ondrop="@(async (e) =>
                                     {
                                         await DropComponentToEndOfRowAsync(ContainerData, currentRow);
                                         await OnDropFinishedAsync(divId);
@@ -142,7 +142,7 @@
                      ondragover="event.preventDefault();"
                      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, 'bo-dropzone-hover bo-drag-enter')"
                      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, 'bo-dropzone-hover bo-drag-enter')"
-                @ondrop="@(async () =>
+                @ondrop="@(async (e) =>
                                 {
                                     await DropComponentAfterRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
@@ -151,6 +151,8 @@
                 </div>
             }
         }
+
+
     </div>
 </div>
 

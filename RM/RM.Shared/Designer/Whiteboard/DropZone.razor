@@ -5,8 +5,9 @@
      ondragover="event.preventDefault();"
      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-     @ondrop="@(async () =>
+     @ondrop="@(async (e) =>
                 {
+
                     await DropBeforeComponentAsync();
                     await OnDropFinishedAsync(leftDropZoneId);
                 })"
@@ -17,7 +18,7 @@
      ondragover="event.preventDefault();"
      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-     @ondrop="@(async () =>
+     @ondrop="@(async (e) =>
                 {
                     await DropAfterComponentAsync();
                     await OnDropFinishedAsync(rightDropZoneId);
@@ -58,9 +59,12 @@
             // you are trying to drag and drop a new widget
             var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
             var newComponentData = paletteWidgetData.CreateComponent();
-
+           
+            //newComponentData.ParentId = containerData.Id;
             await DropWidgetAtPositionAsync(newComponentData, null);
             await FormDesigner.SelectComponentAsync(newComponentData);
+
+           // newComponentData.ParentId = Container.Id;
         }
         else if (FormDesigner.IsDraggedItemComponent()) //拖放的是设计器中定义好了的
         {
@@ -83,7 +87,7 @@
             // you are trying to drag and drop a new widget
             var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
             var newComponentData = paletteWidgetData.CreateComponent();
-
+           // newComponentData.ParentId = Container.Id;
             await DropWidgetAtPositionAsync(newComponentData, ComponentIndex + 1);
             await FormDesigner.SelectComponentAsync(newComponentData);
         }

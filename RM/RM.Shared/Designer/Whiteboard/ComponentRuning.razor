@@ -1,6 +1,6 @@
 ﻿@using RM.Shared.Designer.Whiteboard.Components
 @{
-    string tabsContainerClass = ComponentData?.Type == ComponentType.Tabs ? "container-element" : "";
+    string tabsContainerClass = ComponentData?.ComponentType == ComponentType.Tabs ? "container-element" : "";
 }
 <div class="component-elementruning">
     <div class="widget-wrapper">
@@ -10,7 +10,7 @@
             h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
         }
         <div class="widget-content" style="height:@h">
-            @switch (ComponentData?.Type)
+            @switch (ComponentData?.ComponentType)
             {
                 case ComponentType.SingleLine:
                     <SingleLineCompRuning Component="@ComponentData" />
@@ -56,7 +56,7 @@
                     break;
 
                 default:
-                    throw new NotImplementedException(@$"ComponentType: '{ComponentData?.Type}' is not implemented");
+                    throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
             }
         </div>
 

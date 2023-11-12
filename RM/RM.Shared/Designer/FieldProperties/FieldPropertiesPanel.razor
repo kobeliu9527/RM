@@ -13,7 +13,7 @@
 
                 @if (ComponentData != null)
                 {
-                    @switch (ComponentData.Type)
+                    @switch (ComponentData.ComponentType)
                     {
                         case ComponentType.Checkbox:
                             <CheckboxProperties ComponentData="@ComponentData" />
@@ -60,7 +60,7 @@
                 }
                 else if (ContainerData != null)
                 {
-                    @switch (ContainerData.Type)
+                    @switch (ContainerData.ContainerType)
                     {
                         case ContainerType.Base://嵌套的第一个Tab,父级Tab
                             // Do nothing
@@ -89,7 +89,7 @@
 
         </TabItem>
         <TabItem Text="菜单管理">
-            <div>菜单管理</div>
+            <TreeView Items="@(Get())" ShowCheckbox="true" />
         </TabItem>
         <TabItem Text="角色">
             <div class="fd-field-properties-panel h-100">角色</div>
@@ -102,11 +102,37 @@
 
 
 @code {
-   
+
     [CascadingParameter(Name = "Root")]
     [NotNull]
     public FormDesigner? FormDesigner { get; set; }
-
+    public TreeViewItem<ComponentDto> MyProperty { get; set; }
     private ComponentDto? ComponentData = null;
     private ContainerDto? ContainerData = null;
+    private List<TreeViewItem<ComponentDto>> BindingItems;
+    public List<TreeViewItem<ComponentDto>> Get()
+    {
+        var res = new List<TreeViewItem<ComponentDto>>();
+        ToTree(FormDesigner.ContainerData, res);
+        return res;
+    }
+    private void ToTree(ContainerDto container, List<TreeViewItem<ComponentDto>> list)
+    {
+        foreach (var item2 in container.Rows)
+        {
+            foreach (var item3 in item2)
+            {
+                var itemtree = new TreeViewItem<ComponentDto>(item3) { Text = item3.Id };
+                list.Add(itemtree);
+                if (item3?.ChildContainers?.Count>0)
+                {
+                    itemtree.Items = new List<TreeViewItem<ComponentDto>>();
+                    foreach (var item4 in item3.ChildContainers)
+                    {
+                        ToTree(item4, itemtree.Items);
+                    }
+                }
+            }
+        }
+    }
 }

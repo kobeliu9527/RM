@@ -1,17 +1,28 @@
-﻿namespace RM.Shared.Models
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace RM.Shared.Models
 {
     /// <summary>
     /// 容器数据对象
     /// </summary>
     /// <remarks>
     ///<para>ID:Id标识</para>
-    ///<para>Type:容器类型,枚举<see cref="ContainerType"/></para>
+    ///<para>Type:容器类型,枚举<see cref="Models.ContainerType"/></para>
     ///<para>Rows:表示所有的行的集合,<see cref="ComponentDto"/>表示一个控件,<see cref="list{ContainerDto}"/>表示一行控件,<see cref="list{list{ComponentDto}}"/>表示Rows集合</para>
     /// </remarks>
     public class ContainerDto 
     {
-        //public Guid Id { get; private set; }
-        public ContainerType Type { get; private set; }
+        /// <summary>
+        /// 容器的名字,必须全局唯一
+        /// </summary>
+        [DisplayName("唯一标识"), Required(ErrorMessage = "容器的名字,必须全局唯一")]
+        public string Id { get;  set; }
+   
+        /// <summary>
+        /// 容器的类型
+        /// </summary>
+        public ContainerType ContainerType { get;  set; }
         private List<List<ComponentDto>> rows=new List<List<ComponentDto>>();
         /// <summary>
         /// 控件的属性
@@ -33,7 +44,7 @@
 
         public ContainerDto(ContainerType type) 
         {
-            Type = type;
+            ContainerType = type;
             InitEmptyContainer(ref rows);
         }
 

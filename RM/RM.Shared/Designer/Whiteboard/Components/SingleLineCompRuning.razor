@@ -32,16 +32,30 @@
             List<SugarParameter> ps = new List<SugarParameter>();
             SugarParameter Msg = new SugarParameter("Msg", null, true);
             ps.Add(Msg);
-            foreach (var item in Component.Props["Parameters"].StringListValue)
+            foreach (var item in Component.Props["Parameters"].MutilProperties)
             {
-                var v12 = FormDesigner.ContainerData.FindFirst(x => x.Id == item);
-                if (v12 != null)
+                var container = FormDesigner.ContainerData.FindAllContainer(x=>x.Id==item.ContainerName).FirstOrDefault();
+                foreach (var item2 in item.StringListValue)
                 {
-                    var v = v12.ValueInfo.StringValue;
-                    SugarParameter p = new SugarParameter(item, v);
-                    ps.Add(p);
+                    var v12 = container.FindFirst(x => x.Id == item2);
+                    if (v12 != null)
+                    {
+                        var v = v12.ValueInfo.StringValue;
+                        SugarParameter p = new SugarParameter(item2, v);
+                        ps.Add(p);
+                    }
                 }
             }
+            //foreach (var item in Component.Props["Parameters"].StringListValue)
+            //{
+            //    var v12 = FormDesigner.ContainerData.FindFirst(x => x.Id == item);
+            //    if (v12 != null)
+            //    {
+            //        var v = v12.ValueInfo.StringValue;
+            //        SugarParameter p = new SugarParameter(item, v);
+            //        ps.Add(p);
+            //    }
+            //}
             var tabw = db.Ado.UseStoredProcedure().GetDataTable(Component.Props["StoreName"].StringValue, ps);
             if (Msg.Value != null)
             {

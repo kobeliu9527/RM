@@ -136,6 +136,7 @@
             // you are trying to drag and drop a new widget from Palette
             var paletteWidgetData = await Root.GetDraggedPaletteWidgetAsync();
             var newComponentData = paletteWidgetData.CreateComponent();
+            newComponentData.ParentId = containerData.Id;
             await AddComponentToRowAsync(newComponentData, destinationRow);
             await Root.SelectComponentAsync(newComponentData);
         }

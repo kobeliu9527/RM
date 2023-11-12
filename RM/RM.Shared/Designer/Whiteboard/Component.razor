@@ -3,7 +3,7 @@
     bool isSelectedComponent =
         FormDesigner.IsSelectedComponent(ComponentData);
     string selectedComponentClass = isSelectedComponent ? "component-element--selected" : "";
-    string tabsContainerClass = ComponentData?.Type == ComponentType.Tabs ? "container-element" : "";
+    string tabsContainerClass = ComponentData?.ComponentType == ComponentType.Tabs ? "container-element" : "";
 }
 
 <div class="component-element @Class @selectedComponentClass @tabsContainerClass"
@@ -21,7 +21,7 @@
             h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
         }
         <div class="widget-content" style="height:@h">
-            @switch (ComponentData?.Type)
+            @switch (ComponentData?.ComponentType)
             {
                 case ComponentType.SingleLine:
                     <SingleLineComp Component="@ComponentData" />
@@ -67,11 +67,11 @@
                     break;
 
                 default:
-                    throw new NotImplementedException(@$"ComponentType: '{ComponentData?.Type}' is not implemented");
+                    throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
             }
         </div>
 
-        @if (ComponentData?.Type != ComponentType.Tabs)
+        @if (ComponentData?.ComponentType != ComponentType.Tabs)
         {
             var ss = @Container;
             //用于拖拽时候
