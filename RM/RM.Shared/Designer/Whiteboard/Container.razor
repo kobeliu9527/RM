@@ -12,7 +12,7 @@
         {
             var currentRowIndex = rowIndex;
             var currentRow = ContainerData.Rows[currentRowIndex];
-            //如果为第一行
+            //如果为第一行,添加虚拟框div
             @if (currentRowIndex == 0 && !ContainerData.IsEmpty())//当拖动到页面的最上面的时候,会触发伪类元素生成
             {
                 Guid divId = Guid.NewGuid();
@@ -30,6 +30,7 @@
                 </div>
             }
 
+            //正式解析
             bool isMoveRowUpVisible = IsMoveRowUpVisible(currentRow);
             bool isMoveRowDownVisible = IsMoveRowDownVisible(currentRow);
             bool isRowElement = isMoveRowUpVisible ||
@@ -41,7 +42,7 @@
 
             <div class="row row-builder @rowElementClass @rowSeparatorClass">
 
-                @if (isRowElement)
+                @if (isRowElement)//添加行左右移动的功能
                 {
                     <div class="component-caption component-caption--row">
                         <span class="container-title">Row</span>
@@ -132,7 +133,7 @@
                 }
 
             </div>
-
+            //如果不是空容器,那么就在最后一行加一个隐藏div
             @if (!ContainerData.IsEmpty())
             {
                 Guid divId = Guid.NewGuid();

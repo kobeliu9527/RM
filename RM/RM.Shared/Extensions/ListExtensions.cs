@@ -38,6 +38,13 @@ namespace RM.Shared.Extensions
             list.RemoveAt(oldIndex);
             list.Insert(newIndex, removedItem);
         }
+        /// <summary>
+        /// 是否还能向左移动
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public static bool IsMoveLeftPossible<T>(this List<T> list, T element)
         {
             return list.IndexOf(element) > 0;
