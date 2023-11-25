@@ -1,0 +1,284 @@
+﻿@using SqlSugar
+
+@*@inherits PropertiesComponentBase*@
+@*<div class="prop-group-box" style="min-height:80vh">*@
+<div style="min-height:80vh">
+    @*<div class="box-header">Defaults(默认通用属性)</div>*@
+    <Collapse OnCollapseChanged="(aa)=>{   return Task.CompletedTask;}" IsAccordion="true">
+        <CollapseItems>
+            <CollapseItem Text="通用属性" IsCollapsed="false">
+                <ValidateForm @ref="ValidateForm" Model="@ComponentData" OnValidSubmit="@OnValidComplexModel" OnFieldValueChanged="OnFieldValueChanged">
+                    <EditorForm TModel="ComponentDto" ItemsPerRow="1" AutoGenerateAllItem="false">
+                        <FieldItems>
+                            <EditorItem @bind-Field="@context.Id">
+                                <EditTemplate Context="value">
+                                    <BootstrapInput IsSelectAllTextOnFocus="true" @bind-Value="value.Id" OnValueChanged="IdOnValueChanged"></BootstrapInput>
+                                </EditTemplate>
+                            </EditorItem>
+
+                            <EditorItem @bind-Field="@context">
+                                <EditTemplate Context="value">
+                                    <Collapse>
+                                        <CollapseItems>
+                                            <CollapseItem Text="外观参数">
+                                                <Switch @bind-Value="value.IsAbsPosition" OnValueChanged="OnValueChangedForBool"></Switch>
+                                                @if (@context.IsAbsPosition)
+                                                {
+                                                    <BootstrapInputNumber @bind-Value="value.Top" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                    <BootstrapInputNumber @bind-Value="value.Left" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                    <BootstrapInputNumber @bind-Value="value.Zindex" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                }
+                                                <BootstrapInputNumber @bind-Value="value.Width" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                                <Select @bind-Value="value.Color" OnValueChanged="OnValueChangedForColor"></Select>
+                                                <Switch @bind-Value="value.ShowLabel" OnValueChanged="OnValueChangedForBool"></Switch>
+                                                <Switch @bind-Value="value.IsDisabled" OnValueChanged="OnValueChangedForBool"></Switch>
+
+                                            </CollapseItem>
+                                        </CollapseItems>
+                                    </Collapse>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.MutLanguage">
+                                <EditTemplate Context="value">
+                                    <Collapse>
+                                        <CollapseItems>
+                                            <CollapseItem Text="标题设置(多语言)">
+                                                <BootstrapInput @bind-Value="value.MutLanguage.zh_CN" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                                <BootstrapInput @bind-Value="value.MutLanguage.zh_TW" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                                <BootstrapInput @bind-Value="value.MutLanguage.en_US" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                                <BootstrapInput @bind-Value="value.MutLanguage.ja_JP" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                            </CollapseItem>
+                                        </CollapseItems>
+                                    </Collapse>
+                                </EditTemplate>
+                            </EditorItem>
+
+                        </FieldItems>
+                    </EditorForm>
+                </ValidateForm>
+
+            </CollapseItem>
+
+            <CollapseItem Text="Ext(扩展属性)">
+                @if (ComponentData is not null)
+                {
+                    @foreach (var item in @ComponentData.Props)
+                    {
+                        @switch (item.Value.PType)
+                        {
+                            case PType.String:
+                                <BootstrapInput OnValueChanged="OnValueChangedForString" ShowLabel="true" DisplayText="@item.Value.DisplayName" @bind-Value="@item.Value.StringValue"></BootstrapInput>
+                                break;
+                            case PType.SingleColor:
+                                <Select DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.StringValue" ShowLabel="true"></Select>
+                                break;
+                            case PType.Bool:
+                                <Switch @bind-Value="item.Value.BoolVal" OnValueChanged="OnValueChangedForBool" ShowLabel="true" DisplayText="@item.Value.DisplayName"></Switch>
+                                break;
+                            case PType.Int:
+                                break;
+                            case PType.Double:
+                                break;
+                            case PType.StringList:
+                                <div class="ppp2">
+                                    <CheckboxList @bind-Value="@item.Value.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true" DisplayText="@item.Value.DisplayName"></CheckboxList>
+                                </div>
+                                break;
+                            case PType.Select:
+                                <Select TValue="string" Items="GetProList()" @bind-Value="@item.Value.StringValue" ShowSearch="true" ShowLabel="true" DisplayText="@item.Value.DisplayName" />
+
+                                break;
+                            case PType.DataSourse:
+                                <Select IsVirtualize="true" @bind-Value="@item.Value.StringValue" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>
+                                break;
+                            case PType.MutilPropter:
+                                <Collapse>
+                                    <CollapseItems>
+                                        @for (int i = 0; i < Containers.Count; i++)
+                                        {
+                                            <CollapseItem Text="@Containers[i].Id">
+                                                @*   @foreach (var ite in @item.Value.MutilProperties)
+                            {*@
+                                                <div class="ppp2">
+                                                    @*<CheckboxList @bind-Value="@item.Value.MutilProperties[i].StringListValue" Items="@Parameters"></CheckboxList>*@
+                                                    @*<CheckboxList @bind-Value="@ite.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true"></CheckboxList>*@
+                                                </div>
+                                                @*}*@
+                                            </CollapseItem>
+                                        }
+                                        @foreach (var container in Containers)
+                                        {
+                                           
+                                        }
+
+                                    </CollapseItems>
+                                </Collapse>
+
+                                break;
+                            default:
+                                <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.StringValue"></BootstrapInput>
+                                break;
+                        }
+                    }
+                }
+            </CollapseItem>
+
+        </CollapseItems>
+    </Collapse>
+</div>
+
+
+
+
+@code {
+    [NotNull]
+    private Modal? Modal { get; set; }
+
+    [CascadingParameter(Name = "Root")]
+    public FormDesigner? FormDesigner { get; set; }
+
+    [Parameter]
+    public ComponentDto? ComponentData { get; set; }
+
+    [NotNull]
+    private ValidateForm? ValidateForm { get; set; }
+    [Inject]
+    [NotNull]
+    private DialogService? DialogService { get; set; }
+
+    [Inject]
+    [NotNull]
+    private ISqlSugarClient? db { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnLabelChanged { get; set; }
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnWidthChanged { get; set; }
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnHeightChanged { get; set; }
+    [Parameter]
+    public EventCallback<PInof> OnPropChanged { get; set; }
+    /// <summary>
+    /// Primary / Secondary / Success / Danger / Warning / Info / Dark
+    /// </summary>
+    List<SelectedItem> ColorItems = new List<SelectedItem>() {
+                new SelectedItem("None", "None"),
+                new SelectedItem("Active", "Active"),
+                new SelectedItem("Primary", "Primary"),
+                new SelectedItem("Warning", "Warning"),
+                new SelectedItem("Info", "Info"),
+                new SelectedItem("Danger", "Danger"),
+                new SelectedItem("Success", "Success"),
+                new SelectedItem("Dark", "Dark")
+                };
+    List<SelectedItem> BoolItems = new List<SelectedItem>() {
+                new SelectedItem("True", "True"),
+                new SelectedItem("False", "False"),
+
+                };
+    private SelectedItem? VirtualItem1 { get; set; }
+    private async Task<QueryData<SelectedItem>> OnQueryAsync(VirtualizeQueryOption option)
+    {
+        await Task.Delay(200);
+        return new QueryData<SelectedItem>
+            {
+                Items = new List<SelectedItem>()
+                        {
+                    new SelectedItem("北京", "北京"),
+                    new SelectedItem("上海", "上海") { Active = true },
+                },
+                TotalCount = 2
+            };
+    }
+    public List<SelectedItem> Parameters { get; set; } = new List<SelectedItem>() { new SelectedItem() { Value = "1", Text = "22" }, new SelectedItem() { Value = "2", Text = "22" } };
+    public List<ContainerDto> Containers;
+    protected override Task OnInitializedAsync()
+    {
+        Parameters = FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.ParentId+x.Id, Value = x.Id }).ToList();
+        Containers = FormDesigner.ContainerData.FindAllContainer();
+        return base.OnInitializedAsync();
+    }
+    private IEnumerable<SelectedItem> GetParameters()
+    {
+        return FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
+
+    }
+    private IEnumerable<SelectedItem> GetProList()
+    {
+        return db.DbMaintenance.GetProcList("LCM").Select(x => new SelectedItem() { Text = x, Value = x });
+    }
+    public void OnValueChanged(MouseEventArgs e)
+    {
+
+        //Color.Dark
+    }
+    public void OnFieldValueChanged(string key, object value)
+    {//lstNames.GroupBy(n => n).Any(c => c.Count() > 1);
+        if (key == "Id")
+        {
+
+            if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+            {
+                ValidateForm.SetError("Id", "数据库中已存在");
+            }
+
+        }
+        //return Task.CompletedTask;
+    }
+    private Task OnValidComplexModel(EditContext context)
+    {
+        ValidateForm.SetError("Id", "数据库中已存在");
+        return Task.CompletedTask;
+    }
+    /// <summary>
+    /// 当设置控件的Id属性的时候
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public Task IdOnValueChanged(string v)
+    {
+
+        if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
+        {
+            ComponentData.Id = "";
+        }
+        return Task.CompletedTask;
+    }
+    /// <summary>
+    /// 仅仅是手动触发界面刷新
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public async Task OnValueChangedForBool(bool v)
+    {
+        await FormDesigner.StateHasChangedAsync();
+    }
+    /// <summary>
+    /// 当设置控件外观颜色的时候
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public async Task OnValueChangedForColor(Color v)
+    {
+        await FormDesigner.StateHasChangedAsync();
+    }
+    /// <summary>
+    /// 仅仅是手动触发界面刷新
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public async Task OnValueChangedForInt(int v)
+    {
+        await FormDesigner.StateHasChangedAsync();
+    }
+    /// <summary>
+    /// 刷新主界面
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public async Task OnValueChangedForString(string v)
+    {
+        await FormDesigner.StateHasChangedAsync();
+    }
+}
