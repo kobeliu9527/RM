@@ -8,10 +8,16 @@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
+<FormDesigner ContainerData="ContainerData"></FormDesigner>
 @code {
     private int currentCount = 0;
-
+    public ContainerDto? ContainerData { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };
+        return;
+    }
     private void IncrementCount()
     {
         currentCount++;
