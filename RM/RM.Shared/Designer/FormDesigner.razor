@@ -55,7 +55,7 @@
     /// <summary>
     ///
     /// </summary>
-    private List<ComponentDto> DraggedComponentOriginRow = null;
+    private RowDto DraggedComponentOriginRow = null;
     /// <summary>
     ///
     /// </summary>
@@ -142,7 +142,7 @@
     }
 
     public async Task SetDraggedComponentAsync(ComponentDto draggedComponentData,
-        List<ComponentDto> draggedComponentOriginRow, ContainerDto draggedComponentOriginContainer)
+        RowDto draggedComponentOriginRow, ContainerDto draggedComponentOriginContainer)
     {
         DraggedComponentData = draggedComponentData;
         DraggedComponentOriginRow = draggedComponentOriginRow;
@@ -154,7 +154,7 @@
     {
         return await Task.FromResult(DraggedComponentData);
     }
-    public async Task<List<ComponentDto>> GetDraggedComponentOriginRowAsync()
+    public async Task<RowDto> GetDraggedComponentOriginRowAsync()
     {
         return await Task.FromResult(DraggedComponentOriginRow);
     }

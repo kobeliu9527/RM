@@ -25,14 +25,14 @@ namespace RM.Shared.Core
         /// todo 重新计算一行中每个控件所占用的大小
         /// </summary>
         /// <param name="componentInRow"></param>
-        public static void ComputeEachItemSizeInRow(List<ComponentDto> componentInRow)
+        public static void ComputeEachItemSizeInRow(RowDto componentInRow)
         {
             //debug 直接整除就好了
-            var columnSize = Math.Floor((double)(MaxColumnWidth / componentInRow.Count));//每一个占用多少
+            var columnSize = Math.Floor((double)(MaxColumnWidth / componentInRow.Row .Count));//每一个占用多少
             var lastColumnSize = MaxColumnWidth % columnSize;//评分后剩余多少
 
-            var rowSize = componentInRow.Aggregate(0, (colSize, component) => colSize + component.Width);
-            var lastComponent = componentInRow.Last();
+            var rowSize = componentInRow .Row.Aggregate(0, (colSize, component) => colSize + component.Width);
+            var lastComponent = componentInRow.Row.Last();
 
             if (rowSize < MaxColumnWidth)//所有控件的width之和小于12,直接把最后一个的width设为fill
             {
@@ -43,7 +43,7 @@ namespace RM.Shared.Core
             else//控件sum>12了
             {
                 //we iterate over the component to resize  them
-                foreach (var component in componentInRow)
+                foreach (var component in componentInRow.Row)
                 {
                     component.Width = (int)columnSize;//将宽度设置为12/控件总数
                 }
@@ -58,9 +58,9 @@ namespace RM.Shared.Core
                 // we distribute the rest of number-of-components / 12 to
                 // columns starting from the end
                 //将多余的控件
-                for (var index = componentInRow.Count - (int)lastColumnSize; index < componentInRow.Count - 1; index++)
+                for (var index = componentInRow.Row  .Count - (int)lastColumnSize; index < componentInRow.Row.Count - 1; index++)
                 {
-                    componentInRow[index].Width += 1;
+                    componentInRow.Row[index].Width += 1;
                 }
             }
         }

@@ -19,7 +19,7 @@
     <div class="d-flex flex-row h-100">
         <FormDesigner ContainerData="@ContainerData" LeftName="@LeftName" @ref="FormDesigner" />
 
-        <Modal @ref="SmallFullScreenModal">
+       @*  <Modal @ref="SmallFullScreenModal">
             <ModalDialog FullScreenSize="FullScreenSize.Always" Title="演示" ShowFooter="false" ShowCloseButton="false">
                 <HeaderTemplate>
 
@@ -34,7 +34,7 @@
 
                 </FooterTemplate>
             </ModalDialog>
-        </Modal>
+        </Modal> *@
 
     </div>
 </div>
@@ -70,7 +70,7 @@
     {
         foreach (var item in ContainerData.Rows)
         {
-            foreach (var item2 in item)
+            foreach (var item2 in item.Row)
             {
                 foreach (var item3 in item2.Props)
                 {
@@ -103,7 +103,8 @@
     }
     private async Task RunDemoPredefinedContainer()
     {
-
+       // ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>()}} };
+        //return;
         //List<List<ComponentDto>> Rows = new List<List<ComponentDto>>()
         //    {
         //        new List<ComponentDto>()

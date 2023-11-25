@@ -22,7 +22,7 @@ namespace RM.Shared.Extensions
             {
                 foreach (var row in container.Rows)
                 {
-                    if (row != null && row.Any())
+                    if (row != null && row.Row.Any())
                     {
                         result = false;
                         break;
@@ -34,7 +34,7 @@ namespace RM.Shared.Extensions
         }
 
         public static async Task RemoveRowAsync(this ContainerDto container,
-            List<ComponentDto> row)
+            RowDto row)
         {
             if (container.Rows.Count > 1)
             {
@@ -54,7 +54,7 @@ namespace RM.Shared.Extensions
         {
             foreach (var row in container.Rows)
             {
-                foreach (var component in row)
+                foreach (var component in row.Row)
                 {
                     if (match != null)
                     {
@@ -99,7 +99,7 @@ namespace RM.Shared.Extensions
             }
             foreach (var row in container.Rows)
             {
-                foreach (var component in row)
+                foreach (var component in row.Row)
                 {
                     if (component.ChildContainers?.Count > 0)
                     {

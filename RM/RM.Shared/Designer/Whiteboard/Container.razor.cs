@@ -56,23 +56,24 @@ namespace RM.Shared.Designer.Whiteboard
         private const string DropZoneCssClasses = @"'bo-dropzone-hover bo-drag-enter'";
         private const string DropZoneCssClassesWithoutSingleQuotes = @"bo-dropzone-hover bo-drag-enter";
 #region Move Row Up-Down Methods
-        private bool IsMoveRowUpVisible(List<ComponentDto> componentsInRow)
+        private bool IsMoveRowUpVisible(RowDto componentsInRow)
         {
+            //List<RowDto>
             return ContainerData.Rows.IsMoveLeftPossible(componentsInRow);
         }
 
-        private bool IsMoveRowDownVisible(List<ComponentDto> componentsInRow)
+        private bool IsMoveRowDownVisible(RowDto componentsInRow)
         {
             return ContainerData.Rows.IsMoveRightPossible(componentsInRow);
         }
 
-        private async Task MoveRowUpAsync(List<ComponentDto> componentsInRow)
+        private async Task MoveRowUpAsync(RowDto componentsInRow)
         {
             ContainerData.Rows.MoveLeft(componentsInRow);
             await Task.CompletedTask;
         }
 
-        private async Task MoveRowDownAsync(List<ComponentDto> componentsInRow)
+        private async Task MoveRowDownAsync(RowDto componentsInRow)
         {
             ContainerData.Rows.MoveRight(componentsInRow);
             await Task.CompletedTask;
@@ -80,7 +81,7 @@ namespace RM.Shared.Designer.Whiteboard
 
 #endregion Move Row Up-Down Methods
 #region Drag and Drop Methods
-        private async Task DragComponentStartAsync(ComponentDto draggedItemData, List<ComponentDto> currentRow, ContainerDto currentContainer)
+        private async Task DragComponentStartAsync(ComponentDto draggedItemData, RowDto currentRow, ContainerDto currentContainer)
         {
             await Root.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
         }
@@ -93,7 +94,7 @@ namespace RM.Shared.Designer.Whiteboard
         /// <returns></returns>
         private async Task DropComponentBeforeRowAsync(int rowIndex, ContainerDto currentContainer)
         {
-            var newRow = new List<ComponentDto>();
+            var newRow = new RowDto();
             currentContainer.Rows.Insert(rowIndex, newRow);
             await DropComponentToEndOfRowAsync(currentContainer, newRow);
         }
@@ -106,7 +107,7 @@ namespace RM.Shared.Designer.Whiteboard
         /// <returns></returns>
         private async Task DropComponentAfterRowAsync(int rowIndex, ContainerDto?currentContainer)
         {
-            var newRow = new List<ComponentDto>();
+            var newRow = new RowDto();
             var newRowIndex = rowIndex + 1;
             currentContainer.Rows.Insert(newRowIndex, newRow);
             await DropComponentToEndOfRowAsync(currentContainer, newRow);
@@ -119,7 +120,7 @@ namespace RM.Shared.Designer.Whiteboard
         /// <param name = "destinationRow"></param>
         /// <returns></returns>
         /// <exception cref = "NotImplementedException"></exception>
-        private async Task DropComponentToEndOfRowAsync(ContainerDto containerData, List<ComponentDto> destinationRow)
+        private async Task DropComponentToEndOfRowAsync(ContainerDto containerData, RowDto destinationRow)
         {
             if (Root.IsDraggedItemPaletteWidget()) //从工具箱中拖动的
             {
@@ -140,7 +141,7 @@ namespace RM.Shared.Designer.Whiteboard
                 // TODO: Check is component movable
                 // add component to destination row
                 await AddComponentToRowAsync(componentData, destinationRow);
-                if (originRow.Count == 0)
+                if (originRow.Row.Count == 0)
                 {
                     var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
                     originContainer.Rows.Remove(originRow);
@@ -173,25 +174,25 @@ namespace RM.Shared.Designer.Whiteboard
         /// <param name = "componentData"></param>
         /// <param name = "currentRow"></param>
         /// <returns></returns>
-        private async Task AddComponentToRowAsync(ComponentDto componentData, List<ComponentDto> currentRow)
+        private async Task AddComponentToRowAsync(ComponentDto componentData, RowDto currentRow)
         {
-            currentRow.Add(componentData);
+            currentRow.Row. Add(componentData);
             ComponentUtils.ComputeEachItemSizeInRow(currentRow);
             await Task.CompletedTask;
         }
 
-        private async Task DetachComponentFromPreviousRowAsync(ComponentDto componentData, List<ComponentDto> destinationRow)
+        private async Task DetachComponentFromPreviousRowAsync(ComponentDto componentData, RowDto destinationRow)
         {
             var originRow = await Root.GetDraggedComponentOriginRowAsync();
             // remove component from origin row
-            originRow.Remove(componentData);
+            originRow.Row.Remove(componentData);
             var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
-            if (destinationRow?.Count == 0 && destinationRow != originRow)
+            if (destinationRow?.Row .Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
             }
 
-            if (originRow?.Count == 0 && destinationRow != originRow)
+            if (originRow.Row.Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
             }
@@ -205,10 +206,10 @@ namespace RM.Shared.Designer.Whiteboard
         /// </summary>
         /// <param name = "componentsInRow"></param>
         /// <returns></returns>
-        private int CalculateRowSize(List<ComponentDto> componentsInRow)
+        private int CalculateRowSize(RowDto componentsInRow)
         {
             int size = 0;
-            foreach (var component in componentsInRow)
+            foreach (var component in componentsInRow.Row)
             {
                 size += ComponentUtils.CalculateColumnWidth(component);
             }

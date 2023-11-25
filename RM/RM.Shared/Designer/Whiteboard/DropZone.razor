@@ -38,7 +38,7 @@
     public ContainerDto Container { get; set; }
 
     [Parameter]
-    public List<ComponentDto> ComponentRow { get; set; }
+    public RowDto ComponentRow { get; set; }
 
     [Parameter]
     public ComponentDto ComponentData { get; set; }
@@ -142,7 +142,7 @@
     private async Task MoveComponentToPositionAsync(ComponentDto componentData, bool isComponentDroppedToLeftDropZone)
     {
         var destinationRow = ComponentRow;
-        int componentIndexInDestination = destinationRow.IndexOf(componentData);
+        int componentIndexInDestination = destinationRow.Row .IndexOf(componentData);
         bool isWidgetAlreadyInDestinationRow = componentIndexInDestination != -1;
         int componentIndex = ComponentIndex;
 
@@ -158,7 +158,7 @@
         {
             // It means that the component is dragged and dropped in the same row
 
-            int destinationRowLength = destinationRow.Count;
+            int destinationRowLength = destinationRow.Row.Count;
 
             // Do nothing for current component
             if (componentIndexInDestination == ComponentIndex)
@@ -193,7 +193,7 @@
             }
 
             // move component to its new position in the row
-            destinationRow.MoveTo(componentIndexInDestination, componentIndex);
+            destinationRow.Row.MoveTo(componentIndexInDestination, componentIndex);
         }
         else
         {
@@ -218,21 +218,21 @@
     }
 
     private async Task DetachComponentFromPreviousRowAsync(ComponentDto componentData,
-        List<ComponentDto> destinationRow)
+        RowDto destinationRow)
     {
         var originRow = await FormDesigner.GetDraggedComponentOriginRowAsync();
 
         // remove component from origin row
-        originRow.Remove(componentData);
+        originRow.Row.Remove(componentData);
 
         var originContainer = await FormDesigner.GetDraggedComponentOriginContainerAsync();
 
-        if (destinationRow?.Count == 0 && destinationRow != originRow)
+        if (destinationRow.Row.Count == 0 && destinationRow != originRow)
         {
             await originContainer.RemoveRowAsync(originRow);
         }
 
-        if (originRow?.Count == 0 && destinationRow != originRow)
+        if (originRow.Row.Count == 0 && destinationRow != originRow)
         {
             await originContainer.RemoveRowAsync(originRow);
         }
@@ -240,16 +240,16 @@
         await FormDesigner.SelectComponentAsync(null);
     }
 
-    private async Task AddComponentToRowAsync(List<ComponentDto> currentRow,
+    private async Task AddComponentToRowAsync(RowDto currentRow,
         ComponentDto componentData, int? index)
     {
         if (index.HasValue && index.Value >= 0)
         {
-            currentRow.Insert(index.Value, componentData);
+            currentRow.Row.Insert(index.Value, componentData);
         }
         else
         {
-            currentRow.Add(componentData);
+            currentRow.Row.Add(componentData);
         }
 
         ComponentUtils.ComputeEachItemSizeInRow(currentRow);

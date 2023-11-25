@@ -50,7 +50,7 @@ namespace RM.Shared.Designer.Whiteboard
         /// 要控制的这个组件所在的行
         /// </summary>
         [Parameter]
-        public List<ComponentDto> ComponentsInParentRow { get; set; }
+        public RowDto ComponentsInParentRow { get; set; }
         /// <summary>
         /// 要控制的组件的数据
         /// </summary>
@@ -60,12 +60,12 @@ namespace RM.Shared.Designer.Whiteboard
 #region Move Left Button
         private bool IsMoveLeftVisible()
         {
-            return ComponentsInParentRow.IsMoveLeftPossible(Component);
+            return ComponentsInParentRow.Row.IsMoveLeftPossible(Component);
         }
 
         private async Task MoveLeftAsync()
         {
-            ComponentsInParentRow?.MoveLeft(Component);
+            ComponentsInParentRow?.Row?.MoveLeft(Component);
             await Root.StateHasChangedAsync();
         }
 
@@ -73,12 +73,12 @@ namespace RM.Shared.Designer.Whiteboard
 #region Move Right Button
         private bool IsMoveRightVisible()
         {
-            return ComponentsInParentRow.IsMoveRightPossible(Component);
+            return ComponentsInParentRow.Row.IsMoveRightPossible(Component);
         }
 
         private async Task MoveRightAsync()
         {
-            ComponentsInParentRow?.MoveRight(Component);
+            ComponentsInParentRow.Row .MoveRight(Component);
             await Root.StateHasChangedAsync();
         }
 
@@ -87,12 +87,12 @@ namespace RM.Shared.Designer.Whiteboard
         private async Task OnDeleteAsync()
         {
             //将这个组件从这个行集合中移除 
-            ComponentsInParentRow.Remove(Component);
+            ComponentsInParentRow.Row.Remove(Component);
             
             // remove row from parent container 
             // if the row is empty and not last row in container
             // otherwise there will be no drop zone to drag and drop new components
-            if (ComponentsInParentRow.Count == 0 && Container.ContainerData.Rows.Count != 1)
+            if (ComponentsInParentRow.Row.Count == 0 && Container.ContainerData.Rows.Count != 1)
             {
                 Container.ContainerData.Rows.Remove(ComponentsInParentRow);
             }

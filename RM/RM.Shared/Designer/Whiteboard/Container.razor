@@ -3,7 +3,7 @@
 <div class="container-wrapper qqqqqq" 
      onmouseover="formDesigner.highlihter.activate(event, @ComponentHighlighterCssClass)">
     <div class="widget-wrapper"
-    @onclick="OnClickCallback"
+    @onclick="@OnClickCallback"
     @onclick:preventDefault="true"
     @onclick:stopPropagation="true"
          onmouseout="formDesigner.highlihter.deactivate(event, @ComponentHighlighterCssClass)">
@@ -68,10 +68,10 @@
                     </div>
                 }
 
-                @for (int componentIndex = 0; componentIndex < currentRow.Count; componentIndex++)
+                @for (int componentIndex = 0; componentIndex < currentRow.Row.Count; componentIndex++)
                 {
                     var currentComponentIndex = componentIndex;
-                    var currentComponent = currentRow[componentIndex];
+                    var currentComponent = currentRow.Row[componentIndex];
                     string componentColumnWidth =
                     ComponentUtils.GetComponentColumnCssClasses(currentComponent);
                     string h = "auto";
