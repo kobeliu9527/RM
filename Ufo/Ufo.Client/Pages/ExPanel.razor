@@ -1,0 +1,28 @@
+﻿@* <div class="row @ComponentDto.FlexInfo.ColCount" style="position:@ComponentDto.Position.ToString();"
+     ondragover="event.preventDefault();"
+     ondragenter="event.preventDefault();"
+     ondragleave="event.preventDefault();"
+@ondrop:preventDefault
+     @ondrop="(e)=>{
+   ComponentDto.Child?.Add(new ComponentDto(){ ComponentType= ComponentType.Button});
+;
+}"> *@
+    @if (ComponentDto.Child != null)
+    {
+        @foreach (var item in ComponentDto.Child)
+        {
+            <Component  ComponentDto="item" Parent="ComponentDto"></Component>
+        }
+    }
+@* </div> *@
+
+@code {
+    public string Col { get; set; } = "";
+    [Parameter]
+    [NotNull]
+    public ComponentDto? ComponentDto { get; set; }
+
+    [Parameter]
+    [NotNull]
+    public ComponentDto? Parent { get; set; }
+}

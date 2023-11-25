@@ -7,7 +7,6 @@
      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
      @ondrop="@(async (e) =>
                 {
-
                     await DropBeforeComponentAsync();
                     await OnDropFinishedAsync(leftDropZoneId);
                 })"

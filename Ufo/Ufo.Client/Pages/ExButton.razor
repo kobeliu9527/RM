@@ -1,0 +1,15 @@
+﻿@using Models
+@using System.Diagnostics.CodeAnalysis
+<button id="@Guid.NewGuid()">按钮</button>
+
+@code {
+    [Parameter]
+    [NotNull]
+    public ComponentDto? ComponentDto { get; set; }
+    /// <summary>
+    /// 父级容器
+    /// </summary>
+    [Parameter]
+    [NotNull]
+    public ComponentDto? Parent { get; set; }
+}
