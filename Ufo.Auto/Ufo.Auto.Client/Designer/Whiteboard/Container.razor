@@ -1,13 +1,13 @@
 ﻿
 
 
-<div class="container-wrapper qqqqqq" 
-     onmouseover="formDesigner.highlihter.activate(event, @ComponentHighlighterCssClass)">
+<div class="container-wrapper qqqqqq"
+     onmouseover="formDesigner.highlihter.activate(event, @(ComponentHighlighterCssClass))">
     <div class="widget-wrapper"
-    @onclick="@OnClickCallback"
-    @onclick:preventDefault="true"
-    @onclick:stopPropagation="true"
-   onmouseout="formDesigner.highlihter.deactivate(event, @ComponentHighlighterCssClass)">
+         @onclick="@OnClickCallback"
+         @onclick:preventDefault="true"
+         @onclick:stopPropagation="true"
+         onmouseout="formDesigner.highlihter.deactivate(event, @(ComponentHighlighterCssClass))">
 
         @for (int rowIndex = 0; rowIndex < ContainerData?.Rows.Count; rowIndex++)
         {
@@ -20,14 +20,14 @@
                 <div id="@divId"
                      class="row dropRow"
                      ondragover="event.preventDefault();"
-                     ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
-                     ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-                @ondrop="@(async (e) =>
+                     ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @(DropZoneCssClasses))"
+                     ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @(DropZoneCssClasses))"
+                     @ondrop="@(async (e) =>
                                 {
                                     await DropComponentBeforeRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
                                 })"
-                @ondrop:preventDefault="true">
+                     @ondrop:preventDefault="true">
                 </div>
             }
 
@@ -82,7 +82,7 @@
                         //z-index:@(currentComponent.Zindex)
                         <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;width:@h;"
                              draggable="true"
-                        @ondragstart="@(async () =>
+                             @ondragstart="@(async () =>
                                          {
                                              await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
                                          })">
@@ -97,7 +97,7 @@
                     {
                         <div class="draggable  @componentColumnWidth"
                              draggable="true"
-                        @ondragstart="@(async () =>
+                             @ondragstart="@(async () =>
                                          {
                                              await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
                                          })">
@@ -124,12 +124,12 @@
                          ondragover="event.preventDefault();"
                          ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
                          ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-                    @ondrop="@(async (e) =>
+                         @ondrop="@(async (e) =>
                                     {
                                         await DropComponentToEndOfRowAsync(ContainerData, currentRow);
                                         await OnDropFinishedAsync(divId);
                                     })"
-                    @ondrop:preventDefault="true">
+                         @ondrop:preventDefault="true">
                     </div>
                 }
 
@@ -144,12 +144,12 @@
                      ondragover="event.preventDefault();"
                      ondragenter="event.preventDefault();formDesigner.utils.addClass(this, 'bo-dropzone-hover bo-drag-enter')"
                      ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, 'bo-dropzone-hover bo-drag-enter')"
-                @ondrop="@(async (e) =>
+                     @ondrop="@(async (e) =>
                                 {
                                     await DropComponentAfterRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
                                 })"
-                @ondrop:preventDefault="true">
+                     @ondrop:preventDefault="true">
                 </div>
             }
         }

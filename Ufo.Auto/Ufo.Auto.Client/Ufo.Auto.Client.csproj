@@ -26,7 +26,6 @@
     <None Include="Designer\FieldProperties\Properties\SingelLineProperties.razor" />
     <None Include="Designer\FieldProperties\Properties\TabProperties.razor" />
     <None Include="Designer\FieldProperties\Properties\TabsProperties.razor" />
-    <None Include="Designer\FormDesigner.razor" />
     <None Include="Designer\FormRuning.razor" />
     <None Include="Designer\Palette\PalettePanel.razor" />
     <None Include="Designer\Palette\PaletteWidget.razor" />
