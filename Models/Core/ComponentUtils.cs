@@ -28,11 +28,11 @@ namespace Models.Core
         public static void ComputeEachItemSizeInRow(RowDto componentInRow)
         {
             //debug 直接整除就好了
-            var columnSize = Math.Floor((double)(MaxColumnWidth / componentInRow.ComponentDto.Count));//每一个占用多少
+            var columnSize = Math.Floor((double)(MaxColumnWidth / componentInRow.ComponentList.Count));//每一个占用多少
             var lastColumnSize = MaxColumnWidth % columnSize;//评分后剩余多少
 
-            var rowSize = componentInRow.ComponentDto.Aggregate(0, (colSize, component) => colSize + component.Width);
-            var lastComponent = componentInRow.ComponentDto.Last();
+            var rowSize = componentInRow.ComponentList.Aggregate(0, (colSize, component) => colSize + component.Width);
+            var lastComponent = componentInRow.ComponentList.Last();
 
             if (rowSize < MaxColumnWidth)//所有控件的width之和小于12,直接把最后一个的width设为fill
             {
@@ -43,7 +43,7 @@ namespace Models.Core
             else//控件sum>12了
             {
                 //we iterate over the component to resize  them
-                foreach (var component in componentInRow.ComponentDto)
+                foreach (var component in componentInRow.ComponentList)
                 {
                     component.Width = (int)columnSize;//将宽度设置为12/控件总数
                 }
@@ -58,9 +58,9 @@ namespace Models.Core
                 // we distribute the rest of number-of-components / 12 to
                 // columns starting from the end
                 //将多余的控件
-                for (var index = componentInRow.ComponentDto.Count - (int)lastColumnSize; index < componentInRow.ComponentDto.Count - 1; index++)
+                for (var index = componentInRow.ComponentList.Count - (int)lastColumnSize; index < componentInRow.ComponentList.Count - 1; index++)
                 {
-                    componentInRow.ComponentDto[index].Width += 1;
+                    componentInRow.ComponentList[index].Width += 1;
                 }
             }
         }

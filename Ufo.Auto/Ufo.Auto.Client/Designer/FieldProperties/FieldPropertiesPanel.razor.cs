@@ -26,7 +26,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
         {
             foreach (var item2 in container.Rows)
             {
-                foreach (var item3 in item2.ComponentDto)
+                foreach (var item3 in item2.ComponentList)
                 {
                     var itemtree = new TreeViewItem<ComponentDto>(item3) { Text = item3.Id };
                     list.Add(itemtree);

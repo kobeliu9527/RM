@@ -56,12 +56,12 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         #region Move Left Button
         private bool IsMoveLeftVisible()
         {
-            return ComponentsInParentRow.ComponentDto.IsMoveLeftPossible(Component);
+            return ComponentsInParentRow.ComponentList.IsMoveLeftPossible(Component);
         }
 
         private async Task MoveLeftAsync()
         {
-            ComponentsInParentRow?.ComponentDto?.MoveLeft(Component);
+            ComponentsInParentRow?.ComponentList?.MoveLeft(Component);
             await Root.StateHasChangedAsync();
         }
 
@@ -69,12 +69,12 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         #region Move Right Button
         private bool IsMoveRightVisible()
         {
-            return ComponentsInParentRow.ComponentDto.IsMoveRightPossible(Component);
+            return ComponentsInParentRow.ComponentList.IsMoveRightPossible(Component);
         }
 
         private async Task MoveRightAsync()
         {
-            ComponentsInParentRow.ComponentDto.MoveRight(Component);
+            ComponentsInParentRow.ComponentList.MoveRight(Component);
             await Root.StateHasChangedAsync();
         }
 
@@ -83,12 +83,12 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         private async Task OnDeleteAsync()
         {
             //将这个组件从这个行集合中移除 
-            ComponentsInParentRow.ComponentDto.Remove(Component);
+            ComponentsInParentRow.ComponentList.Remove(Component);
 
             // remove row from parent container 
             // if the row is empty and not last row in container
             // otherwise there will be no drop zone to drag and drop new components
-            if (ComponentsInParentRow.ComponentDto.Count == 0 && Container.ContainerData.Rows.Count != 1)
+            if (ComponentsInParentRow.ComponentList.Count == 0 && Container.ContainerData.Rows.Count != 1)
             {
                 Container.ContainerData.Rows.Remove(ComponentsInParentRow);
             }

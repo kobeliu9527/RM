@@ -71,10 +71,10 @@
                     </div>
                 }
 
-                @for (int componentIndex = 0; componentIndex < currentRow.ComponentDto.Count; componentIndex++)
+                @for (int componentIndex = 0; componentIndex < currentRow.ComponentList.Count; componentIndex++)
                 {
                     var currentComponentIndex = componentIndex;
-                    var currentComponent = currentRow.ComponentDto[componentIndex];
+                    var currentComponent = currentRow.ComponentList[componentIndex];
                     string componentColumnWidth =
                     ComponentUtils.GetComponentColumnCssClasses(currentComponent);
                     string h = "auto";

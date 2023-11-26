@@ -100,6 +100,6 @@ namespace Models
         public string Id { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public List<ComponentDto> ComponentDto { get; set; }=new ();
+        public List<ComponentDto> ComponentList { get; set; }=new ();
     }
 }

@@ -155,7 +155,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
                 // TODO: Check is component movable
                 // add component to destination row
                 await AddComponentToRowAsync(componentData, destinationRow);
-                if (originRow.ComponentDto.Count == 0)
+                if (originRow.ComponentList.Count == 0)
                 {
                     var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
                     originContainer.Rows.Remove(originRow);
@@ -190,7 +190,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         /// <returns></returns>
         private async Task AddComponentToRowAsync(ComponentDto componentData, RowDto currentRow)
         {
-            currentRow.ComponentDto.Add(componentData);
+            currentRow.ComponentList.Add(componentData);
             ComponentUtils.ComputeEachItemSizeInRow(currentRow);
             await Task.CompletedTask;
         }
@@ -199,14 +199,14 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         {
             var originRow = await Root.GetDraggedComponentOriginRowAsync();
             // remove component from origin row
-            originRow.ComponentDto.Remove(componentData);
+            originRow.ComponentList.Remove(componentData);
             var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
-            if (destinationRow?.ComponentDto.Count == 0 && destinationRow != originRow)
+            if (destinationRow?.ComponentList.Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
             }
 
-            if (originRow.ComponentDto.Count == 0 && destinationRow != originRow)
+            if (originRow.ComponentList.Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
             }
@@ -223,7 +223,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         private int CalculateRowSize(RowDto componentsInRow)
         {
             int size = 0;
-            foreach (var component in componentsInRow.ComponentDto)
+            foreach (var component in componentsInRow.ComponentList)
             {
                 size += ComponentUtils.CalculateColumnWidth(component);
             }
