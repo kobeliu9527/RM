@@ -143,7 +143,7 @@
     private async Task MoveComponentToPositionAsync(ComponentDto componentData, bool isComponentDroppedToLeftDropZone)
     {
         var destinationRow = ComponentRow;
-        int componentIndexInDestination = destinationRow.Row .IndexOf(componentData);
+        int componentIndexInDestination = destinationRow.ComponentDto .IndexOf(componentData);
         bool isWidgetAlreadyInDestinationRow = componentIndexInDestination != -1;
         int componentIndex = ComponentIndex;
 
@@ -159,7 +159,7 @@
         {
             // It means that the component is dragged and dropped in the same row
 
-            int destinationRowLength = destinationRow.Row.Count;
+            int destinationRowLength = destinationRow.ComponentDto.Count;
 
             // Do nothing for current component
             if (componentIndexInDestination == ComponentIndex)
@@ -194,7 +194,7 @@
             }
 
             // move component to its new position in the row
-            destinationRow.Row.MoveTo(componentIndexInDestination, componentIndex);
+            destinationRow.ComponentDto.MoveTo(componentIndexInDestination, componentIndex);
         }
         else
         {
@@ -224,16 +224,16 @@
         var originRow = await FormDesigner.GetDraggedComponentOriginRowAsync();
 
         // remove component from origin row
-        originRow.Row.Remove(componentData);
+        originRow.ComponentDto.Remove(componentData);
 
         var originContainer = await FormDesigner.GetDraggedComponentOriginContainerAsync();
 
-        if (destinationRow.Row.Count == 0 && destinationRow != originRow)
+        if (destinationRow.ComponentDto.Count == 0 && destinationRow != originRow)
         {
             await originContainer.RemoveRowAsync(originRow);
         }
 
-        if (originRow.Row.Count == 0 && destinationRow != originRow)
+        if (originRow.ComponentDto.Count == 0 && destinationRow != originRow)
         {
             await originContainer.RemoveRowAsync(originRow);
         }
@@ -246,11 +246,11 @@
     {
         if (index.HasValue && index.Value >= 0)
         {
-            currentRow.Row.Insert(index.Value, componentData);
+            currentRow.ComponentDto.Insert(index.Value, componentData);
         }
         else
         {
-            currentRow.Row.Add(componentData);
+            currentRow.ComponentDto.Add(componentData);
         }
 
         ComponentUtils.ComputeEachItemSizeInRow(currentRow);

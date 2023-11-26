@@ -34,6 +34,12 @@ namespace RM.Shared.Designer.Whiteboard
     public partial class Container
     {
         /// <summary>
+        /// 整个设计界面
+        /// </summary>
+        [NotNull]
+        [CascadingParameter(Name = "Root")]
+        public FormDesigner? FormDesigner { get; set; }
+        /// <summary>
         /// 每一个组件都应该有这个属性
         /// </summary>
         [CascadingParameter(Name = "Root")]
@@ -55,7 +61,16 @@ namespace RM.Shared.Designer.Whiteboard
         private const string ComponentHighlighterCssClass = @"'component-element--hover'";
         private const string DropZoneCssClasses = @"'bo-dropzone-hover bo-drag-enter'";
         private const string DropZoneCssClassesWithoutSingleQuotes = @"bo-dropzone-hover bo-drag-enter";
-#region Move Row Up-Down Methods
+
+        ///// <summary>
+        ///// 设置本组件为FormDesigner中被选中的控件,并且刷新界面
+        ///// </summary>
+        ///// <returns></returns>
+        //private async Task SelectComponentAsync()
+        //{
+        //    await FormDesigner.SelectRowAsync();
+        //}
+        #region Move Row Up-Down Methods
         private bool IsMoveRowUpVisible(RowDto componentsInRow)
         {
             //List<RowDto>

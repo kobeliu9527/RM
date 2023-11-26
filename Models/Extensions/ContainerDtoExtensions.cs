@@ -22,7 +22,7 @@ namespace Models.Extensions
             {
                 foreach (var row in container.Rows)
                 {
-                    if (row != null && row.Row.Any())
+                    if (row != null && row.ComponentDto.Any())
                     {
                         result = false;
                         break;
@@ -54,7 +54,7 @@ namespace Models.Extensions
         {
             foreach (var row in container.Rows)
             {
-                foreach (var component in row.Row)
+                foreach (var component in row.ComponentDto)
                 {
                     if (match != null)
                     {
@@ -99,7 +99,7 @@ namespace Models.Extensions
             }
             foreach (var row in container.Rows)
             {
-                foreach (var component in row.Row)
+                foreach (var component in row.ComponentDto)
                 {
                     if (component.ChildContainers?.Count > 0)
                     {

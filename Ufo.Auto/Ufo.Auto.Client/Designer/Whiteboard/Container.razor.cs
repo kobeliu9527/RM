@@ -46,7 +46,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
 
         /// <summary>
-        /// 跟容器数据
+        /// 容器本身的数据数据
         /// </summary>
         [Parameter]
         public ContainerDto? ContainerData { get; set; }
@@ -54,6 +54,14 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         private const string ComponentHighlighterCssClass = @"'component-element--hover'";
         private const string DropZoneCssClasses = @"'bo-dropzone-hover bo-drag-enter'";
         private const string DropZoneCssClassesWithoutSingleQuotes = @"bo-dropzone-hover bo-drag-enter";
+        /// <summary>
+        /// 设置本组件为FormDesigner中被选中的控件,并且刷新界面
+        /// </summary>
+        /// <returns></returns>
+        private async void SelectRowAsync(RowDto row)
+        {
+            await Root.SelectRowAsync(row);
+        }
         #region Move Row Up-Down Methods
         private bool IsMoveRowUpVisible(RowDto componentsInRow)
         {
@@ -80,6 +88,13 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
 
         #endregion Move Row Up-Down Methods
         #region Drag and Drop Methods
+        /// <summary>
+        /// 在设计器中拖动组件的时候
+        /// </summary>
+        /// <param name="draggedItemData">被拖动的组件</param>
+        /// <param name="currentRow">被拖动组件所在的行</param>
+        /// <param name="currentContainer">被拖动组件所在的容器</param>
+        /// <returns></returns>
         private async Task DragComponentStartAsync(ComponentDto draggedItemData, RowDto currentRow, ContainerDto currentContainer)
         {
             await Root.SetDraggedComponentAsync(draggedItemData, currentRow, currentContainer);
@@ -140,7 +155,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
                 // TODO: Check is component movable
                 // add component to destination row
                 await AddComponentToRowAsync(componentData, destinationRow);
-                if (originRow.Row.Count == 0)
+                if (originRow.ComponentDto.Count == 0)
                 {
                     var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
                     originContainer.Rows.Remove(originRow);
@@ -175,7 +190,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         /// <returns></returns>
         private async Task AddComponentToRowAsync(ComponentDto componentData, RowDto currentRow)
         {
-            currentRow.Row.Add(componentData);
+            currentRow.ComponentDto.Add(componentData);
             ComponentUtils.ComputeEachItemSizeInRow(currentRow);
             await Task.CompletedTask;
         }
@@ -184,14 +199,14 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         {
             var originRow = await Root.GetDraggedComponentOriginRowAsync();
             // remove component from origin row
-            originRow.Row.Remove(componentData);
+            originRow.ComponentDto.Remove(componentData);
             var originContainer = await Root.GetDraggedComponentOriginContainerAsync();
-            if (destinationRow?.Row.Count == 0 && destinationRow != originRow)
+            if (destinationRow?.ComponentDto.Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
             }
 
-            if (originRow.Row.Count == 0 && destinationRow != originRow)
+            if (originRow.ComponentDto.Count == 0 && destinationRow != originRow)
             {
                 await originContainer.RemoveRowAsync(originRow);
             }
@@ -208,7 +223,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         private int CalculateRowSize(RowDto componentsInRow)
         {
             int size = 0;
-            foreach (var component in componentsInRow.Row)
+            foreach (var component in componentsInRow.ComponentDto)
             {
                 size += ComponentUtils.CalculateColumnWidth(component);
             }

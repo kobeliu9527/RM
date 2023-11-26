@@ -14,6 +14,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
         public TreeViewItem<ComponentDto> MyProperty { get; set; }
         private ComponentDto? ComponentData = null;
         private ContainerDto? ContainerData = null;
+        private RowDto? RowData = null;
         private List<TreeViewItem<ComponentDto>> BindingItems;
         public List<TreeViewItem<ComponentDto>> Get()
         {
@@ -25,7 +26,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
         {
             foreach (var item2 in container.Rows)
             {
-                foreach (var item3 in item2.Row)
+                foreach (var item3 in item2.ComponentDto)
                 {
                     var itemtree = new TreeViewItem<ComponentDto>(item3) { Text = item3.Id };
                     list.Add(itemtree);

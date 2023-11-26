@@ -1,6 +1,4 @@
 ﻿
-
-
 <div class="container-wrapper qqqqqq"
      onmouseover="formDesigner.highlihter.activate(event, @(ComponentHighlighterCssClass))">
     <div class="widget-wrapper"
@@ -13,7 +11,7 @@
         {
             var currentRowIndex = rowIndex;
             var currentRow = ContainerData.Rows[currentRowIndex];
-            //如果为第一行,添加虚拟框div
+            //如果为第一行,添加虚拟框div,后期这里应该加一个条件是设计模式在才会有
             @if (currentRowIndex == 0 && !ContainerData.IsEmpty())//当拖动到页面的最上面的时候,会触发伪类元素生成
             {
                 Guid divId = Guid.NewGuid();
@@ -41,7 +39,11 @@
             string rowSeparatorClass = currentRowIndex == ContainerData.Rows.Count - 1 ?
             "row-separator" : "";
 
-            <div class="row row-builder @rowElementClass @rowSeparatorClass">
+            <div class="row row-builder @rowElementClass @rowSeparatorClass"
+                 @onclick="async(e)=>{
+                     await Root.SelectRowAsync(currentRow);
+                 }"
+                 @onclick:stopPropagation="true">
 
                 @if (isRowElement)//添加行左右移动的功能
                 {
@@ -69,10 +71,10 @@
                     </div>
                 }
 
-                @for (int componentIndex = 0; componentIndex < currentRow.Row.Count; componentIndex++)
+                @for (int componentIndex = 0; componentIndex < currentRow.ComponentDto.Count; componentIndex++)
                 {
                     var currentComponentIndex = componentIndex;
-                    var currentComponent = currentRow.Row[componentIndex];
+                    var currentComponent = currentRow.ComponentDto[componentIndex];
                     string componentColumnWidth =
                     ComponentUtils.GetComponentColumnCssClasses(currentComponent);
                     string h = "auto";
@@ -134,7 +136,7 @@
                 }
 
             </div>
-            //如果不是空容器,那么就在最后一行加一个隐藏div
+            //如果不是空容器,那么就在最后一行加一个隐藏div,设计模式在加
             @if (!ContainerData.IsEmpty())
             {
                 Guid divId = Guid.NewGuid();

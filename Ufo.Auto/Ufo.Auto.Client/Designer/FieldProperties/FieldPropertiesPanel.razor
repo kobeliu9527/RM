@@ -9,6 +9,7 @@
                 @{
                     ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
                     ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
+                    RowData = FormDesigner.GetSelectedRowAsync().Result;
                 }
 
                 @if (ComponentData != null)
@@ -72,6 +73,15 @@
                         default:
                             throw new NotImplementedException();
                     }
+                }
+                else if(RowData!=null)
+                {
+                    <div class="h-100 w-100">
+                        Select an element on the whiteboard, then set its properties here
+                        <br />
+                        选中了一行
+                    </div>
+
                 }
                 else
                 {

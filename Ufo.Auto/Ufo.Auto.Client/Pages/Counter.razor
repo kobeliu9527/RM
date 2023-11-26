@@ -15,7 +15,10 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };
+        //ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };
+        ContainerData = new ContainerDto() { 
+            //ContainerType = ContainerType.Base, 
+            Rows = new List<RowDto>() { new RowDto() } };
         return;
     }
     private void IncrementCount()
