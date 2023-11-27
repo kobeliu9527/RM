@@ -21,7 +21,7 @@ namespace Ufo.Auto.Client.Designer.Palette
         /// </summary>
         [Parameter]
         public List<PaletteWidgetDto>? Widgets { get; set; }
-        List<TreeComponentData> _datas;
+        List<TreeComponentData> _datas = new List<TreeComponentData>();
         /// <summary>
         /// 容器本身的数据数据
         /// </summary>
@@ -36,101 +36,112 @@ namespace Ufo.Auto.Client.Designer.Palette
             {
                 Widgets = PaletteWidgetSeeder.GetPaletteWidgets();
             }
-            _datas = new List<TreeComponentData>() { new TreeComponentData() { Id = ContainerData.Id, Type = ControlType.Comtainer, Name = "跟容器" } };
+            //   _datas = new List<TreeComponentData>() { new TreeComponentData() { Id = ContainerData.Id, Type = ControlType.Comtainer, Name = "跟容器" } };
+            ContainerData.ToTree(_datas);
         }
+
         //OnClick
-        public async Task OnClick(TreeEventArgs<TreeComponentData> args) 
+        public void Query()
         {
-            var dataItem = ((TreeComponentData)args.Node.DataItem);
-            switch (dataItem.Type)
-            {
-                case ControlType.Comtainer:
-                    ContainerDto? res = null;
-                    ContainerData.FindContainer(x => x.Id == dataItem.Id, ref res);
-                    if (res != null)
-                    {
-                        await Root.SelectContainerAsync(res);
-                    }
-
-                    break;
-                case ControlType.Row:
-                    RowDto? resrow = null;
-                    ContainerData.FindRow(x => x.Id == dataItem.Id, ref resrow);
-                    if (resrow != null)
-                    {
-                        await Root.SelectRowAsync(resrow);
-                    }
-                    break;
-                case ControlType.Component:
-                    ComponentDto? resrom = null;
-                    ContainerData.FindComponent(x => x.Id == dataItem.Id, ref resrom);
-                    if (resrom != null)
-                    {
-                        await Root.SelectComponentAsync(resrom);   
-                    }
-                    break;
-                default:
-                    break;
-            }
+        //    _datas = new() { new TreeComponentData() { Name = "跟容器" } }; ContainerData.ToTree(_datas[0].Items);
+            _datas = new() {  }; 
+            ContainerData.ToTree(_datas);
         }
-        public async Task OnNodeLoadDelayAsync(TreeEventArgs<TreeComponentData> args)
+        public async Task OnClick(TreeEventArgs<TreeComponentData> args)
+    {
+        var dataItem = ((TreeComponentData)args.Node.DataItem);
+        switch (dataItem.Type)
         {
-            var dataItem = ((TreeComponentData)args.Node.DataItem);
-            dataItem.Items.Clear();
-            switch (dataItem.Type)
-            {
-                case ControlType.Comtainer:
-                    ContainerDto? res = null;
-                    ContainerData.FindContainer(x => x.Id == dataItem.Id, ref res);
-                    if (res != null)
-                    {
-                        await Root.SelectContainerAsync(res);
-                        foreach (var item in res.Rows)
-                        {
-                            dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Row, Name = "行" });
-                        }
-                    }
+            case ControlType.Comtainer:
+                ContainerDto? res = null;
+                ContainerData.FindContainer(x => x.Id == dataItem.Id, ref res);
+                if (res != null)
+                {
+                    await Root.SelectContainerAsync(res);
+                }
 
-                    break;
-                case ControlType.Row:
-                    RowDto? resrow = null;
-                    ContainerData.FindRow(x => x.Id == dataItem.Id, ref resrow);
-                    if (resrow != null)
-                    {
-                        foreach (var item in resrow.ComponentList)
-                        {
-                            dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Component, Name = "组件" });
-                        }
-                    }
-                    break;
-                case ControlType.Component:
-                    ComponentDto? resrom = null;
-                    ContainerData.FindComponent(x => x.Id == dataItem.Id, ref resrom);
-                    if (resrom != null)
-                    {
-                        foreach (var item in resrom.ChildContainers)
-                        {
-                            dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Comtainer, Name = "容器" });
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
+                break;
+            case ControlType.Row:
+                RowDto? resrow = null;
+                ContainerData.FindRow(x => x.Id == dataItem.Id, ref resrow);
+                if (resrow != null)
+                {
+                    await Root.SelectRowAsync(resrow);
+                }
+                break;
+            case ControlType.Component:
+                ComponentDto? resrom = null;
+                ContainerData.FindComponent(x => x.Id == dataItem.Id, ref resrom);
+                if (resrom != null)
+                {
+                    await Root.SelectComponentAsync(resrom);
+                }
+                break;
+            default:
+                break;
         }
     }
-    public class TreeComponentData
+    public async Task OnNodeLoadDelayAsync(TreeEventArgs<TreeComponentData> args)
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public ControlType Type { get; set; }
-        public List<TreeComponentData> Items { get; set; } = new();
+        _datas = new List<TreeComponentData>();
+        ContainerData.ToTree(_datas);
+        return;
+        var dataItem = ((TreeComponentData)args.Node.DataItem);
+        dataItem.Items.Clear();
+        switch (dataItem.Type)
+        {
+            case ControlType.Comtainer:
+                ContainerDto? res = null;
+                ContainerData.FindContainer(x => x.Id == dataItem.Id, ref res);
+                if (res != null)
+                {
+                    await Root.SelectContainerAsync(res);
+                    foreach (var item in res.Rows)
+                    {
+                        dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Row, Name = "行" });
+                    }
+                }
+
+                break;
+            case ControlType.Row:
+                RowDto? resrow = null;
+                ContainerData.FindRow(x => x.Id == dataItem.Id, ref resrow);
+                if (resrow != null)
+                {
+                    foreach (var item in resrow.ComponentList)
+                    {
+                        dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Component, Name = item.ChildContainers.Count > 0 ? "容器组件" : "组件" });
+                    }
+                }
+                break;
+            case ControlType.Component:
+                ComponentDto? resrom = null;
+                ContainerData.FindComponent(x => x.Id == dataItem.Id, ref resrom);
+                if (resrom != null)
+                {
+                    foreach (var item in resrom.ChildContainers)
+                    {
+                        dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Comtainer, Name = "Tab页面" });
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
     }
-    public enum ControlType
-    {
-        Comtainer,
-        Row,
-        Component
-    }
+}
+public class TreeComponentData
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public ControlType Type { get; set; }
+    public List<TreeComponentData> Items { get; set; } = new();
+}
+public enum ControlType
+{
+    Comtainer,
+    Row,
+    Component
+}
 }

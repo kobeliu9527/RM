@@ -2,6 +2,7 @@
 using BootstrapBlazor.Components;
 using Models;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Ufo.Auto.Client.Designer.Palette;
 
 namespace Ufo.Auto.Client.Extensions
@@ -158,8 +159,34 @@ namespace Ufo.Auto.Client.Extensions
                 }
             }
         }
+
+        public static List<TreeComponentData> ToTree(this ContainerDto container, List<TreeComponentData> list)
+        {
+            var root = new TreeComponentData() { Id = container.Id, Name = "容器",Type= ControlType.Comtainer };
+            list.Add(root);
+            foreach (var row in container.Rows)
+            {
+                var node = new TreeComponentData() { Id = row.Id ,Name="行", Type = ControlType.Row };
+                root.Items.Add(node);
+                foreach (var com in row.ComponentList)
+                {
+                    var node2 = new TreeComponentData() { Id = com.Id ,Name = com.ChildContainers.Count > 0 ? "容器组件" : "组件", Type = ControlType.Component };
+                    node.Items.Add(node2);
+                    if (com.ChildContainers.Count > 0)
+                    {
+                        foreach (var c in com.ChildContainers)
+                        {
+                            //var node3 = new TreeComponentData() { Id = com.Id, Name = "rongqi" };
+                            //node2.Items.Add(node3);
+                            ToTree(c, node2.Items);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
         /// <summary>
-        /// 递归找到容器中符合条件的所有子容器,包括本身
+        /// 递归找到容器中符合条件的所有子容器,包括本身 List<TreeComponentData>
         /// </summary>
         /// <param name="container"></param>
         /// <param name="match">Predicate{</param>

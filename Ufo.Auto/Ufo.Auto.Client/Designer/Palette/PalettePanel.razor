@@ -28,11 +28,12 @@
         <TabPane Tab="Tab 2" Key="2">
             @* <TreeView Items="@(Get())" ShowCheckbox="true" /> *@
             <ChildContent>
+                <AntDesign.Button OnClick="Query"></AntDesign.Button>
                 <AntDesign.Tree DataSource="_datas" TItem="TreeComponentData"
                                 TitleExpression="x=>x.DataItem.Name"
                                 OnClick="OnClick"
                                 ChildrenExpression="x=>x.DataItem.Items"
-                                OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"></AntDesign.Tree>
+                                ></AntDesign.Tree>
 
             </ChildContent>
         </TabPane>
