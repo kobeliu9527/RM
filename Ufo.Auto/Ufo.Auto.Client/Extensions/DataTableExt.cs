@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Extensions
+namespace Ufo.Auto.Client.Extensions
 {
     public static class DataTableExt
     {

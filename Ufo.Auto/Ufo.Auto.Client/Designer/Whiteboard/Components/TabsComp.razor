@@ -17,9 +17,9 @@
             var activeTabClass = IsTabOpened(tabContainer) ? "active" : "";
             <li class="nav-item">
                 <a class="nav-link d-flex flex-row clickable @activeTabClass"
-                @onclick="@(async () => await OpenTabAsync(tabContainer))"
-                @onclick:preventDefault="true"
-                @onclick:stopPropagation="true">
+                   @onclick="@(async () => await OpenTabAsync(tabContainer))"
+                   @onclick:preventDefault="true"
+                   @onclick:stopPropagation="true">
                     @if (IsMoveTabLeftVisible(tabContainer))
                     {
                         <MatIconButton Icon="@MatIconNames.Arrow_back"
@@ -51,8 +51,8 @@
         <li class="nav-item">
             <a class="nav-link d-flex flex-row clickable"
                title="Add Tab"
-            @onclick="@(async () => await AddTabAsync())"
-            @onclick:preventDefault="true">
+               @onclick="@(async () => await AddTabAsync())"
+               @onclick:preventDefault="true">
                 <MatIconButton Icon="@MatIconNames.Add"
                                Class="component-mover-icon tab-color" />
             </a>
@@ -63,7 +63,7 @@
     {
         @if (IsTabOpened(tabContainer) || IsThereOnlyOneTab())
         {
-            <Container ContainerData="tabContainer" />
+            <Container ContainerData="tabContainer" IsDesigner="FormDesigner.IsDesigner" />
         }
     }
 </div>
@@ -111,6 +111,7 @@
     {
         var newTabContainer = new ContainerDto(ContainerType.Tab)
             {
+                Rows = new List<RowDto>() { new RowDto() },
                 MutLanguage = new MutLanguage() { zh_CN = $"Tab {TabContainerList?.Count + 1}" }
 
             };

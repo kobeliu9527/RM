@@ -15,7 +15,11 @@ namespace Ufo.Auto.Client.Designer
         /// </summary>
         [Parameter]
         public string? LeftName { get; set; }
-
+        /// <summary>
+        /// 是否处于设计设计模式
+        /// </summary>
+        [Parameter]
+        public bool IsDesigner { get; set; }
         /// <summary>
         /// 跟容器数据
         /// </summary>
@@ -58,6 +62,7 @@ namespace Ufo.Auto.Client.Designer
         {
             SelectedContainer = containerData;
             SelectedComponent = null;
+            SelectedRowDto = null;
             await StateHasChangedAsync();
         }
         public async Task<ContainerDto?> GetSelectedContainerAsync()
@@ -77,6 +82,7 @@ namespace Ufo.Auto.Client.Designer
         {
             SelectedComponent = componentData;
             SelectedContainer = null;
+            SelectedRowDto = null;
             await StateHasChangedAsync();
         }
         /// <summary>

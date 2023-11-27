@@ -40,11 +40,13 @@ namespace Models
         public ContainerDto()
         {
             //InitEmptyContainer(ref rows);
+            Id = Guid.NewGuid().ToString();
         }
 
 
         public ContainerDto(ContainerType type)
         {
+            Id = Guid.NewGuid().ToString();
             ContainerType = type;
             InitEmptyContainer(ref rows);
         }
@@ -101,5 +103,9 @@ namespace Models
         public int Width { get; set; }
         public int Height { get; set; }
         public List<ComponentDto> ComponentList { get; set; }=new ();
+        public RowDto()
+        {
+            Id= Guid.NewGuid().ToString();
+        }
     }
 }

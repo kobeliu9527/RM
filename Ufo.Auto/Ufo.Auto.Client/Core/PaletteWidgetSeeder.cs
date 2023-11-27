@@ -1,4 +1,6 @@
-﻿namespace Models.Core
+﻿using Models;
+
+namespace Ufo.Auto.Client.Core
 {
     public static class PaletteWidgetSeeder
     {

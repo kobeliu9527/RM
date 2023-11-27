@@ -1,6 +1,5 @@
 ﻿using BootstrapBlazor.Components;
-using Models.Core;
-using Models.Extensions;
+
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -19,6 +18,7 @@ namespace Models
         /// </summary>
         public ComponentDto()
         {
+            Id = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -27,6 +27,7 @@ namespace Models
         /// <param name="type"></param>
         public ComponentDto(ComponentType type)
         {
+            Id = Guid.NewGuid().ToString();
             InitializeComponent(type);
         }
 
@@ -39,7 +40,8 @@ namespace Models
 
         #region 字段
 
-        private int width = ComponentUtils.MaxColumnWidth;
+        // private int width = ComponentUtils.MaxColumnWidth;
+        private int width = 12;
 
         private int height = 0;
 
@@ -135,7 +137,7 @@ namespace Models
         /// <summary>
         /// 如果这个组件是容器组件,那么他还有子组件
         /// </summary>
-        public List<ContainerDto>? ChildContainers { get; set; }
+        public List<ContainerDto> ChildContainers { get; set; } = new();
 
         /// <summary>
         /// shifou
@@ -187,7 +189,6 @@ namespace Models
         internal void InitializeComponent(ComponentType type)
         {
             ComponentType = type;
-            //DisplayText = $"{Type.GetName()}-{Guid.NewGuid()}";
             MutLanguage.zh_CN = $"{ComponentType.GetName()}";
             if (ComponentType == ComponentType.Tabs)
             {
@@ -195,7 +196,9 @@ namespace Models
                 {
                     new ContainerDto(ContainerType.Tab)
                     {
-                MutLanguage = new MutLanguage() { zh_CN = "Tab 1" }
+                         Id =Guid.NewGuid().ToString(),
+                         Rows=new (){ new ()},
+                         MutLanguage = new MutLanguage() { zh_CN = "Tab 1" }
                     }
                 };
             }

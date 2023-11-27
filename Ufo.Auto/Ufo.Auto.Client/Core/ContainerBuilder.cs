@@ -1,6 +1,4 @@
-﻿using Models;
-
-namespace Models.Core
+﻿namespace Ufo.Auto.Client.Core
 {
     public class ContainerBuilder
     {

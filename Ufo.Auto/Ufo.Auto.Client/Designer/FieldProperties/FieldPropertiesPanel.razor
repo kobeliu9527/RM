@@ -1,110 +1,108 @@
-﻿@using BootstrapBlazor.Components
+﻿@using AntDesign
 
 <div class="fd-field-properties-panel h-100 ppp">
-
-    <Tab>
-        <TabItem Text="控件属性">
+    <Tabs  Animated>
+        <TabPane Tab="Tab 1" Key="1">
             <ChildContent>
-                @*<div class="asdfsdfafdsf"> 解决不铺满*@
-                @{
-                    ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
-                    ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
-                    RowData = FormDesigner.GetSelectedRowAsync().Result;
-                }
+            @{
+                ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
+                ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
+                RowData = FormDesigner.GetSelectedRowAsync().Result;
+            }
 
-                @if (ComponentData != null)
+            @if (ComponentData != null)
+            {
+                @switch (ComponentData.ComponentType)
                 {
-                    @switch (ComponentData.ComponentType)
-                    {
-                        case ComponentType.Checkbox:
-                            <CheckboxProperties ComponentData="@ComponentData" />
-                            break;
-                        case ComponentType.DateTime:
-                            <DateTimeProperties ComponentData="@ComponentData" />
-                            break;
-                        case ComponentType.Email:
-                            <EmailProperties ComponentData="@ComponentData" />
-                            break;
-                        case ComponentType.File:
-                            <FileProperties ComponentData="@ComponentData" />
-                            break;
+                    case ComponentType.Checkbox:
+                        <CheckboxProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.DateTime:
+                        <DateTimeProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.Email:
+                        <EmailProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.File:
+                        <FileProperties ComponentData="@ComponentData" />
+                        break;
 
-                        case ComponentType.Link:
-                            <LinkProperties ComponentData="@ComponentData" />
-                            break;
+                    case ComponentType.Link:
+                        <LinkProperties ComponentData="@ComponentData" />
+                        break;
 
-                        case ComponentType.MultiLine:
-                            <MultiLineProperties ComponentData="@ComponentData" />
-                            break;
+                    case ComponentType.MultiLine:
+                        <MultiLineProperties ComponentData="@ComponentData" />
+                        break;
 
-                        case ComponentType.Number:
-                            <NumberProperties ComponentData="@ComponentData" />
-                            break;
+                    case ComponentType.Number:
+                        <NumberProperties ComponentData="@ComponentData" />
+                        break;
 
-                        case ComponentType.SingleLine:
-                            <SingelLineProperties ComponentData="@ComponentData" />
-                            break;
+                    case ComponentType.SingleLine:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
 
-                        case ComponentType.Tabs:
-                            ;
-                            <TabsProperties ComponentData="@ComponentData" />
-                            break;
-                        case ComponentType.Select:
-                            <SingelLineProperties ComponentData="@ComponentData" />
-                            break;
-                        case ComponentType.Table:
-                            <SingelLineProperties ComponentData="@ComponentData" />
-                            break;
-                        default:
-                            throw new NotImplementedException("为设置属性");
-                    }
+                    case ComponentType.Tabs:
+                        ;
+                        <TabsProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.Select:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.Table:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
+                    default:
+                        throw new NotImplementedException("为设置属性");
                 }
-                else if (ContainerData != null)
+            }
+            else if (ContainerData != null)
+            {
+                @switch (ContainerData.ContainerType)
                 {
-                    @switch (ContainerData.ContainerType)
-                    {
-                        case ContainerType.Base://嵌套的第一个Tab,父级Tab
-                            // Do nothing
-                            <TabProperties ComponentData="@ContainerData" />
-                            break;
-                        case ContainerType.Tab://添加Tab中的一个tab页面时候,点击一个tab的时候
-                            <TabProperties ComponentData="@ContainerData" />
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
+                    case ContainerType.Base://嵌套的第一个Tab,父级Tab
+                                                    // Do nothing
+                        <TabProperties ComponentData="@ContainerData" />
+                        break;
+                    case ContainerType.Tab://添加Tab中的一个tab页面时候,点击一个tab的时候
+                        <TabProperties ComponentData="@ContainerData" />
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
-                else if(RowData!=null)
-                {
-                    <div class="h-100 w-100">
-                        Select an element on the whiteboard, then set its properties here
-                        <br />
-                        选中了一行
-                    </div>
+            }
+            else if (RowData != null)
+            {
+                <div class="h-100 w-100">
+                    Select an element on the whiteboard, then set its properties here
+                    <br />
+                    选中了一行
+                </div>
 
-                }
-                else
-                {
-                    <div class="h-100 w-100">
-                        Select an element on the whiteboard, then set its properties here
-                        <br />
-                        选中一个控件,然后在此处设置他的属性
-                    </div>
-                }
-                @*</div>*@
+            }
+            else
+            {
+                <div class="h-100 w-100">
+                    Select an element on the whiteboard, then set its properties here
+                    <br />
+                    选中一个控件,然后在此处设置他的属性
+                </div>
+            }
+                Tab 1
             </ChildContent>
+        </TabPane>
+        <TabPane Tab="Tab 2" Key="2">
+            @* <TreeView Items="@(Get())" ShowCheckbox="true" /> *@
+            <ChildContent>
+                <div class="fd-field-properties-panel h-100">角色2</div>
 
-            @*</div>*@
-            @*</div>*@
-
-        </TabItem>
-        <TabItem Text="菜单管理">
-            <TreeView Items="@(Get())" ShowCheckbox="true" />
-        </TabItem>
-        <TabItem Text="角色">
+            </ChildContent>
+        </TabPane>
+        <TabPane Tab="Tab 3" Key="3">
             <div class="fd-field-properties-panel h-100">角色</div>
-        </TabItem>
-    </Tab>
+        </TabPane>
+    </Tabs>
 
 </div>
 

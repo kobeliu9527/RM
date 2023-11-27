@@ -19,9 +19,9 @@ using MatBlazor;
 using SqlSugar;
 using System.Diagnostics.CodeAnalysis;
 using Models;
-using Models.Extensions;
-using Models.Core;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Ufo.Auto.Client.Extensions;
+using Ufo.Auto.Client.Core;
 
 namespace Ufo.Auto.Client.Designer.Whiteboard
 {
@@ -31,14 +31,19 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
     public partial class Container
     {
         /// <summary>
+        /// 是否处于设计设计模式
+        /// </summary>
+        [Parameter]
+        public bool IsDesigner { get; set; }
+        /// <summary>
         /// 每一个组件都应该有这个属性
         /// </summary>
         [CascadingParameter(Name = "Root")]
         [NotNull]
         public FormDesigner? Root { get; set; }
-        //@inject IJSRuntime JSRuntime
         [Inject]
-            public IJSRuntime JSRuntime { get; set; }
+        [NotNull]
+        public IJSRuntime? JSRuntime { get; set; }
         /// <summary>
         /// SelectContainerAsync();赋值当前选中的容器,早期逻辑,后期应该可以优化掉
         /// </summary>
@@ -49,6 +54,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         /// 容器本身的数据数据
         /// </summary>
         [Parameter]
+        [NotNull]
         public ContainerDto? ContainerData { get; set; }
 
         private const string ComponentHighlighterCssClass = @"'component-element--hover'";
@@ -63,7 +69,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
             await Root.SelectRowAsync(row);
         }
         #region Move Row Up-Down Methods
-        private bool IsMoveRowUpVisible(RowDto componentsInRow)
+        private bool IsMoveRowUpVisible(RowDto? componentsInRow)
         {
             //List<RowDto>
             return ContainerData.Rows.IsMoveLeftPossible(componentsInRow);
@@ -140,8 +146,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
             {
                 // you are trying to drag and drop a new widget from Palette
                 var paletteWidgetData = await Root.GetDraggedPaletteWidgetAsync();
-                var newComponentData = paletteWidgetData.CreateComponent();
-                newComponentData.ParentId = containerData.Id;
+                var newComponentData = paletteWidgetData?.CreateComponent();
                 await AddComponentToRowAsync(newComponentData, destinationRow);
                 await Root.SelectComponentAsync(newComponentData);
             }

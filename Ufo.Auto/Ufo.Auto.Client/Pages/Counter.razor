@@ -1,5 +1,5 @@
 ﻿@page "/counter"
-@rendermode InteractiveAuto
+@rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
 
@@ -8,9 +8,11 @@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-<FormDesigner ContainerData="ContainerData"></FormDesigner>
+
+<FormDesigner ContainerData="ContainerData" IsDesigner="MyProperty"></FormDesigner>
 @code {
     private int currentCount = 0;
+    public bool MyProperty { get; set; }
     public ContainerDto? ContainerData { get; set; }
     protected override void OnInitialized()
     {
@@ -24,5 +26,6 @@
     private void IncrementCount()
     {
         currentCount++;
+        MyProperty = !MyProperty;
     }
 }

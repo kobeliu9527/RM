@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Models;
-using Models.Extensions;
 using SqlSugar;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using Ufo.Auto.Client.Extensions;
 
 namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
 {
@@ -27,9 +27,9 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
         [NotNull]
         private DialogService? DialogService { get; set; }
 
-        [Inject]
-        [NotNull]
-        private ISqlSugarClient? db { get; set; }
+        //[Inject]
+        //[NotNull]
+        //private ISqlSugarClient? db { get; set; }
 
         [Parameter]
         public EventCallback<ChangeEventArgs> OnLabelChanged { get; set; }
@@ -84,7 +84,8 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
         }
         private IEnumerable<SelectedItem> GetProList()
         {
-            return db.DbMaintenance.GetProcList("LCM").Select(x => new SelectedItem() { Text = x, Value = x });
+            return new List<SelectedItem> { };
+           // return db.DbMaintenance.GetProcList("LCM").Select(x => new SelectedItem() { Text = x, Value = x });
         }
         public void OnValueChanged(MouseEventArgs e)
         {

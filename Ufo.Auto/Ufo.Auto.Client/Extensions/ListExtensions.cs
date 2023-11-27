@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Models.Extensions
+namespace Ufo.Auto.Client.Extensions
 {
     public static class ListExtensions
     {

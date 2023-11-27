@@ -1,4 +1,6 @@
-﻿namespace Models.Extensions
+﻿using Models;
+
+namespace Ufo.Auto.Client.Extensions
 {
     public static class PaletteWidgetDtoExtensions
     {
@@ -24,7 +26,7 @@
                 componentData.Props.Add(item.Key, p);
             }
             //componentData.Props = paletteWidget.Props;
-            componentData.Id = $"{paletteWidget.ComponentType}-{DateTime.Now.ToString("F")}";
+            componentData.Id = Guid.NewGuid().ToString();
             return componentData;
         }
     }

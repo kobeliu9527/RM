@@ -1,7 +1,10 @@
-﻿using Models;
+﻿using AntDesign;
+using BootstrapBlazor.Components;
+using Models;
 using System.Collections.Generic;
+using Ufo.Auto.Client.Designer.Palette;
 
-namespace Models.Extensions
+namespace Ufo.Auto.Client.Extensions
 {
     /// <summary>
     /// 
@@ -16,9 +19,7 @@ namespace Models.Extensions
         public static bool IsEmpty(this ContainerDto container)
         {
             var result = true;
-
-            if (container != null &&
-                container.Rows.Any())
+            if (container != null && container.Rows.Any())
             {
                 foreach (var row in container.Rows)
                 {
@@ -29,7 +30,6 @@ namespace Models.Extensions
                     }
                 }
             }
-
             return result;
         }
 
@@ -72,6 +72,87 @@ namespace Models.Extensions
                         foreach (var c in component.ChildContainers)
                         {
                             FindAllComponent(c, match, result);
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// 找到符合条件的组件
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="match"></param>
+        /// <param name="component"></param>
+        public static void FindComponent(this ContainerDto container, Func<ComponentDto, bool> match, ref ComponentDto? component)
+        {
+            foreach (var row in container.Rows)
+            {
+                foreach (var com in row.ComponentList)
+                {
+                    if (match(com))
+                    {
+                        component = com;
+                        return;
+                    }
+                    if (com.ChildContainers?.Count > 0)
+                    {
+                        foreach (var c in com.ChildContainers)
+                        {
+                            FindComponent(c, match, ref component);
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// 找到符合条件的行
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="match"></param>
+        /// <param name="component"></param>
+        public static void FindRow(this ContainerDto container, Func<RowDto, bool> match, ref RowDto? res)
+        {
+            foreach (var row in container.Rows)
+            {
+                if (match(row))
+                {
+                    res = row;
+                    return;
+                }
+                foreach (var com in row.ComponentList)
+                {
+                    if (com.ChildContainers?.Count > 0)
+                    {
+                        foreach (var c in com.ChildContainers)
+                        {
+                            FindRow(c, match, ref res);
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// 找到符合条件的容器
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="match"></param>
+        /// <param name="component"></param>
+        public static void FindContainer(this ContainerDto container, Func<ContainerDto, bool> match, ref ContainerDto? res)
+        {
+            if (match(container))
+            {
+                res = container;
+                return;
+            }
+            foreach (var row in container.Rows)
+            {
+                foreach (var com in row.ComponentList)
+                {
+                    if (com.ChildContainers?.Count > 0)
+                    {
+                        foreach (var c in com.ChildContainers)
+                        {
+                            FindContainer(c, match, ref res);
                         }
                     }
                 }

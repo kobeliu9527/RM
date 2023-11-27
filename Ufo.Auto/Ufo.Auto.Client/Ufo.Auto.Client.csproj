@@ -53,6 +53,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AntDesign" Version="0.16.2" />
+    <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.0" />
     <PackageReference Include="MatBlazor" Version="2.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
   </ItemGroup>

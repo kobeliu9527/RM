@@ -20,7 +20,7 @@ using MatBlazor;
 using SqlSugar;
 using System.Diagnostics.CodeAnalysis;
 using Models;
-using Models.Extensions;
+using Ufo.Auto.Client.Extensions;
 
 namespace Ufo.Auto.Client.Designer.Whiteboard
 {
