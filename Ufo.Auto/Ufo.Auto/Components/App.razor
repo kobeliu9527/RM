@@ -5,32 +5,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="bootstrap/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="Ufo.Auto.styles.css" />
     @* AntDesigner *@
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-
-
-    @* <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css"> *@
-    <link rel="stylesheet" href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css">
-    <link rel="stylesheet" href="_content/BootstrapBlazor/css/motronic.min.css">
+    @* BootstrapBlazor *@
+    <link href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css" rel="stylesheet">
+    <link href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css" rel="stylesheet">
+    @* <link href="_content/BootstrapBlazor/css/motronic.min.css" rel="stylesheet"> *@
+    @* MatBlazor *@
     <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
 
-    @* <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css"> *@
-    <link rel="stylesheet" href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css">
-    <link rel="stylesheet" href="_content/BootstrapBlazor/css/motronic.min.css">
-    @* <link rel="stylesheet" href="_content/Ufo.Auto.Client/css/site.css"> *@
-    @* <link rel="stylesheet" href="_content/RM.Shared/css/motronic.css"> *@
-
+    @* bootstrap原生 *@
     <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <!--Custom css files-->
     <link href="css/site.css" rel="stylesheet" />
     <link href="css/motronic.css" rel="stylesheet" />
-    <!--Custom css files-->
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/layout.css" rel="stylesheet" />
@@ -38,7 +29,6 @@
     <link href="css/general.css" rel="stylesheet" />
     <link href="css/palette.css" rel="stylesheet" />
     <link href="css/field-properties.css" rel="stylesheet" />
-
     <link href="css/whiteboard/component.css" rel="stylesheet" />
     <link href="css/whiteboard/container.css" rel="stylesheet" />
     <link href="css/whiteboard/drag-drop.css" rel="stylesheet" />
@@ -46,12 +36,13 @@
 
 
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <script src="_content/MatBlazor/dist/matBlazor.js"></script>
     <!--Cutom JS Libraries-->
     <script src="js/form-designer.js"></script>

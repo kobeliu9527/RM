@@ -1,146 +1,78 @@
 ﻿@using SqlSugar
-
-
+@using global::Models
 
 @*@inherits PropertiesComponentBase*@
 @*<div class="prop-group-box" style="min-height:80vh">*@
-<div style="min-height:80vh">
-    @*<div class="box-header">Defaults(默认通用属性)</div>*@
-    <Collapse OnCollapseChanged="(aa)=>{   return Task.CompletedTask;}" IsAccordion="true">
-        <CollapseItems>
-            <CollapseItem Text="通用属性" IsCollapsed="false">
-                <ValidateForm @ref="ValidateForm" Model="@ComponentData" OnValidSubmit="@OnValidComplexModel" OnFieldValueChanged="OnFieldValueChanged">
-                    <EditorForm TModel="ComponentDto" ItemsPerRow="1" AutoGenerateAllItem="false">
-                        <FieldItems>
-                            <EditorItem @bind-Field="@context.Id">
-                                <EditTemplate Context="value">
-                                    <BootstrapInput IsSelectAllTextOnFocus="true" @bind-Value="value.Id" OnValueChanged="IdOnValueChanged"></BootstrapInput>
-                                </EditTemplate>
-                            </EditorItem>
+@* <div style="min-height:80vh"> *@
+@*<div class="box-header">Defaults(默认通用属性)</div>*@
 
-                            <EditorItem @bind-Field="@context">
-                                <EditTemplate Context="value">
-                                    <Collapse>
-                                        <CollapseItems>
-                                            <CollapseItem Text="外观参数">
-                                                <Switch @bind-Value="value.IsAbsPosition" OnValueChanged="OnValueChangedForBool"></Switch>
-                                                @if (@context.IsAbsPosition)
-                                                {
-                                                    <BootstrapInputNumber @bind-Value="value.Top" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                                    <BootstrapInputNumber @bind-Value="value.Left" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                                    <BootstrapInputNumber @bind-Value="value.Zindex" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                                }
-                                                <BootstrapInputNumber @bind-Value="value.Width" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                                <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
-                                                <Select @bind-Value="value.Color" OnValueChanged="OnValueChangedForColor"></Select>
-                                                <Switch @bind-Value="value.ShowLabel" OnValueChanged="OnValueChangedForBool"></Switch>
-                                                <Switch @bind-Value="value.IsDisabled" OnValueChanged="OnValueChangedForBool"></Switch>
+<div class="properties">
+<Collapse OnCollapseChanged="OnCollapseChanged">
+   
+    <CollapseItems >
+        <CollapseItem Text="通用属性" >
+            <AntDesign.Text>Id</AntDesign.Text>
+            <AntDesign.Input @bind-Value="ComponentData.Id" Placeholder="Id" ReadOnly="true"></AntDesign.Input>
+            <AntDesign.Text>名称</AntDesign.Text>
+            <AntDesign.Input @bind-Value="ComponentData.Name" TValue="string" Placeholder="名称" OnChange="OnChangeString"></AntDesign.Input>
+            <AntDesign.Text>宽:</AntDesign.Text>
+            <br />
+            <AntDesign.InputNumber TValue="int" Step="1" Min="1" Max="12" @bind-Value="ComponentData.Width" OnChange="OnChange" />
+            <br />
+            <AntDesign.Text>高:(默认自动)</AntDesign.Text>
+            <br />
+            <AntDesign.InputNumber TValue="int" Step="10" Min="0" @bind-Value="ComponentData.Height" OnChange="OnChange" />
+            <br />
+            
+        </CollapseItem>
+        <CollapseItem Text="扩展属性">
+             <AntDesign.Text>大小:</AntDesign.Text>
+             <AntDesign.RadioGroup @bind-Value="@ComponentData.Props["Size"].StringValue" TValue="string" OnChange="OnChange" Options="@SizeOptions"></AntDesign.RadioGroup>
+             <br />
+             <AntDesign.Text>只读:</AntDesign.Text>
+             <AntDesign.Switch @bind-Value="@ComponentData.Props["ReadOnly"].BoolVal" OnChange="OnChange"></AntDesign.Switch>
 
-                                            </CollapseItem>
-                                        </CollapseItems>
-                                    </Collapse>
-                                </EditTemplate>
-                            </EditorItem>
-                            <EditorItem @bind-Field="@context.MutLanguage">
-                                <EditTemplate Context="value">
-                                    <Collapse>
-                                        <CollapseItems>
-                                            <CollapseItem Text="标题设置(多语言)">
-                                                <BootstrapInput @bind-Value="value.MutLanguage.zh_CN" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
-                                                <BootstrapInput @bind-Value="value.MutLanguage.zh_TW" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
-                                                <BootstrapInput @bind-Value="value.MutLanguage.en_US" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
-                                                <BootstrapInput @bind-Value="value.MutLanguage.ja_JP" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
-                                            </CollapseItem>
-                                        </CollapseItems>
-                                    </Collapse>
-                                </EditTemplate>
-                            </EditorItem>
+        </CollapseItem>
+        <CollapseItem Text="事件和数据源">
+                <CheckboxList IsButton="true" TValue="IEnumerable<string>" Items="@BoxListData" @bind-Value="@ComponentData.Props["Params"].StringListValue" ShowLabel="true" DisplayText="存储过程需要的参数" />
+                @* <TreeView TItem="TreeComponentData" Items="@treeData" ShowCheckbox="true" ClickToggleNode="true" /> *@
+                @*   <AntDesign.TreeSelect TItem="TreeComponentData"
+                Style="width:100%;"
+                DataSource="treeData"
+                OnSelectedItemsChanged="OnChangeTreeSelects"
+                @bind-Values="@ComponentData.Props["Params"].StringListValue"
+                Placeholder="Please select"
+                Multiple
+                TreeDefaultExpandAll
+                ChildrenExpression="node=>node.DataItem.Children"
+                TitleExpression="node=>node.DataItem.Title"
+                KeyExpression="x=>x.DataItem.Key">
+                </AntDesign.TreeSelect> *@
+                <Button OnClick="()=>{BoxListData=new (); FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);}">刷新</Button>
 
-                        </FieldItems>
-                    </EditorForm>
-                </ValidateForm>
-
-            </CollapseItem>
-
-            <CollapseItem Text="Ext(扩展属性)">
-                @if (ComponentData is not null)
-                {
-                    @foreach (var item in @ComponentData.Props)
-                    {
-                        @switch (item.Value.PType)
-                        {
-                            case PType.String:
-                                <BootstrapInput OnValueChanged="OnValueChangedForString" ShowLabel="true" DisplayText="@item.Value.DisplayName" @bind-Value="@item.Value.StringValue"></BootstrapInput>
-                                break;
-                            case PType.SingleColor:
-                                <Select DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.StringValue" ShowLabel="true"></Select>
-                                break;
-                            case PType.Bool:
-                                <Switch @bind-Value="item.Value.BoolVal" OnValueChanged="OnValueChangedForBool" ShowLabel="true" DisplayText="@item.Value.DisplayName"></Switch>
-                                break;
-                            case PType.Int:
-                                break;
-                            case PType.Double:
-                                break;
-                            case PType.StringList:
-                                <div class="ppp2">
-                                    <CheckboxList @bind-Value="@item.Value.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true" DisplayText="@item.Value.DisplayName"></CheckboxList>
-                                </div>
-                                break;
-                            case PType.Select:
-                                <Select TValue="string" Items="GetProList()" @bind-Value="@item.Value.StringValue" ShowSearch="true" ShowLabel="true" DisplayText="@item.Value.DisplayName" />
-
-                                break;
-                            case PType.DataSourse:
-                                <Select IsVirtualize="true" @bind-Value="@item.Value.StringValue" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>
-                                break;
-                            case PType.MutilPropter:
-                                <Collapse>
-                                    <CollapseItems>
-                                        @for (int i = 0; i < Containers.Count; i++)
-                                        {
-                                            <CollapseItem Text="@Containers[i].Id">
-                                                @*   @foreach (var ite in @item.Value.MutilProperties)
-                            {*@
-                                                <div class="ppp2">
-                                                    @*<CheckboxList @bind-Value="@item.Value.MutilProperties[i].StringListValue" Items="@Parameters"></CheckboxList>*@
-                                                    @*<CheckboxList @bind-Value="@ite.StringListValue" Items="@Parameters" Color="Color.Danger" ShowLabel="true"></CheckboxList>*@
-                                                </div>
-                                                @*}*@
-                                            </CollapseItem>
-                                        }
-                                        @foreach (var container in Containers)
-                                        {
-                                           
-                                        }
-
-                                    </CollapseItems>
-                                </Collapse>
-
-                                break;
-                            default:
-                                <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.StringValue"></BootstrapInput>
-                                break;
-                        }
-                    }
-                }
-            </CollapseItem>
-
-        </CollapseItems>
-    </Collapse>
+        </CollapseItem>
+    </CollapseItems>
+</Collapse>
 </div>
 
 
 
-
 @code {
+    private string value;
     [NotNull]
     private Modal? Modal { get; set; }
-
+    AntDesign.RadioOption<string>[] SizeOptions = new AntDesign.RadioOption<string>[]
+    {
+        new(){ Value = "large", Label="大", },
+        new(){ Value = "default", Label="中", },
+        new(){ Value = "small", Label="小", },
+    };
     [CascadingParameter(Name = "Root")]
+    [NotNull]
     public FormDesigner? FormDesigner { get; set; }
 
     [Parameter]
+    [NotNull]
     public ComponentDto? ComponentData { get; set; }
 
     [NotNull]
@@ -164,22 +96,22 @@
     /// <summary>
     /// Primary / Secondary / Success / Danger / Warning / Info / Dark
     /// </summary>
-    List<SelectedItem> ColorItems = new List<SelectedItem>() {
-                new SelectedItem("None", "None"),
-                new SelectedItem("Active", "Active"),
-                new SelectedItem("Primary", "Primary"),
-                new SelectedItem("Warning", "Warning"),
-                new SelectedItem("Info", "Info"),
-                new SelectedItem("Danger", "Danger"),
-                new SelectedItem("Success", "Success"),
-                new SelectedItem("Dark", "Dark")
-                };
-    List<SelectedItem> BoolItems = new List<SelectedItem>() {
-                new SelectedItem("True", "True"),
-                new SelectedItem("False", "False"),
+    // List<SelectedItem> ColorItems = new List<SelectedItem>() {
+    //             new SelectedItem("None", "None"),
+    //             new SelectedItem("Active", "Active"),
+    //             new SelectedItem("Primary", "Primary"),
+    //             new SelectedItem("Warning", "Warning"),
+    //             new SelectedItem("Info", "Info"),
+    //             new SelectedItem("Danger", "Danger"),
+    //             new SelectedItem("Success", "Success"),
+    //             new SelectedItem("Dark", "Dark")
+    //             };
+    // List<SelectedItem> BoolItems = new List<SelectedItem>() {
+    //             new SelectedItem("True", "True"),
+    //             new SelectedItem("False", "False"),
 
-                };
-    private SelectedItem? VirtualItem1 { get; set; }
+    //             };
+    // private SelectedItem? VirtualItem1 { get; set; }
     private async Task<QueryData<SelectedItem>> OnQueryAsync(VirtualizeQueryOption option)
     {
         await Task.Delay(200);
@@ -193,17 +125,108 @@
                 TotalCount = 2
             };
     }
-    public List<SelectedItem> Parameters { get; set; } = new List<SelectedItem>() { new SelectedItem() { Value = "1", Text = "22" }, new SelectedItem() { Value = "2", Text = "22" } };
-    public List<ContainerDto> Containers;
+    // public List<SelectedItem> Parameters { get; set; } = new List<SelectedItem>() { new SelectedItem() { Value = "1", Text = "22" }, new SelectedItem() { Value = "2", Text = "22" } };
+    // public List<ContainerDto> Containers;
+    List<TreeViewItem<TreeComponentData>>? treeData; 
+    List<SelectedItem>? BoxListData;
     protected override Task OnInitializedAsync()
     {
-        Parameters = FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.ParentId+x.Id, Value = x.Id }).ToList();
-        Containers = FormDesigner.ContainerData.FindAllContainer();
+        //         treeData = new List<TreeComponentData>() { new TreeComponentData()
+        //         {
+        //             Type= ControlType.Comtainer,
+        //             Key=FormDesigner.ContainerData.Id,
+        //             Title=FormDesigner.ContainerData.Name,
+        //             Children=new List<TreeComponentData>()
+        // } };
+        treeData = new List<TreeViewItem<TreeComponentData>>();
+        BoxListData = new();
+        FormDesigner.FunctionPage.ContainerData.ToTree(treeData);
+        FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);
+        // Parameters = FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.ParentId + x.Id, Value = x.Id }).ToList();
+        // Containers = FormDesigner.ContainerData.FindAllContainer();
         return base.OnInitializedAsync();
+    }
+    public async Task OnCollapseChanged(CollapseItem e)
+    {
+        if (e.Text == "事件和数据源" && e.IsCollapsed == false)
+        {
+            BoxListData = new();
+            FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);
+            await   FormDesigner.StateHasChangedAsync();
+        }
+    }
+    public Task OnNodeLoadDelayAsync(AntDesign.TreeEventArgs<TreeComponentData> args)
+    {
+        var dataItem = args.Node.DataItem;
+        // if (dataItem.Children==null)
+        // {
+        //     return Task.CompletedTask;
+        // }
+        switch (dataItem.Type)
+        {
+            case ControlType.Comtainer:
+                ContainerDto? res = null;
+                FormDesigner.FunctionPage.ContainerData.FindContainer(x => x.Id == dataItem.Key, ref res);
+                if (res != null)
+                {
+                    var node = (List<TreeComponentData>)dataItem.Children;
+                    node.Clear();
+                    foreach (var row in res.Rows)
+                    {
+                        node.Add(new TreeComponentData()
+                            {
+                                Type = ControlType.Row,
+                                Key = row.Id,
+                                Title = row.Name
+                            });
+                    }
+                }
+
+                break;
+            case ControlType.Row:
+                RowDto? resrow = null;
+                FormDesigner.FunctionPage.ContainerData.FindRow(x => x.Id == dataItem.Key, ref resrow);
+                if (resrow != null)
+                {
+                    var node = (List<TreeComponentData>)dataItem.Children;
+                    node.Clear();
+                    foreach (var com in resrow.ComponentList)
+                    {
+                        node.Add(new TreeComponentData()
+                            {
+                                Type = ControlType.Component,
+                                Key = com.Id,
+                                Title = com.Name
+                            });
+                    }
+                }
+                break;
+            case ControlType.Component:
+                ComponentDto? resrom = null;
+                FormDesigner.FunctionPage.ContainerData.FindComponent(x => x.Id == dataItem.Key, ref resrom);
+                if (resrom != null)
+                {
+                    var node = (List<TreeComponentData>)dataItem.Children;
+                    node.Clear();
+                    foreach (var com in resrom.ChildContainers)
+                    {
+                        node.Add(new TreeComponentData()
+                            {
+                                Type = ControlType.Comtainer,
+                                Key = com.Id,
+                                Title = com.Name
+                            });
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return Task.CompletedTask;
     }
     private IEnumerable<SelectedItem> GetParameters()
     {
-        return FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
+        return FormDesigner.FunctionPage.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
 
     }
     private IEnumerable<SelectedItem> GetProList()
@@ -220,7 +243,7 @@
         if (key == "Id")
         {
 
-            if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+            if (FormDesigner.FunctionPage.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
             {
                 ValidateForm.SetError("Id", "数据库中已存在");
             }
@@ -241,7 +264,7 @@
     public Task IdOnValueChanged(string v)
     {
 
-        if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
+        if (FormDesigner.FunctionPage.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
         {
             ComponentData.Id = "";
         }
@@ -281,6 +304,19 @@
     /// <returns></returns>
     public async Task OnValueChangedForString(string v)
     {
+        await FormDesigner.StateHasChangedAsync();
+    }
+    public async Task OnChangeString(string a)
+    {
+        await FormDesigner.StateHasChangedAsync();
+    }
+    public async Task OnChange()//OnChangeTreeSelects
+    {
+        await FormDesigner.StateHasChangedAsync();
+    }
+    public async Task OnChangeTreeSelects(IEnumerable<TreeComponentData> list)//OnChangeTreeSelects
+    {
+        var ss = FormDesigner.FunctionPage.ContainerData;
         await FormDesigner.StateHasChangedAsync();
     }
 }

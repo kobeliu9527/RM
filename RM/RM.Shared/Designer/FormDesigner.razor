@@ -13,7 +13,7 @@
             @onclick="@(async () =>
             await SelectComponentAsync(null))"
             @onclick:stopPropagation="true">
-                <Container ContainerData="ContainerData"
+                <Container  ContainerData="ContainerData"
                            OnClickCallback="@(async (e) =>
                            await SelectContainerAsync(ContainerData))" />
             </div>

@@ -6,85 +6,150 @@
     string selectedComponentClass = isSelectedComponent ? "component-element--selected" : "";
     string tabsContainerClass = ComponentData?.ComponentType == ComponentType.Tabs ? "container-element" : "";
 }
-
-<div class="component-element @Class @selectedComponentClass @tabsContainerClass"
-@onclick="SelectComponentAsync"
-@onclick:stopPropagation="true">
-    <div class="widget-wrapper">
-        @if (isSelectedComponent)
-        {
-            <ComponentMover Component="@ComponentData"
-                            ComponentsInParentRow="@ComponentRow" />
-
-        }
-        @{
-            string h = "auto";
-            h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
-        }
-        <div class="widget-content" style="height:@h">
-            @switch (ComponentData?.ComponentType)
+@if (FormDesigner.IsDesigner)
+{
+    <div class="component-element @Class @selectedComponentClass @tabsContainerClass"
+         @onclick="SelectComponentAsync"
+         @onclick:stopPropagation="true">
+        <div class="widget-wrapper">
+            @if (isSelectedComponent)
             {
-                case ComponentType.SingleLine:
-                    <SingleLineComp Component="@ComponentData" />
-                    break;
+                <ComponentMover Component="@ComponentData"
+                                ComponentsInParentRow="@ComponentRow" />
 
-                case ComponentType.MultiLine:
-                    <MultiLineComp Component="@ComponentData" />
-                    break;
-
-                case ComponentType.Email:
-                    <EmailComp Component="@ComponentData" />
-                    break;
-
-                case ComponentType.Link:
-                    <LinkComp Component="@ComponentData" />
-                    break;
-
-                case ComponentType.Checkbox:
-                    <CheckboxComp Component="@ComponentData" />
-                    break;
-
-                case ComponentType.Number:
-                    <NumberComp Component="@ComponentData" />
-                    break;
-
-                case ComponentType.File:
-                    <FileComp Component="@ComponentData" />
-                    break;
-
-                case ComponentType.DateTime:
-                    <DateTimeComp Component="@ComponentData" />
-                    break;
-                case ComponentType.Select:
-                    <SelectComp Component="@ComponentData" />
-                    break;
-                case ComponentType.Table:
-                    <DataGridViewComp Component="@ComponentData" />
-                    break;
-                case ComponentType.Tabs:
-                    <TabsComp ComponentData="@ComponentData"
-                              ComponentRow="@ComponentRow"
-                              TabContainerList="@ComponentData.ChildContainers" />
-                    break;
-
-                default:
-                    throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
             }
+            @{
+                string h = "auto";
+                h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
+            }
+            <div class="widget-content" style="height:@h">
+                @switch (ComponentData?.ComponentType)
+                {
+                    case ComponentType.SingleLine:
+                        <SingleLineComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.MultiLine:
+                        <MultiLineComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Email:
+                        <EmailComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Link:
+                        <LinkComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Checkbox:
+                        <CheckboxComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Number:
+                        <NumberComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.File:
+                        <FileComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.DateTime:
+                        <DateTimeComp Component="@ComponentData" />
+                        break;
+                    case ComponentType.Select:
+                        <SelectComp Component="@ComponentData" />
+                        break;
+                    case ComponentType.Table:
+                        <DataGridViewComp Component="@ComponentData" />
+                        break;
+                    case ComponentType.Tabs:
+                        <TabsComp ComponentData="@ComponentData"
+                                  ComponentRow="@ComponentRow"
+                                  TabContainerList="@ComponentData.ChildContainers" />
+                        break;
+
+                    default:
+                        throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
+                }
+            </div>
+
+            @if (ComponentData?.ComponentType != ComponentType.Tabs)
+            {
+                var ss = @Container;
+                //用于拖拽时候
+                <DropZone Container="@Container"
+                          ComponentRow="@ComponentRow"
+                          ComponentIndex="@ComponentIndex"
+                          ComponentData="@ComponentData" />
+            }
+
         </div>
-
-        @if (ComponentData?.ComponentType != ComponentType.Tabs)
-        {
-            var ss = @Container;
-            //用于拖拽时候
-            <DropZone Container="@Container"
-                      ComponentRow="@ComponentRow"
-                      ComponentIndex="@ComponentIndex"
-                      ComponentData="@ComponentData" />
-        }
-
     </div>
-</div>
+}
+else
+{
+    <div class="component-element @Class @selectedComponentClass @tabsContainerClass"
+         @onclick="SelectComponentAsync"
+         @onclick:stopPropagation="true">
+        <div class="widget-wrapper">
+            @{
+                string h = "auto";
+                h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
+            }
+            <div class="widget-content" style="height:@h">
+                @switch (ComponentData?.ComponentType)
+                {
+                    case ComponentType.SingleLine:
+                        <SingleLineComp Component="@ComponentData" />
+                        break;
 
+                    case ComponentType.MultiLine:
+                        <MultiLineComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Email:
+                        <EmailComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Link:
+                        <LinkComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Checkbox:
+                        <CheckboxComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.Number:
+                        <NumberComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.File:
+                        <FileComp Component="@ComponentData" />
+                        break;
+
+                    case ComponentType.DateTime:
+                        <DateTimeComp Component="@ComponentData" />
+                        break;
+                    case ComponentType.Select:
+                        <SelectComp Component="@ComponentData" />
+                        break;
+                    case ComponentType.Table:
+                        <DataGridViewComp Component="@ComponentData" />
+                        break;
+                    case ComponentType.Tabs:
+                        <TabsComp ComponentData="@ComponentData"
+                                  ComponentRow="@ComponentRow"
+                                  TabContainerList="@ComponentData.ChildContainers" />
+                        break;
+
+                    default:
+                        throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
+                }
+            </div>
+        </div>
+    </div>
+
+}
 @code {
     /// <summary>
     /// 整个设计界面

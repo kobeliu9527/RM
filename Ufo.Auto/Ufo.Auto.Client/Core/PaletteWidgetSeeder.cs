@@ -15,13 +15,17 @@ namespace Ufo.Auto.Client.Core
             {
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "文本框",
                     ComponentType = ComponentType.SingleLine,//控制界面生成
                     Description = "文本框控件",
                     Order = 1,
                     Visible = true,
-                    Props=new Dictionary<string, Property>(){
+                    Props=new Dictionary<string, Property>()
+                    {
+                        {"Size",new Property(){PType= PType.String, StringValue="large",DisplayName="大小"} },
+                        {"ReadOnly",new Property(){PType= PType.Bool, BoolVal=false,DisplayName="只读"} },
+                        {"Params",new Property(){PType= PType.StringList, StringListValue=new List<string>(),DisplayName="存储过程关联参数"} },
                         {"IsExecuteForEnter",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="回车后是否执行存储过程"} },
                         {"StoreName",new Property(){PType= PType.Select, StringValue="",DisplayName="执行存储过程的名称"} },
                         {"Parameters",new Property(){PType= PType.MutilPropter, MutilProperties=new List<MutilProperty>(),DisplayName="执行存储过程需要的参数"} },
@@ -33,7 +37,7 @@ namespace Ufo.Auto.Client.Core
                 },
                  new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "DataGridView",
                     ComponentType = ComponentType.Table,//控制界面生成
                     Description = "表格",
@@ -46,7 +50,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Multi Line",
                     ComponentType = ComponentType.MultiLine,
                     Description = "This is a multi line component",
@@ -56,7 +60,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "选择框",
                     ComponentType = ComponentType.Select,//控制界面生成
                     Description = "提供一个下拉列表,用于选择",
@@ -75,7 +79,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Link",
                     ComponentType = ComponentType.Link,
                     Description = "This is a link component",
@@ -85,7 +89,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Email",
                     ComponentType = ComponentType.Email,
                     Description = "This is an email component",
@@ -95,7 +99,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Checkbox",
                     ComponentType = ComponentType.Checkbox,
                     Description = "This is a checkbox component",
@@ -112,7 +116,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Number",
                     ComponentType = ComponentType.Number,
                     Description = "This is a number component",
@@ -122,7 +126,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "File",
                     ComponentType = ComponentType.File,
                     Description = "This is a file component",
@@ -132,7 +136,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "DateTime",
                     ComponentType = ComponentType.DateTime,
                     Description = "This is a date time component",
@@ -142,7 +146,7 @@ namespace Ufo.Auto.Client.Core
                 },
                 new PaletteWidgetDto()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Tabs",
                     ComponentType = ComponentType.Tabs,
                     Description = "This is a tabs component",

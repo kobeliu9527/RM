@@ -1,19 +1,30 @@
-﻿namespace Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
+namespace Models
 {
     /// <summary>
     /// 表示一个组件 按钮/文本框/选中框等
     /// </summary>
     public class PaletteWidgetDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
+        /// <summary>
+        /// 组件的名字,必须全局唯一
+        /// </summary>
+        [DisplayName("唯一标识"), Required(ErrorMessage = "组件的Id,必须全局唯一"), ReadOnly(true)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("名字"), Required(ErrorMessage = "组件的名字,最好全局唯一")]
+        public string Name { get; set; } = "";
         /// <summary>
         /// 控件的类型,用于区分是文本框还是下拉框等等
         /// </summary>
         public ComponentType ComponentType { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = "组件描述";
         public int Order { get; set; }
-        public string Icon { get; set; }
+        public string Icon { get; set; } = "组件图标";
         public bool Visible { get; set; }
 
         /// <summary>
@@ -54,7 +65,7 @@
         /// <summary>
         /// 属性值
         /// </summary>
-        public List<string> StringListValue { get; set; } = new();
+        public IEnumerable<string> StringListValue { get; set; } 
         /// <summary>
         /// 多个参数值
         /// </summary>

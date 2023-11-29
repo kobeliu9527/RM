@@ -1,9 +1,8 @@
 ﻿@using AntDesign
 
 <div class="fd-field-properties-panel h-100 ppp">
-    <Tabs  Animated>
-        <TabPane Tab="Tab 1" Key="1">
-            <ChildContent>
+    <Tab>
+        <TabItem Text="界面设计">
             @{
                 ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
                 ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
@@ -74,12 +73,7 @@
             }
             else if (RowData != null)
             {
-                <div class="h-100 w-100">
-                    Select an element on the whiteboard, then set its properties here
-                    <br />
-                    选中了一行
-                </div>
-
+                <RowProperties RowDto="RowData"></RowProperties>
             }
             else
             {
@@ -89,21 +83,14 @@
                     选中一个控件,然后在此处设置他的属性
                 </div>
             }
-                Tab 1
-            </ChildContent>
-        </TabPane>
-        <TabPane Tab="Tab 2" Key="2">
-            @* <TreeView Items="@(Get())" ShowCheckbox="true" /> *@
-            <ChildContent>
-                <div class="fd-field-properties-panel h-100">角色2</div>
-
-            </ChildContent>
-        </TabPane>
-        <TabPane Tab="Tab 3" Key="3">
-            <div class="fd-field-properties-panel h-100">角色</div>
-        </TabPane>
-    </Tabs>
-
+        </TabItem>
+        <TabItem Text="页面属性">
+            <div>我是用户管理</div>
+        </TabItem>
+        <TabItem Text="界面设计3">
+            <div>我是用户管理</div>
+        </TabItem>
+    </Tab>
 </div>
 
 

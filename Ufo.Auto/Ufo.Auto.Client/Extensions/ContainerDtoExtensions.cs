@@ -159,18 +159,32 @@ namespace Ufo.Auto.Client.Extensions
                 }
             }
         }
-
-        public static List<TreeComponentData> ToTree(this ContainerDto container, List<TreeComponentData> list)
+        /// <summary>
+        /// 生成控件树结构 IEnumerable<SelectedItem>
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static IEnumerable<TreeViewItem<TreeComponentData>> ToTree(this ContainerDto container, IEnumerable<TreeViewItem<TreeComponentData>> list)
         {
-            var root = new TreeComponentData() { Id = container.Id, Name = "容器",Type= ControlType.Comtainer };
-            list.Add(root);
+            var root = new TreeViewItem<TreeComponentData>(new TreeComponentData() { Key = container.Id, Title = container.Name, Type = ControlType.Comtainer, Children = new List<TreeComponentData>() }) {  Text= container.Name
+            };
+            ((List<TreeViewItem<TreeComponentData>>)list).Add(root);
             foreach (var row in container.Rows)
             {
-                var node = new TreeComponentData() { Id = row.Id ,Name="行", Type = ControlType.Row };
+                var node = new TreeViewItem<TreeComponentData>(new TreeComponentData() { Key = row.Id, Title = row.Name, Type = ControlType.Row, Children = new List<TreeComponentData>() })
+                {
+                    Text = row.Name
+                };
+                //((List<TreeComponentData>)root.Children).Add(node);
                 root.Items.Add(node);
                 foreach (var com in row.ComponentList)
                 {
-                    var node2 = new TreeComponentData() { Id = com.Id ,Name = com.ChildContainers.Count > 0 ? "容器组件" : "组件", Type = ControlType.Component };
+                    var node2 = new TreeViewItem<TreeComponentData>(new TreeComponentData() { Key = com.Id, Title = com.Name, Type = ControlType.Component, Children = new List<TreeComponentData>() })
+                    {
+                        Text = com.Name
+                    };
+                    //((List<TreeComponentData>)node.Children).Add(node2);
                     node.Items.Add(node2);
                     if (com.ChildContainers.Count > 0)
                     {
@@ -179,6 +193,24 @@ namespace Ufo.Auto.Client.Extensions
                             //var node3 = new TreeComponentData() { Id = com.Id, Name = "rongqi" };
                             //node2.Items.Add(node3);
                             ToTree(c, node2.Items);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+        public static List<TreeViewItem<TreeComponentData>> ToSelectedItemList(this ContainerDto container, List<SelectedItem> list)
+        {
+            foreach (var row in container.Rows)
+            {
+                foreach (var item in row.ComponentList)
+                {
+                    list.Add(new SelectedItem() { Text=item.Name,Value=item.Id });
+                    if (item.ChildContainers.Count>0)
+                    {
+                        foreach (var c in item.ChildContainers)
+                        {
+                            ToSelectedItemList(c,list);
                         }
                     }
                 }

@@ -14,11 +14,12 @@ namespace Models
 
         #region Public Constructors
 
-        /// <summary>
-        /// </summary>
+       /// <summary>
+       /// 
+       /// </summary>
         public ComponentDto()
         {
-            Id = Guid.NewGuid().ToString();
+           
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace Models
         /// <param name="type"></param>
         public ComponentDto(ComponentType type)
         {
-            Id = Guid.NewGuid().ToString();
+        
             InitializeComponent(type);
         }
 
@@ -50,15 +51,20 @@ namespace Models
         #region 属性
 
         /// <summary>
-        /// 唯一值
+        /// 组件的名字,必须全局唯一
         /// </summary>
-        [DisplayName("页面唯一标识"), Required(ErrorMessage = "控件的名字,必须全局唯一")]
-        public string Id { get; set; }
+        [DisplayName("唯一标识"), Required(ErrorMessage = "组件的Id,必须全局唯一"), ReadOnly(true)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("名字"), Required(ErrorMessage = "组件的名字,最好全局唯一")]
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 父级容器的ID
         /// </summary>
-        public string ParentId { get; set; }
+        public string? ParentId { get; set; }
 
         /// <summary>
         /// 外观颜色
@@ -196,7 +202,6 @@ namespace Models
                 {
                     new ContainerDto(ContainerType.Tab)
                     {
-                         Id =Guid.NewGuid().ToString(),
                          Rows=new (){ new ()},
                          MutLanguage = new MutLanguage() { zh_CN = "Tab 1" }
                     }

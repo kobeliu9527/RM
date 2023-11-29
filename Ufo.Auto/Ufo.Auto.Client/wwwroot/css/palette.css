@@ -22,8 +22,9 @@
 
 .fd-palette-widgets {
     box-sizing: border-box;
-    width: 225px;
     background-color: white;
+    max-height:80vh;
+    overflow:auto;
 }
 
 .fd-palette-widget {

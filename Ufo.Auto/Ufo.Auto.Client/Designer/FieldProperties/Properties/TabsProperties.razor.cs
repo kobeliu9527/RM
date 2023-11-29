@@ -74,12 +74,12 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
         public List<SelectedItem> Parameters { get; set; } = new List<SelectedItem>() { new SelectedItem() { Value = "1", Text = "22" }, new SelectedItem() { Value = "2", Text = "22" } };
         protected override Task OnInitializedAsync()
         {
-            Parameters = FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id }).ToList();
+            Parameters = FormDesigner.FunctionPage.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id }).ToList();
             return base.OnInitializedAsync();
         }
         private IEnumerable<SelectedItem> GetParameters()
         {
-            return FormDesigner.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
+            return FormDesigner.FunctionPage.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });
 
         }
         private IEnumerable<SelectedItem> GetProList()
@@ -97,7 +97,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
             if (key == "Id")
             {
 
-                if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+                if (FormDesigner.FunctionPage.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
                 {
                     ValidateForm.SetError("Id", "数据库中已存在");
                 }
@@ -118,7 +118,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
         public Task IdOnValueChanged(string v)
         {
 
-            if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
+            if (FormDesigner.FunctionPage.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 1))
             {
                 ComponentData.Id = "";
             }

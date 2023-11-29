@@ -19,7 +19,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
         public List<TreeViewItem<ComponentDto>> Get()
         {
             var res = new List<TreeViewItem<ComponentDto>>();
-            ToTree(FormDesigner.ContainerData, res);
+            ToTree(FormDesigner.FunctionPage.ContainerData, res);
             return res;
         }
         private void ToTree(ContainerDto container, List<TreeViewItem<ComponentDto>> list)

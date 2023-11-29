@@ -12,6 +12,7 @@ namespace Ufo.Auto.Client.Extensions
         public static ComponentDto CreateComponent(this PaletteWidgetDto paletteWidget)
         {
             var componentData = new ComponentDto(paletteWidget.ComponentType);
+            componentData.Name = paletteWidget.Name; 
             foreach (var item in paletteWidget.Props)
             {
                 Property p = new Property()
@@ -22,6 +23,7 @@ namespace Ufo.Auto.Client.Extensions
                     DataSourse = item.Value.DataSourse,
                     BoolVal = item.Value.BoolVal,
                     IntlVal = item.Value.IntlVal,
+                    StringListValue=new List<string>()
                 };
                 componentData.Props.Add(item.Key, p);
             }

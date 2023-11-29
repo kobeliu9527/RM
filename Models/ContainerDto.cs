@@ -16,14 +16,17 @@ namespace Models
         /// <summary>
         /// 容器的名字,必须全局唯一
         /// </summary>
-        [DisplayName("唯一标识"), Required(ErrorMessage = "容器的名字,必须全局唯一")]
-        public string Id { get; set; }
-
+        [DisplayName("唯一标识"), Required(ErrorMessage = "容器的Id,必须全局唯一"), ReadOnly(true)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("名字"), Required(ErrorMessage = "容器的名字,最好全局唯一")]
+        public string Name { get; set; } = "跟容器";
         /// <summary>
         /// 容器的类型
         /// </summary>
         public ContainerType ContainerType { get; set; }
-        //private List<List<ComponentDto>> rows=new List<List<ComponentDto>>();
         private List<RowDto> rows = new();
         /// <summary>
         /// 控件的属性
@@ -34,19 +37,18 @@ namespace Models
         /// </summary>
         public MutLanguage MutLanguage { get; set; } = new();
         #region Public Constructors
+
         /// <summary>
         /// 
         /// </summary>
         public ContainerDto()
         {
-            //InitEmptyContainer(ref rows);
-            Id = Guid.NewGuid().ToString();
+
         }
 
 
         public ContainerDto(ContainerType type)
         {
-            Id = Guid.NewGuid().ToString();
             ContainerType = type;
             InitEmptyContainer(ref rows);
         }
@@ -88,24 +90,30 @@ namespace Models
 
     }
 
-
-    public class RowListDto
-    {
-        public List<RowDto> Rows { get; set; }
-    }
     /// <summary>
     /// 表示一行
     /// </summary>
     public class RowDto
     {
-        [DisplayName("唯一标识"), Required(ErrorMessage = "必须全局唯一")]
-        public string Id { get; set; }
+        /// <summary>
+        /// 容器的名字,必须全局唯一
+        /// </summary>
+        [DisplayName("唯一标识"), Required(ErrorMessage = "行的Id,必须全局唯一"), ReadOnly(true)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// 
+        /// </summary>
+        [DisplayName("名字"), Required(ErrorMessage = "行的名字,最好全局唯一")]
+        public string Name { get; set; } = "行";
         public int Width { get; set; }
         public int Height { get; set; }
-        public List<ComponentDto> ComponentList { get; set; }=new ();
+        /// <summary>
+        /// 这一行包含的所有的组件
+        /// </summary>
+        public List<ComponentDto> ComponentList { get; set; } = new();
         public RowDto()
         {
-            Id= Guid.NewGuid().ToString();
+
         }
     }
 }

@@ -1,4 +1,5 @@
 using AntDesign;
+using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Models;
 using System.Diagnostics.CodeAnalysis;
@@ -21,7 +22,7 @@ namespace Ufo.Auto.Client.Designer.Palette
         /// </summary>
         [Parameter]
         public List<PaletteWidgetDto>? Widgets { get; set; }
-        List<TreeComponentData> _datas = new List<TreeComponentData>();
+        List<TreeViewItem<TreeComponentData>> _datas = new ();
         /// <summary>
         /// 容器本身的数据数据
         /// </summary>
@@ -36,14 +37,12 @@ namespace Ufo.Auto.Client.Designer.Palette
             {
                 Widgets = PaletteWidgetSeeder.GetPaletteWidgets();
             }
-            //   _datas = new List<TreeComponentData>() { new TreeComponentData() { Id = ContainerData.Id, Type = ControlType.Comtainer, Name = "跟容器" } };
             ContainerData.ToTree(_datas);
         }
 
         //OnClick
         public void Query()
         {
-        //    _datas = new() { new TreeComponentData() { Name = "跟容器" } }; ContainerData.ToTree(_datas[0].Items);
             _datas = new() {  }; 
             ContainerData.ToTree(_datas);
         }
@@ -54,7 +53,7 @@ namespace Ufo.Auto.Client.Designer.Palette
         {
             case ControlType.Comtainer:
                 ContainerDto? res = null;
-                ContainerData.FindContainer(x => x.Id == dataItem.Id, ref res);
+                ContainerData.FindContainer(x => x.Id == dataItem.Key, ref res);
                 if (res != null)
                 {
                     await Root.SelectContainerAsync(res);
@@ -63,7 +62,7 @@ namespace Ufo.Auto.Client.Designer.Palette
                 break;
             case ControlType.Row:
                 RowDto? resrow = null;
-                ContainerData.FindRow(x => x.Id == dataItem.Id, ref resrow);
+                ContainerData.FindRow(x => x.Id == dataItem.Key, ref resrow);
                 if (resrow != null)
                 {
                     await Root.SelectRowAsync(resrow);
@@ -71,7 +70,7 @@ namespace Ufo.Auto.Client.Designer.Palette
                 break;
             case ControlType.Component:
                 ComponentDto? resrom = null;
-                ContainerData.FindComponent(x => x.Id == dataItem.Id, ref resrom);
+                ContainerData.FindComponent(x => x.Id == dataItem.Key, ref resrom);
                 if (resrom != null)
                 {
                     await Root.SelectComponentAsync(resrom);
@@ -83,60 +82,10 @@ namespace Ufo.Auto.Client.Designer.Palette
     }
     public async Task OnNodeLoadDelayAsync(TreeEventArgs<TreeComponentData> args)
     {
-        _datas = new List<TreeComponentData>();
+        _datas = new List<TreeViewItem<TreeComponentData>>();
         ContainerData.ToTree(_datas);
         return;
-        var dataItem = ((TreeComponentData)args.Node.DataItem);
-        dataItem.Items.Clear();
-        switch (dataItem.Type)
-        {
-            case ControlType.Comtainer:
-                ContainerDto? res = null;
-                ContainerData.FindContainer(x => x.Id == dataItem.Id, ref res);
-                if (res != null)
-                {
-                    await Root.SelectContainerAsync(res);
-                    foreach (var item in res.Rows)
-                    {
-                        dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Row, Name = "行" });
-                    }
-                }
-
-                break;
-            case ControlType.Row:
-                RowDto? resrow = null;
-                ContainerData.FindRow(x => x.Id == dataItem.Id, ref resrow);
-                if (resrow != null)
-                {
-                    foreach (var item in resrow.ComponentList)
-                    {
-                        dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Component, Name = item.ChildContainers.Count > 0 ? "容器组件" : "组件" });
-                    }
-                }
-                break;
-            case ControlType.Component:
-                ComponentDto? resrom = null;
-                ContainerData.FindComponent(x => x.Id == dataItem.Id, ref resrom);
-                if (resrom != null)
-                {
-                    foreach (var item in resrom.ChildContainers)
-                    {
-                        dataItem.Items.Add(new TreeComponentData() { Id = item.Id, Type = ControlType.Comtainer, Name = "Tab页面" });
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-
     }
-}
-public class TreeComponentData
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public ControlType Type { get; set; }
-    public List<TreeComponentData> Items { get; set; } = new();
 }
 public enum ControlType
 {

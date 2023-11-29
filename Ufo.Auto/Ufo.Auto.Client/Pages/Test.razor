@@ -1,23 +1,15 @@
 ﻿@page "/test"
-@rendermode InteractiveServer
+@rendermode InteractiveAuto
 <h3>Test</h3>
-@* <div class="fd-field-properties-panel h-100 ppp"> *@
-
-    <Tab >
-        <TabItem Text="控件属性">
-        <div class="fd-field-properties-panel h-100">角色4</div>
-        </TabItem>
-        <TabItem Text="菜单管理">
-            @* <TreeView Items="@(Get())" ShowCheckbox="true" /> *@
-            <div class="fd-field-properties-panel h-100">角色2</div>
-
-        </TabItem>
-        <TabItem Text="角色">
-            <div class="fd-field-properties-panel h-100">角色</div>
-        </TabItem>
-    </Tab>
-
+ 
+<Button OnClick="OnClick">提示</Button>
 @* </div> *@
 @code {
-
+    [Inject]
+    [NotNull]
+    private ToastService? ToastService { get; set; }
+    public async Task OnClick()
+    {
+        await ToastService.Success("Title", "Content", autoHide: true);
+    }
 }

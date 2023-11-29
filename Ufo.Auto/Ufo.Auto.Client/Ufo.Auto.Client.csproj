@@ -57,6 +57,8 @@
     <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.0" />
     <PackageReference Include="MatBlazor" Version="2.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.125-preview09" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

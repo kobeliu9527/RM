@@ -20,11 +20,18 @@ namespace Ufo.Auto.Client.Designer
         /// </summary>
         [Parameter]
         public bool IsDesigner { get; set; }
+        ///// <summary>
+        ///// 跟容器数据
+        ///// </summary>
+        //[Parameter]
+        //[NotNull]
+        //public ContainerDto? ContainerData { get; set; }
         /// <summary>
-        /// 跟容器数据
+        /// 页面数据
         /// </summary>
         [Parameter]
-        public ContainerDto? ContainerData { get; set; }
+        [NotNull]
+        public FunctionPage? FunctionPage { get; set; }
         /// <summary>
         /// 选中的容器
         /// </summary>

@@ -83,7 +83,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
             if (key == "Id")
             {
 
-                if (FormDesigner.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
+                if (FormDesigner.FunctionPage.ContainerData.FindAllComponent(x => true).GroupBy(x => x.Id).Any(x => x.Count() > 0))
                 {
                     ValidateForm.SetError("Id", "数据库中已存在");
                 }

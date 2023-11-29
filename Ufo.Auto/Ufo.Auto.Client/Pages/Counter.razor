@@ -1,31 +1,67 @@
 ﻿@page "/counter"
-@rendermode InteractiveServer
+@* @attribute [StreamRendering] *@
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@using System.Text.Unicode
+@inject AntDesign.NotificationService _notice
+
+
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-<FormDesigner ContainerData="ContainerData" IsDesigner="MyProperty"></FormDesigner>
+<button class="btn btn-primary" @onclick="IncrementCount2">序列化</button>
+<button class="btn btn-primary" @onclick="IncrementCount3">消息</button>
+<AntDesign.Button Type="primary" OnClick="IncrementCount3">
+    Display normal message
+</AntDesign.Button>
+<FormDesigner FunctionPage="FunctionPage" IsDesigner="MyProperty"></FormDesigner>
 @code {
+    [Inject][NotNull]
+    public AntDesign.IMessageService _message { get; set; }
     private int currentCount = 0;
-    public bool MyProperty { get; set; }
+    public bool MyProperty { get; set; } = true;
     public ContainerDto? ContainerData { get; set; }
+    /// <summary>
+    /// 页面数据
+    /// </summary>
+    [Parameter]
+    [NotNull]
+    public FunctionPage? FunctionPage { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        FunctionPage = new FunctionPage();
+
         //ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };
-        ContainerData = new ContainerDto() { 
-            //ContainerType = ContainerType.Base, 
-            Rows = new List<RowDto>() { new RowDto() } };
+        FunctionPage.ContainerData = new ContainerDto()
+            {
+                //ContainerType = ContainerType.Base,
+                Rows = new List<RowDto>() { new RowDto() }
+            };
         return;
     }
     private void IncrementCount()
     {
         currentCount++;
         MyProperty = !MyProperty;
+    }
+    private void IncrementCount2()
+    {
+        JsonSerializerOptions op = new JsonSerializerOptions()
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs)
+            };
+        var json = System.Text.Json.JsonSerializer.Serialize(FunctionPage.ContainerData, op);
+    }
+    private async Task IncrementCount3()
+    {
+       System. Console.WriteLine("onclick");
+       await _message.Info("啊打发十分");
+        // await _notice.Open(new AntDesign.NotificationConfig()
+        //     {
+        //         Message = "title",
+        //         Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification."
+        //     });
     }
 }
