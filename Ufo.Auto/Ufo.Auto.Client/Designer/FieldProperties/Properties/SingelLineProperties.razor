@@ -1,59 +1,49 @@
 ﻿@using SqlSugar
-@using global::Models
-
-@*@inherits PropertiesComponentBase*@
-@*<div class="prop-group-box" style="min-height:80vh">*@
-@* <div style="min-height:80vh"> *@
-@*<div class="box-header">Defaults(默认通用属性)</div>*@
-
-<div class="properties">
 <Collapse OnCollapseChanged="OnCollapseChanged">
-   
-    <CollapseItems >
-        <CollapseItem Text="通用属性" >
-            <AntDesign.Text>Id</AntDesign.Text>
-            <AntDesign.Input @bind-Value="ComponentData.Id" Placeholder="Id" ReadOnly="true"></AntDesign.Input>
-            <AntDesign.Text>名称</AntDesign.Text>
-            <AntDesign.Input @bind-Value="ComponentData.Name" TValue="string" Placeholder="名称" OnChange="OnChangeString"></AntDesign.Input>
-            <AntDesign.Text>宽:</AntDesign.Text>
-            <br />
-            <AntDesign.InputNumber TValue="int" Step="1" Min="1" Max="12" @bind-Value="ComponentData.Width" OnChange="OnChange" />
-            <br />
-            <AntDesign.Text>高:(默认自动)</AntDesign.Text>
-            <br />
-            <AntDesign.InputNumber TValue="int" Step="10" Min="0" @bind-Value="ComponentData.Height" OnChange="OnChange" />
-            <br />
-            
+    <CollapseItems>
+        <CollapseItem Text="通用属性">
+            <BootstrapInput @bind-Value="ComponentData.Id" ShowLabel="true" Readonly="true" DisplayText="ID"></BootstrapInput>
+            <BootstrapInputNumber @bind-Value="@ComponentData.Width" IsSelectAllTextOnFocus="true" OnValueChanged="OnValueChangedForInt" ShowLabel="true" DisplayText="宽" ShowButton="true" TValue="int" Min="1" Max="12" />
+            <BootstrapInputNumber @bind-Value="@ComponentData.Height" IsSelectAllTextOnFocus="true" OnValueChanged="OnValueChangedForInt" ShowLabel="true" DisplayText="高" ShowButton="true" TValue="int" Min="1" Max="12" />
+            <Collapse>
+                <CollapseItems>
+                    <CollapseItem Text="多语言显示">
+                        <ValidateForm Model="@ComponentData.MutLanguage">
+                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.zh_CN" ShowLabel="true" DisplayText="中文" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.en_US" ShowLabel="true" DisplayText="英文" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.zh_TW" ShowLabel="true" DisplayText="繁体" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.ja_JP" ShowLabel="true" DisplayText="日语" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                        </ValidateForm>
+                    </CollapseItem>
+                </CollapseItems>
+            </Collapse>
         </CollapseItem>
         <CollapseItem Text="扩展属性">
-             <AntDesign.Text>大小:</AntDesign.Text>
-             <AntDesign.RadioGroup @bind-Value="@ComponentData.Props["Size"].StringValue" TValue="string" OnChange="OnChange" Options="@SizeOptions"></AntDesign.RadioGroup>
-             <br />
-             <AntDesign.Text>只读:</AntDesign.Text>
-             <AntDesign.Switch @bind-Value="@ComponentData.Props["ReadOnly"].BoolVal" OnChange="OnChange"></AntDesign.Switch>
+            <Switch @bind-Value="@ComponentData.Props["ReadOnly"].BoolVal" OnValueChanged="OnValueChangedForBool" ShowLabel="true" DisplayText="是否为只读"></Switch>
 
         </CollapseItem>
         <CollapseItem Text="事件和数据源">
-                <CheckboxList IsButton="true" TValue="IEnumerable<string>" Items="@BoxListData" @bind-Value="@ComponentData.Props["Params"].StringListValue" ShowLabel="true" DisplayText="存储过程需要的参数" />
-                @* <TreeView TItem="TreeComponentData" Items="@treeData" ShowCheckbox="true" ClickToggleNode="true" /> *@
-                @*   <AntDesign.TreeSelect TItem="TreeComponentData"
-                Style="width:100%;"
-                DataSource="treeData"
-                OnSelectedItemsChanged="OnChangeTreeSelects"
-                @bind-Values="@ComponentData.Props["Params"].StringListValue"
-                Placeholder="Please select"
-                Multiple
-                TreeDefaultExpandAll
-                ChildrenExpression="node=>node.DataItem.Children"
-                TitleExpression="node=>node.DataItem.Title"
-                KeyExpression="x=>x.DataItem.Key">
-                </AntDesign.TreeSelect> *@
-                <Button OnClick="()=>{BoxListData=new (); FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);}">刷新</Button>
-
+            @value StoreName
+            <Select TValue="string" @bind-Value="@ComponentData.Props["StoreName"].StringValue" IsVirtualize="true" OnQueryAsync="OnQueryAsync" ShowSearch="true" DisplayText="存储过程名字"></Select>
+            <CheckboxList IsButton="true" TValue="IEnumerable<string>" Items="@BoxListData" @bind-Value="@ComponentData.Props["Params"].StringListValue" ShowLabel="true" DisplayText="存储过程需要的参数" />
+            @* <TreeView TItem="TreeComponentData" Items="@treeData" ShowCheckbox="true" ClickToggleNode="true" /> *@
+            @*   <AntDesign.TreeSelect TItem="TreeComponentData"
+            Style="width:100%;"
+            DataSource="treeData"
+            OnSelectedItemsChanged="OnChangeTreeSelects"
+            @bind-Values="@ComponentData.Props["Params"].StringListValue"
+            Placeholder="Please select"
+            Multiple
+            TreeDefaultExpandAll
+            ChildrenExpression="node=>node.DataItem.Children"
+            TitleExpression="node=>node.DataItem.Title"
+            KeyExpression="x=>x.DataItem.Key">
+            </AntDesign.TreeSelect> *@
+            @* <Button OnClick="()=>{BoxListData=new (); FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);}">刷新</Button> *@
         </CollapseItem>
     </CollapseItems>
 </Collapse>
-</div>
+
 
 
 
@@ -115,19 +105,22 @@
     private async Task<QueryData<SelectedItem>> OnQueryAsync(VirtualizeQueryOption option)
     {
         await Task.Delay(200);
-        return new QueryData<SelectedItem>
-            {
-                Items = new List<SelectedItem>()
-                        {
-                    new SelectedItem("北京", "北京"),
-                    new SelectedItem("上海", "上海") { Active = true },
-                },
-                TotalCount = 2
-            };
+        var storeList = db.DbMaintenance.GetProcList("LCM");
+        var sourse = storeList.Select(x => new SelectedItem() { Text = x, Value = x }).ToList();
+        return new QueryData<SelectedItem> { Items = sourse, TotalCount = sourse.Count };
+        // return new QueryData<SelectedItem>
+        //     {
+        //         Items = new List<SelectedItem>()
+        //                 {
+        //             new SelectedItem("北京", "北京"),
+        //             new SelectedItem("上海", "上海") { Active = true },
+        //         },
+        //         TotalCount = 2
+        //     };
     }
     // public List<SelectedItem> Parameters { get; set; } = new List<SelectedItem>() { new SelectedItem() { Value = "1", Text = "22" }, new SelectedItem() { Value = "2", Text = "22" } };
     // public List<ContainerDto> Containers;
-    List<TreeViewItem<TreeComponentData>>? treeData; 
+    List<TreeViewItem<TreeComponentData>>? treeData;
     List<SelectedItem>? BoxListData;
     protected override Task OnInitializedAsync()
     {
@@ -152,7 +145,7 @@
         {
             BoxListData = new();
             FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);
-            await   FormDesigner.StateHasChangedAsync();
+            await FormDesigner.StateHasChangedAsync();
         }
     }
     public Task OnNodeLoadDelayAsync(AntDesign.TreeEventArgs<TreeComponentData> args)

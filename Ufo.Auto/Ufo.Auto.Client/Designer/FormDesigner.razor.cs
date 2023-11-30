@@ -1,6 +1,8 @@
+using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Ufo.Auto.Client.Designer
@@ -20,6 +22,8 @@ namespace Ufo.Auto.Client.Designer
         /// </summary>
         [Parameter]
         public bool IsDesigner { get; set; }
+
+        private ConcurrentQueue<ConsoleMessageItem> ColorMessages { get; set; } = new() ;
         ///// <summary>
         ///// 跟容器数据
         ///// </summary>
@@ -35,31 +39,37 @@ namespace Ufo.Auto.Client.Designer
         /// <summary>
         /// 选中的容器
         /// </summary>
-        private ContainerDto? SelectedContainer = null;
+        public ContainerDto? SelectedContainer = null;
         /// <summary>
         /// 选中的控件
         /// </summary>
-        private ComponentDto? SelectedComponent = null;
+        public ComponentDto? SelectedComponent = null;
         /// <summary>
         /// 选中的行
         /// </summary>
-        private RowDto? SelectedRowDto = null;
+        public RowDto? SelectedRowDto = null;
         /// <summary>
         /// 工具箱中正在被拖动的项的数据,ondragstart会触发
         /// </summary>
-        private PaletteWidgetDto? DraggedPaletteWidget = null;
+        public PaletteWidgetDto? DraggedPaletteWidget = null;
         /// <summary>
         /// 设计器中被拖动的项目的Dto数据
         /// </summary>
-        private ComponentDto? DraggedComponentData = null;
+        public ComponentDto? DraggedComponentData = null;
         /// <summary>
         /// 设计器中被拖动的组件所在的行
         /// </summary>
-        private RowDto? DraggedComponentOriginRow = null;
+        public RowDto? DraggedComponentOriginRow = null;
         /// <summary>
         /// 设计器中被拖动的组件所在的容器
         /// </summary>
-        private ContainerDto? DraggedComponentOriginContainer = null;
+        public ContainerDto? DraggedComponentOriginContainer = null;
+
+        protected override void OnInitialized()
+        {
+            ColorMessages.Enqueue(new ConsoleMessageItem { Message = $"{DateTimeOffset.Now}: Dispatch Message" });
+            base.OnInitialized();
+        }
         /// <summary>
         /// 点击容器后会触发,实际就是给SelectedContainer赋值!(实际点击行也会触发)
         /// </summary>

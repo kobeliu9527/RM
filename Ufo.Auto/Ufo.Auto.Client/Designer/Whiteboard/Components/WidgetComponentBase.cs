@@ -24,7 +24,7 @@ namespace Ufo.Auto.Client.Designer.Whiteboard.Components
         /// </summary>
         [CascadingParameter(Name = "Root")]
         [NotNull]
-        public FormRuning? FormDesigner { get; set; }
+        public FormDesigner? FormDesigner { get; set; }
         /// <summary>
         /// 组件基类
         /// </summary>

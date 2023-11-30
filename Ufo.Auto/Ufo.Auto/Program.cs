@@ -80,6 +80,6 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Ufo.Auto.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(Counter).Assembly);
 
 app.Run();

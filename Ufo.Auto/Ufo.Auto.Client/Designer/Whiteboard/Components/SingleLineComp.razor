@@ -1,15 +1,18 @@
 ﻿@inherits WidgetComponentBase
-@inject AntDesign.IMessageService _message
 @*<form>
     <div class="form-group">*@
 @if (Component != null)
 {
-    <AntDesign.Text>@Component.Name</AntDesign.Text>
-    <AntDesign.Input Id="@Component.Id"
-                     ReadOnly="@Component.Props["ReadOnly"].BoolVal"
-                     Size="@Component.Props["Size"].StringValue"
-                     OnPressEnter="OnPressEnter"
-                     @bind-Value="@(Component.ValueInfo.StringValue)"></AntDesign.Input>
+    <BootstrapInput PlaceHolder="请输入 ..."
+                    Id="@Component.Id"
+                    Readonly="@Component.Props["ReadOnly"].BoolVal"
+                    OnEnterAsync="OnPressEnter"
+                    TValue="string"
+                    IsAutoFocus="true"
+                    IsSelectAllTextOnFocus="true"
+                    ShowLabel="true"
+                    DisplayText="@Component.MutLanguage.GetLanguage()"
+                    @bind-Value="@(Component.ValueInfo.StringValue)" />
 }
 else
 {
@@ -27,12 +30,22 @@ else
 @*    </div>
 </form>*@
 @code {
-    private  async void OnPressEnter(KeyboardEventArgs e)
+    private async Task OnPressEnter(string e)
     {
-        ;
+        var storeName = Component.Props["StoreName"].StringValue;
+        await ToastService.Warning($"将要执行存储过程:{storeName}");
+
         var msg = string.Join("|", Component.Props["Params"].StringListValue);
-        await _message.Info(msg);
-        await InvokeAsync(() => { _message.Info(msg); });
+        foreach (var item in Component.Props["Params"].StringListValue)
+        {
+            var ss=  FormDesigner.FunctionPage.ContainerData.FindFirst(x=>x.Id==item);
+            if (ss is not null)
+            {
+                await ToastService.Warning($"控件{ss.Name}的值是:{ss.ValueInfo.StringValue}");
+            }
+
+        }
         StateHasChanged();
+     
     }
 }

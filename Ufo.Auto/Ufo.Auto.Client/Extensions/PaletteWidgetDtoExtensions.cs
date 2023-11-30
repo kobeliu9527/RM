@@ -12,6 +12,7 @@ namespace Ufo.Auto.Client.Extensions
         public static ComponentDto CreateComponent(this PaletteWidgetDto paletteWidget)
         {
             var componentData = new ComponentDto(paletteWidget.ComponentType);
+            componentData.MutLanguage.zh_CN = paletteWidget.Name;
             componentData.Name = paletteWidget.Name; 
             foreach (var item in paletteWidget.Props)
             {

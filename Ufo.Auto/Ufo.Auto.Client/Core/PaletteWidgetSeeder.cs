@@ -23,7 +23,6 @@ namespace Ufo.Auto.Client.Core
                     Visible = true,
                     Props=new Dictionary<string, Property>()
                     {
-                        {"Size",new Property(){PType= PType.String, StringValue="large",DisplayName="大小"} },
                         {"ReadOnly",new Property(){PType= PType.Bool, BoolVal=false,DisplayName="只读"} },
                         {"Params",new Property(){PType= PType.StringList, StringListValue=new List<string>(),DisplayName="存储过程关联参数"} },
                         {"IsExecuteForEnter",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="回车后是否执行存储过程"} },
@@ -33,7 +32,7 @@ namespace Ufo.Auto.Client.Core
                         {"IsAutoFocus",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="是否自动获取焦点"} },
                         {"PlaceHolder",new Property(){PType= PType.String, StringValue="请输入..",DisplayName="提示信息"} },
                     },
-                    Icon = @"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path d='M 1,19 1,1 49,1 49,19 Z M 0,0 0,20 50,20 50,0 Z' style='fill:#000000'/></g><path style='fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1' d='m 5.4382875,15.181544 3.838384,0 0,0.707071 -3.838384,0 z m -0.112826,-11.259453 3.838384,0 0,0.707071 -3.838384,0 z m 2.429338,11.975342 -1.062012,0 0,-11.889647 1.062012,0 z'/></svg>",
+                    Icon = @"fa-solid fa-crow",
                 },
                  new PaletteWidgetDto()
                 {

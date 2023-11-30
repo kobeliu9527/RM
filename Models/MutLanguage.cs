@@ -57,33 +57,33 @@ namespace Models
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public string this[MutLanguageEnum index]
-        {
-            get
-            {
-                switch (index)
-                {
-                    case MutLanguageEnum.中文:
-                        return zh_CN == null ? "??" : zh_CN;
-                    case MutLanguageEnum.中文繁体:
-                        return zh_TW == null ? "??" : zh_TW;
-                    case MutLanguageEnum.英文:
-                        return en_US == null ? "??" : en_US;
-                    case MutLanguageEnum.日文:
-                        return ja_JP == null ? "??" : ja_JP;
-                    case MutLanguageEnum.泰文:
-                        return th_TH == null ? "??" : th_TH; ;
-                    case MutLanguageEnum.法文:
-                        return fr_FR == null ? "??" : fr_FR; ;
-                    case MutLanguageEnum.德文:
-                        return zh_CN == null ? "??" : zh_CN;
-                    default:
-                        break;
-                }
-                return "??";
-            }
-            set { /* set the specified index to value here */ }
-        }
+        //public string this[MutLanguageEnum index]
+        //{
+        //    get
+        //    {
+        //        switch (index)
+        //        {
+        //            case MutLanguageEnum.中文:
+        //                return zh_CN == null ? "??" : zh_CN;
+        //            case MutLanguageEnum.中文繁体:
+        //                return zh_TW == null ? "??" : zh_TW;
+        //            case MutLanguageEnum.英文:
+        //                return en_US == null ? "??" : en_US;
+        //            case MutLanguageEnum.日文:
+        //                return ja_JP == null ? "??" : ja_JP;
+        //            case MutLanguageEnum.泰文:
+        //                return th_TH == null ? "??" : th_TH; ;
+        //            case MutLanguageEnum.法文:
+        //                return fr_FR == null ? "??" : fr_FR; ;
+        //            case MutLanguageEnum.德文:
+        //                return zh_CN == null ? "??" : zh_CN;
+        //            default:
+        //                break;
+        //        }
+        //        return "??";
+        //    }
+        //    set { /* set the specified index to value here */ }
+        //}
         /// <summary>
         /// 中文(大陆)
         /// </summary>

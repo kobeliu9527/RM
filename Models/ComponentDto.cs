@@ -195,7 +195,7 @@ namespace Models
         internal void InitializeComponent(ComponentType type)
         {
             ComponentType = type;
-            MutLanguage.zh_CN = $"{ComponentType.GetName()}";
+            //MutLanguage.zh_CN = $"{ComponentType.GetName()}";
             if (ComponentType == ComponentType.Tabs)
             {
                 ChildContainers = new List<ContainerDto>()

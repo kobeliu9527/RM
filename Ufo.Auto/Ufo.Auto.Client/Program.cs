@@ -48,4 +48,6 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
    });
     return sqlSugar;
 });
+//var ss=builder.Build();
+
 await builder.Build().RunAsync();
