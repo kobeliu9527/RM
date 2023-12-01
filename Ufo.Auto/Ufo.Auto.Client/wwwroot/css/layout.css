@@ -1,1 +1,63 @@
-﻿
+﻿.dheader {
+    /*设计界面头*/
+    height: 5vh;
+}
+
+.dmain {
+    position: relative;
+    height: 94vh;
+    display: flex;
+}
+
+.dmain-left {
+    width: 20%;
+    max-width: 20%;
+}
+
+.dmain-main {
+    position: relative;
+    height: 100%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: space-around;
+}
+
+.dmain-right {
+    width: 20%;
+    max-width: 20%;
+    height: 100%;
+}
+
+.container-content {
+    /*内容*/
+    border: 2px solid #eeeeee;
+    margin: 0px;
+    margin-top: 3px;
+    border-radius: 4px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: 100%
+}
+
+.container-msg {
+    /*消息*/
+    width: 100%;
+}
+/*运行时*/
+.rmain {
+    position: relative;
+    height: 85vh;
+    display: flex;
+}
+
+.rmain-main {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: space-around;
+}

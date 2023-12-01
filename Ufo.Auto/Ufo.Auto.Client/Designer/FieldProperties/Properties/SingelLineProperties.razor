@@ -5,18 +5,21 @@
             <BootstrapInput @bind-Value="ComponentData.Id" ShowLabel="true" Readonly="true" DisplayText="ID"></BootstrapInput>
             <BootstrapInputNumber @bind-Value="@ComponentData.Width" IsSelectAllTextOnFocus="true" OnValueChanged="OnValueChangedForInt" ShowLabel="true" DisplayText="宽" ShowButton="true" TValue="int" Min="1" Max="12" />
             <BootstrapInputNumber @bind-Value="@ComponentData.Height" IsSelectAllTextOnFocus="true" OnValueChanged="OnValueChangedForInt" ShowLabel="true" DisplayText="高" ShowButton="true" TValue="int" Min="1" Max="12" />
-            <Collapse>
-                <CollapseItems>
-                    <CollapseItem Text="多语言显示">
-                        <ValidateForm Model="@ComponentData.MutLanguage">
-                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.zh_CN" ShowLabel="true" DisplayText="中文" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
-                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.en_US" ShowLabel="true" DisplayText="英文" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
-                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.zh_TW" ShowLabel="true" DisplayText="繁体" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
-                            <BootstrapInput @bind-Value="@ComponentData.MutLanguage.ja_JP" ShowLabel="true" DisplayText="日语" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
-                        </ValidateForm>
-                    </CollapseItem>
-                </CollapseItems>
-            </Collapse>
+           <div>
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="多语言显示">
+                            <ValidateForm Model="@ComponentData.MutLanguage">
+                                <BootstrapInput @bind-Value="@ComponentData.MutLanguage.zh_CN" ShowLabel="true" DisplayText="中文" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                                <BootstrapInput @bind-Value="@ComponentData.MutLanguage.en_US" ShowLabel="true" DisplayText="英文" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                                <BootstrapInput @bind-Value="@ComponentData.MutLanguage.zh_TW" ShowLabel="true" DisplayText="繁体" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                                <BootstrapInput @bind-Value="@ComponentData.MutLanguage.ja_JP" ShowLabel="true" DisplayText="日语" TValue="string" OnValueChanged="OnChangeString"></BootstrapInput>
+                            </ValidateForm>
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+           </div>
+           
         </CollapseItem>
         <CollapseItem Text="扩展属性">
             <Switch @bind-Value="@ComponentData.Props["ReadOnly"].BoolVal" OnValueChanged="OnValueChangedForBool" ShowLabel="true" DisplayText="是否为只读"></Switch>

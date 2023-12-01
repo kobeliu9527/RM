@@ -38,14 +38,12 @@ else
         var msg = string.Join("|", Component.Props["Params"].StringListValue);
         foreach (var item in Component.Props["Params"].StringListValue)
         {
-            var ss=  FormDesigner.FunctionPage.ContainerData.FindFirst(x=>x.Id==item);
+            var ss=  RootContainer.FindFirst(x=>x.Id==item);
             if (ss is not null)
             {
                 await ToastService.Warning($"控件{ss.Name}的值是:{ss.ValueInfo.StringValue}");
             }
-
         }
         StateHasChanged();
-     
     }
 }

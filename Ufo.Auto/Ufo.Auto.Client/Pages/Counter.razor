@@ -1,24 +1,18 @@
 ﻿@page "/counter"
+@layout DesignerLayout
 @* @attribute [StreamRendering] *@
 @rendermode InteractiveAuto
 @using System.Text.Json
 @using System.Text.Encodings.Web
 @using System.Text.Unicode
-@inject AntDesign.NotificationService _notice
-
-
-
-<PageTitle>Counter</PageTitle>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-<button class="btn btn-primary" @onclick="IncrementCount2">序列化</button>
-<button class="btn btn-primary" @onclick="IncrementCount3">消息</button>
-<AntDesign.Button Type="primary" OnClick="IncrementCount3">
-    Display normal message
-</AntDesign.Button>
+@using Ufo.Auto.Client.Layout
+<PageTitle>设计界面</PageTitle>
+@app
 <FormDesigner FunctionPage="FunctionPage" IsDesigner="MyProperty"></FormDesigner>
 @code {
-    [Inject][NotNull]
+    public bool IsShowBackdropOpen { get; set; }
+    [Inject]
+    [NotNull]
     public AntDesign.IMessageService _message { get; set; }
     private int currentCount = 0;
     public bool MyProperty { get; set; } = true;
@@ -29,6 +23,8 @@
     [Parameter]
     [NotNull]
     public FunctionPage? FunctionPage { get; set; }
+    [CascadingParameter]
+    public string app { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -57,12 +53,7 @@
     }
     private async Task IncrementCount3()
     {
-       System. Console.WriteLine("onclick");
-       await _message.Info("啊打发十分");
-        // await _notice.Open(new AntDesign.NotificationConfig()
-        //     {
-        //         Message = "title",
-        //         Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification."
-        //     });
+        System.Console.WriteLine("onclick");
+        await _message.Info("啊打发十分");
     }
 }

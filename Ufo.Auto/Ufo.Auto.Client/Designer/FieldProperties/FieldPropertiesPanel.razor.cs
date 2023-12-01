@@ -16,11 +16,13 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
         private ContainerDto? ContainerData = null;
         private RowDto? RowData = null;
         private List<TreeViewItem<ComponentDto>> BindingItems;
+        public IEnumerable<SelectedItem> ShowMsgTypeList = Enum.GetNames(typeof(ShowMsgType)).Select(x => new SelectedItem() { Text = x, Value = x }).ToList();
         public List<TreeViewItem<ComponentDto>> Get()
         {
             var res = new List<TreeViewItem<ComponentDto>>();
             ToTree(FormDesigner.FunctionPage.ContainerData, res);
             return res;
+             
         }
         private void ToTree(ContainerDto container, List<TreeViewItem<ComponentDto>> list)
         {
@@ -41,5 +43,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
                 }
             }
         }
+
+        
     }
 }

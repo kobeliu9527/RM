@@ -22,7 +22,7 @@ namespace Ufo.Auto.Client.Designer
         /// </summary>
         [Parameter]
         public bool IsDesigner { get; set; }
-
+        private ConsoleLogger? NormalLogger { get; set; }
         private ConcurrentQueue<ConsoleMessageItem> ColorMessages { get; set; } = new() ;
         ///// <summary>
         ///// 跟容器数据
@@ -64,11 +64,20 @@ namespace Ufo.Auto.Client.Designer
         /// 设计器中被拖动的组件所在的容器
         /// </summary>
         public ContainerDto? DraggedComponentOriginContainer = null;
-
+        public void Test()
+        {
+           
+            if (ColorMessages.Count>2)
+            {
+                ColorMessages.TryDequeue(out _);
+            }
+            ColorMessages.Enqueue(new ConsoleMessageItem() { Message = "啊手动阀" });
+        }
         protected override void OnInitialized()
         {
             ColorMessages.Enqueue(new ConsoleMessageItem { Message = $"{DateTimeOffset.Now}: Dispatch Message" });
             base.OnInitialized();
+  
         }
         /// <summary>
         /// 点击容器后会触发,实际就是给SelectedContainer赋值!(实际点击行也会触发)

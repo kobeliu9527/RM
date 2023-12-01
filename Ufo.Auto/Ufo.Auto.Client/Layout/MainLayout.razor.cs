@@ -1,0 +1,63 @@
+﻿using BootstrapBlazor.Components;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+
+namespace Ufo.Auto.Client.Layout
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed partial class MainLayout
+    {
+        public ConcurrentQueue<ConsoleMessageItem> ColorMessages { get; set; } = new();
+        private bool UseTabSet { get; set; } = true;
+
+        private string Theme { get; set; } = "";
+
+        private bool IsOpen { get; set; }
+
+        private bool IsFixedHeader { get; set; } = true;
+
+        private bool IsFixedFooter { get; set; } = true;
+
+        private bool IsFullSide { get; set; } = true;
+
+        private bool ShowFooter { get; set; } = true;
+
+        private List<MenuItem>? Menus { get; set; }
+        [CascadingParameter]
+        public int app { get; set; }
+        /// <summary>
+        /// OnInitialized 方法
+        /// </summary>
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            ColorMessages.Enqueue(new ConsoleMessageItem { Message = $"{DateTimeOffset.Now}: Dispatch Message" });
+            Menus = GetIconSideMenuItems(app);
+        }
+
+        private static List<MenuItem> GetIconSideMenuItems(int a)
+        {
+            
+            var menus = new List<MenuItem>
+            {
+                new MenuItem() { Text = "返回组件库", Icon = "fa-solid fa-fw fa-home", Url = "https://www.blazor.zone/components" },
+                new MenuItem() { Text = "Index", Icon = "fa-solid fa-fw fa-flag", Url = "/" , Match = NavLinkMatch.All},
+                new MenuItem() { Text = "Counter", Icon = "fa-solid fa-fw fa-check-square", Url = "/counter" },
+                new MenuItem() { Text = "FetchData", Icon = "fa-solid fa-fw fa-database", Url = "fetchdata" },
+                new MenuItem() { Text = "Table", Icon = "fa-solid fa-fw fa-table", Url = "table" },
+                new MenuItem() { Text = "花名册", Icon = "fa-solid fa-fw fa-users", Url = "users" },
+                new MenuItem() { Text = "1", Icon = "fa-solid fa-fw fa-users", Url = "/runing/1" },
+                new MenuItem() { Text = "2", Icon = "fa-solid fa-fw fa-users", Url = "/runing/2" }
+                ,
+                new MenuItem() { Text = a.ToString(), Icon = "fa-solid fa-fw fa-users", Url = "/runing/3" }
+
+            };
+
+            return menus;
+        }
+    }
+}

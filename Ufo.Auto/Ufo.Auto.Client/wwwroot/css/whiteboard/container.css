@@ -1,11 +1,4 @@
-﻿.container-space {
-    border: 2px solid #eeeeee;
-    margin: 0px;
-    margin-top: 3px;
-    border-radius: 4px;
-    overflow-y: auto;
-    min-height:80vh;
-}
+﻿
 
 .container-wrapper {
     margin-top: 14px;
@@ -27,6 +20,7 @@
 .row-builder {
     position: relative;
 }
+
 .row.row-builder {
     margin-left: 0;
     margin-right: 0;
@@ -57,7 +51,7 @@
         background-color: #eee;
         z-index: 0;
         line-height: 2em;
- /*       position: relative;
+        /*       position: relative;
         width: 100%;
         padding-right: 15px;
         padding-left: 15px*/
@@ -70,3 +64,13 @@
     left: 15px;
     right: 15px;
 }
+
+.wrapper {
+/*    min-height: 80vh;
+    max-height:85vh;*/
+    display: flex;
+    position:relative;
+    flex-direction: column;
+}
+
+

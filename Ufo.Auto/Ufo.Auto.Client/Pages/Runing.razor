@@ -1,0 +1,63 @@
+﻿@page "/runing/{id}"
+@* @attribute [StreamRendering] *@
+@rendermode InteractiveAuto
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@using System.Text.Unicode
+@using System.Collections.Concurrent
+@using Ufo.Auto.Client.Layout
+<PageTitle>运行时候</PageTitle>
+<div class="rmain">
+    <div class="rmain-main">
+        <div class="container-content">
+            <CascadingValue Value="FunctionPage.ContainerData" Name="RootContainer">
+                <Container ContainerData="FunctionPage.ContainerData" IsDesigner="false" />
+            </CascadingValue>
+        </div>
+        <div class="container-msg">
+            @switch (FunctionPage.ShowMsgType)
+            {
+                case ShowMsgType.None:
+                    break;
+                case ShowMsgType.Console:
+                    <Console ShowLight="false" Items="ColorMessages" HeaderText="消息"></Console>
+                    break;
+                case ShowMsgType.ConsoleBox:
+                    @* <ConsoleLogger @ref="NormalLogger" class="mt-3" /> *@
+                    break;
+                case ShowMsgType.Toast:
+                    break;
+                case ShowMsgType.SweetAlert:
+                    break;
+                default:
+                    break;
+            }
+        </div>
+    </div>
+</div>
+@code {
+    private ConcurrentQueue<ConsoleMessageItem> ColorMessages { get; set; } = new();
+    [Parameter]
+    public string? Id { get; set; }
+    [NotNull]
+    public FunctionPage? FunctionPage { get; set; }
+    protected override void OnInitialized()
+    {
+        var id = Id;
+        ColorMessages.Enqueue(new ConsoleMessageItem() { Message = "asf" });
+        ColorMessages.Enqueue(new ConsoleMessageItem() { Message = "asf" });
+        ColorMessages.Enqueue(new ConsoleMessageItem() { Message = "asf" });
+        FunctionPage = new FunctionPage()
+            {
+                ShowMsgType = ShowMsgType.Console,
+                ContainerData = new ContainerDto() { }
+            };
+        base.OnInitialized();
+    }
+    protected override void OnParametersSet()
+    {
+        var id = Id;
+
+        base.OnParametersSet();
+    }
+}

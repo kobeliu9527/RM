@@ -20,6 +20,12 @@ namespace Ufo.Auto.Client.Designer.Whiteboard.Components
         [NotNull]
         public ComponentDto? Component { get; set; }
         /// <summary>
+        /// 跟容器
+        /// </summary>
+        [CascadingParameter(Name = "RootContainer")]
+        [NotNull]
+        public ContainerDto? RootContainer { get; set; }
+        /// <summary>
         /// 表示跟页面
         /// </summary>
         [CascadingParameter(Name = "Root")]

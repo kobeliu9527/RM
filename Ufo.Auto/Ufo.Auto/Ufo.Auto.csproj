@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Ufo.Auto.Client\Ufo.Auto.Client.csproj" />
     <PackageReference Include="AntDesign" Version="0.16.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
   </ItemGroup>
 
 </Project>
