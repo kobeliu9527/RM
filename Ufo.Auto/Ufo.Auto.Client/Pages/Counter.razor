@@ -1,14 +1,19 @@
 ﻿@page "/counter"
 @layout DesignerLayout
+@inject ICrudBase<FunctionPage> db
 @* @attribute [StreamRendering] *@
-@rendermode InteractiveAuto
+
 @using System.Text.Json
 @using System.Text.Encodings.Web
 @using System.Text.Unicode
 @using Ufo.Auto.Client.Layout
 <PageTitle>设计界面</PageTitle>
 @app
-<FormDesigner FunctionPage="FunctionPage" IsDesigner="MyProperty"></FormDesigner>
+@if (FunctionPage!=null)
+{
+    <FormDesigner FunctionPage="@FunctionPage" IsDesigner="MyProperty"></FormDesigner>
+
+}
 @code {
     public bool IsShowBackdropOpen { get; set; }
     [Inject]
@@ -25,9 +30,13 @@
     public FunctionPage? FunctionPage { get; set; }
     [CascadingParameter]
     public string app { get; set; }
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
         base.OnInitialized();
+        var ss =await db.SelectAll();
+        FunctionPage = ss.Data[1];
+        // FunctionPage = ss;
+         return;
         FunctionPage = new FunctionPage();
 
         //ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };

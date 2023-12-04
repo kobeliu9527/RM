@@ -88,66 +88,6 @@
 }
 else
 {
-    <div class="component-element @Class @selectedComponentClass @tabsContainerClass"
-         @onclick="SelectComponentAsync"
-         @onclick:stopPropagation="true">
-        <div class="widget-wrapper">
-            @{
-                string h = "auto";
-                h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
-            }
-            <div class="widget-content" style="height:@h">
-                @switch (ComponentData?.ComponentType)
-                {
-                    case ComponentType.SingleLine:
-                        <SingleLineComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.MultiLine:
-                        <MultiLineComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.Email:
-                        <EmailComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.Link:
-                        <LinkComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.Checkbox:
-                        <CheckboxComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.Number:
-                        <NumberComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.File:
-                        <FileComp Component="@ComponentData" />
-                        break;
-
-                    case ComponentType.DateTime:
-                        <DateTimeComp Component="@ComponentData" />
-                        break;
-                    case ComponentType.Select:
-                        <SelectComp Component="@ComponentData" />
-                        break;
-                    case ComponentType.Table:
-                        <DataGridViewComp Component="@ComponentData" />
-                        break;
-                    case ComponentType.Tabs:
-                        <TabsComp ComponentData="@ComponentData"
-                                  ComponentRow="@ComponentRow"
-                                  TabContainerList="@ComponentData.ChildContainers" />
-                        break;
-
-                    default:
-                        throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
-                }
-            </div>
-        </div>
-    </div>
 
 }
 @code {
@@ -162,7 +102,6 @@ else
     /// </summary>
     [Parameter]
     public ContainerDto? Container { get; set; }
-
     /// <summary>
     /// 组件的数据
     /// </summary>

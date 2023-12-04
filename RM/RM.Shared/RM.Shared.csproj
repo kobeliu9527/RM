@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
     <None Include="Designer\FieldProperties\FieldPropertiesPanel.razor" />
     <None Include="Designer\FieldProperties\Properties\CheckboxProperties.razor" />
     <None Include="Designer\FieldProperties\Properties\DateTimeProperties.razor" />
@@ -55,7 +56,7 @@
     <PackageReference Include="BootstrapBlazor" Version="8.0.3" />
     <PackageReference Include="MatBlazor" Version="2.6.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.112" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.126" />
   </ItemGroup>
 
   <ItemGroup>

@@ -49,7 +49,8 @@ namespace Ufo.Auto.Client.Designer.Whiteboard
         /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
-
+        [Parameter]
+        public EventCallback StateHasChangedOnContainer { get; set; }
         /// <summary>
         /// 容器本身的数据数据
         /// </summary>

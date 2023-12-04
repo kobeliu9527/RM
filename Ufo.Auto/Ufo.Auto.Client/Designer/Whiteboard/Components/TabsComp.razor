@@ -95,7 +95,12 @@
     /// 处于被激活的容器
     /// </summary>
     private ContainerDto ActiveTabContainer = null;
-
+    /// <summary>
+    /// 跟容器
+    /// </summary>
+    [CascadingParameter(Name = "RootContainer")]
+    [NotNull]
+    public ContainerDto? RootContainer { get; set; }
     /// <summary>
     /// 设置正在被激活的
     /// </summary>ContainerDto

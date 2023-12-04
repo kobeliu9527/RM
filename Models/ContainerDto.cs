@@ -27,7 +27,7 @@ namespace Models
         /// 容器的类型
         /// </summary>
         public ContainerType ContainerType { get; set; }
-        private List<RowDto> rows = new();
+        private List<RowDto> rows=new();
         /// <summary>
         /// 控件的属性
         /// </summary>
@@ -45,18 +45,13 @@ namespace Models
         {
 
         }
-
-
         public ContainerDto(ContainerType type)
         {
             ContainerType = type;
             InitEmptyContainer(ref rows);
         }
 
-        public ContainerDto(List<RowDto> rows)
-        {
-            Rows = rows;
-        }
+
 
         #endregion Public Constructors
 
@@ -110,10 +105,10 @@ namespace Models
         /// <summary>
         /// 这一行包含的所有的组件
         /// </summary>
-        public List<ComponentDto> ComponentList { get; set; } = new();
+        public List<ComponentDto> ComponentList { get; set; } =new();
         public RowDto()
         {
-
+            ComponentList = new();
         }
     }
 }

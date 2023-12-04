@@ -1,6 +1,7 @@
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Models;
+using SqlSugar;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Ufo.Auto.Client.Designer.FieldProperties
@@ -22,7 +23,7 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
             var res = new List<TreeViewItem<ComponentDto>>();
             ToTree(FormDesigner.FunctionPage.ContainerData, res);
             return res;
-             
+
         }
         private void ToTree(ContainerDto container, List<TreeViewItem<ComponentDto>> list)
         {
@@ -43,7 +44,12 @@ namespace Ufo.Auto.Client.Designer.FieldProperties
                 }
             }
         }
-
+        [Inject]
+        public ISqlSugarClient db { get; set; }
+        public void OnClick()
+        {
+            db.Updateable(FormDesigner.FunctionPage).ExecuteCommand();
         
+        }
     }
 }

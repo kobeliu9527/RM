@@ -9,6 +9,8 @@ namespace Ufo.Auto.Client.Designer
 {
     public partial class FormDesigner
     {
+        [Parameter]
+        public Action? StateHasChangedOnContainer { get; set; }
         [Inject]
         [NotNull]
         public IJSRuntime? JSRuntime { get; set; }
@@ -75,6 +77,7 @@ namespace Ufo.Auto.Client.Designer
         }
         protected override void OnInitialized()
         {
+            StateHasChangedOnContainer = () => { this.StateHasChanged(); };
             ColorMessages.Enqueue(new ConsoleMessageItem { Message = $"{DateTimeOffset.Now}: Dispatch Message" });
             base.OnInitialized();
   

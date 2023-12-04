@@ -1,0 +1,10 @@
+{"@t":"2023-12-02T15:07:01.7007534Z","@mt":"程序启动动........"}
+{"@t":"2023-12-02T15:07:03.3329770Z","@mt":"Now listening on: {address}","address":"http://localhost:5067","EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:03.3408620Z","@mt":"Application started. Press Ctrl+C to shut down.","SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:03.3420621Z","@mt":"Hosting environment: {EnvName}","EnvName":"Development","SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:03.3429053Z","@mt":"Content root path: {ContentRoot}","ContentRoot":"C:\\Users\\kobe1\\source\\repos\\RM\\Ufo.Auto\\Ufo.Auto","SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:51.2645399Z","@mt":"程序启动动........"}
+{"@t":"2023-12-02T15:07:52.9796161Z","@mt":"Now listening on: {address}","address":"http://localhost:5067","EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:52.9916499Z","@mt":"Application started. Press Ctrl+C to shut down.","SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:52.9934327Z","@mt":"Hosting environment: {EnvName}","EnvName":"Development","SourceContext":"Microsoft.Hosting.Lifetime"}
+{"@t":"2023-12-02T15:07:52.9949021Z","@mt":"Content root path: {ContentRoot}","ContentRoot":"C:\\Users\\kobe1\\source\\repos\\RM\\Ufo.Auto\\Ufo.Auto","SourceContext":"Microsoft.Hosting.Lifetime"}

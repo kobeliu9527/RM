@@ -25,12 +25,12 @@ namespace Ufo.Auto.Client.Designer.Whiteboard.Components
         [CascadingParameter(Name = "RootContainer")]
         [NotNull]
         public ContainerDto? RootContainer { get; set; }
-        /// <summary>
-        /// 表示跟页面
-        /// </summary>
-        [CascadingParameter(Name = "Root")]
-        [NotNull]
-        public FormDesigner? FormDesigner { get; set; }
+        ///// <summary>
+        ///// 表示跟页面
+        ///// </summary>
+        //[CascadingParameter(Name = "Root")]
+        //[NotNull]
+        //public FormDesigner? FormDesigner { get; set; }
         /// <summary>
         /// 组件基类
         /// </summary>

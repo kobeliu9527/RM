@@ -7,21 +7,10 @@ namespace Ufo.Auto.Client
         public int app { get; set; }
         protected override void OnInitialized()
         {
-            Console.WriteLine("OnInitialized执行完,该执行render");
             base.OnInitialized();
         }
         protected override async Task OnInitializedAsync()
         {
-            await Task.Run(async () =>
-               {
-                   for (int i = 0; i < 5; i++) 
-                   {
-                       await Task.Delay(1000);
-                       Console.WriteLine("后台处理中.....");
-                   }
-               });
-            Console.WriteLine("OnInitializedAsync执行完,该执行render");
-
             await base.OnInitializedAsync();
             app = 5;
         }
@@ -36,7 +25,15 @@ namespace Ufo.Auto.Client
         protected override void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
+
             Console.WriteLine(firstRender);
+        }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            await Task.Delay(5000);
+            app = 4;
+
         }
     }
 }

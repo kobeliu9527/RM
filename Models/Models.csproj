@@ -4,11 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BootstrapBlazor" Version="8.0.3" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.125-preview06" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.126" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

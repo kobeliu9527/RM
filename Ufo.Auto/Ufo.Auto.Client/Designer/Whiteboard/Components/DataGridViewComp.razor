@@ -228,33 +228,27 @@
     /// <param name="obj"></param>
     private async void SelectedRowsChanged(List<DynamicObject> obj)
     {
-        if (obj.Count <= 0)
-        {
-            return;
-        }
-        if (FormDesigner.SelectedContainer != null)
-        {
-            var o = obj.First();
-            if (UserData != null)
-            {
-                foreach (DataColumn item in UserData.Columns)
-                {
-                    var ss = o.GetValue(item.ColumnName);
-                    var ssss = Component.Parameters;
-                    //  var control = FormDesigner.SelectedContainer.FindFirst(x => x.MutLanguage.zh_CN == item.ColumnName);
-                   // var control = FormDesigner.SelectedContainer.FindAllComponent(x => x.MutLanguage.zh_CN == item.ColumnName).FirstOrDefault();
-                    // if (control != null && ss != null)
-                    // {
-                    //     control.ValueInfo.StringValue = ss.ToString();
-                    // }
-                }
-                await FormDesigner.StateHasChangedAsync();
-                foreach (var item in obj)
-                {
-                    var ss = item;
-                }
-            }
-        }
+        // if (obj.Count <= 0)
+        // {
+        //     return;
+        // }
+        // if (FormDesigner.SelectedContainer != null)
+        // {
+        //     var o = obj.First();
+        //     if (UserData != null)
+        //     {
+        //         foreach (DataColumn item in UserData.Columns)
+        //         {
+        //             var ss = o.GetValue(item.ColumnName);
+        //             var ssss = Component.Parameters;
+        //         }
+        //         await FormDesigner.StateHasChangedAsync();
+        //         foreach (var item in obj)
+        //         {
+        //             var ss = item;
+        //         }
+        //     }
+        // }
 
 
     }

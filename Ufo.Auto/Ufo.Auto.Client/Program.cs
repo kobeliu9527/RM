@@ -1,18 +1,40 @@
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Models;
+using Models.System;
 using SqlSugar;
 using System.Diagnostics;
 using System.Reflection;
+using Ufo.Auto.Client.Services.AuthenticationStateCustom;
+using Ufo.Auto.Client.Services.Base;
+using Ufo.Auto.Client.Services.CompanyGroupServer;
+using Ufo.Auto.Client.Services.CompanyServer;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddBootstrapBlazor();
 builder.Services.AddAntDesign();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddHttpClient(
+    "http",
+    client =>
+    {
+        //client.BaseAddress = new Uri("https://localhost:5000/api/");
+        client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+
+        // Add a user-agent default request header.http://*:2222
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-docs");
+
+    });
+builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClient>();
 builder.Services.AddSingleton<ISqlSugarClient>(s =>
 {
     SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
     {
         DbType = SqlSugar.DbType.SqlServer,
         //
-        ConnectionString = "Server = .;Database = LCM;User ID = sa;Password = 1;",
+        ConnectionString = "Server = .;Database = Ufo;User ID = sa;Password = 1;",
         // ConnectionString = "DataSource=WMS.db",
         IsAutoCloseConnection = true,
         ConfigureExternalServices = new ConfigureExternalServices
@@ -48,6 +70,12 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
    });
     return sqlSugar;
 });
+
+builder.Services.AddScoped<ICrudBase<Company>, CompanyServerByHttp>();
+builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByHttp>();
+builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByHttp>();
+
+//builder.Services.AddScoped<ICompanyManger, CompanyManger>();
 //var ss=builder.Build();
 
 await builder.Build().RunAsync();

@@ -28,7 +28,7 @@ namespace Models
         /// <param name="type"></param>
         public ComponentDto(ComponentType type)
         {
-        
+            ChildContainers = new();
             InitializeComponent(type);
         }
 
@@ -143,7 +143,7 @@ namespace Models
         /// <summary>
         /// 如果这个组件是容器组件,那么他还有子组件
         /// </summary>
-        public List<ContainerDto> ChildContainers { get; set; } = new();
+        public List<ContainerDto> ChildContainers { get; set; } = new ();
 
         /// <summary>
         /// shifou

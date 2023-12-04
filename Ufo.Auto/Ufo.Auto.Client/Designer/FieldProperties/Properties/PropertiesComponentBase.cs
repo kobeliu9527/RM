@@ -14,15 +14,14 @@ namespace Ufo.Auto.Client.Designer.FieldProperties.Properties
 
         [CascadingParameter(Name = "Root")]
         public FormDesigner FormDesigner { get; set; }
-
+        [CascadingParameter]
+        public Action? StateHasChangedOnContainer { get; set; }
         [Parameter]
         public ComponentDto ComponentData { get; set; }
 
+
         public async Task OnPropChangedAsync(PInof e)
         {
-            //ComponentData.Props.TryAdd
-            // ComponentData.Label = e.Value.ToString();
-            //ComponentData.Props[e.key].Value = e.Value.ToString();
             await FormDesigner.StateHasChangedAsync();
         }
         public async Task OnLabelChangedAsync(ChangeEventArgs e)

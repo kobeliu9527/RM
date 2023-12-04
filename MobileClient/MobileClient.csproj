@@ -53,8 +53,4 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\RM\RM.Shared\RM.Shared.csproj" />
-    </ItemGroup>
-
 </Project>

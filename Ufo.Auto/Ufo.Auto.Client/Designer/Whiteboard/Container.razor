@@ -1,219 +1,163 @@
-﻿@if (IsDesigner)
-{
-    <div class="container-wrapper"
-         onmouseover="formDesigner.highlihter.activate(event, @(ComponentHighlighterCssClass))">
-        <div class="widget-wrapper"
-             @onclick="@OnClickCallback"
-             @onclick:preventDefault="true"
-             @onclick:stopPropagation="true"
-             onmouseout="formDesigner.highlihter.deactivate(event, @(ComponentHighlighterCssClass))">
+﻿
+<div class="container-wrapper"
+     onmouseover="formDesigner.highlihter.activate(event, @(ComponentHighlighterCssClass))">
+    <div class="widget-wrapper"
+         @onclick="@OnClickCallback"
+         @onclick:preventDefault="true"
+         @onclick:stopPropagation="true"
+         onmouseout="formDesigner.highlihter.deactivate(event, @(ComponentHighlighterCssClass))">
 
-            @for (int rowIndex = 0; rowIndex < ContainerData?.Rows.Count; rowIndex++)
+        @for (int rowIndex = 0; rowIndex < ContainerData?.Rows.Count; rowIndex++)
+        {
+            var currentRowIndex = rowIndex;
+            var currentRow = ContainerData.Rows[currentRowIndex];
+            //如果为第一行,添加虚拟框div,后期这里应该加一个条件是设计模式在才会有
+            @if (currentRowIndex == 0 && !ContainerData.IsEmpty())//当拖动到页面的最上面的时候,会触发伪类元素生成
             {
-                var currentRowIndex = rowIndex;
-                var currentRow = ContainerData.Rows[currentRowIndex];
-                //如果为第一行,添加虚拟框div,后期这里应该加一个条件是设计模式在才会有
-                @if (currentRowIndex == 0 && !ContainerData.IsEmpty())//当拖动到页面的最上面的时候,会触发伪类元素生成
-                {
-                    Guid divId = Guid.NewGuid();
-                    <div id="@divId"
-                         class="row dropRow"
-                         ondragover="event.preventDefault();"
-                         ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @(DropZoneCssClasses))"
-                         ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @(DropZoneCssClasses))"
-                         @ondrop="@(async (e) =>
+                Guid divId = Guid.NewGuid();
+                <div id="@divId"
+                     class="row dropRow"
+                     ondragover="event.preventDefault();"
+                     ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @(DropZoneCssClasses))"
+                     ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @(DropZoneCssClasses))"
+                     @ondrop="@(async (e) =>
                                 {
                                     await DropComponentBeforeRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
                                 })"
-                         @ondrop:preventDefault="true">
+                     @ondrop:preventDefault="true">
+                </div>
+            }
+
+            //正式解析
+            bool isMoveRowUpVisible = IsMoveRowUpVisible(currentRow);
+            bool isMoveRowDownVisible = IsMoveRowDownVisible(currentRow);
+            bool isRowElement = isMoveRowUpVisible ||
+            isMoveRowDownVisible ||
+            ContainerData?.Rows.Count > 0;
+            string rowElementClass = isRowElement ? "row-element" : "";
+            string rowSeparatorClass = currentRowIndex == ContainerData?.Rows.Count - 1 ?
+            "row-separator" : "";
+
+            <div class="row row-builder @rowElementClass @rowSeparatorClass"
+                 @onclick="async(e)=>{
+                     await Root.SelectRowAsync(currentRow);
+                 }"
+                 @onclick:stopPropagation="true">
+
+                @if (isRowElement)//添加行左右移动的功能
+                {
+                    <div class="component-caption component-caption--row">
+                        <span class="container-title">Row</span>
+
+                        @if (isMoveRowUpVisible)
+                        {
+                            <MatIconButton Icon="@MatIconNames.Arrow_upward"
+                                           OnClick="@(async () => await MoveRowUpAsync(currentRow))"
+                                           OnClickStopPropagation="true"
+                                           Class="component-mover-icon"
+                                           Title="Move Row Up" />
+                        }
+
+                        @if (isMoveRowDownVisible)
+                        {
+                            <MatIconButton Icon="@MatIconNames.Arrow_downward"
+                                           OnClick="@(async () => await MoveRowDownAsync(currentRow))"
+                                           OnClickStopPropagation="true"
+                                           Class="component-mover-icon"
+                                           Title="Move Row Down" />
+                        }
+
                     </div>
                 }
 
-                //正式解析
-                bool isMoveRowUpVisible = IsMoveRowUpVisible(currentRow);
-                bool isMoveRowDownVisible = IsMoveRowDownVisible(currentRow);
-                bool isRowElement = isMoveRowUpVisible ||
-                isMoveRowDownVisible ||
-                ContainerData?.Rows.Count > 0;
-                string rowElementClass = isRowElement ? "row-element" : "";
-                string rowSeparatorClass = currentRowIndex == ContainerData?.Rows.Count - 1 ?
-                "row-separator" : "";
-
-                <div class="row row-builder @rowElementClass @rowSeparatorClass"
-                     @onclick="async(e)=>{
-                     await Root.SelectRowAsync(currentRow);
-                 }"
-                     @onclick:stopPropagation="true">
-
-                    @if (isRowElement)//添加行左右移动的功能
+                @for (int componentIndex = 0; componentIndex < currentRow.ComponentList.Count; componentIndex++)
+                {
+                    var currentComponentIndex = componentIndex;
+                    var currentComponent = currentRow.ComponentList[componentIndex];
+                    string componentColumnWidth =
+                    ComponentUtils.GetComponentColumnCssClasses(currentComponent);
+                    string h = "auto";
+                    h = currentComponent?.Height <= 0 ? "auto" : currentComponent?.Height + "px";
+                    @if (currentComponent!.IsAbsPosition)
                     {
-                        <div class="component-caption component-caption--row">
-                            <span class="container-title">Row</span>
-
-                            @if (isMoveRowUpVisible)
-                            {
-                                <MatIconButton Icon="@MatIconNames.Arrow_upward"
-                                               OnClick="@(async () => await MoveRowUpAsync(currentRow))"
-                                               OnClickStopPropagation="true"
-                                               Class="component-mover-icon"
-                                               Title="Move Row Up" />
-                            }
-
-                            @if (isMoveRowDownVisible)
-                            {
-                                <MatIconButton Icon="@MatIconNames.Arrow_downward"
-                                               OnClick="@(async () => await MoveRowDownAsync(currentRow))"
-                                               OnClickStopPropagation="true"
-                                               Class="component-mover-icon"
-                                               Title="Move Row Down" />
-                            }
-
+                        //z-index:@(currentComponent.Zindex)
+                        <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;width:@h;"
+                             draggable="true"
+                             @ondragstart="@(async () =>
+                                         {
+                                             await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
+                                         })">
+                            <CascadingValue Value="this" Name="Container">
+                                <Component ComponentData="@currentComponent"
+                                           ComponentRow="@currentRow"
+                                           ComponentIndex="@currentComponentIndex" />
+                            </CascadingValue>
                         </div>
                     }
-
-                    @for (int componentIndex = 0; componentIndex < currentRow.ComponentList.Count; componentIndex++)
+                    else
                     {
-                        var currentComponentIndex = componentIndex;
-                        var currentComponent = currentRow.ComponentList[componentIndex];
-                        string componentColumnWidth =
-                        ComponentUtils.GetComponentColumnCssClasses(currentComponent);
-                        string h = "auto";
-                        h = currentComponent?.Height <= 0 ? "auto" : currentComponent?.Height + "px";
-                        @if (currentComponent!.IsAbsPosition)
-                        {
-                            //z-index:@(currentComponent.Zindex)
-                            <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;width:@h;"
-                                 draggable="true"
-                                 @ondragstart="@(async () =>
+                        <div class="draggable  @componentColumnWidth"
+                             draggable="true"
+                             @ondragstart="@(async () =>
                                          {
                                              await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
                                          })">
-                                <CascadingValue Value="this" Name="Container">
-                                    <Component ComponentData="@currentComponent"
-                                               ComponentRow="@currentRow"
-                                               ComponentIndex="@currentComponentIndex" />
-                                </CascadingValue>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="draggable  @componentColumnWidth"
-                                 draggable="true"
-                                 @ondragstart="@(async () =>
-                                         {
-                                             await DragComponentStartAsync(currentComponent, currentRow, ContainerData);
-                                         })">
-                                <CascadingValue Value="this" Name="Container">
-                                    <Component ComponentData="@currentComponent"
-                                               ComponentRow="@currentRow"
-                                               ComponentIndex="@currentComponentIndex" />
-                                </CascadingValue>
-                            </div>
-                        }
+                            <CascadingValue Value="this" Name="Container">
+                                <Component ComponentData="@currentComponent"
+                                           ComponentRow="@currentRow"
+                                           ComponentIndex="@currentComponentIndex" />
+                            </CascadingValue>
+                        </div>
                     }
+                }
 
-                    @{
-                        int rowSize = CalculateRowSize(currentRow);
-                    }
+                @{
+                    int rowSize = CalculateRowSize(currentRow);
+                }
 
-                    @if (rowSize < ComponentUtils.MaxColumnWidth)
-                    {
-                        int columnSize = ComponentUtils.MaxColumnWidth - rowSize;
-                        Guid divId = Guid.NewGuid();
-                        <div id="@divId"
-                             class="widget-placeholder drop-container col-@columnSize d-flex justify-content-center text-center"
-                             data-col="@columnSize"
-                             ondragover="event.preventDefault();"
-                             ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
-                             ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
-                             @ondrop="@(async (e) =>
+                @if (rowSize < ComponentUtils.MaxColumnWidth)
+                {
+                    int columnSize = ComponentUtils.MaxColumnWidth - rowSize;
+                    Guid divId = Guid.NewGuid();
+                    <div id="@divId"
+                         class="widget-placeholder drop-container col-@columnSize d-flex justify-content-center text-center"
+                         data-col="@columnSize"
+                         ondragover="event.preventDefault();"
+                         ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
+                         ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
+                         @ondrop="@(async (e) =>
                                     {
                                         await DropComponentToEndOfRowAsync(ContainerData, currentRow);
                                         await OnDropFinishedAsync(divId);
                                     })"
-                             @ondrop:preventDefault="true">
-                        </div>
-                    }
+                         @ondrop:preventDefault="true">
+                    </div>
+                }
 
-                </div>
-                //如果不是空容器,那么就在最后一行加一个隐藏div,设计模式在加
-                @if (!ContainerData!.IsEmpty())
-                {
-                    Guid divId = Guid.NewGuid();
-                    var isLastDropRow = currentRowIndex == ContainerData?.Rows.Count - 1 ? "dropRow--last" : "";
-                    <div id="@divId"
-                         class="row dropRow @isLastDropRow"
-                         ondragover="event.preventDefault();"
-                         ondragenter="event.preventDefault();formDesigner.utils.addClass(this, 'bo-dropzone-hover bo-drag-enter')"
-                         ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, 'bo-dropzone-hover bo-drag-enter')"
-                         @ondrop="@(async (e) =>
+            </div>
+            //如果不是空容器,那么就在最后一行加一个隐藏div,设计模式在加
+            @if (!ContainerData!.IsEmpty())
+            {
+                Guid divId = Guid.NewGuid();
+                var isLastDropRow = currentRowIndex == ContainerData?.Rows.Count - 1 ? "dropRow--last" : "";
+                <div id="@divId"
+                     class="row dropRow @isLastDropRow"
+                     ondragover="event.preventDefault();"
+                     ondragenter="event.preventDefault();formDesigner.utils.addClass(this, 'bo-dropzone-hover bo-drag-enter')"
+                     ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, 'bo-dropzone-hover bo-drag-enter')"
+                     @ondrop="@(async (e) =>
                                 {
                                     await DropComponentAfterRowAsync(currentRowIndex, ContainerData);
                                     await OnDropFinishedAsync(divId);
                                 })"
-                         @ondrop:preventDefault="true">
-                    </div>
-                }
-            }
-        </div>
-    </div>
-}
-else
-{
-    @ContainerData.Id
-    <div style="width:100px;height:800px;background-color:red"></div>
-    <div class="container-wrapper qqqqqq">
-        <div class="widget-wrapper">
-            @for (int rowIndex = 0; rowIndex < ContainerData?.Rows.Count; rowIndex++)
-            {
-                var currentRowIndex = rowIndex;
-                var currentRow = ContainerData.Rows[currentRowIndex];
-                //正式解析
-                bool isMoveRowUpVisible = IsMoveRowUpVisible(currentRow);
-                bool isMoveRowDownVisible = IsMoveRowDownVisible(currentRow);
-                bool isRowElement = isMoveRowUpVisible ||
-                isMoveRowDownVisible ||
-                ContainerData?.Rows.Count > 0;
-                string rowElementClass = isRowElement ? "row-element-runing" : "";
-                string rowSeparatorClass = currentRowIndex == ContainerData?.Rows.Count - 1 ?
-                "row-separator" : "";
-
-                <div class="row row-builder @rowElementClass @rowSeparatorClass">
-                    @for (int componentIndex = 0; componentIndex < currentRow.ComponentList.Count; componentIndex++)
-                    {
-                        var currentComponentIndex = componentIndex;
-                        var currentComponent = currentRow.ComponentList[componentIndex];
-                        string componentColumnWidth =
-                        ComponentUtils.GetComponentColumnCssClasses(currentComponent);
-                        string h = "auto";
-                        h = currentComponent?.Height <= 0 ? "auto" : currentComponent?.Height + "px";
-                        @if (currentComponent!.IsAbsPosition)
-                        {
-                            <div class="draggable" style="position:absolute;top:@(currentComponent.Top)px;left:@(currentComponent.Left)px;width:@h;">
-                                <CascadingValue Value="this" Name="Container">
-                                    <Component ComponentData="@currentComponent"
-                                               ComponentRow="@currentRow"
-                                               ComponentIndex="@currentComponentIndex" />
-                                </CascadingValue>
-                            </div>
-                        }
-                        else
-                        {
-                            <div  class="draggable  @componentColumnWidth">
-                                <CascadingValue Value="this" Name="Container">
-                                    <Component ComponentData="@currentComponent"
-                                               ComponentRow="@currentRow"
-                                               ComponentIndex="@currentComponentIndex" />
-                                </CascadingValue>
-                            </div>
-                        }
-                    }
+                     @ondrop:preventDefault="true">
                 </div>
             }
-        </div>
+        }
     </div>
-}
+</div>
+
 
 
 

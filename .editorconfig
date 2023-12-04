@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0036: 对修饰符排序
+dotnet_diagnostic.IDE0036.severity = none

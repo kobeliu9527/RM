@@ -19,18 +19,32 @@ namespace Models
         [DisplayName("名字"), Required(ErrorMessage = "组件的名字,最好全局唯一")]
         public string Name { get; set; } = "";
         /// <summary>
+        /// 排序
+        /// </summary>
+        public int Order { get; set; }
+        /// <summary>
         /// 控件的类型,用于区分是文本框还是下拉框等等
         /// </summary>
         public ComponentType ComponentType { get; set; }
+        /// <summary>
+        /// 控件属于什么种类:普通控件/容器控件/图表控件/通讯控件
+        /// </summary>
+        public GroupType GroupType { get; set; }
         public string Description { get; set; } = "组件描述";
-        public int Order { get; set; }
         public string Icon { get; set; } = "组件图标";
         public bool Visible { get; set; }
 
         /// <summary>
-        /// 这个控件所拥有的所有属性
+        /// 这个控件所拥有的所有附加属性
         /// </summary>
         public Dictionary<string, Property> Props { get; set; } = new();
+    }
+    public enum GroupType
+    {
+        普通控件,
+        容器控件,
+        图标控件,
+        通讯控件
     }
     public class MutilProperty
     {
@@ -70,10 +84,6 @@ namespace Models
         /// 多个参数值
         /// </summary>
         public List<MutilProperty> MutilProperties { get; set; } = new();
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ////public string StringVal { get; set; } = "";
         /// <summary>
         /// 
         /// </summary>

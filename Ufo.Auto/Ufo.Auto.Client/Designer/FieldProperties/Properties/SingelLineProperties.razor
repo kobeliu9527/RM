@@ -1,4 +1,5 @@
 ﻿@using SqlSugar
+@inherits PropertiesComponentBase
 <Collapse OnCollapseChanged="OnCollapseChanged">
     <CollapseItems>
         <CollapseItem Text="通用属性">
@@ -26,7 +27,6 @@
 
         </CollapseItem>
         <CollapseItem Text="事件和数据源">
-            @value StoreName
             <Select TValue="string" @bind-Value="@ComponentData.Props["StoreName"].StringValue" IsVirtualize="true" OnQueryAsync="OnQueryAsync" ShowSearch="true" DisplayText="存储过程名字"></Select>
             <CheckboxList IsButton="true" TValue="IEnumerable<string>" Items="@BoxListData" @bind-Value="@ComponentData.Props["Params"].StringListValue" ShowLabel="true" DisplayText="存储过程需要的参数" />
             @* <TreeView TItem="TreeComponentData" Items="@treeData" ShowCheckbox="true" ClickToggleNode="true" /> *@
@@ -46,27 +46,9 @@
         </CollapseItem>
     </CollapseItems>
 </Collapse>
-
-
-
-
 @code {
-    private string value;
     [NotNull]
     private Modal? Modal { get; set; }
-    AntDesign.RadioOption<string>[] SizeOptions = new AntDesign.RadioOption<string>[]
-    {
-        new(){ Value = "large", Label="大", },
-        new(){ Value = "default", Label="中", },
-        new(){ Value = "small", Label="小", },
-    };
-    [CascadingParameter(Name = "Root")]
-    [NotNull]
-    public FormDesigner? FormDesigner { get; set; }
-
-    [Parameter]
-    [NotNull]
-    public ComponentDto? ComponentData { get; set; }
 
     [NotNull]
     private ValidateForm? ValidateForm { get; set; }
@@ -302,9 +284,11 @@
     {
         await FormDesigner.StateHasChangedAsync();
     }
-    public async Task OnChangeString(string a)
+    public  Task OnChangeString(string a)
     {
-        await FormDesigner.StateHasChangedAsync();
+        // await FormDesigner.StateHasChangedAsync();
+        StateHasChangedOnContainer?.Invoke();
+        return Task.CompletedTask;
     }
     public async Task OnChange()//OnChangeTreeSelects
     {

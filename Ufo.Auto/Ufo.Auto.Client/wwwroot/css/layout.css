@@ -34,8 +34,8 @@
     /*内容*/
     border: 2px solid #eeeeee;
     margin: 0px;
-    margin-top: 3px;
-    border-radius: 4px;
+    margin-top: 0px;
+    border-radius: 2px;
     overflow-y: auto;
     flex: 1;
     max-height: 100%
