@@ -33,47 +33,39 @@ using Ufo.Auto.Client.Services.CompanyServer;
 using Ufo.Auto.Components;
 using Ufo.Auto.Controllers;
 using Ufo.Auto.Filters;
-string jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4xIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiYWRtaW4yIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbImxlYWRlciIsImd1c3QiXSwiZXhwIjoxNzAxNzg0NTc3fQ.rQLVupOVhTq42LE5DKEfa5IedWcc1YinNKRj6UvAFrA";
-JwtSecurityTokenHandler handler = new();
-var jwttoken = handler.ReadJwtToken(jwt);
-var claims = jwttoken.Claims;
-
-
 
 #region 日志配置
-string json = "{user}";
-var mssql = new MSSqlServerSinkOptions() { AutoCreateSqlTable = true, TableName = "hhhhhh" };
-var columnOptions = new ColumnOptions();
-columnOptions.Store.Remove(StandardColumn.Properties);
+//string json = "{user}";
+//var mssql = new MSSqlServerSinkOptions() { AutoCreateSqlTable = true, TableName = "hhhhhh" };
+//var columnOptions = new ColumnOptions();
+//columnOptions.Store.Remove(StandardColumn.Properties);
 Log.Logger = new LoggerConfiguration()
     //.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
     .MinimumLevel.Debug()//框架整体的日志等级,这里设置太高,会导致后面设置中低于这个的都没有效果
     .WriteTo.Console()//输出到控制台
-
-    //logger.LogInformation("{pp}:asdfas","11");如果有pp这个占位且值等于11,那么就会制行后面的writeTo()
-    .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(Matching.WithProperty<string>("pp", p => p == "11")).WriteTo.Async(a => a.File("分类1//123456.txt")))
-    .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(Matching.WithProperty<string>("pp", p => p == "22")).WriteTo.Async(a => a.File("分类2//1啊手动阀.txt")))
-    //如果等级为Warning,就会写入到目录为"按等级2"中,文件名"1啊手动阀.txt"
-    .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(x => x.Level == LogEventLevel.Warning).WriteTo.Async(a => a.File("按等级2//1啊手动阀.txt")))
-    //写入到文件asdf//log.txt 按天生成
-    .WriteTo.File("asdf//log.txt", rollingInterval: RollingInterval.Day)
-    .WriteTo.File("log2222277.json", outputTemplate: "{Message:lj}", restrictedToMinimumLevel: LogEventLevel.Fatal)
-    .WriteTo.File(new ExpressionTemplate(
-        "{{MSG: @m}}"), "asdf//log.json", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Fatal)
-    //以json的格式生成
-    .WriteTo.File(new CompactJsonFormatter(), $"{DateTime.Now.Month}//{DateTime.Now.Day}//log.txt",
-    rollingInterval: RollingInterval.Minute, //滚动周期
-    rollOnFileSizeLimit: true,//文件是否滚动
-    fileSizeLimitBytes: null,//限制文件大小
-    retainedFileCountLimit: null,//限制文件个数
-    shared: true//进程共享
-    )
-.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(Matching.WithProperty<string>("dev", p => p != "")).WriteTo.MSSqlServer("Server = .;Database = LCM;User ID = sa;Password = 1;Encrypt=true;TrustServerCertificate=true", mssql
- , restrictedToMinimumLevel: LogEventLevel.Fatal
-))
+                      //logger.LogInformation("{pp}:asdfas","11");如果有pp这个占位且值等于11,那么就会制行后面的writeTo()
+                      // .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(Matching.WithProperty<string>("pp", p => p == "11")).WriteTo.Async(a => a.File("分类1//123456.txt")))
+                      //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(Matching.WithProperty<string>("pp", p => p == "22")).WriteTo.Async(a => a.File("分类2//1啊手动阀.txt")))
+                      //如果等级为Warning,就会写入到目录为"按等级2"中,文件名"1啊手动阀.txt"
+                      // .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(x => x.Level == LogEventLevel.Warning).WriteTo.Async(a => a.File("按等级2//1啊手动阀.txt")))
+                      //写入到文件asdf//log.txt 按天生成
+                      // .WriteTo.File("asdf//log.txt", rollingInterval: RollingInterval.Day)
+                      // .WriteTo.File("log2222277.json", outputTemplate: "{Message:lj}", restrictedToMinimumLevel: LogEventLevel.Fatal)
+                      //.WriteTo.File(new ExpressionTemplate("{{MSG: @m}}"), "asdf//log.json", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Fatal)
+                      //以json的格式生成
+                      //.WriteTo.File(new CompactJsonFormatter(), $"{DateTime.Now.Month}{DateTime.Now.Day}//log.txt",
+                      //rollingInterval: RollingInterval.Minute, //滚动周期
+                      //rollOnFileSizeLimit: true,//文件是否滚动
+                      //fileSizeLimitBytes: null,//限制文件大小
+                      //retainedFileCountLimit: null,//限制文件个数
+                      //shared: true//进程共享
+                      //)
+                      //.WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(Matching.WithProperty<string>("dev", p => p != "")).WriteTo.MSSqlServer("Server = .;Database = LCM;User ID = sa;Password = 1;Encrypt=true;TrustServerCertificate=true", mssql
+                      // , restrictedToMinimumLevel: LogEventLevel.Fatal
+                      //))
 
     .CreateLogger();
-Log.Warning("程序启动动........");
+Log.Warning("程序启动中........");
 User user = new User() { Name = "adasdafasf", Roles = new List<Role>() { } };
 Log.Fatal("{dev}", JsonSerializer.Serialize(user));
 #endregion
@@ -114,12 +106,13 @@ builder.Services.AddHttpClient(
     });
 builder.Services.AddEndpointsApiExplorer();//
 
-builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op => {
+builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
+{
     op.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
     {
-        ValidateIssuer=false,
-        ValidateAudience=false,
-        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(LoginController.key))
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(LoginController.key))
     };
 });
 builder.Services.AddAuthorization();
@@ -166,7 +159,8 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
    });
     return sqlSugar;
 });
-builder.Services.AddOpenApiDocument((settings) => {
+builder.Services.AddOpenApiDocument((settings) =>
+{
     settings.DocumentName = "名字:接口文档";
     settings.Version = "版本:v0.0.1";
     settings.Title = "标题:测试接口项目";
@@ -206,10 +200,11 @@ app.UseStaticFiles();
 
 app.UseOpenApi(settings =>
 {
-  
+
 }); ; // serve documents (same as app.UseSwagger())
 
-app.UseSwaggerUi(op => {
+app.UseSwaggerUi(op =>
+{
     op.Path = "/api";
 });
 
