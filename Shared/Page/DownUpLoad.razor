@@ -1,0 +1,60 @@
+﻿@page "/updownload"
+@using Microsoft.JSInterop
+@using System.Net.Http.Json
+@using Models.NotEntity
+@inject IJSRuntime JS
+@inject IHttpClientFactory httpClientFactory
+<h1>File Download Example 2</h1>
+
+<button @onclick="downLoadLarge">
+    下载大文件
+</button>
+<button @onclick="downLoadSmall">
+    下载小文件(不推荐)
+</button>
+<button @onclick="Post">
+    发送post请求
+</button>
+结果:@psot
+
+@code {
+    public string psot { get; set; }
+    private Stream GetFileStream()
+    {
+        var randomBinaryData = new byte[50 * 1024];
+        var fileStream = new MemoryStream(randomBinaryData);
+        
+        return fileStream;
+    }
+    private async Task downLoadSmall()
+    {
+        var fileStream = GetFileStream();
+        var fileName = "log.log";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downLoadSmall", fileName, streamRef);
+    }
+    private async Task downLoadLarge()
+    {
+        var fileName = "quote.txt";
+        var fileURL = "http://localhost:9527/File/DownloadFile?FilePath=1.txt";
+        await JS.InvokeVoidAsync("window.downLoadLarge", fileName, fileURL);
+    }
+    private async Task<Result<string>> Post()
+    {
+        Result<string>? result = new();
+        using HttpClient http = httpClientFactory.CreateClient("http");
+        //执行http请求
+        var res = await http.PostAsJsonAsync<string>("Login/GetJwt", "");
+        if (res.IsSuccessStatusCode)
+        {
+            result = await res.Content.ReadFromJsonAsync<Result<string>>();
+        }
+        if (result!=null)
+        {
+            psot = result.Data;
+        }
+        return await Task.FromResult(result??new Result<string>());
+    }
+}

@@ -28,7 +28,7 @@ namespace Ufo.Auto.Client.Layout
 
         private List<MenuItem>? Menus { get; set; }
         [CascadingParameter]
-        public int app { get; set; }
+        public string layoutstring { get; set; }
         /// <summary>
         /// OnInitialized 方法
         /// </summary>
@@ -36,7 +36,7 @@ namespace Ufo.Auto.Client.Layout
         {
             base.OnInitialized();
             ColorMessages.Enqueue(new ConsoleMessageItem { Message = $"{DateTimeOffset.Now}: Dispatch Message" });
-            Menus = GetIconSideMenuItems(app);
+            Menus = GetIconSideMenuItems(5);
         }
 
         private static List<MenuItem> GetIconSideMenuItems(int a)

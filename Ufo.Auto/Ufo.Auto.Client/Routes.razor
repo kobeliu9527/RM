@@ -3,7 +3,7 @@
 
 
 <BootstrapBlazorRoot>
-    <CascadingValue Value="@app">
+    <CascadingValue Value="@routes">
         <Router AppAssembly="@typeof(Program).Assembly">
             <Found Context="routeData">
                 <Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />

@@ -32,8 +32,11 @@ namespace Models.NotEntity
         /// <summary>
         /// 错误信息
         /// </summary>
-        public string? ErrorMsg { get; set; }
-
+        public string ErrorMsg { get; set; } = "";
+        /// <summary>
+        /// 错误代码位置
+        /// </summary>
+        public string? ErrorPosition { get; set; }
         /// <summary>
         /// 错误信息集合
         /// </summary>
@@ -66,10 +69,16 @@ namespace Models.NotEntity
         public Result<T> CatchException(Exception ex,int ErrCode=200)
         {
             Exception = ex;
-            ErrorMsg = ex.Message;
+            ErrorMsg += ex.Message;
+            ErrorPosition = ex.StackTrace;
             StatusCode = ErrCode;
             IsSucceeded = false;
             EndTime= DateTime.Now;
+            return this;
+        }
+        public Result<T> End(int ErrCode = 200)
+        {
+            EndTime = DateTime.Now;
             return this;
         }
     }

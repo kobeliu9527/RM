@@ -1,0 +1,9 @@
+﻿@page "/pagetest"
+@using Models
+<h3>PageTest</h3>
+@CompanyGroup.Name
+<BootstrapBlazor.Components.Button OnClick="()=>{CompanyGroup.Name=DateTime.Now.ToString();}">sdfsadfasdf</BootstrapBlazor.Components.Button>
+@code {
+    [CascadingParameter]
+    public CompanyGroup CompanyGroup { get; set; }
+}

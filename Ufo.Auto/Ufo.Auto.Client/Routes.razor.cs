@@ -4,7 +4,7 @@ namespace Ufo.Auto.Client
 {
     public partial class Routes
     {
-        public int app { get; set; }
+        public string routes { get; set; } = "routes";
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -12,7 +12,7 @@ namespace Ufo.Auto.Client
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            app = 5;
+           // app = 5;
         }
         protected override void OnParametersSet()
         {
@@ -32,7 +32,7 @@ namespace Ufo.Auto.Client
         {
             await base.OnAfterRenderAsync(firstRender);
             await Task.Delay(5000);
-            app = 4;
+           // app = 4;
 
         }
     }
