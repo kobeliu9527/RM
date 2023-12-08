@@ -32,10 +32,7 @@
         <TabItem Text="菜单管理">
             <Button OnClick="Query">刷新</Button>
             <TreeView TItem="TreeComponentData" Items="@_datas" ShowCheckbox="true" ClickToggleNode="true" />
-            @*     <AntDesign.Tree DataSource="_datas" TItem="TreeComponentData"
-            TitleExpression="x=>x.DataItem.Title"
-            OnClick="OnClick"
-            ChildrenExpression="x=>x.DataItem.Children"></AntDesign.Tree> *@
+          
 
         </TabItem>
         <TabItem Text="角色">

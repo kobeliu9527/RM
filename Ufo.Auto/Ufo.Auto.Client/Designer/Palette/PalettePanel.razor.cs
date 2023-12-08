@@ -1,4 +1,4 @@
-using AntDesign;
+
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Models;
@@ -46,46 +46,46 @@ namespace Ufo.Auto.Client.Designer.Palette
             _datas = new() {  }; 
             ContainerData.ToTree(_datas);
         }
-        public async Task OnClick(TreeEventArgs<TreeComponentData> args)
-    {
-        var dataItem = ((TreeComponentData)args.Node.DataItem);
-        switch (dataItem.Type)
-        {
-            case ControlType.Comtainer:
-                ContainerDto? res = null;
-                ContainerData.FindContainer(x => x.Id == dataItem.Key, ref res);
-                if (res != null)
-                {
-                    await Root.SelectContainerAsync(res);
-                }
+    //    public async Task OnClick(TreeEventArgs<TreeComponentData> args)
+    //{
+    //    var dataItem = ((TreeComponentData)args.Node.DataItem);
+    //    switch (dataItem.Type)
+    //    {
+    //        case ControlType.Comtainer:
+    //            ContainerDto? res = null;
+    //            ContainerData.FindContainer(x => x.Id == dataItem.Key, ref res);
+    //            if (res != null)
+    //            {
+    //                await Root.SelectContainerAsync(res);
+    //            }
 
-                break;
-            case ControlType.Row:
-                RowDto? resrow = null;
-                ContainerData.FindRow(x => x.Id == dataItem.Key, ref resrow);
-                if (resrow != null)
-                {
-                    await Root.SelectRowAsync(resrow);
-                }
-                break;
-            case ControlType.Component:
-                ComponentDto? resrom = null;
-                ContainerData.FindComponent(x => x.Id == dataItem.Key, ref resrom);
-                if (resrom != null)
-                {
-                    await Root.SelectComponentAsync(resrom);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    public async Task OnNodeLoadDelayAsync(TreeEventArgs<TreeComponentData> args)
-    {
-        _datas = new List<TreeViewItem<TreeComponentData>>();
-        ContainerData.ToTree(_datas);
-        return;
-    }
+    //            break;
+    //        case ControlType.Row:
+    //            RowDto? resrow = null;
+    //            ContainerData.FindRow(x => x.Id == dataItem.Key, ref resrow);
+    //            if (resrow != null)
+    //            {
+    //                await Root.SelectRowAsync(resrow);
+    //            }
+    //            break;
+    //        case ControlType.Component:
+    //            ComponentDto? resrom = null;
+    //            ContainerData.FindComponent(x => x.Id == dataItem.Key, ref resrom);
+    //            if (resrom != null)
+    //            {
+    //                await Root.SelectComponentAsync(resrom);
+    //            }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
+    //public async Task OnNodeLoadDelayAsync(TreeEventArgs<TreeComponentData> args)
+    //{
+    //    _datas = new List<TreeViewItem<TreeComponentData>>();
+    //    ContainerData.ToTree(_datas);
+    //    return;
+    //}
 }
 public enum ControlType
 {

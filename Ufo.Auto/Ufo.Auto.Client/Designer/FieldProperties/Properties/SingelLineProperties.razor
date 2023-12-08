@@ -29,20 +29,6 @@
         <CollapseItem Text="事件和数据源">
             <Select TValue="string" @bind-Value="@ComponentData.Props["StoreName"].StringValue" IsVirtualize="true" OnQueryAsync="OnQueryAsync" ShowSearch="true" DisplayText="存储过程名字"></Select>
             <CheckboxList IsButton="true" TValue="IEnumerable<string>" Items="@BoxListData" @bind-Value="@ComponentData.Props["Params"].StringListValue" ShowLabel="true" DisplayText="存储过程需要的参数" />
-            @* <TreeView TItem="TreeComponentData" Items="@treeData" ShowCheckbox="true" ClickToggleNode="true" /> *@
-            @*   <AntDesign.TreeSelect TItem="TreeComponentData"
-            Style="width:100%;"
-            DataSource="treeData"
-            OnSelectedItemsChanged="OnChangeTreeSelects"
-            @bind-Values="@ComponentData.Props["Params"].StringListValue"
-            Placeholder="Please select"
-            Multiple
-            TreeDefaultExpandAll
-            ChildrenExpression="node=>node.DataItem.Children"
-            TitleExpression="node=>node.DataItem.Title"
-            KeyExpression="x=>x.DataItem.Key">
-            </AntDesign.TreeSelect> *@
-            @* <Button OnClick="()=>{BoxListData=new (); FormDesigner.FunctionPage.ContainerData.ToSelectedItemList(BoxListData);}">刷新</Button> *@
         </CollapseItem>
     </CollapseItems>
 </Collapse>
@@ -133,75 +119,75 @@
             await FormDesigner.StateHasChangedAsync();
         }
     }
-    public Task OnNodeLoadDelayAsync(AntDesign.TreeEventArgs<TreeComponentData> args)
-    {
-        var dataItem = args.Node.DataItem;
-        // if (dataItem.Children==null)
-        // {
-        //     return Task.CompletedTask;
-        // }
-        switch (dataItem.Type)
-        {
-            case ControlType.Comtainer:
-                ContainerDto? res = null;
-                FormDesigner.FunctionPage.ContainerData.FindContainer(x => x.Id == dataItem.Key, ref res);
-                if (res != null)
-                {
-                    var node = (List<TreeComponentData>)dataItem.Children;
-                    node.Clear();
-                    foreach (var row in res.Rows)
-                    {
-                        node.Add(new TreeComponentData()
-                            {
-                                Type = ControlType.Row,
-                                Key = row.Id,
-                                Title = row.Name
-                            });
-                    }
-                }
+    // public Task OnNodeLoadDelayAsync(AntDesign.TreeEventArgs<TreeComponentData> args)
+    // {
+    //     var dataItem = args.Node.DataItem;
+    //     // if (dataItem.Children==null)
+    //     // {
+    //     //     return Task.CompletedTask;
+    //     // }
+    //     switch (dataItem.Type)
+    //     {
+    //         case ControlType.Comtainer:
+    //             ContainerDto? res = null;
+    //             FormDesigner.FunctionPage.ContainerData.FindContainer(x => x.Id == dataItem.Key, ref res);
+    //             if (res != null)
+    //             {
+    //                 var node = (List<TreeComponentData>)dataItem.Children;
+    //                 node.Clear();
+    //                 foreach (var row in res.Rows)
+    //                 {
+    //                     node.Add(new TreeComponentData()
+    //                         {
+    //                             Type = ControlType.Row,
+    //                             Key = row.Id,
+    //                             Title = row.Name
+    //                         });
+    //                 }
+    //             }
 
-                break;
-            case ControlType.Row:
-                RowDto? resrow = null;
-                FormDesigner.FunctionPage.ContainerData.FindRow(x => x.Id == dataItem.Key, ref resrow);
-                if (resrow != null)
-                {
-                    var node = (List<TreeComponentData>)dataItem.Children;
-                    node.Clear();
-                    foreach (var com in resrow.ComponentList)
-                    {
-                        node.Add(new TreeComponentData()
-                            {
-                                Type = ControlType.Component,
-                                Key = com.Id,
-                                Title = com.Name
-                            });
-                    }
-                }
-                break;
-            case ControlType.Component:
-                ComponentDto? resrom = null;
-                FormDesigner.FunctionPage.ContainerData.FindComponent(x => x.Id == dataItem.Key, ref resrom);
-                if (resrom != null)
-                {
-                    var node = (List<TreeComponentData>)dataItem.Children;
-                    node.Clear();
-                    foreach (var com in resrom.ChildContainers)
-                    {
-                        node.Add(new TreeComponentData()
-                            {
-                                Type = ControlType.Comtainer,
-                                Key = com.Id,
-                                Title = com.Name
-                            });
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-        return Task.CompletedTask;
-    }
+    //             break;
+    //         case ControlType.Row:
+    //             RowDto? resrow = null;
+    //             FormDesigner.FunctionPage.ContainerData.FindRow(x => x.Id == dataItem.Key, ref resrow);
+    //             if (resrow != null)
+    //             {
+    //                 var node = (List<TreeComponentData>)dataItem.Children;
+    //                 node.Clear();
+    //                 foreach (var com in resrow.ComponentList)
+    //                 {
+    //                     node.Add(new TreeComponentData()
+    //                         {
+    //                             Type = ControlType.Component,
+    //                             Key = com.Id,
+    //                             Title = com.Name
+    //                         });
+    //                 }
+    //             }
+    //             break;
+    //         case ControlType.Component:
+    //             ComponentDto? resrom = null;
+    //             FormDesigner.FunctionPage.ContainerData.FindComponent(x => x.Id == dataItem.Key, ref resrom);
+    //             if (resrom != null)
+    //             {
+    //                 var node = (List<TreeComponentData>)dataItem.Children;
+    //                 node.Clear();
+    //                 foreach (var com in resrom.ChildContainers)
+    //                 {
+    //                     node.Add(new TreeComponentData()
+    //                         {
+    //                             Type = ControlType.Comtainer,
+    //                             Key = com.Id,
+    //                             Title = com.Name
+    //                         });
+    //                 }
+    //             }
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    //     return Task.CompletedTask;
+    // }
     private IEnumerable<SelectedItem> GetParameters()
     {
         return FormDesigner.FunctionPage.ContainerData.FindAllComponent().Select(x => new SelectedItem() { Text = "   " + x.Id, Value = x.Id });

@@ -1,18 +1,5 @@
 ﻿@using global::Models
-<AntDesign.Collapse  DefaultActiveKey="@(new[]{"1"})" Accordion>
-    <AntDesign.Panel Header="通用属性" Key="1">
-        <AntDesign.Text>Id</AntDesign.Text>
-        <AntDesign.Input @bind-Value="RowDto.Id" Placeholder="Id" ReadOnly="true"></AntDesign.Input>
-        <AntDesign.Text>名称</AntDesign.Text>
-        <AntDesign.Input @bind-Value="RowDto.Name" Placeholder="名称"></AntDesign.Input>
-    </AntDesign.Panel>
-    <AntDesign.Panel Header="This is panel header 2" Key="2">
-        <p>222</p>
-    </AntDesign.Panel>
-    <AntDesign.Panel Header="This is panel header 3" Key="3">
-        <p>333</p>
-    </AntDesign.Panel>
-</AntDesign.Collapse>
+
 
 @code {
     [Parameter][NotNull]

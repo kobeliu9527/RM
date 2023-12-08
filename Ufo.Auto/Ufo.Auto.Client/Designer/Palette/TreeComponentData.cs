@@ -1,9 +1,9 @@
-﻿using AntDesign;
+﻿
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Ufo.Auto.Client.Designer.Palette
 {
-    public class TreeComponentData : ITreeData<TreeComponentData>
+    public class TreeComponentData 
     {
         public string Key { get; set; }
         public string Title { get; set; }

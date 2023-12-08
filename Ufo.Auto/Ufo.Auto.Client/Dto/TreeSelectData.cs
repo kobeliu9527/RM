@@ -1,9 +1,9 @@
-﻿using AntDesign;
+﻿
 
 namespace Ufo.Auto.Client.Dto
 {
 
-    public class TreeSelectData : ITreeData<string>
+    public class TreeSelectData 
     {
         public string Key { get; set; }
         public string Title { get; set; }

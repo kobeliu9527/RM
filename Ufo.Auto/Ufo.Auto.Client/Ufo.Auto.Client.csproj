@@ -62,7 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.16.2" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.0" />
     <PackageReference Include="MatBlazor" Version="2.10.0" />

@@ -13,7 +13,7 @@ using Ufo.Auto.Client.Services.CompanyServer;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddBootstrapBlazor();
-builder.Services.AddAntDesign();
+
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddHttpClient(

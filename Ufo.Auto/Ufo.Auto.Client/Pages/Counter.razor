@@ -16,9 +16,7 @@
 }
 @code {
     public bool IsShowBackdropOpen { get; set; }
-    [Inject]
-    [NotNull]
-    public AntDesign.IMessageService _message { get; set; }
+
     private int currentCount = 0;
     public bool MyProperty { get; set; } = true;
     public ContainerDto? ContainerData { get; set; }
@@ -63,6 +61,5 @@
     private async Task IncrementCount3()
     {
         System.Console.WriteLine("onclick");
-        await _message.Info("啊打发十分");
     }
 }
