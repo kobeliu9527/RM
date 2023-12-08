@@ -8,7 +8,7 @@ namespace Models
     /// <summary>
     /// 多语言
     /// </summary>
-    public class MutLanguage
+    public class MutLanguage:EntityBase
     {
         /// <summary>
         /// 根据语言环境选择语言

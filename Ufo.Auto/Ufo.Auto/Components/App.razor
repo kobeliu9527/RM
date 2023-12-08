@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     @* bootstrap原生 *@
-    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  @*   <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" /> *@
     @* 项目生成 *@
     @* <link rel="stylesheet" href="app.css" /> *@
     <link rel="stylesheet" href="Ufo.Auto.styles.css" />
@@ -35,12 +35,12 @@
 
 
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet @rendermode="@InteractiveWebAssembly" />
+    <HeadOutlet @rendermode="@InteractiveServer" />
 </head>
 
 <body>
-
-    <Routes @rendermode="@InteractiveWebAssembly" />
+    <div style="border:solid;margin:0px">adf</div>
+    <Routes @rendermode="@InteractiveServer" />
 
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>

@@ -1,9 +1,17 @@
 ﻿@page "/pagetest"
 @using Models
+@using Models.Services.Base
+@inject ICrudBase<SysModule> db
 <h3>PageTest</h3>
 @CompanyGroup.Name
+<button @onclick="test"></button>
 <BootstrapBlazor.Components.Button OnClick="()=>{CompanyGroup.Name=DateTime.Now.ToString();}">sdfsadfasdf</BootstrapBlazor.Components.Button>
 @code {
     [CascadingParameter]
     public CompanyGroup CompanyGroup { get; set; }
+    public void test()
+    {
+        // db.SelectNav(new Models.Dto.Query<SysModule>());
+        db.Insert(new SysModule() {  Name="asfdasdf"});
+    }
 }

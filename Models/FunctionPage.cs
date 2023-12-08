@@ -31,7 +31,7 @@ namespace Models
         /// </summary>
         [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
         [NotNull]
-        [JsonIgnore] 
+        //[JsonIgnore] 
         public ContainerDto? ContainerData { get; set; }
         /// <summary>
         /// 消息框的类型

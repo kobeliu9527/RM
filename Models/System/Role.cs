@@ -10,7 +10,7 @@ namespace Models.System
         /// <summary>
         /// 角色名字
         /// </summary>
-        public string? Name { get; set; } = "";
+        public string Name { get; set; } = "";
         /// <summary>
         /// 这个角色里面所有的人员
         /// </summary>

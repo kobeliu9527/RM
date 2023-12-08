@@ -25,6 +25,7 @@
 }
 
 .component-element {
+    position:relative;
     display: block;
     border: 1px transparent solid;
     margin: .3em 0;

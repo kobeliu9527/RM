@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.NotEntity;
+using Models.Services.Base;
 using Models.System;
 using System.Linq.Expressions;
-using Ufo.Auto.Client.Services.Base;
 
 
 namespace Ufo.Auto.Controllers

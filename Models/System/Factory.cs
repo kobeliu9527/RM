@@ -20,7 +20,7 @@ namespace Models.System
         /// <summary>
         /// 所有的模块
         /// </summary>
-        [Navigate(NavigateType.OneToMany, nameof(Module.FactoryId))]
-        public List<Module>? Modules { get; set; }
+        [Navigate(NavigateType.OneToMany, nameof(SysModule.FactoryId))]
+        public List<SysModule>? Modules { get; set; }
     }
 }

@@ -33,10 +33,10 @@
     protected override async void OnInitialized()
     {
         base.OnInitialized();
-        var ss =await db.SelectAll();
-        FunctionPage = ss.Data[1];
-        // FunctionPage = ss;
-         return;
+        // var ss =await db.SelectAll();
+        // FunctionPage = ss.Data[1];
+        // // FunctionPage = ss;
+        //  return;
         FunctionPage = new FunctionPage();
 
         //ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };

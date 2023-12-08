@@ -3,6 +3,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -235,7 +236,7 @@ namespace Models
         /// <summary>
         /// </summary>
         public double DoubleValue { get; set; }
-
+        [JsonIgnore]
         public DataTable? DataTable { get; set; }
 
         #endregion 属性

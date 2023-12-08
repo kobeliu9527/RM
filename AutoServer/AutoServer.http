@@ -1,6 +1,6 @@
-@AutoServer_HostAddress = http://localhost:5099
+# @AutoServer_HostAddress = http://localhost:5099
 
-GET {{AutoServer_HostAddress}}/weatherforecast/
-Accept: application/json
+# GET {{AutoServer_HostAddress}}/weatherforecast/
+# Accept: application/json
 
-###
+# ###

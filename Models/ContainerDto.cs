@@ -16,12 +16,12 @@ namespace Models
         /// <summary>
         /// 容器的名字,必须全局唯一
         /// </summary>
-        [DisplayName("唯一标识"), Required(ErrorMessage = "容器的Id,必须全局唯一"), ReadOnly(true)]
+        //[DisplayName("唯一标识"), Required(ErrorMessage = "容器的Id,必须全局唯一"), ReadOnly(true)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
         /// <summary>
         /// 
         /// </summary>
-        [DisplayName("名字"), Required(ErrorMessage = "容器的名字,最好全局唯一")]
+        //[DisplayName("名字"), Required(ErrorMessage = "容器的名字,最好全局唯一")]
         public string Name { get; set; } = "跟容器";
         /// <summary>
         /// 容器的类型

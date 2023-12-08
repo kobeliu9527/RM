@@ -5,7 +5,7 @@ namespace Models.System
     /// <summary>
     /// 模块
     /// </summary>
-    public class Module : EntityBase
+    public class SysModule : EntityBase
     {
         /// <summary>
         /// 名字

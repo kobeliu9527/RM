@@ -1,3 +1,5 @@
+global using  Models.Dto;
+global using Mapster;
 using AutoServer;
 using AutoServer.Controllers;
 using AutoServer.CustomConverter;
@@ -18,6 +20,10 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
+using Models.Services.Base;
+using Models.System;
+using Models.Services.ServerByDb;
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -44,7 +50,7 @@ builder.Services.AddControllers(
     op.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs);
     op.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 
-    op.JsonSerializerOptions.Converters.Add(new JsonTextConverter("yyyy-MM-dd HH:mm:ss"));
+    //op.JsonSerializerOptions.Converters.Add(new JsonTextConverter("yyyy-MM-dd HH:mm:ss"));
 
 });
 builder.Services.AddAuthentication()
@@ -157,6 +163,10 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
    });
     return sqlSugar;
 });
+
+builder.Services.AddScoped<ICrudBase<SysModule>, ModuleServerByDB>();
+builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
+builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

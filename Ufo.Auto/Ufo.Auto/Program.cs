@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Models;
+using Models.Services.AuthenticationStateCustom;
+using Models.Services.Base;
+using Models.Services.ServerByDb;
 using Models.System;
 using Newtonsoft.Json.Linq;
 using NSwag;
@@ -66,7 +69,7 @@ Log.Logger = new LoggerConfiguration()
 
     .CreateLogger();
 Log.Warning("≥Ã–Ú∆Ù∂Ø÷–........");
-User user = new User() { Name = "adasdafasf", Roles = new List<Role>() { } };
+User user = new User() {  RealName = "adasdafasf", Roles = new List<Role>() { } };
 Log.Fatal("{dev}", JsonSerializer.Serialize(user));
 #endregion
 var builder = WebApplication.CreateBuilder(args);

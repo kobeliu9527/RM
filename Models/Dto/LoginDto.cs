@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.System;
 
-namespace Models.System
+namespace Models.Dto
 {
     /// <summary>
     /// 登录信息
@@ -26,7 +27,7 @@ namespace Models.System
         /// <summary>
         /// 模块
         /// </summary>
-        public Module? Module { get; set; }
+        public SysModule? Module { get; set; }
 
     }
 }
