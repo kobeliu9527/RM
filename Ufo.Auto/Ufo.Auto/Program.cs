@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Models;
-using Models.Services.AuthenticationStateCustom;
+//using Models.Services.AuthenticationStateCustom;
 using Models.Services.Base;
 using Models.Services.ServerByDb;
 using Models.System;
@@ -180,9 +180,9 @@ builder.Services.AddOpenApiDocument((settings) =>
     });
 });
 
-builder.Services.AddScoped<ICrudBase<Company>, CompanyServerByDB>();
-builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
-builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
+//builder.Services.AddScoped<ICrudBase<Company>, CompanyServerByDB>();
+//builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
+//builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
 //builder.Services.AddScoped<ICompanyManger, CompanyManger>();
 
 var app = builder.Build();

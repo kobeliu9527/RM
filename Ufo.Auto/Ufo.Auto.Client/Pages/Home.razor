@@ -2,16 +2,16 @@
 @using Models.NotEntity
 @using Models.System
 @using Ufo.Auto.Client.Services.Base
-@inject ICrudBase<Company> CompanyServer
+@* @inject ICrudBase<Company> CompanyServer *@
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 @app
-<Button OnClick="async()=>{
+@* <Button OnClick="async()=>{
 
 res=await
 
-CompanyServer.Insert(null);}"></Button>
+CompanyServer.Insert(null);}"></Button> *@
 <br />
 数据是:
 @app

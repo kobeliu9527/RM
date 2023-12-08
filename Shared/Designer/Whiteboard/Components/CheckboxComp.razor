@@ -1,0 +1,32 @@
+﻿@using System.Data;
+@inherits WidgetComponentBase
+
+@*<form>*@
+    <div class="form-group">
+        <Checkbox TValue="bool" DisplayText="@(Component.Props.ContainsKey("DisplayText")?Component.Props["DisplayText"].StringValue.ToString():"文本框")"
+                  ShowLabel="@(Component.Props.ContainsKey("ShowLabel")?Convert.ToBoolean(Component.Props["ShowLabel"].StringValue):true)" class="form-control"
+                  Id="@Component.Id.ToString()"
+                  Color="@(Component.Props.ContainsKey("Color")?(Color)Enum.Parse(typeof(Color),Component.Props["Color"].StringValue):Color.Danger)"
+                  @bind-Value="@(Component.Props["BoolVal"].BoolVal)"></Checkbox>
+    </div>
+@*</form>*@
+
+
+@code {
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+    
+    public void aaa()
+    {
+        
+        DataTable aa = new DataTable();
+        foreach (var item in aa.Rows)
+        {
+
+        }
+
+    }
+}
