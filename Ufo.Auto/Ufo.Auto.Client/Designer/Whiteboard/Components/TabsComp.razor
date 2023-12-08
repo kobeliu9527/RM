@@ -1,4 +1,4 @@
-﻿@using MatBlazor
+﻿
 @{
     bool isSelectedComponent =
         FormDesigner.IsSelectedComponent(ComponentData);
@@ -22,28 +22,35 @@
                    @onclick:stopPropagation="true">
                     @if (IsMoveTabLeftVisible(tabContainer))
                     {
-                        <MatIconButton Icon="@MatIconNames.Arrow_back"
+                     @*    <MatIconButton Icon="@MatIconNames.Arrow_back"
                                        OnClick="@(async () => await MoveTabLeftAsync(tabContainer))"
                                        OnClickStopPropagation="true"
                                        Class="component-mover-icon tab-color"
-                                       title="Move Left" />
+                                       title="Move Left" /> *@
+                        <Button OnClick="@(async () => await MoveTabLeftAsync(tabContainer))" Size="Size.Small" Icon="fas fa-circle-arrow-left">
+                        </Button>
+
                     }
                     @if (IsMoveTabRightVisible(tabContainer))
                     {
-                        <MatIconButton Icon="@MatIconNames.Arrow_forward"
+                    @*     <MatIconButton Icon="@MatIconNames.Arrow_forward"
                                        OnClick="@(async () => await MoveTabRightAsync(tabContainer))"
                                        OnClickStopPropagation="true"
                                        Class="component-mover-icon tab-color"
-                                       title="Move Right" />
+                                       title="Move Right" /> *@
+                        <Button OnClick="@(async () => await MoveTabRightAsync(tabContainer))" Size="Size.Small" Icon="fas fa-circle-arrow-right">
+                        </Button>
                     }
                     <span class="tab-title">@(tabContainer.MutLanguage.GetLanguage())</span>
                     @if (IsRemoveTabVisible(tabContainer))
                     {
-                        <MatIconButton Icon="@MatIconNames.Cancel"
+                  @*       <MatIconButton Icon="@MatIconNames.Cancel"
                                        OnClick="@(async () => await OnTabDeleteAsync(tabContainer))"
                                        OnClickStopPropagation="true"
                                        Class="component-mover-icon tab-color"
-                                       title="Delete" />
+                                       title="Delete" /> *@
+                        <Button OnClick="@(async () => await OnTabDeleteAsync(tabContainer))" Size="Size.Small" Icon="fas fa-rectangle-xmark">
+                        </Button>
                     }
                 </a>
             </li>
@@ -53,8 +60,10 @@
                title="Add Tab"
                @onclick="@(async () => await AddTabAsync())"
                @onclick:preventDefault="true">
-                <MatIconButton Icon="@MatIconNames.Add"
-                               Class="component-mover-icon tab-color" />
+               @*  <MatIconButton Icon="@MatIconNames.Add"
+                               Class="component-mover-icon tab-color" /> *@
+                <Button Size="Size.Small" Icon="fas fa-plus">
+                </Button>
             </a>
         </li>
     </ul>
