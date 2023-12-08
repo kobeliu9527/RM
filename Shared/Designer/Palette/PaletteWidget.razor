@@ -1,0 +1,49 @@
+﻿
+@if (WidgetItem != null)
+{
+    <BootstrapTooltip Title="@WidgetItem.Description">
+        <div id="@WidgetItem.Id.ToString()"
+             class="fd-palette-widget text-center draggable"
+             draggable="true"
+             @ondragstart="@(async () => await DragStartAsync(WidgetItem))">
+            @if (!string.IsNullOrEmpty(WidgetItem.Icon))
+            {
+                <i class="@WidgetItem.Icon" style="font-size:40px;color:red;"></i>
+            }
+            <h5 class="fd-palette-widget-label">@WidgetItem.Name</h5>
+        </div>
+
+    </BootstrapTooltip>
+
+}
+else
+{
+    <p>Widget could not be loaded</p>
+}
+
+@code
+{
+    /// <summary>
+    /// 表示一个工具箱组件
+    /// </summary>
+    [Parameter]
+    public PaletteWidgetDto WidgetItem { get; set; }
+
+    /// <summary>
+    /// 由3部分组成,左侧工具箱,中间设计器,右侧属性栏
+    /// </summary>
+    [CascadingParameter(Name = "Root")]
+    public FormDesigner FormDesigner { get; set; }
+
+    /// <summary>
+    /// 控件开始拖动的时候会触发
+    /// </summary>
+    /// <param name="widgetItem"></param>
+    /// <returns></returns>
+    private async Task DragStartAsync(PaletteWidgetDto widgetItem)
+    {
+        await FormDesigner.SetDraggedPaletteWidgetAsync(widgetItem);
+    }
+}
+
+

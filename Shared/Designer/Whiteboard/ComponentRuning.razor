@@ -1,0 +1,106 @@
+﻿
+@{
+    string tabsContainerClass = ComponentData?.ComponentType == ComponentType.Tabs ? "container-element" : "";
+}
+<div class="component-element @Class  @tabsContainerClass"
+     @onclick="SelectComponentAsync"
+     @onclick:stopPropagation="true">
+    <div class="widget-wrapper">
+        @{
+            string h = "auto";
+            h = ComponentData?.Height <= 0 ? "auto" : ComponentData?.Height + "px";
+        }
+        <div class="widget-content" style="height:@h">
+            @switch (ComponentData?.ComponentType)
+            {
+                case ComponentType.SingleLine:
+                    <SingleLineComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.MultiLine:
+                    <MultiLineComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.Email:
+                    <EmailComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.Link:
+                    <LinkComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.Checkbox:
+                    <CheckboxComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.Number:
+                    <NumberComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.File:
+                    <FileComp Component="@ComponentData" />
+                    break;
+
+                case ComponentType.DateTime:
+                    <DateTimeComp Component="@ComponentData" />
+                    break;
+                case ComponentType.Select:
+                    <SelectComp Component="@ComponentData" />
+                    break;
+                case ComponentType.Table:
+                    <DataGridViewComp Component="@ComponentData" />
+                    break;
+                case ComponentType.Tabs:
+                    <TabsComp ComponentData="@ComponentData"
+                              ComponentRow="@ComponentRow"
+                              TabContainerList="@ComponentData.ChildContainers" />
+                    break;
+
+                default:
+                    throw new NotImplementedException(@$"ComponentType: '{ComponentData?.ComponentType}' is not implemented");
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// 整个设计界面
+    /// </summary>
+    [NotNull]
+    [CascadingParameter(Name = "Root")]
+    public FormDesigner? FormDesigner { get; set; }
+    /// <summary>
+    /// 父级容器
+    /// </summary>
+    [Parameter]
+    public ContainerDto? Container { get; set; }
+    /// <summary>
+    /// 组件的数据
+    /// </summary>
+    [Parameter]
+    public ComponentDto? ComponentData { get; set; }
+
+    /// <summary>
+    /// 这个组件所在的行
+    /// </summary>
+    [Parameter]
+    public RowDto? ComponentRow { get; set; }
+    /// <summary>
+    /// 表示他是这一行中第几的一个组件
+    /// </summary>
+    [Parameter]
+    public int ComponentIndex { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    /// <summary>
+    /// 设置本组件为FormDesigner中被选中的控件,并且刷新界面
+    /// </summary>
+    /// <returns></returns>
+    private async Task SelectComponentAsync()
+    {
+        await FormDesigner.SelectComponentAsync(ComponentData);
+    }
+}

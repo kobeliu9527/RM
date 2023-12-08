@@ -1,0 +1,34 @@
+﻿@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<div style="position:absolute;top:-2rem;z-index:100">
+    @* <span style="margin-left:4px;">@Component.ComponentType.GetName()</span> *@
+    @if (IsMoveLeftVisible())
+    {
+        <Button OnClick="MoveLeftAsync" Size="Size.Small" Icon="fas fa-circle-arrow-left">
+        </Button>
+    }
+
+    @if (IsMoveRightVisible())
+    {
+        <Button OnClick="MoveRightAsync" Size="Size.Small" Icon="fas fa-circle-arrow-right">
+        </Button>
+
+        @*  <MatIconButton Icon="@MatIconNames.Arrow_forward"
+    OnClick="MoveRightAsync"
+    OnClickStopPropagation="true"
+    Class="component-mover-icon"
+    title="Move Right" /> *@
+    }
+
+    @*     <MatIconButton Icon="@MatIconNames.Cancel"
+    OnClick="OnDeleteAsync"
+    OnClickStopPropagation="true"
+    Class="component-mover-icon"
+    title="Delete" /> *@
+    <Button OnClick="OnDeleteAsync" Size="Size.Small" Icon="fas fa-rectangle-xmark">
+    </Button>
+</div>
+
+

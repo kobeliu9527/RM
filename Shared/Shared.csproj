@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,11 +6,44 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\js\form-designer.js" />
-  </ItemGroup>
+
+
 
   <ItemGroup>
+    <None Include="Designer\FieldProperties\FieldPropertiesPanel.razor" />
+    <None Include="Designer\FieldProperties\Properties\CheckboxProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\DateTimeProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\DefaultPropertiesComp.razor" />
+    <None Include="Designer\FieldProperties\Properties\EmailProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\FileProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\LinkProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\MultiLineProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\NumberProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\SingelLineProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\TabProperties.razor" />
+    <None Include="Designer\FieldProperties\Properties\TabsProperties.razor" />
+    <None Include="Designer\FormRuning.razor" />
+    <None Include="Designer\Palette\PalettePanel.razor" />
+    <None Include="Designer\Palette\PaletteWidget.razor" />
+    <None Include="Designer\Whiteboard\Component.razor" />
+    <None Include="Designer\Whiteboard\ComponentMover.razor" />
+    <None Include="Designer\Whiteboard\ComponentRuning.razor" />
+    <None Include="Designer\Whiteboard\Components\CheckboxComp.razor" />
+    <None Include="Designer\Whiteboard\Components\DataGridViewComp.razor" />
+    <None Include="Designer\Whiteboard\Components\DateTimeComp.razor" />
+    <None Include="Designer\Whiteboard\Components\EmailComp.razor" />
+    <None Include="Designer\Whiteboard\Components\FileComp.razor" />
+    <None Include="Designer\Whiteboard\Components\LinkComp.razor" />
+    <None Include="Designer\Whiteboard\Components\MultiLineComp.razor" />
+    <None Include="Designer\Whiteboard\Components\NumberComp.razor" />
+    <None Include="Designer\Whiteboard\Components\SelectComp.razor" />
+    <None Include="Designer\Whiteboard\Components\SingleLineComp.razor" />
+    <None Include="Designer\Whiteboard\Components\SingleLineCompRuning.razor" />
+    <None Include="Designer\Whiteboard\Components\TabsComp.razor" />
+    <None Include="Designer\Whiteboard\Components\TabsCompRuning.razor" />
+    <None Include="Designer\Whiteboard\Container.razor" />
+    <None Include="Designer\Whiteboard\ContainerRuning.razor" />
+    <None Include="Designer\Whiteboard\DropZone.razor" />
     <None Include="wwwroot\js\form-designer.js" />
   </ItemGroup>
 

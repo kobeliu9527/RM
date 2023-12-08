@@ -10,11 +10,10 @@ namespace Models
     /// </summary>
     public class MutLanguage:EntityBase
     {
-        /// <summary>
-        /// 根据语言环境选择语言
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <returns></returns>
         public string GetLanguage()
         {
             string res = "";

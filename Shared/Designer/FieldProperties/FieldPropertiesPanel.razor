@@ -1,0 +1,102 @@
+﻿@using Shared.Designer.FieldProperties.Properties
+
+
+<div class="fd-field-properties-panel h-100 ppp">
+    <Tab>
+        <TabItem Text="界面设计">
+            @{
+                ComponentData = FormDesigner.GetSelectedComponentAsync().Result;
+                ContainerData = FormDesigner.GetSelectedContainerAsync().Result;
+                RowData = FormDesigner.GetSelectedRowAsync().Result;
+            }
+
+            @if (ComponentData != null)
+            {
+                @switch (ComponentData.ComponentType)
+                {
+                    case ComponentType.Checkbox:
+                        <CheckboxProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.DateTime:
+                        <DateTimeProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.Email:
+                        <EmailProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.File:
+                        <FileProperties ComponentData="@ComponentData" />
+                        break;
+
+                    case ComponentType.Link:
+                        <LinkProperties ComponentData="@ComponentData" />
+                        break;
+
+                    case ComponentType.MultiLine:
+                        <MultiLineProperties ComponentData="@ComponentData" />
+                        break;
+
+                    case ComponentType.Number:
+                        <NumberProperties ComponentData="@ComponentData" />
+                        break;
+
+                    case ComponentType.SingleLine:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
+
+                    case ComponentType.Tabs:
+                        ;
+                        <TabsProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.Select:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
+                    case ComponentType.Table:
+                        <SingelLineProperties ComponentData="@ComponentData" />
+                        break;
+                    default:
+                        throw new NotImplementedException("为设置属性");
+                }
+            }
+            else if (ContainerData != null)
+            {
+                @switch (ContainerData.ContainerType)
+                {
+                    case ContainerType.Base://嵌套的第一个Tab,父级Tab
+                                                    // Do nothing
+                        <TabProperties ComponentData="@ContainerData" />
+                        break;
+                    case ContainerType.Tab://添加Tab中的一个tab页面时候,点击一个tab的时候
+                        <TabProperties ComponentData="@ContainerData" />
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            else if (RowData != null)
+            {
+                <RowProperties RowDto="RowData"></RowProperties>
+            }
+            else
+            {
+                <div class="h-100 w-100">
+                    Select an element on the whiteboard, then set its properties here
+                    <br />
+                    选中一个控件,然后在此处设置他的属性
+                </div>
+            }
+        </TabItem>
+        <TabItem Text="页面">
+            <BootstrapInput @bind-Value="FormDesigner.FunctionPage.Id" ShowLabel="true" Readonly="true" DisplayText="主键ID"></BootstrapInput>
+            <Select @bind-Value="FormDesigner.FunctionPage.ShowMsgType" ShowLabel="true" DisplayText="消息展示框类型" OnValueChanged="async (e)=>{await FormDesigner.StateHasChangedAsync();}"></Select>
+        </TabItem>
+        <TabItem Text="其他">
+            <div>我是用户管理</div>
+            <Button OnClick="OnClick"></Button>
+        </TabItem>
+    </Tab>
+</div>
+
+
+
+
+

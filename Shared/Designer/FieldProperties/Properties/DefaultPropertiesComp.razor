@@ -1,0 +1,110 @@
+﻿@*<div class="prop-group-box" style="min-height:80vh">*@
+<div style="min-height:80vh">
+    @*<div class="box-header">Defaults(默认通用属性)</div>*@
+@*@*    <Collapse OnCollapseChanged="(aa)=>{   return Task.CompletedTask;}" IsAccordion="true">
+        <CollapseItems>
+            <CollapseItem Text="通用属性" IsCollapsed="false">
+                <ValidateForm @ref="ValidateForm" Model="@ComponentData" OnValidSubmit="@OnValidComplexModel" OnFieldValueChanged="OnFieldValueChanged">
+                    <EditorForm TModel="ComponentDto" ItemsPerRow="1" AutoGenerateAllItem="false">
+                        <FieldItems>
+                            <EditorItem @bind-Field="@context.Id" >
+                                <EditTemplate Context="value">
+                                    <BootstrapInput IsSelectAllTextOnFocus="true" @bind-Value="value.Id" OnValueChanged="IdOnValueChanged"></BootstrapInput>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Width">
+                                <EditTemplate Context="value">
+                                    <BootstrapInputNumber @bind-Value="value.Width" Max="12" Min="1" ShowButton="true" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Height">
+                                <EditTemplate Context="value">
+                                    <BootstrapInputNumber @bind-Value="value.Height" ShowButton="true" Step="10" OnValueChanged="OnValueChangedForInt"></BootstrapInputNumber>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Color">
+                                <EditTemplate Context="value">
+                                    <Select @bind-Value="value.Color" OnValueChanged="OnValueChangedForColor"></Select>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.ShowLabel">
+                                <EditTemplate Context="value">
+                                    <Switch @bind-Value="value.ShowLabel" OnValueChanged="OnValueChangedForBool"></Switch>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.IsDisabled">
+                                <EditTemplate Context="value">
+                                    <Switch @bind-Value="value.IsDisabled" OnValueChanged="OnValueChangedForBool"></Switch>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.IsAutoFocus">
+                                <EditTemplate Context="value">
+                                    <Switch @bind-Value="value.IsAutoFocus" OnValueChanged="OnValueChangedForBool"></Switch>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.IsSelectAllTextOnFocus">
+                                <EditTemplate Context="value">
+                                    <Switch @bind-Value="value.IsSelectAllTextOnFocus" OnValueChanged="OnValueChangedForBool"></Switch>
+                                </EditTemplate>
+                            </EditorItem>
+                            <EditorItem @bind-Field="@context.Type" Editable="false" />
+                            <EditorItem @bind-Field="@context.MutLanguage">
+                                <EditTemplate Context="value">
+                                    <Collapse>
+                                        <CollapseItems>
+                                            <CollapseItem Text="多语言设置">
+                                                <BootstrapInput @bind-Value="value.MutLanguage.zh_CN" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                                <BootstrapInput @bind-Value="value.MutLanguage.zh_TW" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                                <BootstrapInput @bind-Value="value.MutLanguage.en_US" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                                <BootstrapInput @bind-Value="value.MutLanguage.ja_JP" OnValueChanged="(v)=>{return FormDesigner.StateHasChangedAsync();}"></BootstrapInput>
+                                            </CollapseItem>
+                                        </CollapseItems>
+                                    </Collapse>
+                                </EditTemplate>
+                            </EditorItem>
+                        </FieldItems>
+                    </EditorForm>
+                </ValidateForm>
+
+            </CollapseItem>
+
+            <CollapseItem Text="Ext(扩展属性)">
+                @if (ComponentData is not null)
+                {
+                    @foreach (var item in @ComponentData.Props)
+                    {
+                        @switch (item.Value.PType)
+                        {
+                            case PType.String:
+                                <BootstrapInput OnValueChanged="(e)=>{OnPropChanged.InvokeAsync(new PInof(){key=item.Key,Value=e});return Task.CompletedTask;}" ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.StringValue"></BootstrapInput>
+                                break;
+                            case PType.SingleColor:
+                                <Select ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true" Items="ColorItems" @bind-Value="@item.Value.StringValue"></Select>
+                                break;
+                            case PType.Bool:
+                                <Checkbox TValue="bool" DisplayText="@item.Key"
+                                          ShowLabel="true" class="form-control"
+                                          Color="Color.Danger"
+                                @bind-Value="@(item.Value.BoolVal)"></Checkbox>
+                                break;
+                            case PType.Int:
+                                break;
+                            case PType.Double:
+                                break;
+                            case PType.DataSourse:
+                                @*<Select IsVirtualize="true" @bind-Value="@(ComponentData.Props[""].Value)" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>*@
+        @*                        <Select IsVirtualize="true" @bind-Value="@item.Value.StringValue" OnQueryAsync="OnQueryAsync" ShowLabel="true" DisplayText="@item.Key" Color="Color.Primary" IsClearable="true"></Select>
+                                break;
+                            default:
+                                <BootstrapInput ShowLabel="true" DisplayText="@item.Key" @bind-Value="@item.Value.StringValue"></BootstrapInput>
+                                break;
+                        }
+                    }
+                }
+@*            </CollapseItem>
+*@
+  @*      </CollapseItems>
+    </Collapse>*@*@*@*@
+</div>
+
+

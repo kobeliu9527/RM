@@ -1,0 +1,57 @@
+﻿using System.Collections.Generic;
+
+namespace Shared.Extensions
+{
+    public static class ListExtensions
+    {
+        public static void MoveLeft<T>(this List<T> list, T element)
+        {
+            list.MoveTo(element, false);
+        }
+        public static void MoveRight<T>(this List<T> list, T element)
+        {
+            list.MoveTo(element, true);
+        }
+        public static void MoveTo<T>(this List<T> list, T element, bool right)
+        {
+            var currentIndex = list.IndexOf(element);
+            var newIndex = currentIndex != 0 ? currentIndex - 1 : 0;
+
+            if (right)
+            {
+                newIndex = currentIndex != -1 ? currentIndex + 1 : 1;
+            }
+
+            // We already have the item and it's the only one, do nothing
+            if (currentIndex != -1 && list.Count == 1)
+            {
+                return;
+            }
+
+            list.RemoveAt(currentIndex);
+            list.Insert(newIndex, element);
+        }
+        public static void MoveTo<T>(this List<T> list, int oldIndex, int newIndex)
+        {
+            var removedItem = list[oldIndex];
+
+            list.RemoveAt(oldIndex);
+            list.Insert(newIndex, removedItem);
+        }
+        /// <summary>
+        /// 是否还能向左移动
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static bool IsMoveLeftPossible<T>(this List<T> list, T element)
+        {
+            return list.IndexOf(element) > 0;
+        }
+        public static bool IsMoveRightPossible<T>(this List<T> list, T element)
+        {
+            return list.IndexOf(element) < list.Count - 1;
+        }
+    }
+}

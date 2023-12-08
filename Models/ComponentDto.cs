@@ -24,7 +24,7 @@ namespace Models
         }
 
         /// <summary>
-        /// 根据控件类型创建控件 <see cref="PaletteWidgetDtoExtensions.CreateComponent(PaletteWidgetDto)"/>
+        /// 根据控件类型创建控件 
         /// </summary>
         /// <param name="type"></param>
         public ComponentDto(ComponentType type)
@@ -159,7 +159,7 @@ namespace Models
         /// 宽,参考bootstarp中设计,1-12
         /// </summary>
         /// <remarks>
-        ///<para><see cref="ComponentUtils.GetComponentColumnCssClasses"/>方法,根据组件的with计算大小</para>
+        ///<para>方法,根据组件的with计算大小</para>
         /// </remarks>
         [DisplayName("宽度:参考bootstarp中设计,值范围1-12")]
         public int Width

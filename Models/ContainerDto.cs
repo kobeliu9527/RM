@@ -3,25 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
-    /// <summary>
-    /// 容器数据对象
-    /// </summary>
-    /// <remarks>
-    ///<para>ID:Id标识</para>
-    ///<para>Type:容器类型,枚举<see cref="Models.ContainerType"/></para>
-    ///<para>Rows:表示所有的行的集合,<see cref="ComponentDto"/>表示一个控件,<see cref="list{ContainerDto}"/>表示一行控件,<see cref="list{list{ComponentDto}}"/>表示Rows集合</para>
-    /// </remarks>
+   
     public class ContainerDto
     {
         /// <summary>
         /// 容器的名字,必须全局唯一
         /// </summary>
-        //[DisplayName("唯一标识"), Required(ErrorMessage = "容器的Id,必须全局唯一"), ReadOnly(true)]
+        [DisplayName("唯一标识"), Required(ErrorMessage = "容器的Id,必须全局唯一"), ReadOnly(true)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
         /// <summary>
         /// 
         /// </summary>
-        //[DisplayName("名字"), Required(ErrorMessage = "容器的名字,最好全局唯一")]
+        [DisplayName("名字"), Required(ErrorMessage = "容器的名字,最好全局唯一")]
         public string Name { get; set; } = "跟容器";
         /// <summary>
         /// 容器的类型

@@ -2,9 +2,9 @@
 
 namespace Models.System
 {
-    /// <summary>
-    /// IComparable<Role>,IComparer<Role>,IEqualityComparer<Role>
-    /// </summary>
+   /// <summary>
+   /// 
+   /// </summary>
     public class Role : EntityBase,IEquatable<Role>,IComparable<Role>
     {
         /// <summary>

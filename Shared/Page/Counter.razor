@@ -1,34 +1,66 @@
 ﻿@page "/counter"
-@using BootstrapBlazor.Components
-@using Models
+@* @layout DesignerLayout *@
+@* @inject ICrudBase<FunctionPage> db *@
+@* @attribute [StreamRendering] *@
 
-<PageTitle>Counter</PageTitle>
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@using System.Text.Unicode
+@using Shared.Designer
+@* @using Ufo.Auto.Client.Layout *@
+<PageTitle>设计界面</PageTitle>
+@app
+@if (FunctionPage!=null)
+{
+    <FormDesigner FunctionPage="@FunctionPage" IsDesigner="MyProperty"></FormDesigner>
 
-<h1>Counter</h1>
-<img src="_content/Shared/3.png" />
-<p role="status">Current count: @currentCount</p>
-@CompanyGroup.Name
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-<Tab>
-    <TabItem Text="用户管理">
-        <div>我是用户管理</div>
-    </TabItem>
-    <TabItem Text="菜单管理">
-        <div>我是菜单管理</div>
-    </TabItem>
-    <TabItem Text="角色管理">
-        <div>我是角色管理</div>
-    </TabItem>
-    <TabItem Text="部门管理">
-        <div>我是部门管理</div>
-    </TabItem>
-</Tab>
+}
 @code {
+    public bool IsShowBackdropOpen { get; set; }
+
     private int currentCount = 0;
+    public bool MyProperty { get; set; } = true;
+    public ContainerDto? ContainerData { get; set; }
+    /// <summary>
+    /// 页面数据
+    /// </summary>
+    [Parameter]
+    [NotNull]
+    public FunctionPage? FunctionPage { get; set; }
     [CascadingParameter]
-    public CompanyGroup CompanyGroup { get; set; }
+    public string app { get; set; }
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        // var ss =await db.SelectAll();
+        // FunctionPage = ss.Data[1];
+        // // FunctionPage = ss;
+        //  return;
+        FunctionPage = new FunctionPage();
+
+        //ContainerData = new ContainerDto() {  ContainerType= ContainerType.Base,Rows=new List<RowDto>() {  new RowDto(){ Row=new List<ComponentDto>() { } }} };
+        FunctionPage.ContainerData = new ContainerDto()
+            {
+                //ContainerType = ContainerType.Base,
+                Rows = new List<RowDto>() { new RowDto() }
+            };
+        return;
+    }
     private void IncrementCount()
     {
         currentCount++;
+        MyProperty = !MyProperty;
+    }
+    private void IncrementCount2()
+    {
+        JsonSerializerOptions op = new JsonSerializerOptions()
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs)
+            };
+        var json = System.Text.Json.JsonSerializer.Serialize(FunctionPage.ContainerData, op);
+    }
+    private async Task IncrementCount3()
+    {
+        System.Console.WriteLine("onclick");
     }
 }
