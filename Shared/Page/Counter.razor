@@ -1,5 +1,5 @@
 ﻿@page "/counter"
-@* @layout DesignerLayout *@
+@layout Shared.Layout.Designer
 @* @inject ICrudBase<FunctionPage> db *@
 @* @attribute [StreamRendering] *@
 
@@ -12,8 +12,9 @@
 @app
 @if (FunctionPage!=null)
 {
+       @* <div class="dmain"> *@
     <FormDesigner FunctionPage="@FunctionPage" IsDesigner="MyProperty"></FormDesigner>
-
+    @* </div> *@
 }
 @code {
     public bool IsShowBackdropOpen { get; set; }
