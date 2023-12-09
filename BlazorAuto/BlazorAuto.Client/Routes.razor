@@ -1,7 +1,41 @@
-﻿
-<Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-</Router>
+﻿<CascadingValue Value="this.SysModule" Name="router">
+    <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+    </Router>
+</CascadingValue>
+@code
+{
+    public Models.System.SysModule? SysModule { get; set; }
+    protected override void OnInitialized()
+    {
+        // SysModule = new Models.System.SysModule() { Name = "我是RouterOnInitialized" };
+        base.OnInitialized();
+    }
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+    protected override Task OnParametersSetAsync()
+    {
+        SysModule = new Models.System.SysModule()
+            {
+                FunctionGroups = new List<Models.System.FunctionGroup>()
+        {
+        new Models.System.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=1,  Name="diyi"} } } ,
+        new Models.System.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=2,  Name="diy2"} } },
+        new Models.System.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=3,  Name="diyi3"} } },
+        new Models.System.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=4,  Name="diyi33"} } }
+
+        }
+            };
+        return base.OnParametersSetAsync();
+    }
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+     
+        return base.OnAfterRenderAsync(firstRender);
+    }
+}

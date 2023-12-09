@@ -1,4 +1,5 @@
 ﻿using BootstrapBlazor.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
 namespace Shared.Layout
@@ -23,7 +24,8 @@ namespace Shared.Layout
         private bool ShowFooter { get; set; } = true;
 
         private List<MenuItem>? Menus { get; set; }
-
+        [CascadingParameter(Name = "router")]
+        public Models.System.SysModule? SysModule { get; set; }
         /// <summary>
         /// OnInitialized 方法
         /// </summary>
@@ -43,6 +45,15 @@ namespace Shared.Layout
                 new() { Text = "Counter", Icon = "fa-solid fa-fw fa-check-square", Url = "/counter" },
                 new() { Text = "Weather", Icon = "fa-solid fa-fw fa-database", Url = "/weather" },
                 new() { Text = "Table", Icon = "fa-solid fa-fw fa-table", Url = "/table" },
+                new() { Text = "run", Icon = "fa-solid fa-fw fa-table", Url = "/table" , Items=
+                new  List<MenuItem>(){
+                 new() { Text = "1", Icon = "fa-solid fa-fw fa-table", Url = "/runing/1" },
+                new() { Text = "2", Icon = "fa-solid fa-fw fa-table", Url = "/runing/2" },
+                new() { Text = "3", Icon = "fa-solid fa-fw fa-table", Url = "/runing/3" }
+                }
+
+                },
+
                 new() { Text = "花名册", Icon = "fa-solid fa-fw fa-users", Url = "/users" }
             };
 

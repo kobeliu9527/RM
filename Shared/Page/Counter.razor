@@ -10,6 +10,10 @@
 @* @using Ufo.Auto.Client.Layout *@
 <PageTitle>设计界面</PageTitle>
 @app
+@if (SysModule != null && SysModule.Name != null)
+{
+    @SysModule.Name
+}
 @if (FunctionPage!=null)
 {
        @* <div class="dmain"> *@
@@ -17,6 +21,8 @@
     @* </div> *@
 }
 @code {
+    [CascadingParameter(Name = "router")]
+    public Models.System.SysModule? SysModule { get; set; }
     public bool IsShowBackdropOpen { get; set; }
 
     private int currentCount = 0;
