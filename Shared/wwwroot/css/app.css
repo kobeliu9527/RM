@@ -137,11 +137,13 @@ code {
 }
 
 .component-elementruning {
+    position: relative;
     display: block;
     border: 1px transparent solid;
-    margin: .3em 0;
-    padding: 1px;
+    margin: 0px;
+    padding: 0px;
 }
+
 /*当鼠标悬浮在组件上的时候,增加一个边框效果*/
 .component-element--hover {
     border-color: var(--fd-primary-color) !important;
@@ -223,7 +225,7 @@ code {
     --mdc-ripple-left: 5px !important;
     --mdc-ripple-top: 5px !important;
 }
-
+/*组件被选中时候的样式*/
 .component-element--selected {
     border: 1px solid #1E90FF;
     background-color: #ecf7ff;
@@ -232,7 +234,7 @@ code {
 }
 
     .component-element--selected:hover > .widget-wrapper > .component-caption {
-        background-color: #1E90FF;
+        background-color: red;
         opacity: 1;
         visibility: visible;
         -webkit-transition: opacity .3s ease;
@@ -244,7 +246,7 @@ code {
     .component-element--selected .Component-marker {
         color: #1E90FF;
     }
-/*container*/
+/*container的样式*/
 
 
 .container-wrapper {

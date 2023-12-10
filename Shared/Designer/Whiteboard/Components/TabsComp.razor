@@ -23,33 +23,18 @@
                    @onclick:stopPropagation="true">
                     @if (IsMoveTabLeftVisible(tabContainer) && isSelectedComponent)
                     {
-                     @*    <MatIconButton Icon="@MatIconNames.Arrow_back"
-                                       OnClick="@(async () => await MoveTabLeftAsync(tabContainer))"
-                                       OnClickStopPropagation="true"
-                                       Class="component-mover-icon tab-color"
-                                       title="Move Left" /> *@
                         <Button OnClick="@(async () => await MoveTabLeftAsync(tabContainer))" Size="Size.Small" Icon="fas fa-circle-arrow-left">
                         </Button>
 
                     }
                     @if (IsMoveTabRightVisible(tabContainer) && isSelectedComponent)
                     {
-                    @*     <MatIconButton Icon="@MatIconNames.Arrow_forward"
-                                       OnClick="@(async () => await MoveTabRightAsync(tabContainer))"
-                                       OnClickStopPropagation="true"
-                                       Class="component-mover-icon tab-color"
-                                       title="Move Right" /> *@
                         <Button OnClick="@(async () => await MoveTabRightAsync(tabContainer))" Size="Size.Small" Icon="fas fa-circle-arrow-right">
                         </Button>
                     }
                     <span class="tab-title">@(tabContainer.MutLanguage.GetLanguage())</span>
                     @if (IsRemoveTabVisible(tabContainer))
                     {
-                  @*       <MatIconButton Icon="@MatIconNames.Cancel"
-                                       OnClick="@(async () => await OnTabDeleteAsync(tabContainer))"
-                                       OnClickStopPropagation="true"
-                                       Class="component-mover-icon tab-color"
-                                       title="Delete" /> *@
                         <Button OnClick="@(async () => await OnTabDeleteAsync(tabContainer))" Size="Size.Small" Icon="fas fa-rectangle-xmark">
                         </Button>
                     }
@@ -144,7 +129,11 @@
     {
         return TabContainerList?.Count == 1;
     }
-
+    /// <summary>
+    /// 一个ContainerDto处于被选中状态并且TabContainerList的个数大于0,那么表示可以被移除
+    /// </summary>
+    /// <param name="tabContainer"></param>
+    /// <returns></returns>
     private bool IsRemoveTabVisible(ContainerDto tabContainer)
     {
         return FormDesigner.IsSelectedContainer(tabContainer) && TabContainerList.Count > 1;

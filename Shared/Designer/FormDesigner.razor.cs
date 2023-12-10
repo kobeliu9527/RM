@@ -68,7 +68,6 @@ namespace Shared.Designer
         public ContainerDto? DraggedComponentOriginContainer = null;
         public void Test()
         {
-
             if (ColorMessages.Count > 2)
             {
                 ColorMessages.TryDequeue(out _);
@@ -94,10 +93,19 @@ namespace Shared.Designer
             SelectedRowDto = null;
             await StateHasChangedAsync();
         }
+        /// <summary>
+        /// 设计器中被选中的容器
+        /// </summary>
+        /// <returns></returns>
         public async Task<ContainerDto?> GetSelectedContainerAsync()
         {
             return await Task.FromResult(SelectedContainer);
         }
+        /// <summary>
+        /// 判断一个ContainerDto是否正处于选中状态
+        /// </summary>
+        /// <param name="containerData"></param>
+        /// <returns></returns>
         public bool IsSelectedContainer(ContainerDto containerData)
         {
             return SelectedContainer != null && SelectedContainer == containerData;
