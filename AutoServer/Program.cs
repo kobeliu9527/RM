@@ -67,9 +67,7 @@ internal class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Appsetting.JwtOption.SecurityKey))
             };
         })
-            //.AddCookie()
             ;
-
 
         builder.Services.AddAuthorization(options =>
         {
@@ -78,7 +76,6 @@ internal class Program
             //    .Build();
         });
         builder.Services.AddCors();
-
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {

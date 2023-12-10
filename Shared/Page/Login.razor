@@ -1,0 +1,19 @@
+﻿@page "/login"
+@layout Designer
+@inject IAuthService auth
+@inject NavigationManager go
+<h3>Login</h3>
+<Button OnClick="Test">登录</Button>
+<Button OnClick="Louut">登出</Button>
+@code {
+    public async void Test()
+    {
+        await auth.SignInAsync(new Models.Dto.UserDto() { SysName = "string", PassWord = "string" });
+        go.NavigateTo("/", true);
+    }
+    public async void Louut()
+    {
+        await auth.SignOutAsync();
+        go.NavigateTo("/", true);
+    }
+}

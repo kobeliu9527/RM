@@ -1,6 +1,8 @@
 ﻿using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Web;
+using Shared.Page;
 
 namespace Shared.Layout
 {
@@ -26,6 +28,13 @@ namespace Shared.Layout
         private List<MenuItem>? Menus { get; set; }
         [CascadingParameter(Name = "router")]
         public Models.System.SysModule? SysModule { get; set; }
+
+        [Inject]
+        [NotNull]
+        private ToastService? ToastService { get; set; }
+        [Inject]
+        [NotNull]
+        private DialogService? DialogService { get; set; }
         /// <summary>
         /// OnInitialized 方法
         /// </summary>
@@ -58,6 +67,28 @@ namespace Shared.Layout
             };
 
             return menus;
+        }
+        private async Task CloseButtonShow()
+        {
+            var option = new DialogOption()
+            {
+                Title = "Close the popup with DialogCloseButton",
+                Component = BootstrapDynamicComponent.CreateComponent<Login>()
+            };
+            await DialogService.Show(option);
+        }
+        public async Task CloseDialogByCodeShow()
+        {
+            var option = new DialogOption()
+            {
+                Title = "Close the popup with code",
+            };
+            option.Component = BootstrapDynamicComponent.CreateComponent<Button>(new Dictionary<string, object?>
+            {
+                [nameof(Button.Text)] = "Click to close the popup",
+                [nameof(Button.OnClick)] = EventCallback.Factory.Create<MouseEventArgs>(this, option.CloseDialogAsync)
+            });
+            await DialogService.Show(option);
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿@inherits LayoutComponentBase
-<Layout>
+<div class="designer">
+<Layout IsPage="true" IsFixedHeader="true" IsFixedFooter="false" AdditionalAssemblies="new[] { GetType().Assembly}">
     <Header>
         <div class="dheader">Header</div>
     </Header>
-    <Main>
+    <Main >
         <div class="dmain">
             <CascadingValue Value="this" IsFixed="true">
                 @Body
@@ -12,6 +13,7 @@
     </Main>
 
 </Layout>
+</div>
 @code {
-
+    //
 }

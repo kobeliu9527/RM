@@ -1,4 +1,4 @@
-﻿namespace AutoServer
+﻿namespace Models
 {
     public class Appsettings
     {

@@ -594,7 +594,7 @@ code {
 
 .dmain {
     position: relative;
-    height: 94vh;
+    height: 93vh;
     display: flex;
 }
 
@@ -1312,4 +1312,8 @@ body {
     font-weight: 300;
     color: gray;
     text-align: center;
+}
+
+.designer .layout.is-page .layout-main {
+    padding: 0px;
 }

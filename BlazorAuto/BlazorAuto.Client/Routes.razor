@@ -1,11 +1,26 @@
-﻿<CascadingValue Value="this.SysModule" Name="router">
-    <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-    </Router>
-</CascadingValue>
+﻿
+<CascadingAuthenticationState>
+    <BootstrapBlazorRoot>
+    <CascadingValue Value="this.SysModule" Name="router">
+        <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
+            <Found Context="routeData">
+                
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)" >
+                    <NotAuthorized>
+                        zhe bu shi yige dizhi 
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
+                    <p role="alert">对不起,这个访问地址不存在</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingValue>
+    </BootstrapBlazorRoot>
+</CascadingAuthenticationState>
 @code
 {
     public Models.System.SysModule? SysModule { get; set; }
@@ -35,7 +50,7 @@
     }
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
-     
+
         return base.OnAfterRenderAsync(firstRender);
     }
 }

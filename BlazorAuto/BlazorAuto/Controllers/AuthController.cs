@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Models;
+using Models.Dto;
 using Models.NotEntity;
 using Models.System;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AutoServer.Controllers
+namespace BlazorAuto.Controllers
 {
     /// <summary>
     /// 登录注册相关
@@ -22,7 +25,7 @@ namespace AutoServer.Controllers
 
         public AuthController(IOptionsSnapshot<Appsettings> options, ISqlSugarClient db)
         {
-            this.appsettings = options.Value;
+            appsettings = options.Value;
             this.db = db;
         }
         /// <summary>
@@ -57,7 +60,7 @@ namespace AutoServer.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<string>> Login(UserDto user)
+        public async Task<Result<string>> Login([FromBody]UserDto user)
         {
             Result<string> res = new Result<string>();
             var userlist = await db.Queryable<User>()
