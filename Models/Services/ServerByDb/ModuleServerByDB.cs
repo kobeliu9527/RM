@@ -20,7 +20,7 @@ namespace Models.Services.ServerByDb
         public ModuleServerByDB(ISqlSugarClient db) : base(db)
         {
         }
-        public async override Task<Result<SysModule>> SelectNav(Query<SysModule> obj)
+        public async override Task<Result<SysModule>> SelectByRole(Query<SysModule> obj)
         {
             Result<SysModule> res = new();
             if (obj.QueryDto != null && obj.Roles != null)

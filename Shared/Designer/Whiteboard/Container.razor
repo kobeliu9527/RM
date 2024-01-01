@@ -51,26 +51,18 @@
                         @if (isRowElement)//添加行左右移动的功能
                         {
                             <div class="component-caption component-caption--row">
-                                @* <span class="container-title">Row</span> *@
+                              
 
                                 @if (isMoveRowUpVisible)
                                 {
-                                    @*  <MatIconButton Icon="@MatIconNames.Arrow_upward"
-                OnClick="@(async () => await MoveRowUpAsync(currentRow))"
-                OnClickStopPropagation="true"
-                Class="component-mover-icon"
-                Title="Move Row Up" /> *@
+                           
                                     <Button OnClick="@(async () => await MoveRowUpAsync(currentRow))" Size="Size.Small" Icon="fas fa-circle-arrow-up">
                                     </Button>
                                 }
 
                                 @if (isMoveRowDownVisible)
                                 {
-                                    @*  <MatIconButton Icon="@MatIconNames.Arrow_downward"
-                OnClick="@(async () => await MoveRowDownAsync(currentRow))"
-                OnClickStopPropagation="true"
-                Class="component-mover-icon"
-                Title="Move Row Down" /> *@
+                                   
                                     <Button OnClick="@(async () => await MoveRowDownAsync(currentRow))" Size="Size.Small" Icon="fas fa-circle-arrow-down">
                                     </Button>
 

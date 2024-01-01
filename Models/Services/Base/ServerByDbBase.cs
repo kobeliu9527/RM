@@ -37,6 +37,19 @@ namespace Models.Services.Base
             }
             return result;
         }
+        public async Task<Result<long>> InsertWithSnowFlakeId(T obj)
+        {
+            var result = new Result<long>();
+            try
+            {
+                result.Data = await db.Insertable(obj).ExecuteReturnSnowflakeIdAsync();
+            }
+            catch (Exception ex)
+            {
+                return result.CatchException(ex);
+            }
+            return result;
+        }
         public async virtual Task<Result<int>> Delete(T obj)
         {
             var result = new Result<int>();
@@ -90,7 +103,9 @@ namespace Models.Services.Base
             return result;
         }
 
-        public abstract Task<Result<T>> SelectNav(Query<T> obj);
+        public abstract Task<Result<T>> SelectByRole(Query<T> obj);
+
+
     }
 
 }

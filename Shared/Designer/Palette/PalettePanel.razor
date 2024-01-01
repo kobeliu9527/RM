@@ -33,6 +33,7 @@
         </TabItem>
         <TabItem Text="菜单管理">
             <Button OnClick="Query">刷新</Button>
+            @* <Button OnClick="Expand2">刷新</Button> *@
             <TreeView TItem="TreeComponentData" Items="@_datas" ShowCheckbox="true" ClickToggleNode="true" />
           
 
@@ -73,11 +74,27 @@
         ContainerData.ToTree(_datas);
     }
 
-    //OnClick
+    //OnClick Expand
     public void Query()
     {
         _datas = new() { };
         ContainerData.ToTree(_datas);
+    }
+    public void Expand2()
+    {
+        Expand(_datas);
+    }
+    public void Expand(List<TreeViewItem<TreeComponentData>> datas)
+    {
+        foreach (var item in datas)
+        {
+            if (item.HasChildren)
+            {
+                item.IsExpand = true;
+               
+                Expand(item.Items);
+            }
+        }
     }
     //    public async Task OnClick(TreeEventArgs<TreeComponentData> args)
     //{

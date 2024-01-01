@@ -18,7 +18,7 @@ namespace Models.Services.ServerByHttp
         {
         }
 
-        public override Task<Result<CompanyGroup>> SelectNav(Query<CompanyGroup> obj)
+        public override Task<Result<CompanyGroup>> SelectByRole(Query<CompanyGroup> obj)
         {
             throw new NotImplementedException();
         }

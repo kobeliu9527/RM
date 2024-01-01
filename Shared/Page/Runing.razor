@@ -1,11 +1,16 @@
 ﻿@page "/runing/{id}"
+
+@inject IHttpClientFactory httpClientFactory
 <h3>Runing @id</h3>
 @if (FunctionPage != null && FunctionPage.Name != null)
 {
     @FunctionPage.Name
 }
-<Button OnClick="()=>{}">asfd</Button>
+<Button OnClick="onclik">asfd</Button>
 @code {
+    /// <summary>
+    /// 
+    /// </summary>
     [Parameter]
     public string id { get; set; } = "-1";
     public FunctionPage? FunctionPage { get; set; }
@@ -20,5 +25,10 @@
         FunctionPage = SysModule?.Find(id.ToString());
         return base.OnParametersSetAsync();
     }
+    public void onclik()
+    {
 
+        using HttpClient http = httpClientFactory.CreateClient("http");
+        var ss = http.BaseAddress;
+    }
 }

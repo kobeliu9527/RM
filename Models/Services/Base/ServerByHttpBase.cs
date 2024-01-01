@@ -63,7 +63,10 @@ namespace Models.Services.Base
             //}
             //return await Task.FromResult(new Result<int>() { Data = 22 });
         }
-
+        public Task<Result<long>> InsertWithSnowFlakeId(T obj)
+        {
+            throw new NotImplementedException();
+        }
         public Task<Result<int>> Delete(T obj)
         {
             throw new NotImplementedException();
@@ -84,14 +87,14 @@ namespace Models.Services.Base
             throw new NotImplementedException();
         }
 
-        public async virtual Task<Result<T>> SelectNav(Query<T> obj)
+        public async virtual Task<Result<T>> SelectByRole(Query<T> obj)
         {
             Result<T> res = new();
             try
             {
                 var ControName = obj.QueryDto.GetType().Name;
                 using HttpClient http = httpClientFactory.CreateClient("http");
-                var reshttp = await http.PostAsJsonAsync($"{ControName}/{nameof(SelectNav)}", obj);
+                var reshttp = await http.PostAsJsonAsync($"{ControName}/{nameof(SelectByRole)}", obj);
                 if (reshttp.IsSuccessStatusCode)
                 {
                     var resread = await reshttp.Content.ReadFromJsonAsync<Result<T>>();
@@ -108,5 +111,7 @@ namespace Models.Services.Base
             }
             return res.End();
         }
+
+
     }
 }

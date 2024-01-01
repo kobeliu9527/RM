@@ -2,7 +2,41 @@
 <div class="designer">
 <Layout IsPage="true" IsFixedHeader="true" IsFixedFooter="false" AdditionalAssemblies="new[] { GetType().Assembly}">
     <Header>
-        <div class="dheader">Header</div>
+        <div class="dheader">
+        <span class="ms-3 flex-sm-fill d-none d-sm-block">Bootstrap of Blazor</span>
+        <div class="flex-fill d-sm-none"></div>
+        <Widget></Widget>
+        <AuthorizeView>
+            <Authorized>
+                        <Logout ImageUrl="images/naozhong.ico" DisplayName="@context.User.Identity?.Name" UserName="Admin">
+                    <LinkTemplate>
+                        <a href="#"><i class="fa-solid fa-suitcase"></i>个人中心</a>
+                        <a href="#"><i class="fa-solid fa-cog"></i>设置</a>
+                        <a href="#"><i class="fa-solid fa-bell"></i>通知<span class="badge badge-pill badge-success"></span></a>
+                        <LogoutLink  Url="/login"/>
+                        @* <Button OnClick="@CloseDialogByCodeShow">Dialog</Button> *@
+                        @* <Button OnClick="@CloseButtonShow">CloseButton</Button> *@
+                    </LinkTemplate>
+                </Logout>
+            </Authorized>
+            <NotAuthorized>
+                        <Logout ImageUrl="images/naozhong.ico" DisplayName="未登录" UserName="Admin">
+                    <LinkTemplate>
+                        <a href="#"><i class="fa-solid fa-suitcase"></i>个人中心</a>
+                        <a href="#"><i class="fa-solid fa-cog"></i>设置</a>
+                        <a href="#"><i class="fa-solid fa-bell"></i>通知<span class="badge badge-pill badge-success"></span></a>
+                        <LogoutLink Url="/login" />
+                        @* <Button OnClick="@CloseDialogByCodeShow">Dialog</Button> *@
+                        @* <Button OnClick="@CloseButtonShow">CloseButton</Button> *@
+                    </LinkTemplate>
+                </Logout>
+            </NotAuthorized>
+            
+        </AuthorizeView>
+        @* <div class="layout-drawer" @onclick="@(e => IsOpen = !IsOpen)"><i class="fa fa-gears"></i></div> *@
+
+
+        </div>
     </Header>
     <Main >
         <div class="dmain">

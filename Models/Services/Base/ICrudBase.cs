@@ -24,6 +24,11 @@ namespace Models.Services.Base
         /// <param name="obj"></param>
         public Task<Result<int>> Insert(T obj);
         /// <summary>
+        /// 新曾一条数据:返回雪花Id
+        /// </summary>
+        /// <param name="obj"></param>
+        public Task<Result<long>> InsertWithSnowFlakeId(T obj);
+        /// <summary>
         /// 查询所有
         /// </summary>
         /// <returns></returns>
@@ -41,10 +46,10 @@ namespace Models.Services.Base
         /// <returns></returns>
         Task<Result<int>> Update(T obj);
         /// <summary>
-        /// 导航查询
+        /// 导航查询:根据角色过滤掉
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">携带的用户角色</param>
         /// <returns></returns>
-        Task<Result<T>> SelectNav(Query<T> obj);
+        Task<Result<T>> SelectByRole(Query<T> obj);
     }
 }

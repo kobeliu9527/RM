@@ -1,0 +1,24 @@
+﻿@using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Core.Anchors
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Core.Models
+@using Blazor.Diagrams.Core.PathGenerators
+@using Blazor.Diagrams.Core.Routers
+@using Blazor.Diagrams.Options
+<div class="diagram-container"> 
+    <CascadingValue Value="Diagram" >
+        <DiagramCanvas>
+      @*       <AdditionalHtml>
+                <!-- EXTRA HTML -->
+                <p>nihao</p>
+            </AdditionalHtml> *@
+        </DiagramCanvas>
+    </CascadingValue>
+
+</div>
+@code {
+    [Parameter]
+    public BlazorDiagram Diagram { get; set; } = null!;
+
+   
+}

@@ -1,14 +1,13 @@
 ﻿@using Shared.Designer.Whiteboard.Components
 
 @{
-    bool isSelectedComponent =
-        FormDesigner.IsSelectedComponent(ComponentData);
+    bool isSelectedComponent = FormDesigner.IsSelectedComponent(ComponentData);
     string selectedComponentClass = isSelectedComponent ? "component-element--selected" : "";
     string tabsContainerClass = ComponentData?.ComponentType == ComponentType.Tabs ? "container-element" : "";
 }
 @if (FormDesigner.IsDesigner)
 {
-    <div class="component-element @Class @selectedComponentClass @tabsContainerClass"
+    <div class="component-element  @selectedComponentClass @tabsContainerClass"
          @onclick="SelectComponentAsync"
          @onclick:stopPropagation="true">
         <div class="widget-wrapper">
@@ -16,7 +15,6 @@
             {
                 <ComponentMover Component="@ComponentData"
                                 ComponentsInParentRow="@ComponentRow" />
-
             }
             @{
                 string h = "auto";
@@ -75,14 +73,12 @@
 
             @if (ComponentData?.ComponentType != ComponentType.Tabs)
             {
-                var ss = @Container;
                 //用于拖拽时候
                 <DropZone Container="@Container"
                           ComponentRow="@ComponentRow"
                           ComponentIndex="@ComponentIndex"
                           ComponentData="@ComponentData" />
             }
-
         </div>
     </div>
 }
@@ -119,8 +115,7 @@ else
     [Parameter]
     public int ComponentIndex { get; set; }
 
-    [Parameter]
-    public string Class { get; set; }
+  
 
     /// <summary>
     /// 设置本组件为FormDesigner中被选中的控件,并且刷新界面

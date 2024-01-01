@@ -1,0 +1,6 @@
+﻿.diagram-container {
+    width: 100vw;
+    height: 80vh;
+    border: 1px solid black; /* Just visual */
+    background-color:lightblue;
+}

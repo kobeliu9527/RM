@@ -27,7 +27,7 @@ namespace Models.Services.ServerByDb
             db.Updateable(cg);
         }
 
-        public override Task<Result<Company>> SelectNav(Query<Company> obj)
+        public override Task<Result<Company>> SelectByRole(Query<Company> obj)
         {
             throw new NotImplementedException();
         }

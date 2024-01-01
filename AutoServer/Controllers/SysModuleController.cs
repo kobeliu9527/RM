@@ -46,10 +46,10 @@ namespace AutoServer.Controllers
             throw new NotImplementedException();
         }
         [HttpPost]
-        public async Task<Result<SysModule>> SelectNav([FromBody] Query<SysModule> obj)
+        public async Task<Result<SysModule>> SelectByRole([FromBody] Query<SysModule> obj)
         {
             obj.Roles = HttpContext.User.Claims.Select(x => new Role() { Name = x.Value }).ToList();
-            var mo = await db.SelectNav(obj);
+            var mo = await db.SelectByRole(obj);
             return mo;
         }
 

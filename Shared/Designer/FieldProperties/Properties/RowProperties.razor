@@ -1,4 +1,20 @@
-﻿
+﻿<Collapse>
+    <CollapseItems>
+        <CollapseItem Text="通用属性">
+            <BootstrapInput @bind-Value="RowDto.Id" ShowLabel="true" Readonly="true" DisplayText="ID"></BootstrapInput>
+            <BootstrapInput @bind-Value="@RowDto.Name"  ShowLabel="true" DisplayText="名字"  TValue="string"   />
+            <BootstrapInputNumber @bind-Value="@RowDto.Width" IsSelectAllTextOnFocus="true" ShowLabel="true" DisplayText="宽" ShowButton="true" TValue="int" Min="1" Max="12" />
+            <BootstrapInputNumber @bind-Value="@RowDto.Height" IsSelectAllTextOnFocus="true"  ShowLabel="true" DisplayText="高" ShowButton="true" TValue="int" Min="1" Max="12" />
+
+        </CollapseItem>
+        <CollapseItem Text="扩展属性">
+
+        </CollapseItem>
+        <CollapseItem Text="事件和数据源">
+            ing
+        </CollapseItem>
+    </CollapseItems>
+</Collapse>
 
 @code {
     [Parameter][NotNull]

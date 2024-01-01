@@ -260,11 +260,10 @@ code {
     border: 1px transparent solid;
     margin: .3em 0;
     padding: 1px;
-}
-
-.container-element {
     box-shadow: 1px 1px 4px #ccc;
 }
+
+
 
 .row-builder {
     position: relative;
@@ -591,7 +590,9 @@ code {
 
 .dheader {
     /*设计界面头*/
+    width:100%;
     height: 5vh;
+    display:flex;
 }
 
 .dmain {

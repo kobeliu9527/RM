@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Models;
 using Models.Services.Base;
 using Models.Services.ServerByHttp;
@@ -21,10 +22,11 @@ builder.Services.AddHttpClient(
     "http",
     client =>
     {
-        client.BaseAddress = new Uri("http://localhost:5049/api/");
+        client.BaseAddress = new Uri(Appsetting.HttpAddress);
         // Add a user-agent default request header.http://*:2222
         client.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-docs");
     });
+//Console.WriteLine(builder.HostEnvironment.BaseAddress.ToString());
 builder.Services.AddScoped<ICrudBase<Company>, CompanyServerByHttp>();
 builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByHttp>();
 builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByHttp>();

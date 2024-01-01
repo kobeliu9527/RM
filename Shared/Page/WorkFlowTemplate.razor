@@ -1,0 +1,147 @@
+﻿@page "/WorkFlowTemplate"
+@using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Components.Widgets
+@using Blazor.Diagrams.Core.Anchors
+@using Blazor.Diagrams.Core.PathGenerators
+@using Blazor.Diagrams.Core.Routers
+@using Blazor.Diagrams.Models
+@using Shared.Components.Svg
+@layout Shared.Layout.Designer
+<CascadingValue Value="this" Name="Root">
+    @if (1 == 1)
+    {
+        <div class="dmain-left">
+            @* <div class="fd-field-properties-panel h-100 ppp"> *@
+            <Tab>
+                <TabItem Text="主页">
+                    <div>我是菜单管理</div>
+                </TabItem>
+                <TabItem Text="工具箱">
+                    <div class="fd-palette-widget text-center draggable" draggable="true">
+                        <div style="pointer-events:none;">
+                            <i class="fas fa-car-on" style="font-size:40px;color:red;"></i>
+                            <h5 class="fd-palette-widget-label">节点</h5>
+                        </div>
+                    </div>
+                    @*            <div class="col-6">
+                <div class="text-center" draggable="true" @ondragstart="(e) => OnDragStart2(e,1)">
+                <div style="pointer-events:none;">
+                <img class="d-block m-auto" src="_content/SharedDemo/img/BotAnswerNodeWidget.png" />
+                <span>Bot Answer Node</span>
+                </div>
+                </div>
+                </div> *@
+                </TabItem>
+                <TabItem Text="角色管理">
+                    <div>我是角色管理</div>
+                </TabItem>
+            </Tab>
+            @* </div> *@
+        </div>
+    }
+    <div class="dmain-main">
+        <div class="container-content" ondragover="event.preventDefault();" @ondragover:preventDefault @ondrop="OnDrop">
+            <CascadingValue Value="_blazorDiagram">
+                <DiagramCanvas>
+                    <Widgets>
+                        <SelectionBoxWidget />
+                    </Widgets>
+                </DiagramCanvas>
+            </CascadingValue>
+        </div>
+        <div class="container-msg">
+            消息框占位
+        </div>
+    </div>
+    @if (1 == 1)
+    {
+        <div class="dmain-right">
+        </div>
+    }
+</CascadingValue>
+
+@code {
+    private readonly BlazorDiagram _blazorDiagram = new BlazorDiagram()
+    {
+    };
+    private int? _draggedType;
+    public Models.Dto.SVG.WorkFlowTemplate wf { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // _blazorDiagram.Options.Links.TargetAnchorFactory = (d,s,a) =>
+        // {
+        // };
+        _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
+        {
+            var link = new LinkModel(new SinglePortAnchor((s as PortModel)!)
+                {
+                    MiddleIfNoMarker = true,
+                    UseShapeAndAlignment = false
+
+                }, ta)
+                {
+                    // Router = new OrthogonalRouter(),//正交的
+                    // PathGenerator = new StraightPathGenerator(),//直的
+                    TargetMarker = LinkMarker.Arrow,
+                    // SourceMarker = LinkMarker.NewCircle(10),
+                    SourceMarker = LinkMarker.Circle,
+                    // SourceMarker = LinkMarker.NewRectangle(10, 20),
+                    // TargetMarker = LinkMarker.NewArrow(20, 10),
+                    Segmentable = true
+                }
+            ;
+            return link;
+
+        };
+        _blazorDiagram.SelectionChanged += (m) =>
+        {
+            if (m is NodeModel nm)
+            {
+                if (nm.Selected)
+                {
+                    nm.Title = DateTime.Now.ToString();
+
+                }
+            }
+
+        };
+        _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
+        foreach (var item in wf.Nodes)
+        {
+            var node = new NodeModelFW(item.Position);
+            node.AddPort(PortAlignment.Top);
+            node.AddPort(PortAlignment.TopLeft);
+            node.AddPort(PortAlignment.TopRight);
+            node.AddPort(PortAlignment.Left);
+            node.AddPort(PortAlignment.Right);
+            node.AddPort(PortAlignment.Bottom);
+            node.AddPort(PortAlignment.BottomLeft);
+            node.AddPort(PortAlignment.BottomRight);
+            _blazorDiagram.Nodes.Add(node);
+        }
+        foreach (var item in wf.Links)
+        {
+            
+        }
+    }
+    private void OnDrop(DragEventArgs e)
+    {
+        // if (_draggedType == null) // Unkown item
+        //     return;
+        var position = _blazorDiagram.GetRelativeMousePoint(e.ClientX - 87, e.ClientY - 30);
+        var node = new NodeModelFW(position);
+
+        node.AddPort(PortAlignment.Top);
+        node.AddPort(PortAlignment.TopLeft);
+        node.AddPort(PortAlignment.TopRight);
+        node.AddPort(PortAlignment.Left);
+        node.AddPort(PortAlignment.Right);
+        node.AddPort(PortAlignment.Bottom);
+        node.AddPort(PortAlignment.BottomLeft);
+        node.AddPort(PortAlignment.BottomRight);
+
+        _blazorDiagram.Nodes.Add(node);
+        _draggedType = null;
+    }
+}

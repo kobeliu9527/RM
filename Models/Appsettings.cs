@@ -3,6 +3,7 @@
     public class Appsettings
     {
         public bool IsDebug { get; set; }
+        public string HttpAddress { get; set; }
         public SqlSugarOption SqlSugarOption { get; set; }
         public JwtOption JwtOption { get; set; }
     }

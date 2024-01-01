@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.Dto.SVG;
 using Models.NotEntity;
 using Models.System;
 using SqlSugar;
@@ -42,8 +43,17 @@ namespace BlazorAuto.Controllers
                     typeof(MutLanguage),
                     typeof(RelationFunctionAndFunctionGroup),
                     typeof(RoleFunction),
-                    typeof(UserRole)
-
+                    typeof(UserRole),
+                    typeof(FwHistory),
+                    typeof(Production),
+                    typeof(WorkFlow),
+                    typeof(NodeModel),
+                    typeof(LinkModel), 
+                    typeof(Product),
+                    typeof(Part),
+                    typeof(Mo), 
+                    typeof(WorkFlowTemplate), 
+                    typeof(Lot)
                     );
                 IEnumerable<string> tabs = db.DbMaintenance.GetTableInfoList().Select(x => x.Name + ":" + x.Description);
                 res.Data = tabs;

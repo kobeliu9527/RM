@@ -49,21 +49,20 @@ namespace Shared.Layout
         {
             var menus = new List<MenuItem>
             {
-                new() { Text = "返回组件库", Icon = "fa-solid fa-fw fa-home", Url = "https://www.blazor.zone/components" },
-                new() { Text = "Index", Icon = "fa-solid fa-fw fa-flag", Url = "/" , Match = NavLinkMatch.All},
-                new() { Text = "Counter", Icon = "fa-solid fa-fw fa-check-square", Url = "/counter" },
-                new() { Text = "Weather", Icon = "fa-solid fa-fw fa-database", Url = "/weather" },
+
+                new() { Text = "首页", Icon = "fa-solid fa-fw fa-flag", Url = "/" , Match = NavLinkMatch.All},
+                new() { Text = "设计器", Icon = "fa-solid fa-fw fa-check-square", Url = "/counter" },
+
                 new() { Text = "Table", Icon = "fa-solid fa-fw fa-table", Url = "/table" },
-                new() { Text = "run", Icon = "fa-solid fa-fw fa-table", Url = "/table" , Items=
+                new() { Text = "运行界面", Icon = "fa-solid fa-fw fa-table", Url = "/table" , Items=
                 new  List<MenuItem>(){
-                 new() { Text = "1", Icon = "fa-solid fa-fw fa-table", Url = "/runing/1" },
-                new() { Text = "2", Icon = "fa-solid fa-fw fa-table", Url = "/runing/2" },
-                new() { Text = "3", Icon = "fa-solid fa-fw fa-table", Url = "/runing/3" }
+                new() { Text = "示例1", Icon = "fa-solid fa-fw fa-table", Url = "/runing/1" },
+                new() { Text = "示例2", Icon = "fa-solid fa-fw fa-table", Url = "/runing/2" },
+                new() { Text = "示例3", Icon = "fa-solid fa-fw fa-table", Url = "/runing/3" }
                 }
 
                 },
-
-                new() { Text = "花名册", Icon = "fa-solid fa-fw fa-users", Url = "/users" }
+                new() { Text = "流程设计", Icon = "fa-solid fa-fw fa-flag", Url = "WorkFlowTemplate" , Match = NavLinkMatch.All},
             };
 
             return menus;

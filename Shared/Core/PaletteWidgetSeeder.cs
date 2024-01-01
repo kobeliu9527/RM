@@ -1,4 +1,6 @@
-﻿using Models;
+﻿using BootstrapBlazor.Components;
+using Models;
+using SqlSugar;
 
 namespace Shared.Core
 {
@@ -10,7 +12,41 @@ namespace Shared.Core
         /// </summary>
         static PaletteWidgetSeeder()
         {
-
+            _paletteWidgetList=new List<PaletteWidgetDto>() {
+            new PaletteWidgetDto()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "文本框",
+                    ComponentType = ComponentType.SingleLine,//控制界面生成
+                    Description = "文本框控件",
+                    Order = 1,
+                    Visible = true,
+                    Icon = @"fas fa-anchor-circle-check",
+                    Props=new Dictionary<string, Property>()
+                    {
+                        {"ReadOnly",new Property(){PType= PType.Bool, BoolVal=false,DisplayName="只读"} },
+                        {"Params",new Property(){PType= PType.StringList, StringListValue=new List<string>(),DisplayName="存储过程关联参数"} },
+                        {"IsExecuteForEnter",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="回车后是否执行存储过程"} },
+                        {"StoreName",new Property(){PType= PType.Select, StringValue="",DisplayName="执行存储过程的名称"} },
+                        {"Parameters",new Property(){PType= PType.MutilPropter, MutilProperties=new List<MutilProperty>(),DisplayName="执行存储过程需要的参数"} },
+                        {"IsSelectAllTextOnFocus",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="是否自动选中所有文字"} },
+                        {"IsAutoFocus",new Property(){PType= PType.Bool, BoolVal=true,DisplayName="是否自动获取焦点"} },
+                        {"PlaceHolder",new Property(){PType= PType.String, StringValue="请输入..",DisplayName="提示信息"} },
+                    },
+                    
+            },
+            new PaletteWidgetDto()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Tabs",
+                    ComponentType = ComponentType.Tabs,
+                    Description = "This is a tabs component",
+                    Order = 9,
+                    Visible = true,
+                    Icon = @"fa-solid fa-crow"
+                }
+            };
+            return;
             _paletteWidgetList = new List<PaletteWidgetDto>()
             {
                 new PaletteWidgetDto()

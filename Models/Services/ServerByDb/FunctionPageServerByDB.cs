@@ -18,7 +18,7 @@ namespace Models.Services.ServerByDb
         {
         }
 
-        public override Task<Result<FunctionPage>> SelectNav(Query<FunctionPage> obj)
+        public override Task<Result<FunctionPage>> SelectByRole(Query<FunctionPage> obj)
         {
             throw new NotImplementedException();
         }

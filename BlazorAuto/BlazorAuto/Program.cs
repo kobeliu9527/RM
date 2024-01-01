@@ -19,14 +19,30 @@ using Shared.AuthenticationStateCustom;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Models.Dto.SVG;
+using Blazor.Diagrams;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
+SnowFlakeSingle.WorkId = 1;
+
 var Configuration = builder.Configuration;
 var Appsetting = Configuration.GetSection(nameof(Appsettings)).Get<Appsettings>()!;
 builder.Services.Configure<Appsettings>(Configuration.GetSection(nameof(Appsettings)));
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClient>();
 builder.Services.AddScoped<IAuthService, AuthenticationStateProviderByClient>();
+
+TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
+TypeAdapterConfig<BlazorDiagram, WorkFlow>
+        .ForType()
+        //.Ignore(d=>d.Options)
+        ;
+////.MapToConstructor(true);
+//builder.Services.AddMapster();
+//.Ignore(dest => dest.Age)
+//.Map(dest => dest.FullName,
+//    src => string.Format("{0} {1}", src.FirstName, src.LastName));
 builder.Services.AddHttpClient(
     "http",
     client =>
@@ -120,7 +136,7 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
     {
         DbType = DbType.SqlServer,
 
-        ConnectionString = "Server = .;Database = Ufo;User ID = sa;Password = 1;TrustServerCertificate=true",
+        ConnectionString = Appsetting.SqlSugarOption.ConnectString,
         // ConnectionString = "DataSource=WMS.db",
         IsAutoCloseConnection = true,
         ConfigureExternalServices = new ConfigureExternalServices

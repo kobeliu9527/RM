@@ -1,27 +1,123 @@
 ﻿@page "/"
+@using Models.Dto.SVG
 @using Shared.AuthenticationStateCustom
+
 @inject IAuthService auth
+@inject ISqlSugarClient db
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<Button OnClick="OnClick">测试</Button>
+
 <AuthorizeView>
     <Authorized>
-        tong guo
+        登录成功,欢迎欢迎
     </Authorized>
     <NotAuthorized>
-        mei tongguo
+        你没有登录哦
     </NotAuthorized>
 </AuthorizeView>
-@if (SysModule != null && SysModule.Name != null)
-{
-    @SysModule.Name
-}
-
-Welcome to your new app.
 @code
 {
     [CascadingParameter(Name = "router")]
     public Models.System.SysModule? SysModule { get; set; }
+    public void OnClick(MouseEventArgs e)
+    {
 
-  
+        Lot lot = new Lot() { };
+        Mo mo = new Mo();
+
+        mo.GenerateLotSn();
+        lot.Product = new Product() { };
+
+
+
+        var car2 = db.Queryable<Product>()
+            .Includes(x => x.Part)
+            .ToTree(it => it.Products, it => it.ParentId, 0)
+            ;
+        // foreach (var item in car.Products)
+        // {
+        //     var ps = db.Queryable<Part>().ToTree(it=>it.Parts,it=>it.ParentId,item.PartId);
+
+        // }
+        var id = SnowFlakeSingle.Instance.NextId();//程序中直接获取ID
+        Part part1 = new() { PartName = "方向盘" };
+        var part1id = db.Insertable(part1).ExecuteReturnSnowflakeId();
+        Part part2 = new() { PartName = "轮胎" };
+        var part2id = db.Insertable(part2).ExecuteReturnSnowflakeId();
+        Part part3 = new() { PartName = "外胎" };//, ParentId = part2id
+        Part part4 = new() { PartName = "内胎"};
+        Part part5 = new() { PartName = "螺丝" };
+        var part3id = db.Insertable(part3).ExecuteReturnSnowflakeId();
+        var part4id = db.Insertable(part4).ExecuteReturnSnowflakeId();
+        var part5id = db.Insertable(part5).ExecuteReturnSnowflakeId();
+
+        Product p = new() { ProductName = "小米汽车" ,ProductId=id,RootId=id};
+        var pid = db.Insertable(p).ExecuteCommand();
+        Product p1 = new() { ProductName = "轮胎", ParentId = id, PartId = part2id, RootId = id };
+        var pid1 = db.Insertable(p1).ExecuteReturnSnowflakeId();
+        Product p2 = new() { ProductName = "方向盘", ParentId = id, PartId = part1id, RootId = id };
+        var pid2 = db.Insertable(p2).ExecuteReturnSnowflakeId();
+        Product p3 = new() { ProductName = "螺丝", ParentId = id, PartId = part5id, RootId = id };
+        var pid3 = db.Insertable(p3).ExecuteReturnSnowflakeId();
+        Product p4 = new() { ProductName = "外胎", ParentId = pid1, PartId = part3id, RootId = id };
+        var pid4 = db.Insertable(p4).ExecuteReturnSnowflakeId();
+        Product p5 = new() { ProductName = "内胎", ParentId = pid1, PartId = part4id, RootId = id };
+        var pid5 = db.Insertable(p5).ExecuteReturnSnowflakeId();
+        //Part part5 = new() { PartName = "轮胎" };
+        var car = db.Queryable<Product>()
+           .Includes(x => x.Part)
+           .ToTree(it => it.Products, it => it.ParentId, 0)
+           ;
+        db.Insertable(new List<Part> {  part3, part4}).ExecuteCommand();
+        List<Product> List = new List<Product> {};
+        List.Add(new Product() { ProductName = "asdf" });
+        db.InsertNav(List)
+                   .Include(z1 => z1.Part)
+                   .ExecuteCommand();
+        // db.Queryable<Product>().Includes(x => x.Parts);
+        // db.Queryable<Part>().ToTree();
+        //var tree = db.Queryable<Product>().ToTree(i=>i.Parts,i=>i.ParentId,0);
+        //  lz.Parts = new List<Product>() { lzw,lzn};
+        //  p.Parts = new List<Product>()
+        //  {
+        // fxp,lz
+        //  };
+        return;
+        var listp = new List<Product>() { p};
+         //db.InsertNav(listp).Include(x=>x.Parent).ExecuteCommand();
+        //db.UpdateNav(listp).Include(x=>x.Parts).ExecuteCommand();
+        return;
+        List<Production> list = new List<Production>();
+        var wf = db.Queryable<WorkFlowTemplate>().ToList().First();
+
+        var prod = new Production() { SN = "123123" ,WorkFlowTemplateId=1};
+        
+       // prod.WorkFlow = new WorkFlow() {  Nodes=wf.Nodes,Links=wf.Links };
+        prod.WorkFlow.Nodes = new() { new() { Id = "nodes" }, new() { Id = "nodes2" }, new() { Id = "nodes3" } };
+        prod.WorkFlow.Links = new() { new() { Id = "likes" }, new() { Id = "likes2" } };
+        list.Add(prod);
+        db.InsertNav(list)
+            .Include(x => x.WorkFlow).ThenInclude(y => y.Nodes)
+            .Include(x => x.WorkFlow).ThenInclude(y => y.Links)
+            .ExecuteCommand();
+        // var prod = db.Queryable<Production>()
+        //         .Includes(x => x.WorkFlow, y => y.Nodes)
+        //         .Includes(x => x.WorkFlow, y => y.Links)
+        //         .ToList();
+        // prod[0].WorkFlow.Nodes[1].Id = "333";
+        // db.UpdateNav(prod)
+        // .Include(x => x.WorkFlow).ThenInclude(x => x.Nodes, new SqlSugar.UpdateNavOptions()
+        //     {
+        //         OneToManyInsertOrUpdate = true,//配置启用 插入、更新或删除模式
+        //     })
+        // .Include(x => x.WorkFlow).ThenInclude(x => x.Links, new SqlSugar.UpdateNavOptions()
+        //     {
+        //         OneToManyInsertOrUpdate = true,//配置启用 插入、更新或删除模式
+        //     })
+        // .ExecuteCommand();
+
+
+    }
+
 }

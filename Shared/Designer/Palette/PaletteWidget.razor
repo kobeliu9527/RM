@@ -8,6 +8,7 @@
              @ondragstart="@(async () => await DragStartAsync(WidgetItem))">
             @if (!string.IsNullOrEmpty(WidgetItem.Icon))
             {
+                //fas fa-anchor-circle-check
                 <i class="@WidgetItem.Icon" style="font-size:40px;color:red;"></i>
             }
             <h5 class="fd-palette-widget-label">@WidgetItem.Name</h5>

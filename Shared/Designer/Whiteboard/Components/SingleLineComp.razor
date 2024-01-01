@@ -1,10 +1,9 @@
-﻿@using Shared.Extensions
+﻿
 @inherits WidgetComponentBase
-@*<form>
-    <div class="form-group">*@
+
 @if (Component != null)
 {
-    <BootstrapInput  PlaceHolder="请输入 ..."
+    <BootstrapInput PlaceHolder="请输入 ..."
                     Id="@Component.Id"
                     Readonly="@Component.Props["ReadOnly"].BoolVal"
                     OnEnterAsync="OnPressEnter"
@@ -19,12 +18,6 @@ else
 {
     <div>
         失败的控件,控件数据为空
-        @*      PlaceHolder="@(Component.Props["PlaceHolder"].StringValue)"
-    IsSelectAllTextOnFocus="@(Component.Props["IsSelectAllTextOnFocus"].BoolVal)"
-    DisplayText="@(Component.MutLanguage.GetLanguage())"
-    ShowLabel="@(Component.ShowLabel)"
-    Color="@(Component.Color)"
-    IsDisabled="@Component.IsDisabled" *@
     </div>
 }
 
@@ -39,7 +32,7 @@ else
         var msg = string.Join("|", Component.Props["Params"].StringListValue);
         foreach (var item in Component.Props["Params"].StringListValue)
         {
-            var ss=  RootContainer.FindFirst(x=>x.Id==item);
+            var ss = RootContainer.FindFirst(x => x.Id == item);
             if (ss is not null)
             {
                 await ToastService.Warning($"控件{ss.Name}的值是:{ss.ValueInfo.StringValue}");

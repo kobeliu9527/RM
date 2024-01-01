@@ -71,7 +71,7 @@ namespace Shared.AuthenticationStateCustom
             return new(principal);
         }
 
-        public async Task SignInAsync(UserDto user)
+        public async Task<Result<string>> SignInAsync(UserDto user)
         {
             //
             using HttpClient http = httpClientFactory.CreateClient("http");
@@ -82,9 +82,14 @@ namespace Shared.AuthenticationStateCustom
                 if (token != null && token.IsSucceeded)
                 {
                     await SetTokenAsync(token.Data!);
+                    return new Result<string>() {  Data="登录成功"};
+                }
+                else
+                {
+                    return new Result<string>() { Data = "登录失败",IsSucceeded=false };
                 }
             }
-            await Task.CompletedTask;
+            return new Result<string>() { Data = "登录失败", IsSucceeded = false };
         }
 
         public async Task SignOutAsync()
@@ -101,11 +106,32 @@ namespace Shared.AuthenticationStateCustom
             }
 
         }
+
+        public async Task<Result<string>> Register(UserDto user)
+        {
+            using HttpClient http = httpClientFactory.CreateClient("http");
+            var res = await http.PostAsJsonAsync("auth/Register", user);
+            if (res.IsSuccessStatusCode)
+            {
+                var token = await res.Content.ReadFromJsonAsync<Result<string>>();
+                if (token != null && token.IsSucceeded)
+                {
+                    await SetTokenAsync(token.Data!);
+                    return new Result<string>() { Data = "注册成功" };
+                }
+                else
+                {
+                    return new Result<string>() { Data = "登录失败", IsSucceeded = false };
+                }
+            }
+            return new Result<string>() { Data = "登录失败", IsSucceeded = false };
+        }
     }
 
     public interface IAuthService
     {
-        Task SignInAsync(UserDto user);
+        Task<Result<string>> SignInAsync(UserDto user);
+        Task<Result<string>> Register(UserDto user);
         Task SignOutAsync();
     }
 }
