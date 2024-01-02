@@ -1,4 +1,4 @@
-﻿@page "/WorkFlowTemplate"
+﻿@page "/WorkFlowDesigner"
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
 @using Blazor.Diagrams.Core.Anchors
@@ -51,11 +51,24 @@
         </div>
         <div class="container-msg">
             消息框占位
+            <Button>ceshi</Button>
         </div>
     </div>
     @if (1 == 1)
     {
         <div class="dmain-right">
+            <Tab>
+                <TabItem Text="属性设置">
+                    @if (SelectedNode != null)
+                    {
+                        <BootstrapInput TValue="string" @bind-Value=@SelectedNode.Title OnValueChanged="OnChangeString"></BootstrapInput>
+                    }
+                </TabItem>
+
+                <TabItem Text="角色管理">
+                    <div>我是角色管理</div>
+                </TabItem>
+            </Tab>
         </div>
     }
 </CascadingValue>
@@ -65,13 +78,11 @@
     {
     };
     private int? _draggedType;
-    public Models.Dto.SVG.WorkFlowTemplate wf { get; set; }
+    public Models.Dto.SVG.WorkFlowTemplate? wf { get; set; }
+    public NodeModelFW? SelectedNode { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        // _blazorDiagram.Options.Links.TargetAnchorFactory = (d,s,a) =>
-        // {
-        // };
         _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
         {
             var link = new LinkModel(new SinglePortAnchor((s as PortModel)!)
@@ -96,17 +107,18 @@
         };
         _blazorDiagram.SelectionChanged += (m) =>
         {
-            if (m is NodeModel nm)
+            if (m is NodeModelFW nm)
             {
                 if (nm.Selected)
                 {
-                    nm.Title = DateTime.Now.ToString();
-
+                    SelectedNode = nm;
+                    StateHasChanged();
                 }
             }
 
         };
         _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
+        return;
         foreach (var item in wf.Nodes)
         {
             var node = new NodeModelFW(item.Position);
@@ -122,8 +134,9 @@
         }
         foreach (var item in wf.Links)
         {
-            
+
         }
+
     }
     private void OnDrop(DragEventArgs e)
     {
@@ -143,5 +156,15 @@
 
         _blazorDiagram.Nodes.Add(node);
         _draggedType = null;
+    }
+    public async Task OnChangeString(string a)
+    {
+        SelectedNode?.Refresh();
+        await Task.CompletedTask;
+    }
+    public BlazorDiagram ToBlazorDiagram()
+    {
+        _blazorDiagram.ToBlazorDiagramDto
+        throw new Exception();
     }
 }

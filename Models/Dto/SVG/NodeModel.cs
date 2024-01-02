@@ -87,27 +87,6 @@ namespace Models.Dto.SVG
         public List<string>? SoursesIdList { get; set; } 
         
     }
-    /// <summary>
-    /// 结果信息:指示为x时候应该流向那些节点
-    /// 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// 
-    /// </para>
-    /// </remarks>
-    public class NodeResult
-    {
-        /// <summary>
-        /// 节点结果
-        /// </summary>
-        public int Result { get; set; }
-        /// <summary>
-        /// 节点Id
-        /// </summary>
-        public List<string>? Ids { get; set; }
-       
-    }
     public enum PortPosition
     {
         Top,

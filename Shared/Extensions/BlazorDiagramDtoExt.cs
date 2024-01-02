@@ -18,6 +18,7 @@ using Shared.Page.SVG;
 using System.Net.Http.Headers;
 using Shared.Components.Svg;
 using SqlSugar.Extensions;
+using NetTaste;
 
 namespace Shared.Extensions
 {
@@ -105,7 +106,76 @@ namespace Shared.Extensions
             }
             return dto;
         }
+        public static BlazorDiagram ToBlazorDiagram(this WorkFlowTemplate wft)
+        {
+            BlazorDiagram _blazorDiagram = new BlazorDiagram();
+            _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
+            {
+                var link = new Blazor.Diagrams.Core.Models.LinkModel(new SinglePortAnchor((s as PortModel)!)
+                {
+                    MiddleIfNoMarker = true,
+                    UseShapeAndAlignment = false
 
+                }, ta)
+                {
+                    // Router = new OrthogonalRouter(),//正交的
+                    // PathGenerator = new StraightPathGenerator(),//直的
+                    TargetMarker = LinkMarker.Arrow,
+                    // SourceMarker = LinkMarker.NewCircle(10),
+                    SourceMarker = LinkMarker.Circle,
+                    // SourceMarker = LinkMarker.NewRectangle(10, 20),
+                    // TargetMarker = LinkMarker.NewArrow(20, 10),
+                    Segmentable = true
+                }
+                ;
+                return link;
+
+            };
+            //_blazorDiagram.SelectionChanged += (m) =>
+            //{
+            //    if (m is NodeModelFW nm)
+            //    {
+            //        if (nm.Selected)
+            //        {
+            //            SelectedNode = nm;
+            //            StateHasChanged();
+            //        }
+            //    }
+
+            //};
+            _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
+            if (wft.Nodes!=null)
+            {
+                foreach (Models.Dto.SVG.NodeModel item in wft.Nodes)
+                {
+                    var Node = new NodeModelFW(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
+                    {
+                        Title = item.Title,
+                    };
+
+                    foreach
+                        (PortAlignment item2 in Enum.GetValues(typeof(PortAlignment)))
+                    {
+                        Node.AddPort(item2);
+                    }
+                    _blazorDiagram.Nodes.Add(Node);
+                }
+            }
+
+            if (wft.Links!=null)
+            {
+                foreach (var item in wft.Links)
+                {
+                    var sourse = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.SourceId)?.GetPort(item.SourceAlignment);
+                    var target = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.TargetId)?.GetPort(item.TargetAlignment);
+                    if (sourse != null && target != null)
+                    {
+                        _blazorDiagram.Links.Add(new Blazor.Diagrams.Core.Models.LinkModel(sourse, target) { TargetMarker = LinkMarker.Arrow });
+                    }
+                }
+            }
+            return _blazorDiagram;
+        }
         public static PortAlignment ToPortAlignment(this PortPosition p)
         {
             switch (p)
