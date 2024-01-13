@@ -82,22 +82,22 @@ namespace Shared.AuthenticationStateCustom
                 if (token != null && token.IsSucceeded)
                 {
                     await SetTokenAsync(token.Data!);
-                    return new Result<string>() {  Data="登录成功"};
+                    return new Result<string>() { Data = "登录成功" };
                 }
                 else
                 {
-                    return new Result<string>() { Data = "登录失败",IsSucceeded=false };
+                    return new Result<string>() { Data = "登录失败", IsSucceeded = false };
                 }
             }
             return new Result<string>() { Data = "登录失败", IsSucceeded = false };
         }
 
-        public async Task SignOutAsync()
+        public async Task<Result<string>> SignOutAsync()
         {
             try
             {
                 await local.SetItemAsStringAsync("token", "");
-                await Task.CompletedTask;
+                return new Result<string>() { Data = "退出登录成功", IsSucceeded = true };
             }
             catch (Exception)
             {
@@ -106,7 +106,6 @@ namespace Shared.AuthenticationStateCustom
             }
 
         }
-
         public async Task<Result<string>> Register(UserDto user)
         {
             using HttpClient http = httpClientFactory.CreateClient("http");
@@ -126,12 +125,56 @@ namespace Shared.AuthenticationStateCustom
             }
             return new Result<string>() { Data = "登录失败", IsSucceeded = false };
         }
+
+        public async Task<Result<string>> WrittenOff(UserDto user)
+        {
+            using HttpClient http = httpClientFactory.CreateClient("http");
+            var res = await http.PostAsJsonAsync("auth/WrittenOff", user);
+            if (res.IsSuccessStatusCode)
+            {
+                var token = await res.Content.ReadFromJsonAsync<Result<string>>();
+                if (token != null && token.IsSucceeded)
+                {
+                    await SetTokenAsync(token.Data!);
+                    return new Result<string>() { Data = "注销成功" };
+                }
+                else
+                {
+                    return new Result<string>() { Data = "注销失败", IsSucceeded = false };
+                }
+            }
+            return new Result<string>() { Data = "注销失败", IsSucceeded = false };
+        }
     }
 
+    /// <summary>
+    /// 登录认证接口
+    /// </summary>
     public interface IAuthService
     {
-        Task<Result<string>> SignInAsync(UserDto user);
+        
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         Task<Result<string>> Register(UserDto user);
-        Task SignOutAsync();
+        /// <summary>
+        /// 注销
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<Result<string>> WrittenOff(UserDto user);
+        /// <summary>
+        /// 登录:
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<Result<string>> SignInAsync(UserDto user);
+        /// <summary>
+        /// 退出
+        /// </summary>
+        /// <returns></returns>
+        Task<Result<string>> SignOutAsync();
     }
 }

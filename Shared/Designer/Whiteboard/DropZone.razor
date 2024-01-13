@@ -31,7 +31,7 @@
 </div>
 
 @code {
-    private const string DropZoneCssClasses = "'bo-dropzone-hover bo-drag-enter bo-dropzone-container'";
+    private const string DropZoneCssClasses                   = "'bo-dropzone-hover bo-drag-enter bo-dropzone-container'";
     private const string DropZoneCssClassesWithoutSingleQuotes = "bo-dropzone-hover bo-drag-enter bo-dropzone-container";
     private readonly Guid leftDropZoneId = Guid.NewGuid();
     private readonly Guid rightDropZoneId = Guid.NewGuid();
@@ -63,12 +63,12 @@
             // you are trying to drag and drop a new widget
             var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
             var newComponentData = paletteWidgetData.CreateComponent();
-           
+
             //newComponentData.ParentId = containerData.Id;
             await DropWidgetAtPositionAsync(newComponentData, null);
             await FormDesigner.SelectComponentAsync(newComponentData);
 
-           // newComponentData.ParentId = Container.Id;
+            // newComponentData.ParentId = Container.Id;
         }
         else if (FormDesigner.IsDraggedItemComponent()) //拖放的是设计器中定义好了的
         {
@@ -91,7 +91,7 @@
             // you are trying to drag and drop a new widget
             var paletteWidgetData = await FormDesigner.GetDraggedPaletteWidgetAsync();
             var newComponentData = paletteWidgetData.CreateComponent();
-           // newComponentData.ParentId = Container.Id;
+            // newComponentData.ParentId = Container.Id;
             await DropWidgetAtPositionAsync(newComponentData, ComponentIndex + 1);
             await FormDesigner.SelectComponentAsync(newComponentData);
         }
@@ -108,7 +108,11 @@
             throw new NotImplementedException();
         }
     }
-
+    /// <summary>
+    /// 用js移除拖拽样式,不需要单引号,直接卸载元素上是需要单引号的
+    /// </summary>
+    /// <param name="elementId"></param>
+    /// <returns></returns>
     private async Task OnDropFinishedAsync(Guid elementId)
     {
         await JSRuntime.InvokeVoidAsync("formDesigner.utils.removeClassById",

@@ -328,7 +328,6 @@ code {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 42;
 }
 
 .dropZone--right {
@@ -600,7 +599,12 @@ code {
     height: 93vh;
     display: flex;
 }
-
+.dmain-main .split-pane {
+    position: relative;
+}
+.dmain-main .split-bar {
+    z-index:9999;
+}
 .dmain-left {
     width: 20%;
     max-width: 20%;

@@ -6,9 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 using Models;
 using Models.Dto;
 using Models.NotEntity;
+using Models.Services.Base;
 using Models.System;
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 
@@ -18,34 +20,42 @@ namespace BlazorAuto.Controllers
     /// 登录注册相关
     /// </summary>
     [Route("api/[controller]/[action]")]
-    public class AuthController : Controller
+    public class AuthController : Controller//, //ICrudBase<User>
     {
         private readonly Appsettings appsettings;
         private readonly ISqlSugarClient db;
 
+        /// <summary>
+        /// 登录注册相关
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="db"></param>
         public AuthController(IOptionsSnapshot<Appsettings> options, ISqlSugarClient db)
         {
             appsettings = options.Value;
             this.db = db;
         }
         /// <summary>
-        /// 注册
+        /// 注册  [Authorize(Roles ="hr,admin")]
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<Result<string>> Register([FromBody] UserDto user)
         {
+            //1.验证权限
             Result<string> res = new();
             try
             {
-                if (db.Queryable<User>().Where(x => x.SysName == user.SysName).Count() > 0)
+                var has = await db.Queryable<User>().SingleAsync(x => x.SysName == user.SysName);
+                if (has !=null)
                 {
                     return res.Fail("用户名重复");
                 }
                 else
                 {
-                    var res1 = await db.Insertable(user.Adapt<User>()).ExecuteCommandAsync();
+                  //  var res1 = await db.Insertable(user.Adapt<User>()).ExecuteCommandAsync();
+                    var res1 = await db.Insertable(user.Adapt<User>()).ExecuteReturnSnowflakeIdAsync();
                 }
             }
             catch (Exception ex)
@@ -67,6 +77,7 @@ namespace BlazorAuto.Controllers
                             .Includes(x => x.Roles)
                             .FirstAsync(x => x.SysName == user.SysName && x.PassWord == user.PassWord)
                             ;
+            //var userlist = await db.SelectBy(x=>x.SysName==user.SysName);
             if (userlist != null)
             {
                 var j = GetJwt(userlist, appsettings.JwtOption);
@@ -163,6 +174,41 @@ namespace BlazorAuto.Controllers
         {
             var ss = HttpContext.User.Claims.ToList();
             return Results.Ok("ok");
+        }
+        [NonAction]
+        public Task<Result<int>> Delete(User obj)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<Result<int>> Insert(User obj)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<Result<long>> InsertWithSnowFlakeId(User obj)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<Result<List<User>>> SelectAll()
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<Result<List<User>>> SelectBy(Expression<Func<User, bool>> func)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<Result<int>> Update(User obj)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<Result<User>> SelectByRole(Query<User> obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

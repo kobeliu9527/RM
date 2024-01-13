@@ -16,7 +16,10 @@ namespace BlazorAuto.Controllers
     public class DbMangerController : Controller
     {
         private readonly ISqlSugarClient db;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
         public DbMangerController(ISqlSugarClient db)
         {
             this.db = db;

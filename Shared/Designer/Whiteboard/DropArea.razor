@@ -1,0 +1,87 @@
+﻿@using Microsoft.JSInterop
+@using Shared.Core
+@using Shared.Extensions
+@using Shared.Page
+@inject IJSRuntime JSRuntime
+@* await DropAfterComponentAsync(); *@
+<div id="@leftDropZoneId" style="z-index:@(Data.Zindex)"
+     class="dropZone"
+     ondragover="event.preventDefault();"
+     ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
+     ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
+     @ondrop="@(async (e) =>
+                {
+                    await DropBeforeComponentAsync();
+                    await OnDropFinishedAsync(leftDropZoneId);
+                })"
+     @ondrop:preventDefault="true">
+</div>
+<div id="@rightDropZoneId" style="z-index:@(Data.Zindex)"
+     class="dropZone dropZone--right"
+     ondragover="event.preventDefault();"
+     ondragenter="event.preventDefault();formDesigner.utils.addClass(this, @DropZoneCssClasses)"
+     ondragleave="event.preventDefault();formDesigner.utils.removeClass(this, @DropZoneCssClasses)"
+     @ondrop="@(async (e) =>
+                {
+                    await DropBeforeComponentAsync();
+                    await OnDropFinishedAsync(rightDropZoneId);
+                })"
+     @ondrop:preventDefault="true">
+</div>
+
+@code {
+    private const string DropZoneCssClasses = "'bo-dropzone-hover bo-drag-enter bo-dropzone-container'";
+    private const string DropZoneCssClassesWithoutSingleQuotes = "bo-dropzone-hover bo-drag-enter bo-dropzone-container";
+    private readonly Guid leftDropZoneId = Guid.NewGuid();
+    private readonly Guid rightDropZoneId = Guid.NewGuid();
+    [CascadingParameter(Name = "DesiginerPro")]
+    public DesiginerPro? DesiginerPro { get; set; }
+    /// <summary>
+    /// 容器本身数据
+    /// </summary>
+    [Parameter][NotNull]
+    public Control? Data { get; set; }
+    /// <summary>
+    /// 父级容器的数据
+    /// </summary>
+    [Parameter]
+    [NotNull]
+    public Control? ParentData { get; set; }
+
+    /// <summary>
+    /// 用js移除拖拽样式,不需要单引号,直接卸载元素上是需要单引号的
+    /// </summary>
+    /// <param name="elementId"></param>
+    /// <returns></returns>
+    private async Task OnDropFinishedAsync(Guid elementId)
+    {
+        await JSRuntime.InvokeVoidAsync("formDesigner.utils.removeClassById",
+            elementId, DropZoneCssClassesWithoutSingleQuotes);
+    }
+    int a = 1;
+    Random r = new();
+    private async Task DropBeforeComponentAsync()
+    {
+        await Task.Delay(100);
+        var s = r.Next(10);
+        if (ParentData!=null)
+        {
+            Control con;
+            if (s>4)
+            {
+                con = new Control(WidgetType.Split, ParentData.Zindex + 1) { IsVertical=true};
+            }
+            else
+            {
+                con = new Control(WidgetType.Bottom, ParentData.Zindex + 1);
+            }
+            a++;
+
+            ParentData.Controls.Add(con);
+            var xx = ParentData;
+            var p = DesiginerPro.Controlmain;
+            DesiginerPro.StateHasChangedInvoke();
+        }
+    
+    }
+}

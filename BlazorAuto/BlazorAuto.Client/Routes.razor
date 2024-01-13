@@ -1,10 +1,9 @@
 ﻿
-<CascadingAuthenticationState>
+<CascadingAuthenticationState >
     <BootstrapBlazorRoot>
     <CascadingValue Value="this.SysModule" Name="router">
         <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
             <Found Context="routeData">
-                
                 <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)" >
                     <NotAuthorized>
                         zhe bu shi yige dizhi 
@@ -18,12 +17,14 @@
                 </LayoutView>
             </NotFound>
         </Router>
-    </CascadingValue>
+            </CascadingValue>
     </BootstrapBlazorRoot>
 </CascadingAuthenticationState>
 @code
 {
     public Models.System.SysModule? SysModule { get; set; }
+    public bool MyProperty { get; set; }
+    public static bool Isdesigner { get; set; } = true;
     protected override void OnInitialized()
     {
         // SysModule = new Models.System.SysModule() { Name = "我是RouterOnInitialized" };

@@ -21,7 +21,7 @@ namespace Shared.Core
                     Description = "文本框控件",
                     Order = 1,
                     Visible = true,
-                    Icon = @"fas fa-anchor-circle-check",
+                    Icon = @"fas fa-pen",
                     Props=new Dictionary<string, Property>()
                     {
                         {"ReadOnly",new Property(){PType= PType.Bool, BoolVal=false,DisplayName="只读"} },
@@ -38,12 +38,12 @@ namespace Shared.Core
             new PaletteWidgetDto()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = "Tabs",
+                    Name = "多页控件(TableControl)",
                     ComponentType = ComponentType.Tabs,
                     Description = "This is a tabs component",
                     Order = 9,
                     Visible = true,
-                    Icon = @"fa-solid fa-crow"
+                    Icon = @"fas fa-ethernet"
                 }
             };
             return;

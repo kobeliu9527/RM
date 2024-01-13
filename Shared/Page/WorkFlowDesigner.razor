@@ -118,6 +118,10 @@
 
         };
         _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
+        _blazorDiagram.PanChanged += () =>
+        {
+            ;
+        };
         return;
         foreach (var item in wf.Nodes)
         {
@@ -164,7 +168,7 @@
     }
     public BlazorDiagram ToBlazorDiagram()
     {
-        _blazorDiagram.ToBlazorDiagramDto
+        // _blazorDiagram.ToBlazorDiagramDto
         throw new Exception();
     }
 }

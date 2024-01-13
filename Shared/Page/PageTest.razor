@@ -5,7 +5,6 @@
 <h3>PageTest</h3>
 @CompanyGroup.Name
 <button @onclick="test"></button>
-<BootstrapBlazor.Components.Button OnClick="()=>{CompanyGroup.Name=DateTime.Now.ToString();}">sdfsadfasdf</BootstrapBlazor.Components.Button>
 @code {
     [CascadingParameter]
     public CompanyGroup CompanyGroup { get; set; }

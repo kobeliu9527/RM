@@ -63,6 +63,7 @@ namespace Shared.Layout
 
                 },
                 new() { Text = "流程设计", Icon = "fa-solid fa-fw fa-flag", Url = "WorkFlowDesigner" , Match = NavLinkMatch.All},
+                new() { Text = "设计程序Pro", Icon = "fa-solid fa-fw fa-flag", Url = "DesiginerPro" , Match = NavLinkMatch.All},
             };
 
             return menus;

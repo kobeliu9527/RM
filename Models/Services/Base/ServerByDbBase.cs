@@ -9,12 +9,9 @@ namespace Models.Services.Base
     /// <summary>
     /// base crud by db
     /// </summary>
-    public abstract class ServerByDbBase<T> : ICrudBase<T> where T : class, new()
+    public class ServerByDbBase<T> : ICrudBaseByDb<T> where T : class, new()
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        protected readonly ISqlSugarClient db;
+        public ISqlSugarClient db { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -26,6 +23,11 @@ namespace Models.Services.Base
 
         public async virtual Task<Result<int>> Insert(T obj)
         {
+            //验证权限 能否执行
+          //  var tabName = obj.GetType().Name;
+            //可以操作这张表的角色集合
+          //  List<Role>? roles = db.Queryable<TableRole>().Includes(x => x.InsertRole).Where(x => x.TableName == tabName).First().InsertRole;
+            //当前用户的角色集合根上面的的集合是否有交集,有才可以
             var result = new Result<int>();
             try
             {
@@ -103,7 +105,10 @@ namespace Models.Services.Base
             return result;
         }
 
-        public abstract Task<Result<T>> SelectByRole(Query<T> obj);
+        public virtual Task<Result<T>> SelectByRole(Query<T> obj)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

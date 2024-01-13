@@ -72,9 +72,9 @@ namespace Shared.Extensions
             }
             return obj;
         }
-        public static WorkFlow ToBlazorDiagramDto(this BlazorDiagram obj)
+        public static WorkFlowTemplate ToBlazorDiagramDto(this BlazorDiagram obj,long id=0)
         {
-            var dto = new WorkFlow();
+            var dto = new WorkFlowTemplate() { WorkFlowTemplateId=id};
             dto.Links=new ();
             dto.Nodes = new ();
             foreach (var node in obj.Nodes)

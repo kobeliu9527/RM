@@ -11,6 +11,6 @@ namespace Models
         /// 主键,自增
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
-        public int Id { get; set; }
+        public long Id { get; set; }
     }
 }

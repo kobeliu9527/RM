@@ -1,12 +1,13 @@
 ﻿using Models.Dto;
 using Models.NotEntity;
 using Models.System;
+using SqlSugar;
 using System.Linq.Expressions;
 
 namespace Models.Services.Base
 {
     /// <summary>
-    /// 增删改查基类
+    /// 增删改查接口 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface ICrudBase<T> where T : class, new()
@@ -51,5 +52,24 @@ namespace Models.Services.Base
         /// <param name="obj">携带的用户角色</param>
         /// <returns></returns>
         Task<Result<T>> SelectByRole(Query<T> obj);
+    }
+    /// <summary>
+    /// 直连数据库增删改查接口
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface ICrudBaseByDb<T>  : ICrudBase<T> where T : class, new()
+    {
+        /// <summary>
+        /// 数据库实例
+        /// </summary>
+         ISqlSugarClient db { get; set; }
+    }
+    /// <summary>
+    /// http请求增删改查接口
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface ICrudBaseByHttp<T> : ICrudBase<T> where T : class, new()
+    {
+        IHttpClientFactory http { get; set; }
     }
 }

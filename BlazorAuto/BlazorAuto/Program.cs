@@ -32,7 +32,7 @@ builder.Services.Configure<Appsettings>(Configuration.GetSection(nameof(Appsetti
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClient>();
 builder.Services.AddScoped<IAuthService, AuthenticationStateProviderByClient>();
-
+builder.Services.AddMemoryCache();
 TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
 TypeAdapterConfig<BlazorDiagram, WorkFlow>
         .ForType()
@@ -179,8 +179,12 @@ builder.Services.AddScoped<ICrudBase<SysModule>, ModuleServerByDB>();
 builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
 builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
 
+//builder.Services.AddScoped<ICrudBase<User>, ServerByDbBase<User>>();
+builder.Services.AddScoped(typeof(ICrudBase<>), typeof(ServerByDbBase<>));
+builder.Services.AddMemoryCache();
+//??
 var app = builder.Build();
-
+//??
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -5,6 +5,7 @@
         <div class="dheader">
         <span class="ms-3 flex-sm-fill d-none d-sm-block">Bootstrap of Blazor</span>
         <div class="flex-fill d-sm-none"></div>
+                <Button OnClick="OnClick">预览</Button>
         <Widget></Widget>
         <AuthorizeView>
             <Authorized>
@@ -50,4 +51,10 @@
 </div>
 @code {
     //
+    [CascadingParameter]
+    public bool MyProperty { get; set; }
+    public void OnClick()
+    {
+        MyProperty = !MyProperty;
+    }
 }

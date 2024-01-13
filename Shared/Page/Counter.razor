@@ -24,8 +24,9 @@
     [CascadingParameter(Name = "router")]
     public Models.System.SysModule? SysModule { get; set; }
     public bool IsShowBackdropOpen { get; set; }
-
+   
     private int currentCount = 0;
+    [CascadingParameter]
     public bool MyProperty { get; set; } = true;
     public ContainerDto? ContainerData { get; set; }
     /// <summary>

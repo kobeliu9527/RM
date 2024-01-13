@@ -170,6 +170,8 @@ internal class Program
         builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
         var app = builder.Build();
 
+        //Ğ¶ÔØÕâºóÃæÂğ?
+
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
