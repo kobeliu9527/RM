@@ -10,7 +10,7 @@ namespace BlazorAuto.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    [Authorize]
+    //[Authorize]
     public class FileController : ControllerBase
     {
         private readonly IHostEnvironment env;

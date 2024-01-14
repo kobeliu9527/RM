@@ -1,62 +1,107 @@
 ﻿@page "/DesiginerPro"
 @layout Designer
-<div class="dmain-left" style="background-color:rebeccapurple">
-    l
-</div>
+<CascadingValue Value="this.MainPage" Name="MainPage" IsFixed="true">
+    <div class="dmain-left" style="background-color:rebeccapurple">
+        <Tab>
+            <TabItem Text="工具箱">
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="普通控件" IsCollapsed="false">
+                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.InputText"></WidgetBtn>
+                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Table"></WidgetBtn>
+                            <WidgetBtn></WidgetBtn>
+                        </CollapseItem>
+                        <CollapseItem Text="容器控件">
+                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitH"></WidgetBtn>
+                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitV"></WidgetBtn>
+                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Row"></WidgetBtn>
+                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Tab"></WidgetBtn>
+                        </CollapseItem>
+                        <CollapseItem Text="图标控件">
+                            早晚会有..
+                        </CollapseItem>
+                        <CollapseItem Text="交互控件">
+                            早晚会有..
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                @*    <div class="fd-palette-widgets">
 
-<div class="dmain-main" style="z-index:1">
-    @if (Controlmain!=null)
-    {
-        <CascadingValue Value="this" Name="DesiginerPro" IsFixed="true">
-            <ControlComponent Data="Controlmain" ParentData="Controlmain"></ControlComponent>
-        </CascadingValue>
-    }
+                </div> *@
+            </TabItem>
+            <TabItem Text="菜单管理">
 
+            </TabItem>
+            <TabItem Text="角色">
+                角色
+            </TabItem>
+        </Tab>
+    </div>
 
-</div>
-<div class="dmain-right" style="background-color:aqua">
-    @if (SelectControl != null)
-    {
-        <EditorForm Model="@SelectControl">
-            <FieldItems>
-                    <EditorItem @bind-Field="@context.Name"/>
+    <div class="dmain-main" style="z-index:1">
+        @if (MainPage.Controlmain != null)
+        {
+            <ControlComponent Data="MainPage.Controlmain" ParentData="MainPage.Controlmain"></ControlComponent>
+        }
+    </div>
+    <div class="dmain-right" style="background-color:aqua">
+        @if (MainPage.SelectControl != null)
+        {
+            <EditorForm Model="@MainPage.SelectControl">
+                <FieldItems>
+                    <EditorItem @bind-Field="@context.Name" />
                     <EditorItem @bind-Field="@context.Height" />
-                <EditorItem @bind-Field="@context.Basis" />
-                <EditorItem @bind-Field="@context.Zindex" />
-            </FieldItems>
-            <Buttons>
-                <Button OnClick="StateHasChangedInvoke">刷新</Button>
-            </Buttons>
-        </EditorForm>
-    }
-</div>
+                    <EditorItem @bind-Field="@context.Basis" />
+                    <EditorItem @bind-Field="@context.Zindex" />
+                </FieldItems>
+                <Buttons>
+                    <Button OnClick="MainPage.StateHasChangedInvoke">刷新</Button>
+                </Buttons>
+            </EditorForm>
+        }
+    </div>
+</CascadingValue>
 @code {
-    public Control Controlmain { get; set; } = new() { Name = "主页面", CtrType = WidgetType.None ,Zindex=11};
-
-    public Control? SelectControl { get; set; }
-
+    // public Control Controlmain { get; set; } = new() { Name = "主页面", CtrType = WidgetType.None, Zindex = 1 };
+    // public Control? SelectControl { get; set; }
+    // public WidgetType SelectedWidgetType { get; set; }
+    public MainPage MainPage { get; set; } = new();
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        MainPage.StateHasChanged = StateHasChanged;
         return;
-        var Control = new Control(WidgetType.Split, 1) { Height = 60 };
-        var row = new Control(WidgetType.Row) { };
-        row.Controls.Add(new Control());
-        row.Controls.Add(new Control(WidgetType.InputText) { Zindex = 11 });
-        var sp = new Control(WidgetType.Split, 2) { IsVertical = true };
-        sp.Controls[0].Controls.Add(row);
-        Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
-        Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
-        Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
-        Control.Controls[1].Controls.Add(sp);
-        Controlmain.Controls.Add(Control);
-        var json=   System.Text.Json.JsonSerializer.Serialize(Controlmain);
-        Controlmain = System.Text.Json.JsonSerializer.Deserialize<Control>(json)??new Control();
+        // var Control = new Control(WidgetType.SplitH, 1) { Height = 60 };
+        // var row = new Control(WidgetType.Row) { };
+        // row.Controls.Add(new Control());
+        // row.Controls.Add(new Control(WidgetType.InputText) { Zindex = 11 });
+        // var sp = new Control(WidgetType.SplitH, 2) { IsVertical = true };
+        // sp.Controls[0].Controls.Add(row);
+        // Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
+        // Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
+        // Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
+        // Control.Controls[1].Controls.Add(sp);
+        // Controlmain.Controls.Add(Control);
+        // var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
+        // Controlmain = System.Text.Json.JsonSerializer.Deserialize<Control>(json) ?? new Control();
     }
-
-    
-    public void StateHasChangedInvoke()
-    {
-        StateHasChanged();
-    }
+    // public void StateHasChangedInvoke()
+    // {
+    //     //var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
+    //     StateHasChanged();
+    // }
+    // public Task SetSelectedControlByBoxAsync(WidgetType data)
+    // {
+    //     SelectControl = null;//这里考虑不用置空
+    //     SelectedWidgetType = data;
+    //     return Task.CompletedTask;
+    // }
+    // public Task SetSelectControlByDesignerAsync(Control data)
+    // {
+    //     // SelectControlByBox = data.Adapt<Control>();
+    //     SelectControl = data;
+    //    // SelectedWidgetType = null;
+    //     StateHasChanged();
+    //     return Task.CompletedTask;
+    // }
 }
