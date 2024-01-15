@@ -10,7 +10,7 @@ namespace Models
         /// <summary>
         /// 主键,自增
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        [SugarColumn(IsPrimaryKey = true)]
         public long Id { get; set; }
     }
 }

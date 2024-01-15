@@ -1,6 +1,6 @@
 ﻿using Models;
 using Models.NotEntity;
-using Models.System;
+using Models.SystemInfo;
 using Ufo.Auto.Client.Services.Base;
 
 namespace Ufo.Auto.Client.Services.CompanyGroupServer

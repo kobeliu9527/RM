@@ -21,7 +21,7 @@
 @code
 {
     [CascadingParameter(Name = "router")]
-    public Models.System.SysModule? SysModule { get; set; }
+    public SysModule? SysModule { get; set; }
     public async void OnClick2(MouseEventArgs e)
     {
       await  userdb.Insert(new User() {  SysName="啊手动阀"});

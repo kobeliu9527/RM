@@ -15,7 +15,7 @@
     public string id { get; set; } = "-1";
     public FunctionPage? FunctionPage { get; set; }
     [CascadingParameter(Name = "router")]
-    public Models.System.SysModule? SysModule { get; set; }
+    public SysModule? SysModule { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();

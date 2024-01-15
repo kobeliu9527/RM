@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
     public class User : EntityBase
     {

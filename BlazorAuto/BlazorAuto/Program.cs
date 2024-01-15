@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Models;
 using Models;
 using Models.Services.Base;
 using Models.Services.ServerByDb;
-using Models.System;
 using System.Reflection;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -22,6 +21,7 @@ using Microsoft.AspNetCore.Authentication;
 using Models.Dto.SVG;
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.SignalR;
+using Models.SystemInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 SnowFlakeSingle.WorkId = 1;

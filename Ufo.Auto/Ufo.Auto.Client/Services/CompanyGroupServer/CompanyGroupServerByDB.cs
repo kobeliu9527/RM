@@ -1,6 +1,6 @@
 ﻿using Models;
 using Models.NotEntity;
-using Models.System;
+using Models.SystemInfo;
 using SqlSugar;
 using Ufo.Auto.Client.Services.Base;
 

@@ -1,46 +1,10 @@
 ﻿@if (Data.CtrType == WidgetType.SplitH)
 {
-    <div style="height:@(Data.Height)%"
-         @onclick="SelectComponentAsync"
-         @onclick:stopPropagation="true">
+    <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" @onclick:stopPropagation="true">
         <Split Basis="@(Data.Basis.ToString()+"%")">
             <FirstPaneTemplate>
-                <div style="height:100%">
-                    @if (Data.Controls.Count > 0)
-                    {
-                        @foreach (var item in Data.Controls[0].Controls)
-                        {
-                            @* <div class="col-@(item.Width)"> *@
-                                <ControlComponent Data="item" ParentData="Data.Controls[0]"></ControlComponent>
-                            @* </div> *@
-                        }
-                    }
-                </div>
-                <DropArea Data="@Data.Controls[0]" ParentData="Data.Controls[0]"></DropArea>
-            </FirstPaneTemplate>
-            <SecondPaneTemplate>
-                <div style="height:100%">
-                    @if (Data.Controls.Count > 1)
-                    {
-                        @foreach (var item in Data.Controls[1].Controls)
-                        {
-                            <ControlComponent Data="item" ParentData="Data.Controls[1]"></ControlComponent>
-                        }
-                    }
-                </div>
-                <DropArea Data="@Data.Controls[1]" ParentData="Data.Controls[1]"></DropArea>
-            </SecondPaneTemplate>
-        </Split>
-    </div>
-}
-else if (Data.CtrType == WidgetType.SplitV)
-{
-    <div style="height:@(Data.Height)%"
-         @onclick="SelectComponentAsync"
-         @onclick:stopPropagation="true">
-        <Split Basis="@(Data.Basis.ToString()+"%")" IsVertical="true">
-            <FirstPaneTemplate>
-                <div style="height:100%">
+                <div style="height:100%;position:relative;overflow-y:auto;" @onclick="async ()=>{await SelectComponentAsync(Data.Controls[0]);}"
+                     @onclick:stopPropagation="true">
                     @if (Data.Controls.Count > 0)
                     {
                         @foreach (var item in Data.Controls[0].Controls)
@@ -48,12 +12,12 @@ else if (Data.CtrType == WidgetType.SplitV)
                             <ControlComponent Data="item" ParentData="Data.Controls[0]"></ControlComponent>
                         }
                     }
+                    <DropArea Data="@Data.Controls[0]" ParentData="Data.Controls[0]"></DropArea>
                 </div>
-
-                <DropArea Data="@Data.Controls[0]" ParentData="Data.Controls[0]"></DropArea>
             </FirstPaneTemplate>
             <SecondPaneTemplate>
-                <div style="height:100%">
+                <div style="height:100%;position:relative;overflow-y:auto;" @onclick="async ()=>{await SelectComponentAsync(Data.Controls[1]);}"
+                     @onclick:stopPropagation="true">
                     @if (Data.Controls.Count > 1)
                     {
                         @foreach (var item in Data.Controls[1].Controls)
@@ -61,8 +25,42 @@ else if (Data.CtrType == WidgetType.SplitV)
                             <ControlComponent Data="item" ParentData="Data.Controls[1]"></ControlComponent>
                         }
                     }
+                    <DropArea Data="@Data.Controls[1]" ParentData="Data.Controls[1]"></DropArea>
                 </div>
-                <DropArea Data="@Data.Controls[1]" ParentData="Data.Controls[1]"></DropArea>
+            </SecondPaneTemplate>
+        </Split>
+    </div>
+}
+else if (Data.CtrType == WidgetType.SplitV)
+{
+    <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" @onclick:stopPropagation="true">
+        <Split Basis="@(Data.Basis.ToString()+"%")" IsVertical="true">
+            <FirstPaneTemplate>
+                <div style="height:100%;position:relative;overflow-y:auto;" 
+                @onclick="async ()=>{await SelectComponentAsync(Data.Controls[0]);}"
+                     @onclick:stopPropagation="true">
+                    @if (Data.Controls.Count > 0)
+                    {
+                        @foreach (var item in Data.Controls[0].Controls)
+                        {
+                            <ControlComponent Data="item" ParentData="Data.Controls[0]"></ControlComponent>
+                        }
+                        <DropArea Data="@Data.Controls[0]" ParentData="Data.Controls[0]"></DropArea>
+                    }
+                </div>
+            </FirstPaneTemplate>
+            <SecondPaneTemplate>
+                <div style="height:100%;position:relative;overflow-y:auto;" @onclick="async ()=>{await SelectComponentAsync(Data.Controls[1]);}"
+                     @onclick:stopPropagation="true">
+                    @if (Data.Controls.Count > 1)
+                    {
+                        @foreach (var item in Data.Controls[1].Controls)
+                        {
+                            <ControlComponent Data="item" ParentData="Data.Controls[1]"></ControlComponent>
+                        }
+                        <DropArea Data="@Data.Controls[1]" ParentData="Data.Controls[1]"></DropArea>
+                    }
+                </div>
             </SecondPaneTemplate>
         </Split>
     </div>
@@ -72,7 +70,6 @@ else if (Data.CtrType == WidgetType.Row)
     <div class="row d-container"
          @onclick="SelectComponentAsync"
          @onclick:stopPropagation="true">
-        @* <Row ItemsPerRow="ItemsPerRow.Three"> *@
         @foreach (var item in Data.Controls)
         {
             <div class="col-@(item.Width)">
@@ -87,7 +84,7 @@ else if (Data.CtrType == WidgetType.InputText)
     <div style="z-index:@(Data.Zindex);position:relative" class="designer"
          @onclick="SelectComponentAsync"
          @onclick:stopPropagation="true">
-        <BootstrapInput TValue="string" DisplayText="adfasf" @bind-Value="Data.Values.ValueString" ShowLabel="true"></BootstrapInput>
+        <BootstrapInput TValue="string" DisplayText="@Data.DisplayName" @bind-Value="Data.Values.ValueString" ShowLabel="true"></BootstrapInput>
         <DropArea Data="@Data" ParentData="@ParentData"></DropArea>
     </div>
 }
@@ -121,35 +118,38 @@ else if (Data.CtrType == WidgetType.Bottom)
     <div style="z-index:@(Data.Zindex);position:relative" class="designer"
          @onclick="SelectComponentAsync"
          @onclick:stopPropagation="true">
-        <Button OnClick="ButtonClick">@Data.Name</Button>
+        <Button OnClick="ButtonClick">@Data.DisplayName</Button>
             <DropArea Data="@Data" ParentData="ParentData"></DropArea>
         </div>
 }
 else if (Data.CtrType == WidgetType.Tab)
 {
     <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="designer"
-         @onclick="SelectComponentAsync"
          @onclick:stopPropagation="true">
-        <Tab>
-            <TabItem Text="用户管理">
-                <div class="yonghuguanli" style="position:relative;height:100%">
-                    <div>我是用户管理</div>
-                    <DropArea Data="@Data" ParentData="ParentData"></DropArea>
-                </div>
-                
-            </TabItem>
-            <TabItem Text="菜单管理">
-                <div>我是菜单管理</div>
-            </TabItem>
-            <TabItem Text="角色管理">
-                <div>我是角色管理</div>
-            </TabItem>
-            <TabItem Text="部门管理">
-                <div>我是部门管理</div>
-            </TabItem>
-        </Tab>
-            
+        <Tab OnClickTabItemAsync="OnClickTabItemAsync">
+            @foreach (var item in Data.Controls)
+            {
+                <TabItem Text="@item.Key">
+                    <div style="position:relative;height:100%" @onclick="SelectComponentAsync"
+                         @onclick:stopPropagation="true">
+                        @foreach (var item2 in item.Controls)
+                        {
+                            <ControlComponent Data="item2" ParentData="@item"></ControlComponent>
+                        }
+                        <DropArea Data="@item" ParentData="@item"></DropArea>
+                    </div>
+                </TabItem>
+            }
+
+            @*   <TabItem Text="菜单管理">
+        <div class="yonghuguanli" style="position:relative;height:100%">
+        <div>菜单管理</div>
+        <DropArea Data="@Data" ParentData="ParentData"></DropArea>
         </div>
+        </TabItem> *@
+        </Tab>
+
+    </div>
 }
 else if (Data.CtrType == WidgetType.None)
 {
@@ -159,8 +159,9 @@ else if (Data.CtrType == WidgetType.None)
         {
             <ControlComponent Data="item" ParentData="Data"></ControlComponent>
         }
+        <DropArea Data="@Data" ParentData="ParentData"></DropArea>
+
     </div>
-    <DropArea Data="@Data" ParentData="ParentData"></DropArea>
 
 }
 

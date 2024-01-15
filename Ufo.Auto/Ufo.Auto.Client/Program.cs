@@ -2,7 +2,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Models;
-using Models.System;
+using Models.SystemInfo;
 using SqlSugar;
 using System.Diagnostics;
 using System.Reflection;

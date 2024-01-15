@@ -1,7 +1,7 @@
 ﻿using SqlSugar;
 using System.Text.Json.Serialization;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
     /// <summary>
     /// 公司
@@ -17,7 +17,7 @@ namespace Models.System
         /// </summary>
         [Navigate(NavigateType.OneToMany, nameof(Factory.CompanyId))]
         //[JsonIgnore]
-        public List<Factory>?  Factories { get; set; }
+        public List<Factory>? Factories { get; set; }
         /// <summary>
         /// 所属集团Id
         /// </summary>

@@ -1,9 +1,11 @@
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Models.Dto;
 using Shared.Page;
 using SqlSugar;
 using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Shared.Components
 {
@@ -43,7 +45,15 @@ namespace Shared.Components
         {
             await MainPage.SetSelectControlByDesignerAsync(Data);
         }
-        private void SelectLeftComponentAsync()
+        /// <summary>
+        /// 设置本组件为MainPage中被选中的控件,并且刷新界面
+        /// </summary>
+        /// <returns></returns>
+        private async Task SelectComponentAsync(Control e)
+        {
+            await MainPage.SetSelectControlByDesignerAsync(e);
+        }
+        private void SelectLeftComponentAsync(Control c)
         {
             // await FormDesigner.SelectComponentAsync(ComponentData);
             if (MainPage != null)
@@ -200,7 +210,7 @@ namespace Shared.Components
                             }
                         }
                     }
-                  var tab=  await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.DataSourse?.StoreName, parameters);
+                    var tab = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.DataSourse?.StoreName, parameters);
                 }
                 else
                 {
@@ -212,6 +222,19 @@ namespace Shared.Components
             {
                 throw;
             }
+        }
+        #endregion
+        #region Tab
+        public async Task OnClickTabItemAsync(TabItem e)
+        {
+            Data.Controls.ForEach(x=>x.IsActive=false);
+            var ss = Data.Controls.Find(x => x.Key == e.Text);
+            if (ss != null)
+            {
+                ss.IsActive = true;
+                await SelectComponentAsync(ss);
+            }
+
         }
         #endregion
     }

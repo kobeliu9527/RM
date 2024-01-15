@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.NotEntity;
-using Models.System;
+using Models.SystemInfo;
 using SqlSugar;
 
 namespace Ufo.Auto.Controllers

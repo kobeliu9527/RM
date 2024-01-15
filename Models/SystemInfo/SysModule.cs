@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
     /// <summary>
     /// 模块
@@ -25,11 +25,11 @@ namespace Models.System
         [Navigate(NavigateType.OneToMany, nameof(FunctionGroup.ModuleId))]
         public List<FunctionGroup>? FunctionGroups { get; set; }
 
-        public FunctionPage? Find( string id)
+        public FunctionPage? Find(string id)
         {
-            if (this.FunctionGroups != null)
+            if (FunctionGroups != null)
             {
-                foreach (var fg in this.FunctionGroups)
+                foreach (var fg in FunctionGroups)
                 {
                     if (fg.FunctionPages != null)
                     {
@@ -51,7 +51,7 @@ namespace Models.System
     /// <summary>
     /// 表的权限
     /// </summary>
-    public class TableRole: EntityBase
+    public class TableRole : EntityBase
     {
         public string? TableName { get; set; }
         /// <summary>

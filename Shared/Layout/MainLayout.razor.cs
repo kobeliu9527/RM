@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
+using Models.SystemInfo;
 using Shared.Page;
 
 namespace Shared.Layout
@@ -19,15 +20,15 @@ namespace Shared.Layout
 
         private bool IsFixedHeader { get; set; } = true;
 
-        private bool IsFixedFooter { get; set; } = true;
+        private bool IsFixedFooter { get; set; } 
 
-        private bool IsFullSide { get; set; } = true;
+        private bool IsFullSide { get; set; } 
 
-        private bool ShowFooter { get; set; } = true;
+        private bool ShowFooter { get; set; } 
 
         private List<MenuItem>? Menus { get; set; }
         [CascadingParameter(Name = "router")]
-        public Models.System.SysModule? SysModule { get; set; }
+        public SysModule? SysModule { get; set; }
 
         [Inject]
         [NotNull]

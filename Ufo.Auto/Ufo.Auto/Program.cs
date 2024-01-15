@@ -8,7 +8,7 @@ using Models;
 //using Models.Services.AuthenticationStateCustom;
 using Models.Services.Base;
 using Models.Services.ServerByDb;
-using Models.System;
+using Models.SystemInfo;
 using Newtonsoft.Json.Linq;
 using NSwag;
 using Serilog;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.NotEntity;
-using Models.System;
+using Models.SystemInfo;
 using SqlSugar;
 
 namespace AutoServer.Controllers

@@ -1,4 +1,5 @@
-﻿using Models.System;
+﻿using Models.Dto;
+using Models.SystemInfo;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -31,8 +32,10 @@ namespace Models
         /// </summary>
         [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
         [NotNull]
-        //[JsonIgnore] 
+        [JsonIgnore] 
         public ContainerDto? ContainerData { get; set; }
+        [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
+        public MainPage? MainPage { get; set; }
         /// <summary>
         /// 消息框的类型
         /// </summary>

@@ -1,107 +1,200 @@
 ﻿@page "/DesiginerPro"
-@layout Designer
-<CascadingValue Value="this.MainPage" Name="MainPage" IsFixed="true">
-    <div class="dmain-left" style="background-color:rebeccapurple">
-        <Tab>
-            <TabItem Text="工具箱">
-                <Collapse>
-                    <CollapseItems>
-                        <CollapseItem Text="普通控件" IsCollapsed="false">
-                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.InputText"></WidgetBtn>
-                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Table"></WidgetBtn>
-                            <WidgetBtn></WidgetBtn>
-                        </CollapseItem>
-                        <CollapseItem Text="容器控件">
-                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitH"></WidgetBtn>
-                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitV"></WidgetBtn>
-                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Row"></WidgetBtn>
-                            <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Tab"></WidgetBtn>
-                        </CollapseItem>
-                        <CollapseItem Text="图标控件">
-                            早晚会有..
-                        </CollapseItem>
-                        <CollapseItem Text="交互控件">
-                            早晚会有..
-                        </CollapseItem>
-                    </CollapseItems>
-                </Collapse>
-                @*    <div class="fd-palette-widgets">
+@* @layout Designer *@
+@if (FunctionPage == null || FunctionPage.MainPage==null)
+{
+    <span>未获取都页面数据</span>
+}
+else
+{
+    <div style="height:100%;width:100%;display:flex">
+        <CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
+            @if (isdesigner)
+            {
+                <div class="dmain-left" style="background-color:rebeccapurple;width:20%">
+                    <Tab>
+                        <TabItem Text="工具箱">
+                            <Collapse>
+                                <CollapseItems>
+                                    <CollapseItem Text="普通控件" IsCollapsed="false">
+                                        <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.InputText"></WidgetBtn>
+                                        <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Table"></WidgetBtn>
+                                        <WidgetBtn></WidgetBtn>
+                                    </CollapseItem>
+                                    <CollapseItem Text="容器控件">
+                                        <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitH"></WidgetBtn>
+                                        <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitV"></WidgetBtn>
+                                        <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Row"></WidgetBtn>
+                                        <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Tab"></WidgetBtn>
+                                    </CollapseItem>
+                                    <CollapseItem Text="图标控件">
+                                        早晚会有..
+                                    </CollapseItem>
+                                    <CollapseItem Text="交互控件">
+                                        早晚会有..
+                                    </CollapseItem>
+                                </CollapseItems>
+                            </Collapse>
+                            @*    <div class="fd-palette-widgets">
 
-                </div> *@
-            </TabItem>
-            <TabItem Text="菜单管理">
+                    </div> *@
+                        </TabItem>
+                        <TabItem Text="菜单管理">
+                            <Table TItem="FunctionPage" ShowEditButton="false" IsPagination="true" PageItemsSource="new int[]{12,20,50}"
+                                   IsStriped="true" IsBordered="true" IsMultipleSelect="false" AutoGenerateColumns="true"
+                                   ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true" IsExtendButtonsInRowHeader="true"
+                                   ClickToSelect="true"
+                                   OnClickRowCallback="OnClickRowCallbackProduct"
+                                   OnQueryAsync="OnQueryAsync" OnDeleteAsync="OnDeleteAsync" OnSaveAsync="OnSaveAsync"
+                                   OnAddAsync="OnAddAsync">
+                            </Table>
+                        </TabItem>
+                        <TabItem Text="角色">
+                            角色
+                        </TabItem>
+                    </Tab>
+                </div>
+            }
+            <div class="dmain-main" style="z-index:1;width:@(isdesigner?60:100)%">
+                @if (FunctionPage != null && FunctionPage.MainPage != null)
+                {
+                    <ControlComponent Data="FunctionPage.MainPage.Controlmain" ParentData="FunctionPage.MainPage.Controlmain"></ControlComponent>
+                }
+            </div>
 
-            </TabItem>
-            <TabItem Text="角色">
-                角色
-            </TabItem>
-        </Tab>
+            @if (isdesigner)
+            {
+                <div class="dmain-right" style="background-color:aqua;width:20%">
+                    <Tab>
+                        <TabItem Text="属性管理">
+                            @if (this.FunctionPage.MainPage.SelectControl != null)
+                            {
+                                <EditorForm Model="@this.FunctionPage.MainPage.SelectControl">
+                                    <FieldItems>
+                                        <EditorItem @bind-Field="@context.Key" />
+                                        <EditorItem @bind-Field="@context.Height" />
+                                        <EditorItem @bind-Field="@context.Basis" />
+                                        <EditorItem @bind-Field="@context.Zindex" />
+                                    </FieldItems>
+                                    <Buttons>
+                                        <Button OnClick="this.FunctionPage.MainPage.StateHasChangedInvoke">刷新</Button>
+                                    </Buttons>
+                                </EditorForm>
+                            }
+                        </TabItem>
+                        <TabItem Text="详情">
+                            角色
+                        </TabItem>
+                    </Tab>
+                </div>
+            }
+        </CascadingValue>
     </div>
+}
 
-    <div class="dmain-main" style="z-index:1">
-        @if (MainPage.Controlmain != null)
-        {
-            <ControlComponent Data="MainPage.Controlmain" ParentData="MainPage.Controlmain"></ControlComponent>
-        }
-    </div>
-    <div class="dmain-right" style="background-color:aqua">
-        @if (MainPage.SelectControl != null)
-        {
-            <EditorForm Model="@MainPage.SelectControl">
-                <FieldItems>
-                    <EditorItem @bind-Field="@context.Name" />
-                    <EditorItem @bind-Field="@context.Height" />
-                    <EditorItem @bind-Field="@context.Basis" />
-                    <EditorItem @bind-Field="@context.Zindex" />
-                </FieldItems>
-                <Buttons>
-                    <Button OnClick="MainPage.StateHasChangedInvoke">刷新</Button>
-                </Buttons>
-            </EditorForm>
-        }
-    </div>
-</CascadingValue>
 @code {
-    // public Control Controlmain { get; set; } = new() { Name = "主页面", CtrType = WidgetType.None, Zindex = 1 };
-    // public Control? SelectControl { get; set; }
-    // public WidgetType SelectedWidgetType { get; set; }
+    [Inject]
+    [NotNull]
+    private SwalService? SwalService { get; set; }
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+    public bool isdesigner { get; set; } = true;
     public MainPage MainPage { get; set; } = new();
+    public FunctionPage? FunctionPage { get; set; }
+    public List<FunctionPage>? FunctionPageList { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        MainPage.StateHasChanged = StateHasChanged;
+        FunctionPage = new FunctionPage() { MainPage = new MainPage() };
+        FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+        var json = System.Text.Json.JsonSerializer.Serialize(FunctionPage);
         return;
-        // var Control = new Control(WidgetType.SplitH, 1) { Height = 60 };
-        // var row = new Control(WidgetType.Row) { };
-        // row.Controls.Add(new Control());
-        // row.Controls.Add(new Control(WidgetType.InputText) { Zindex = 11 });
-        // var sp = new Control(WidgetType.SplitH, 2) { IsVertical = true };
-        // sp.Controls[0].Controls.Add(row);
-        // Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
-        // Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
-        // Control.Controls[0].Controls.Add(new Control() { Zindex = 2 });
-        // Control.Controls[1].Controls.Add(sp);
-        // Controlmain.Controls.Add(Control);
         // var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
         // Controlmain = System.Text.Json.JsonSerializer.Deserialize<Control>(json) ?? new Control();
     }
-    // public void StateHasChangedInvoke()
-    // {
-    //     //var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
-    //     StateHasChanged();
-    // }
-    // public Task SetSelectedControlByBoxAsync(WidgetType data)
-    // {
-    //     SelectControl = null;//这里考虑不用置空
-    //     SelectedWidgetType = data;
-    //     return Task.CompletedTask;
-    // }
-    // public Task SetSelectControlByDesignerAsync(Control data)
-    // {
-    //     // SelectControlByBox = data.Adapt<Control>();
-    //     SelectControl = data;
-    //    // SelectedWidgetType = null;
-    //     StateHasChanged();
-    //     return Task.CompletedTask;
-    // }
+    private Task<QueryData<FunctionPage>> OnQueryAsync(QueryPageOptions options)
+    {
+        // IEnumerable<Product> items = Items;
+        var items = db.Queryable<FunctionPage>().ToList();
+        items = items ?? new List<FunctionPage>();
+        // 过滤
+        var isFiltered = false;
+        if (options.Filters.Any())
+        {
+            // items = items.Where(options.Filters.GetFilterFunc<Product>());
+            isFiltered = true;
+        }
+
+        // 排序
+        var isSorted = false;
+        if (!string.IsNullOrEmpty(options.SortName))
+        {
+            // var invoker = Foo.GetNameSortFunc();
+            // items = invoker(items, options.SortName, options.SortOrder);
+            isSorted = true;
+        }
+
+        // 设置记录总数
+        var total = items.Count();
+        // 内存分页
+        items = items.Skip((options.PageIndex - 1) * options.PageItems).Take(options.PageItems).ToList();
+        return Task.FromResult(new QueryData<FunctionPage>() { Items = items, TotalCount = total, IsSorted = isSorted, IsFiltered = isFiltered, IsSearch = true });
+    }
+    public async Task<bool> OnDeleteAsync(IEnumerable<FunctionPage> list)
+    {
+        await db.Deleteable<FunctionPage>(list).ExecuteCommandAsync();
+        return true;
+    }
+    private async Task<bool> OnSaveAsync(FunctionPage item, ItemChangedType changedType)
+    {
+        try
+        {
+            switch (changedType)
+            {
+                case ItemChangedType.Add:
+                    db.Insertable<FunctionPage>(item).ExecuteReturnSnowflakeId();
+                    break;
+                case ItemChangedType.Update:
+                    db.Updateable(item).ExecuteCommand();
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            var op = new SwalOption()
+                {
+                    Category = SwalCategory.Success,
+                    Title = $"失败",
+                    Content = $"失败:{ex.Message}",
+                    ShowClose = true
+                };
+            await SwalService.Show(op);
+            return false;
+        }
+
+        StateHasChanged();
+        return true;
+    }
+    public async Task<FunctionPage> OnAddAsync()
+    {
+        await Task.Delay(200);
+        var obj = new FunctionPage() { MainPage = new MainPage() };
+        return obj;
+    }
+    public async Task OnClickRowCallbackProduct(FunctionPage p)
+    {
+        FunctionPage = p;
+        var json = System.Text.Json.JsonSerializer.Serialize(FunctionPage);
+
+        //  await ReservoirAreaTable.QueryAsync();
+        if (FunctionPage != null && FunctionPage.MainPage != null)
+        {
+            FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+        }
+        StateHasChanged();
+
+    }
+
 }

@@ -1,18 +1,18 @@
 ﻿using SqlSugar;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
-    public class RoleFunction
+    public class RelationFunctionAndFunctionGroup
     {
         /// <summary>
         /// 
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
-        public int RoleId { get; set; }
+        public int FunctionPageId { get; set; }
         /// <summary>
         /// 
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
-        public int FunctionPageId { get; set; }
+        public int FunctionGroupId { get; set; }
     }
 }

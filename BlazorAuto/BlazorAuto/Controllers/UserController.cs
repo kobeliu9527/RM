@@ -4,7 +4,7 @@ using Models.Dto;
 using Models.Dto.SVG;
 using Models.NotEntity;
 using Models.Services.Base;
-using Models.System;
+using Models.SystemInfo;
 
 namespace BlazorAuto.Controllers
 {

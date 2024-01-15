@@ -1,7 +1,7 @@
 ﻿using Models.Dto;
 using Models.NotEntity;
 using Models.Services.Base;
-using Models.System;
+using Models.SystemInfo;
 using SqlSugar;
 
 namespace Models.Services.ServerByDb

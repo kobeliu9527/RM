@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Logging;
 using Models.NotEntity;
-using Models.System;
+using Models.SystemInfo;
 using SqlSugar;
 
 namespace BlazorAuto.Controllers

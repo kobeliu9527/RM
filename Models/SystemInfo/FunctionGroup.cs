@@ -1,7 +1,7 @@
 ﻿using SqlSugar;
 using System.Text.Json.Serialization;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
     /// <summary>
     /// 功能组,把多个功能页面形成一个功能组
@@ -19,7 +19,7 @@ namespace Models.System
         /// <summary>
         /// 这个功能组包括的所有页面
         /// </summary>
-        [Navigate(typeof(RelationFunctionAndFunctionGroup), nameof(RelationFunctionAndFunctionGroup.FunctionGroupId), nameof(RelationFunctionAndFunctionGroup.FunctionPageId))] 
-            public List<FunctionPage>? FunctionPages { get; set; }
+        [Navigate(typeof(RelationFunctionAndFunctionGroup), nameof(RelationFunctionAndFunctionGroup.FunctionGroupId), nameof(RelationFunctionAndFunctionGroup.FunctionPageId))]
+        public List<FunctionPage>? FunctionPages { get; set; }
     }
 }

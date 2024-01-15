@@ -1,11 +1,11 @@
 ﻿using SqlSugar;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
-   /// <summary>
-   /// 
-   /// </summary>
-    public class Role : EntityBase,IEquatable<Role>,IComparable<Role>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Role : EntityBase, IEquatable<Role>, IComparable<Role>
     {
         /// <summary>
         /// 角色名字
@@ -19,7 +19,7 @@ namespace Models.System
 
         public bool Equals(Role? other)
         {
-            return other?.Name== Name;
+            return other?.Name == Name;
         }
 
         public int CompareTo(Role? other)

@@ -1,4 +1,4 @@
-global using  Models.Dto;
+global using Models.Dto;
 global using Mapster;
 using AutoServer;
 using AutoServer.Controllers;
@@ -21,9 +21,9 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using Models.Services.Base;
-using Models.System;
 using Models.Services.ServerByDb;
 using Models;
+using Models.SystemInfo;
 
 internal class Program
 {

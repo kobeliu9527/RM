@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Models;
 using Models.Services.Base;
 using Models.Services.ServerByHttp;
-using Models.System;
+using Models.SystemInfo;
 using Shared.AuthenticationStateCustom;
 
 

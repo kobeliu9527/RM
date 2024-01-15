@@ -3,7 +3,7 @@ using Models;
 using Models.Dto;
 using Models.NotEntity;
 using Models.Services.Base;
-using Models.System;
+using Models.SystemInfo;
 using System.Linq.Expressions;
 
 namespace AutoServer.Controllers

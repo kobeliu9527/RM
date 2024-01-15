@@ -5,7 +5,7 @@ using Models.CustomConverter;
 using Models.Services.Base;
 using Models.Services.ServerByDb;
 using Models.Services.ServerByHttp;
-using Models.System;
+using Models.SystemInfo;
 using Shared;
 using System.Text.Json;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
     /// <summary>
     /// 工厂信息

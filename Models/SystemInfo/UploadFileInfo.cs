@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.System
+namespace Models.SystemInfo
 {
     /// <summary>
     /// 文件信息
     /// </summary>
-    public class UploadFileInfo:EntityBase
+    public class UploadFileInfo : EntityBase
     {
         /// <summary>
         /// 文件来源人
