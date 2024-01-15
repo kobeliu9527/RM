@@ -17,8 +17,10 @@ namespace Models.Dto
         public void StateHasChangedInvoke()
         {
             var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
-           
-            StateHasChanged?.Invoke();
+            if (StateHasChanged != null)
+            {
+                StateHasChanged.Invoke();
+            }
         }
         public Task SetSelectedControlByBoxAsync(WidgetType data)
         {
@@ -31,7 +33,10 @@ namespace Models.Dto
             // SelectControlByBox = data.Adapt<Control>();
             SelectControl = data;
             // SelectedWidgetType = null;
-            StateHasChanged?.Invoke();
+            if (StateHasChanged!=null)
+            {
+                StateHasChanged.Invoke();
+            }
             return Task.CompletedTask;
         }
         /// <summary>
