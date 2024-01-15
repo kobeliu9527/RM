@@ -13,7 +13,7 @@
         /// <summary>
         /// 每一页显示多少条
         /// </summary>
-        public int PageItems { get; set; } = 10;
+        public int PageItems { get; set; } = 15;
         /// <summary>
         /// 一共有多少条
         /// </summary>

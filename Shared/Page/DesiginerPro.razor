@@ -8,7 +8,7 @@
             <div class="dmain-left" style="background-color:rebeccapurple;width:20%">
                 <Tab>
                     <TabItem Text="菜单管理">
-                        <Table TItem="FunctionPage" ShowEditButton="false" IsPagination="true" PageItemsSource="new int[]{12,20,50}"
+                        <Table TItem="FunctionPage" ShowEditButton="false" IsPagination="true" PageItemsSource="new int[]{20,10,50}"
                                IsStriped="true" IsBordered="true" IsMultipleSelect="false" AutoGenerateColumns="true"
                                ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true" IsExtendButtonsInRowHeader="true"
                                ClickToSelect="true"
@@ -43,8 +43,12 @@
 
                     </div> *@
                     </TabItem>
-                    <TabItem Text="角色">
-                        角色
+                    <TabItem Text="控件树">
+                        <Button OnClick="TreeRefresh">刷新</Button>
+                        @if (ControlTree != null)
+                        {
+                            <TreeView TItem="Control" Items="@ControlTree" OnTreeItemClick="@OnTreeItemClick" />
+                        }
                     </TabItem>
                 </Tab>
             </div>
@@ -66,7 +70,7 @@
             <div class="dmain-right" style="background-color:aqua;width:20%">
                 <Tab>
                     <TabItem Text="属性管理">
-                        @if (FunctionPage != null && FunctionPage.MainPage != null && FunctionPage.MainPage.SelectControl!=null)
+                        @if (FunctionPage != null && FunctionPage.MainPage != null && FunctionPage.MainPage.SelectControl != null)
                         {
                             <EditorForm Model="@this.FunctionPage.MainPage.SelectControl">
                                 <FieldItems>
@@ -98,8 +102,9 @@
     [Inject]
     [NotNull]
     public ISqlSugarClient? db { get; set; }
+    private List<TreeViewItem<Control>>? ControlTree { get; set; }
     public bool isdesigner { get; set; } = true;
-    // public MainPage MainPage { get; set; } = new();
+
     public FunctionPage FunctionPage { get; set; } = new();
     public List<FunctionPage>? FunctionPageList { get; set; }
     protected override void OnInitialized()
@@ -185,10 +190,10 @@
     }
     public async Task OnClickRowCallbackProduct(FunctionPage p)
     {
-        if (FunctionPage.Id!=p.Id)
+        if (FunctionPage.Id != p.Id)
         {
             FunctionPage = p;
-            if (FunctionPage.MainPage!=null)
+            if (FunctionPage.MainPage != null)
             {
                 FunctionPage.MainPage.StateHasChanged = StateHasChanged;
             }
@@ -197,4 +202,23 @@
         await Task.Delay(50);
     }
 
+    public void TreeRefresh()
+    {
+        List<TreeViewItem<Control>> treelist = new();
+        if (FunctionPage != null && FunctionPage.MainPage!=null)
+        {
+            FunctionPage.MainPage.Controlmain.ToTree(treelist);
+            ControlTree = treelist;
+        }
+    }
+    private Task OnTreeItemClick(TreeViewItem<Control> item)
+    {
+        if (FunctionPage != null && FunctionPage.MainPage!=null)
+        {
+            FunctionPage.MainPage.SelectControl = item.Value;
+        }
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    
 }

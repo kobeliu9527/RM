@@ -30,8 +30,6 @@ namespace Shared.Components
         private DataTable PageDataTable { get; set; } = new();
         [NotNull]
         private List<SelectedItem>? PageItemsSource { get; set; } = [
-            new("2", "2条/页"),
-            new("4", "4条/页"),
             new("10", "10条/页"),
             new("20", "20条/页")
         ];
@@ -149,7 +147,20 @@ namespace Shared.Components
                 //}
             })
             {
-
+                OnDeleteAsync = (e) => {  
+                    return Task.FromResult(false); 
+                },
+                OnAddAsync = (e) => {
+                    return Task.FromResult(true);
+                },
+                OnChanged = (e) => {
+                    return Task.FromResult(true);
+                },
+                OnValueChanged = (a,b,c) => {
+                    return Task.FromResult(true);
+                }
+                
+                
             };
         }
         /// <summary>
@@ -227,14 +238,15 @@ namespace Shared.Components
         #region Tab
         public async Task OnClickTabItemAsync(TabItem e)
         {
-            Data.Controls.ForEach(x=>x.IsActive=false);
-            var ss = Data.Controls.Find(x => x.Key == e.Text);
-            if (ss != null)
-            {
-                ss.IsActive = true;
-                await SelectComponentAsync(ss);
-            }
-
+            // await SelectComponentAsync(new MouseEventArgs());
+            //Data.Controls.ForEach(x=>x.IsActive=false);
+            //var ss = Data.Controls.Find(x => x.Key == e.Text);
+            //if (ss != null)
+            //{
+            //    ss.IsActive = true;
+            //    await SelectComponentAsync(ss);
+            //}
+            await Task.Delay(100);
         }
         #endregion
     }

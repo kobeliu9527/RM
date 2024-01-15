@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace Models.Dto
 {
-
+    /// <summary>
+    /// 表示一个控件
+    /// </summary>
     public class Control
     {
         /// <summary>
@@ -90,10 +92,10 @@ namespace Models.Dto
             Key = CtrType.ToString();
         }
         /// <summary>
-        /// todo:新增了控件
+        /// todo:新增了控件 拖动的时候会触发调用此构造函数
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="zindex"></param>
+        /// <param name="type">元素类型</param>
+        /// <param name="zindex">父元素的层级+1</param>
         public Control(WidgetType type, int zindex = 0)
         {
             CtrType = type;
@@ -103,7 +105,7 @@ namespace Models.Dto
             {
                 case WidgetType.SplitH:
                 case WidgetType.SplitV:
-                    DisplayName = "分割框";
+                    DisplayName = "分割面板";
                     IsContainer = true;
                     var first = new Control(WidgetType.FirstPanel) { Key = "FirstPanel", DisplayName = "第一个容器" };
                     first.Zindex = Zindex;
@@ -115,6 +117,8 @@ namespace Models.Dto
                     break;
                 case WidgetType.Row:
                     IsContainer = true;
+                    DisplayName = "行元素";
+                    Height = 10;
                     break;
                 case WidgetType.Bottom:
                     DisplayName = "按钮";
@@ -132,14 +136,16 @@ namespace Models.Dto
                     break;
                 case WidgetType.Table:
                     TableInfo = new TableInfo();
+                    DisplayName = "表格";
                     break;
                 case WidgetType.Tab:
+                    DisplayName = "多页面组件";
                     var tab1 = new Control()
                     {
                         Key = "Tab1",
-                        DisplayName = "Tab1"
+                        DisplayName = "页面1"
                     };
-                    var tab2 = new Control() { Key = "Tab2", DisplayName = "Tab2" };
+                    var tab2 = new Control() { Key = "Tab2", DisplayName = "页面2" };
                     tab1.Zindex = Zindex;
                     tab2.Zindex = Zindex;
                     Controls.Add(tab1);
@@ -149,5 +155,6 @@ namespace Models.Dto
                     break;
             }
         }
+        
     }
 }
