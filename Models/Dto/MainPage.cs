@@ -5,34 +5,60 @@ namespace Models.Dto
 {
     public class MainPage
     {
+        /// <summary>
+        /// 调用StateHasChangedInvoke方法会调用这个委托
+        /// </summary>
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public Action? StateHasChanged { get; set; }
         /// <summary>
         /// 根控件
         /// </summary>
-        public Control Controlmain { get; set; } = new() { Key = "主页面", CtrType = WidgetType.None, Zindex = 5 };
+        public Control Controlmain { get; set; } = new() {  CtrType = WidgetType.None, Zindex = 5 };
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public Control? SelectControl { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        public Control? SelectControlParent { get; set; }
+
         public WidgetType SelectedWidgetType { get; set; }
-        public void StateHasChangedInvoke()
+        /// <summary>
+        /// 立即刷新主页面
+        /// </summary>
+        public async Task StateHasChangedInvoke()
         {
-            var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
+            //var json = System.Text.Json.JsonSerializer.Serialize(Controlmain);
             if (StateHasChanged != null)
             {
                 StateHasChanged.Invoke();
+                await Task.Delay(100);
             }
         }
-        public Task SetSelectedControlByBoxAsync(WidgetType data)
+        /// <summary>
+        /// 设置工具箱中被选中的组件,拖动会触发!后续优化:增加一个字段,表示控件箱中被选中的控件
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Task SetSelectedWidget(WidgetType data)
         {
-            SelectControl = null;//这里考虑不用置空
             SelectedWidgetType = data;
             return Task.CompletedTask;
         }
-        public Task SetSelectControlByDesignerAsync(Control data)
+        /// <summary>
+        /// 设置设计器中被选中的控件:点击设计器中的控件等都会触发这个
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Task SetSelectedControl(Control data)
         {
             // SelectControlByBox = data.Adapt<Control>();
+            if (SelectControl!=null)
+            {
+                SelectControl.IsSelect = false;
+            }
             SelectControl = data;
-            // SelectedWidgetType = null;
+            SelectControl.IsSelect=true;
             if (StateHasChanged!=null)
             {
                 StateHasChanged.Invoke();
@@ -43,10 +69,15 @@ namespace Models.Dto
         /// 递归找到第一个符合条件的
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="Match"></param>
         /// <returns></returns>
-        public Control? FindFirst(string name)
+        public Control? FindFirst(string name, Func<Control, bool>? Match= null)
         {
-            return FindFirst(Controlmain.Controls, (s) => { return s.Key == name; });
+            if (Match==null)
+            {
+                return FindFirst(Controlmain.Controls, (s) => { return s.Key == name; });
+            }
+            return FindFirst(Controlmain.Controls, Match);
         }
 
         public static Control? FindFirst(IEnumerable<Control> collection, Func<Control, bool> math)

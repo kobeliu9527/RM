@@ -2,13 +2,9 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height: 100%;
     width: 100%;
+    padding:0px;
+    margin:0px;
 }
-
-body {
-    margin: 0;
-    background-color: #fff;
-}
-
 h1:focus {
     outline: none;
 }
@@ -709,7 +705,6 @@ code {
 
 .layout.is-page .layout-side {
     color: #3f4254;
-    background-color: #fff;
     box-shadow: 0 0 28px 0 rgb(82 63 105 / 5%);
 }
 
@@ -717,18 +712,15 @@ code {
     color: #3f4254;
 }
 
-.tabs-body {
-    background-color: #fff;
-    overflow: auto;
-}
+
 
 /*.tabs-body-content .tabs-body-content {
     background-color: #f5f8fa;
 }*/
 
-.layout.is-page .layout-footer {
+/*.layout.is-page .layout-footer {
     background-color: #e9ecef;
-}
+}*/
 
 .page-layout-demo-footer-link {
     color: #3f4254;
@@ -948,9 +940,9 @@ code {
         width: 100%;
     }
 
-.layout.is-page .layout-right {
+/*.layout.is-page .layout-right {
     background-color: #fff;
-}
+}*/
 
 .color {
     width: 1.5rem;
@@ -1280,6 +1272,7 @@ code {
     height: 100%;
     max-height: 100%;
     max-width: 20%;
+    
 }
 
     .dmain-left .tabs-body {
@@ -1291,7 +1284,7 @@ code {
     height: 100%;
     max-height: 100%;
     /*width: 60%;*/
-    overflow-y: scroll;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-content: space-between;
@@ -1381,6 +1374,10 @@ body .layout is-page {
     border-width: 1px;
     border-style: groove;
 }
+.layout-main .tabs-body {
+    padding: 0px;
+    overflow: auto;
+}
 /*table增加高亮特效*/
 .table .active {
     --bs-table-striped-bg: #409eff;
@@ -1394,4 +1391,26 @@ body .layout is-page {
 .custom-row {
     margin: 0px;
     padding: 0px;
+    position: relative;
+    border-style: dashed;
+    border-color: slategrey;
+    border-width: 1px;
 }
+.designer-select {
+    border: solid;
+    border-color: #06d006;
+    border-width: 1px;
+}
+.designer:hover {
+    border-style: dashed;
+    border-color: slategrey;
+    border-width: 1px;
+}
+.Prop {
+    height:100%;
+    width:100%;
+}
+    .Prop .btn-group {
+        flex: auto !important;
+        flex-flow: wrap;
+    }

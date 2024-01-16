@@ -5,8 +5,8 @@
     <CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
         @if (isdesigner)
         {
-            <div class="dmain-left" style="background-color:rebeccapurple;width:20%">
-                <Tab>
+            <div class="dmain-left" style="width:20%">
+                <Tab >
                     <TabItem Text="菜单管理">
                         <Table TItem="FunctionPage" ShowEditButton="false" IsPagination="true" PageItemsSource="new int[]{20,10,50}"
                                IsStriped="true" IsBordered="true" IsMultipleSelect="false" AutoGenerateColumns="true"
@@ -67,22 +67,12 @@
 
         @if (isdesigner)
         {
-            <div class="dmain-right" style="background-color:aqua;width:20%">
+            <div class="dmain-right" style="width:20%">
                 <Tab>
                     <TabItem Text="属性管理">
                         @if (FunctionPage != null && FunctionPage.MainPage != null && FunctionPage.MainPage.SelectControl != null)
                         {
-                            <EditorForm Model="@this.FunctionPage.MainPage.SelectControl">
-                                <FieldItems>
-                                    <EditorItem @bind-Field="@context.Key" />
-                                    <EditorItem @bind-Field="@context.Height" />
-                                    <EditorItem @bind-Field="@context.Basis" />
-                                    <EditorItem @bind-Field="@context.Zindex" />
-                                </FieldItems>
-                                <Buttons>
-                                    <Button OnClick="this.FunctionPage.MainPage.StateHasChangedInvoke">刷新</Button>
-                                </Buttons>
-                            </EditorForm>
+                            <ControlProperties Data="FunctionPage.MainPage.SelectControl"></ControlProperties>
                         }
                     </TabItem>
                     <TabItem Text="详情">
@@ -99,6 +89,9 @@
     [Inject]
     [NotNull]
     private SwalService? SwalService { get; set; }
+    [Inject]
+    [NotNull]
+    private ToastService? ToastService { get; set; }
     [Inject]
     [NotNull]
     public ISqlSugarClient? db { get; set; }

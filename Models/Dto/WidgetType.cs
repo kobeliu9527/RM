@@ -14,6 +14,7 @@
         Row,
         Bottom,
         InputText,
-        Tab
+        Tab,
+        TabItem
     }
 }

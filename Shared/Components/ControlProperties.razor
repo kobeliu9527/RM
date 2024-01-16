@@ -1,0 +1,176 @@
+﻿@if (Data != null)
+{
+    <div class="Prop">
+        @switch (Data.CtrType)
+        {
+            case WidgetType.SplitH:
+            case WidgetType.SplitV:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="布局外观">
+
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="时间">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            case WidgetType.Row:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="布局外观">
+                            <Tooltip Title="单位为像素">
+                                <BootstrapInputNumber @bind-Value="@Data.MinHeight" TValue="int" Step="10" Max="9999" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                            </Tooltip>
+                            <Tooltip Title="如果父级容器为Row,这个值表示占用父级容器宽度的份数,分成12份">
+                                <BootstrapInputNumber @bind-Value="@Data.Width" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                            </Tooltip>
+                            <Tooltip Title="相对于前一个控件,间隔多少个单位(在行中有效)">
+                                <BootstrapInputNumber @bind-Value="@Data.Offset" TValue="int" Step="1" Max="12" Min="0" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                            </Tooltip>
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="时间">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            case WidgetType.Bottom:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="布局外观">
+                            @if (@Data.Button != null)
+                            {
+                                <Tooltip Title="宽度由Size,按钮名字决定,这个属性表示占用父级宽度的份数">
+                                    <BootstrapInputNumber @bind-Value="@Data.Width" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                </Tooltip>
+                                <Tooltip Title="相对于前一个控件,间隔多少个单位(在行中有效)">
+                                    <BootstrapInputNumber @bind-Value="@Data.Offset" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                </Tooltip>
+                                <Tooltip Title="控件的大小">
+                                    <Select @bind-Value="@Data.Button.Size" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Select>
+                                </Tooltip>
+                            }
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="时间">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            case WidgetType.InputText:
+                @if (@Data.InputText != null)
+                {
+                    <Collapse OnCollapseChanged="CollapseChangedForInputText">
+                        <CollapseItems>
+                            <CollapseItem Text="布局外观">
+                                <Switch @bind-Value="@Data.InputText.IsDisabled" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
+                                <Tooltip Title="宽度由Size,按钮名字决定,这个属性表示占用父级宽度的份数">
+                                    <BootstrapInputNumber @bind-Value="@Data.Width" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                </Tooltip>
+                                <Tooltip Title="相对于前一个控件,间隔多少个单位(在行中有效)">
+                                    <BootstrapInputNumber @bind-Value="@Data.Offset" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                </Tooltip>
+                                <Switch @bind-Value="@Data.InputText.ShowLabel" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
+                                <Select @bind-Value="@Data.InputText.Color" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Select>
+                            </CollapseItem>
+                            <CollapseItem Text="控件属性">
+                                <Switch @bind-Value="@Data.InputText.IsAutoFocus" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
+                            </CollapseItem>
+                            <CollapseItem Text="事件">
+                                @if (@Data.InputText != null)
+                                {
+                                    <Switch @bind-Value="@Data.InputText.EnterEnAble" ShowLabel="true"></Switch>
+                                    <Select TValue="string" @bind-Value="@Data.InputText.EnterStoreName" IsVirtualize="true" OnQueryAsync="QueryForStoreName" ShowSearch="true" DisplayText="存储过程名字"></Select>
+                                    <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.InputText.EnterStoreParmeter" ShowLabel="true" DisplayText="存储过程需要的参数" />
+                                    <Switch @bind-Value="@Data.InputText.EscEnAble" ShowLabel="true"></Switch>
+                                    
+                                }
+                            </CollapseItem>
+                        </CollapseItems>
+                    </Collapse>
+                }
+
+                break;
+            case WidgetType.None:
+                break;
+            case WidgetType.FirstPanel:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="布局外观">
+                            <BootstrapInputNumber @bind-Value="@Data.Basis" TValue="int" Step="5" Max="90" Min="10" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="时间">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            case WidgetType.SecondPanel:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="外观布局">
+
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="事件数据源">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            case WidgetType.Table:
+                break;
+            case WidgetType.Tab:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="外观布局">
+                            <BootstrapInputNumber @bind-Value="@Data.Height" TValue="int" Step="5" Max="90" Min="10" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="事件数据源">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            case WidgetType.TabItem:
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="外观布局">
+                            TabItem
+                        </CollapseItem>
+                        <CollapseItem Text="特有属性">
+
+                        </CollapseItem>
+                        <CollapseItem Text="事件数据源">
+
+                        </CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+                break;
+            default:
+                break;
+        }
+    </div>
+    
+}
+
+

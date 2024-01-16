@@ -10,7 +10,7 @@ namespace Models.Dto
         public DbType DbType { get; set; }
         public bool ValueBool { get; set; }
         public int ValueInt { get; set; }
-        public string? ValueString { get; set; }
+        public string ValueString { get; set; } = "";
         public float ValueFloat { get; set; }
         public double Valuedouble { get; set; }
         public decimal Valuedecimal { get; set; }

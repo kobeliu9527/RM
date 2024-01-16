@@ -64,7 +64,7 @@
         {
             var con = new Control(MainPage.SelectedWidgetType, ParentData.Zindex + 1);
             ParentData.Controls.Add(con);
-            MainPage.StateHasChangedInvoke();
+          await  MainPage.StateHasChangedInvoke();
         }
 
     }

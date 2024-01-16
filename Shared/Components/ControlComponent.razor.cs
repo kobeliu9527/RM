@@ -11,6 +11,12 @@ namespace Shared.Components
 {
     public partial class ControlComponent
     {
+        [Inject]
+        [NotNull]
+        private SwalService? SwalService { get; set; }
+        [Inject]
+        [NotNull]
+        private ToastService? ToastService { get; set; }
         public Random Random { get; set; } = new Random();
         [Inject]
         [NotNull]
@@ -41,32 +47,38 @@ namespace Shared.Components
         /// <returns></returns>
         private async Task SelectComponentAsync(MouseEventArgs e)
         {
-            await MainPage.SetSelectControlByDesignerAsync(Data);
+            await MainPage.SetSelectedControl(Data);
         }
         /// <summary>
-        /// 设置本组件为MainPage中被选中的控件,并且刷新界面
+        /// 传入一个Control,将此Control设置为页面中的SelectControl
         /// </summary>
+        /// <param name="e"></param>
         /// <returns></returns>
-        private async Task SelectComponentAsync(Control e)
+        private async Task SetSelectedAsync(Control e)
         {
-            await MainPage.SetSelectControlByDesignerAsync(e);
+            await MainPage.SetSelectedControl(e);
         }
-        private void SelectLeftComponentAsync(Control c)
+        /// <summary>
+        /// 传入一个Control,将此Control设置为页面中的SelectControl
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private async Task SelectLeftComponentAsync(Control c)
         {
             // await FormDesigner.SelectComponentAsync(ComponentData);
             if (MainPage != null)
             {
                 MainPage.SelectControl = Data.Controls[0];
-                MainPage.StateHasChangedInvoke();
+                await MainPage.StateHasChangedInvoke();
             }
         }
-        private void SelectRightComponentAsync()
+        private async Task SelectRightComponentAsync()
         {
             // await FormDesigner.SelectComponentAsync(ComponentData);
             if (MainPage != null)
             {
                 MainPage.SelectControl = Data.Controls[1];
-                MainPage.StateHasChangedInvoke();
+                await MainPage.StateHasChangedInvoke();
             }
         }
         protected override void OnInitialized()
@@ -147,20 +159,24 @@ namespace Shared.Components
                 //}
             })
             {
-                OnDeleteAsync = (e) => {  
-                    return Task.FromResult(false); 
+                OnDeleteAsync = (e) =>
+                {
+                    return Task.FromResult(false);
                 },
-                OnAddAsync = (e) => {
+                OnAddAsync = (e) =>
+                {
                     return Task.FromResult(true);
                 },
-                OnChanged = (e) => {
+                OnChanged = (e) =>
+                {
                     return Task.FromResult(true);
                 },
-                OnValueChanged = (a,b,c) => {
+                OnValueChanged = (a, b, c) =>
+                {
                     return Task.FromResult(true);
                 }
-                
-                
+
+
             };
         }
         /// <summary>
@@ -238,7 +254,7 @@ namespace Shared.Components
         #region Tab
         public async Task OnClickTabItemAsync(TabItem e)
         {
-            // await SelectComponentAsync(new MouseEventArgs());
+            await SelectComponentAsync(new MouseEventArgs());
             //Data.Controls.ForEach(x=>x.IsActive=false);
             //var ss = Data.Controls.Find(x => x.Key == e.Text);
             //if (ss != null)
@@ -248,6 +264,35 @@ namespace Shared.Components
             //}
             await Task.Delay(100);
         }
+        #endregion
+        #region 文本框
+        /// <summary>
+        /// Enter键执行的存储过程
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public async Task OnEnterAsyncInputText(string val)
+        {
+            if (Data.InputText!=null&& Data.InputText.EnterEnAble)
+            {
+              await  ToastService.Success("执行成功",$"我成功执行了存储过程:{Data.InputText.EnterStoreName}");
+            }
+            await Task.Delay(100);
+        }
+        /// <summary>
+        /// 退出键要执行的
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public async Task OnEscAsyncInputText(string val)
+        {
+            if (Data.InputText != null && Data.InputText.EscEnAble)
+            {
+                await ToastService.Success("执行成功", $"我成功执行了存储过程:{Data.InputText.EscStoreName}");
+            }
+            await Task.Delay(100);
+        }
+        
         #endregion
     }
 }

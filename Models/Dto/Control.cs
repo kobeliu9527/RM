@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models.Dto
@@ -13,11 +14,26 @@ namespace Models.Dto
     /// </summary>
     public class Control
     {
+        #region 设计时属性
+        [JsonIgnore]
+        public bool IsSelect { get; set; }
+        #endregion
+        #region 按钮属性
+        public Button? Button { get; set; }
+        #endregion
+        #region 输入框属性
+        public InputText?  InputText { get; set; }
+        #endregion
         /// <summary>
-        /// 控件的名字
+        /// 控件唯一Id
+        /// </summary>
+        [DisplayName("Id"), Description("用于数据绑定,筛选等唯一key")]
+        public long Id { get; set; } 
+        /// <summary>
+        /// 控件唯一Id
         /// </summary>
         [DisplayName("Key"), Description("用于数据绑定,筛选等唯一key")]
-        public string Key { get; set; } = "NA";
+        public string Key { get; set; } = Guid.NewGuid().ToString();
         /// <summary>
         /// 控件的名字
         /// </summary>
@@ -47,13 +63,28 @@ namespace Models.Dto
         /// <summary>
         /// 控件高度
         /// </summary>
-        [DisplayName("控件高度"), Description("逻辑:占用父级容器高度的百分比 0-100")]
+        [DisplayName("控件高度"), Description("逻辑:占用父级容器高度的百分比 0-100,自适应控件最小高度")]
         public int Height { get; set; } = 100;
+        /// <summary>
+        /// 最小高度
+        /// </summary>
+        [DisplayName("最小高度"), Description("")]
+        public int MinHeight { get; set; } = 30;
+        /// <summary>
+        /// 最大高度
+        /// </summary>
+        [DisplayName("最大高度"), Description("")]
+        public int MaxHeight { get; set; } = 100;
         /// <summary>
         /// 控件宽度
         /// </summary>
         [DisplayName("控件宽度"), Description("逻辑:1-12之间的值,父级容器被分成12分,这个值表示占用多少.一般放在Row控件下的子控件设置此属性")]
         public int Width { get; set; } = 4;
+        /// <summary>
+        /// 控件宽度
+        /// </summary>
+        [DisplayName("起始偏移"), Description("相对于前一个控件,间隔多少个单位")]
+        public int Offset { get; set; } = 0;
         /// <summary>
         /// 当为Split的时候,表示第一个panel占比
         /// </summary>
@@ -89,7 +120,6 @@ namespace Models.Dto
 
         public Control()
         {
-            Key = CtrType.ToString();
         }
         /// <summary>
         /// todo:新增了控件 拖动的时候会触发调用此构造函数
@@ -100,20 +130,18 @@ namespace Models.Dto
         {
             CtrType = type;
             Zindex = zindex;
-            Key = type.ToString();
             switch (type)
             {
                 case WidgetType.SplitH:
                 case WidgetType.SplitV:
                     DisplayName = "分割面板";
                     IsContainer = true;
-                    var first = new Control(WidgetType.FirstPanel) { Key = "FirstPanel", DisplayName = "第一个容器" };
+                    var first = new Control(WidgetType.FirstPanel) {  DisplayName = "第一个容器" };
                     first.Zindex = Zindex;
-                    var second = new Control(WidgetType.SecondPanel) { Key = "SecondPanel", DisplayName = "第二个容器" };
+                    var second = new Control(WidgetType.SecondPanel) { DisplayName = "第二个容器" };
                     second.Zindex = Zindex;
                     Controls.Add(first);
                     Controls.Add(second);
-                    Key = "Split";
                     break;
                 case WidgetType.Row:
                     IsContainer = true;
@@ -121,9 +149,11 @@ namespace Models.Dto
                     Height = 10;
                     break;
                 case WidgetType.Bottom:
+                    Button = new Button();
                     DisplayName = "按钮";
                     break;
                 case WidgetType.InputText:
+                    InputText = new InputText();
                     DisplayName = "文本框";
                     break;
                 case WidgetType.None:
@@ -142,10 +172,10 @@ namespace Models.Dto
                     DisplayName = "多页面组件";
                     var tab1 = new Control()
                     {
-                        Key = "Tab1",
-                        DisplayName = "页面1"
+                        DisplayName = "页面1",
+                        CtrType = WidgetType.TabItem,
                     };
-                    var tab2 = new Control() { Key = "Tab2", DisplayName = "页面2" };
+                    var tab2 = new Control() { Key = "Tab2", DisplayName = "页面2", CtrType = WidgetType.TabItem };
                     tab1.Zindex = Zindex;
                     tab2.Zindex = Zindex;
                     Controls.Add(tab1);
@@ -155,6 +185,44 @@ namespace Models.Dto
                     break;
             }
         }
-        
+
+    }
+    public class Button
+    {
+        [DisplayName("大小"),Description("按钮等的大小")]
+        public Size Size { get; set; } = Size.None;
+        [DisplayName("按钮风格"), Description("按钮风格")]
+        public ButtonStyle ButtonStyle { get; set; }
+        [DisplayName("按钮图标"), Description("按钮图标")]
+        public string Icon { get; set; } = "";
+        [DisplayName("禁用"), Description("是否禁用此图标")]
+        public bool IsDisabled { get; set; }
+    }
+    public class InputText
+    {//IsTrim
+        [DisplayName("自动去头尾空格"), Description("点击确认后,自动去头尾空格")]
+        public bool IsTrim { get; set; }
+        [DisplayName("边框颜色"), Description("边框颜色")]
+        public Color Color { get; set; }
+        [DisplayName("提示水印"), Description("文本框的提示信息")]
+        public string PlaceHolder { get; set; } = "请输入";
+        [DisplayName("禁用"), Description("是否禁用此图标")]
+        public bool IsDisabled { get; set; }
+        [DisplayName("自动获取焦点"), Description("是否自动获取焦点")]
+        public bool IsAutoFocus { get; set; }
+        [DisplayName("显示标签"), Description("是否显示标签")]
+        public bool ShowLabel { get; set; }=true;
+        [DisplayName("回车执行"), Description("文本框是否执行回车事件")]
+        public bool EnterEnAble { get; set; }
+        [DisplayName("回车执行的存储过程"), Description("按回车后执行的存储过程")]
+        public string EnterStoreName { get; set; } = "";
+        [DisplayName("回车执行的存储过程的参数"), Description("按回车后执行的存储过程需要的参数")]
+        public List<string> EnterStoreParmeter { get; set; } =new List<string>();
+        [DisplayName("返回执行"), Description("文本框是否执行Esc事件")]
+        public bool EscEnAble { get; set; }
+        [DisplayName("返回键执行的存储过程"), Description("按返回键后执行的存储过程")]
+        public string EscStoreName { get; set; } = "";
+        [DisplayName("返回键执行的存储过程的参数"), Description("按返回键后执行的存储过程需要的参数")]
+        public IEnumerable<string>? EscStoreParmeter { get; set; }
     }
 }

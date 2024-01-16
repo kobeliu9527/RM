@@ -1,11 +1,11 @@
-﻿@if (Data!=null)
+﻿@if (Data != null)
 {
     @if (Data.CtrType == WidgetType.SplitH)
     {
-        <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" @onclick:stopPropagation="true">
+        <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" class="@(Data.IsSelect?"designer-select":"designer")" @onclick:stopPropagation="true">
             <Split Basis="@(Data.Controls[0].Basis.ToString()+"%")">
                 <FirstPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" @onclick="async ()=>{await SelectComponentAsync(Data.Controls[0]);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[0].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data.Controls[0]);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 0)
                         {
@@ -18,7 +18,7 @@
                     </div>
                 </FirstPaneTemplate>
                 <SecondPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" @onclick="async ()=>{await SelectComponentAsync(Data.Controls[1]);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[1].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data.Controls[1]);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 1)
                         {
@@ -35,11 +35,11 @@
     }
     else if (Data.CtrType == WidgetType.SplitV)
     {
-        <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" @onclick:stopPropagation="true">
+        <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" class="@(Data.IsSelect?"designer-select":"designer")" @onclick:stopPropagation="true">
             <Split Basis="@(Data.Controls[0].Basis.ToString()+"%")" IsVertical="true">
                 <FirstPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;"
-                         @onclick="async ()=>{await SelectComponentAsync(Data.Controls[0]);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[0].IsSelect?"designer-select":"designer")"
+                         @onclick="async ()=>{await SetSelectedAsync(Data.Controls[0]);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 0)
                         {
@@ -52,7 +52,7 @@
                     </div>
                 </FirstPaneTemplate>
                 <SecondPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" @onclick="async ()=>{await SelectComponentAsync(Data.Controls[1]);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[1].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data.Controls[1]);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 1)
                         {
@@ -69,12 +69,12 @@
     }
     else if (Data.CtrType == WidgetType.Row)
     {
-        <div style="z-index:@(Data.Zindex);min-height:@(Data.Height)%;position:relative" class="row d-container custom-row"
+        <div style="z-index:@(Data.Zindex);min-height:@(Data.MinHeight)px;position:relative" class="row custom-row @(Data.IsSelect?"designer-select":"designer")"
              @onclick="SelectComponentAsync"
              @onclick:stopPropagation="true">
             @foreach (var item in Data.Controls)
             {
-                <div class="col-@(item.Width)">
+                <div class="col-@(item.Width) offset-@(item.Offset)">
                     <ControlComponent Data="item" ParentData="@Data"></ControlComponent>
                 </div>
             }
@@ -83,23 +83,36 @@
     }
     else if (Data.CtrType == WidgetType.InputText)
     {
-        <div style="z-index:@(Data.Zindex);position:relative" class="designer"
-             @onclick="SelectComponentAsync"
-             @onclick:stopPropagation="true">
-            <BootstrapInput TValue="string" DisplayText="@Data.DisplayName" @bind-Value="Data.Values.ValueString" ShowLabel="true"></BootstrapInput>
-            <DropArea Data="@Data" ParentData="@ParentData"></DropArea>
-        </div>
+        @if (Data.InputText != null)
+        {
+            <div style="z-index:@(Data.Zindex);position:relative" class="designer @(Data.IsSelect?"designer-select":"")"
+                 @onclick="SelectComponentAsync"
+                 @onclick:stopPropagation="true">
+                <BootstrapInput @bind-Value="Data.Values.ValueString"
+                                PlaceHolder="@Data.InputText.PlaceHolder"
+                                OnEnterAsync="OnEnterAsyncInputText"
+                                OnEscAsync="OnEscAsyncInputText"
+                                IsTrim="@Data.InputText.IsTrim"
+                                IsDisabled="@Data.InputText.IsDisabled"
+                                DisplayText="@Data.DisplayName"
+                                IsAutoFocus="@Data.InputText.IsAutoFocus"
+                                ShowLabel="@Data.InputText.ShowLabel"
+                                Color="Data.InputText.Color">
+                </BootstrapInput>
+                @* <DropArea Data="@Data" ParentData="@ParentData"></DropArea> *@
+            </div>
+        }
     }
     else if (Data.CtrType == WidgetType.Table)
     {
-        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="designer table"
+        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="table @(Data.IsSelect?"designer-select":"")"
              @onclick="SelectComponentAsync"
              @onclick:stopPropagation="true">
             <div style="height:calc(100% - 60px)">
                 <Table TItem="DynamicObject" DynamicContext="DataTablePageDynamicContext" IsFixedHeader="true"
-                    TableSize="TableSize.Compact"
-                    ClickToSelect="true"
-                    ShowToolbar="true" ShowDeleteButton="true" ShowSearchButton="false" ShowRefresh="false" ShowAddButton="false" ShowEditButton="false" >
+                       TableSize="TableSize.Compact"
+                       ClickToSelect="true"
+                       ShowToolbar="true" ShowDeleteButton="true" ShowSearchButton="false" ShowRefresh="false" ShowAddButton="false" ShowEditButton="false">
                     <TableToolbarTemplate>
                         <TableToolbarButton Color="Color.Info" Icon="fa-fw fa-solid fa-circle-plus" Text="刷新" OnClick="InitDataTable" />
                     </TableToolbarTemplate>
@@ -107,13 +120,13 @@
             </div>
             <div style="height:60px;overflow-y:hidden">
                 <Pagination ShowGotoNavigator="false" ShowPageInfo="false" PageCount="@Data.TableInfo!.PageCount" PageIndex="@Data.TableInfo!.PageIndex" OnPageLinkClick="@OnPageLinkClick">
-                   @*  <PageInfoTemplate>
-                        @if (Data != null && Data.TableInfo != null)
-                        {
-                            <div class="page-info me-2">@($"一共:{Data.TableInfo.TotalCount}条")</div>
-                            <Select @bind-Value="@Data.TableInfo.PageItems" Items="PageItemsSource" OnValueChanged="(e)=>{InitPageDataTable();return Task.CompletedTask;}" />
-                        }
-                    </PageInfoTemplate> *@
+                    @*  <PageInfoTemplate>
+            @if (Data != null && Data.TableInfo != null)
+            {
+            <div class="page-info me-2">@($"一共:{Data.TableInfo.TotalCount}条")</div>
+            <Select @bind-Value="@Data.TableInfo.PageItems" Items="PageItemsSource" OnValueChanged="(e)=>{InitPageDataTable();return Task.CompletedTask;}" />
+            }
+            </PageInfoTemplate> *@
                 </Pagination>
             </div>
             @* <DropArea Data="@Data" ParentData="ParentData"></DropArea> *@
@@ -121,22 +134,25 @@
     }
     else if (Data.CtrType == WidgetType.Bottom)
     {
-        <div style="z-index:@(Data.Zindex);position:relative" class="designer"
-             @onclick="SelectComponentAsync"
-             @onclick:stopPropagation="true">
-            <Button OnClick="ButtonClick">@Data.DisplayName</Button>
-                <DropArea Data="@Data" ParentData="ParentData"></DropArea>
-            </div>
+        @if (Data.Button != null)
+        {
+            <div style="z-index:@(Data.Zindex);position:relative" class="@(Data.IsSelect?"designer-select":"")"
+                 @onclick="SelectComponentAsync"
+                 @onclick:stopPropagation="true">
+                <Button OnClick="ButtonClick" Size="Data.Button.Size">@Data.DisplayName</Button>
+                    <DropArea Data="@Data" ParentData="ParentData"></DropArea>
+                </div>
+        }
     }
     else if (Data.CtrType == WidgetType.Tab)
     {
-        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="designer"
+        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="@(Data.IsSelect?"designer-select":"designer")"
              @onclick:stopPropagation="true">
             <Tab OnClickTabItemAsync="OnClickTabItemAsync">
                 @foreach (var item in Data.Controls)
                 {
                     <TabItem Text="@item.Key">
-                        <div style="position:relative;height:100%" @onclick="async()=>{await SelectComponentAsync(item);}"
+                        <div style="position:relative;height:100%" @onclick="async()=>{await SetSelectedAsync(item);}" class="@(item.IsSelect?"designer-select":"")"
                              @onclick:stopPropagation="true">
                             @foreach (var item2 in item.Controls)
                             {
@@ -155,11 +171,12 @@
         </TabItem> *@
             </Tab>
 
+
         </div>
     }
     else if (Data.CtrType == WidgetType.None)
     {
-        <div style="position:relative;height:100%;width:100%" @onclick="SelectComponentAsync"
+        <div style="position:relative;height:100%;width:100%" class="@(Data.IsSelect?"designer-select":"designer")" @onclick="SelectComponentAsync"
              @onclick:stopPropagation="true">
             @foreach (var item in Data.Controls)
             {
