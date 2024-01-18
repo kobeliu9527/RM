@@ -8,11 +8,11 @@ namespace Models.SystemInfo
         /// 
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
-        public int RoleId { get; set; }
+        public long RoleId { get; set; }
         /// <summary>
         /// 
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
-        public int FunctionPageId { get; set; }
+        public long FunctionPageId { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace Models.SystemInfo
         /// <summary>
         /// 所属公司Id
         /// </summary>
-        public int CompanyId { get; set; }
+        public long CompanyId { get; set; }
         /// <summary>
         /// 所有的模块
         /// </summary>

@@ -1,0 +1,74 @@
+﻿@page "/RoleManger"
+
+<Table TItem="Role"
+       IsPagination="true" PageItemsSource="new int[]{20,10,30}"
+       IsStriped="true" IsBordered="true" IsMultipleSelect="true"
+       IsExtendButtonsInRowHeader="false"
+       ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true"
+       OnQueryAsync="@OnQueryAsync"
+       OnAddAsync="@OnAddAsync"
+       OnSaveAsync="@OnSaveAsync"
+       OnDeleteAsync="@OnDeleteAsync">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.Name" Width="300" />
+        @* <TableColumn @bind-Field="@context.Id" Width="180" /> *@
+    </TableColumns>
+    <BeforeRowButtonTemplate Context="value">
+        <TableCellButton OnClick="()=>{OnClick(value.Id);}">查看人员</TableCellButton>
+    </BeforeRowButtonTemplate>
+</Table>
+
+@code {
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+    [Inject]
+    [NotNull]
+    private DialogService? DialogService { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+
+        return base.OnInitializedAsync();
+    }
+    public void OnClick(long id)
+    {
+        DialogService.ShowModal<EditMenu>(new ResultDialogOption()
+            {
+                ComponentParameters = new Dictionary<string, object>
+                {
+                    [nameof(EditMenu.Id)] = id,
+                }
+            });
+    }
+    private Task<Role> OnAddAsync()
+    {
+        return Task.FromResult(new Role() { });
+    }
+
+    private async Task<QueryData<Role>> OnQueryAsync(QueryPageOptions options)
+    {
+        var item = await db.Queryable<Role>().ToListAsync();
+        return new QueryData<Role>()
+            {
+                Items = item,
+                TotalCount = item.Count,
+            };
+    }
+    private async Task<bool> OnDeleteAsync(IEnumerable<Role> items)
+    {
+        var res = await db.Deleteable<Role>(items).ExecuteCommandAsync();
+        return res > 0 ? true : false;
+    }
+    private async Task<bool> OnSaveAsync(Role item, ItemChangedType changedType)
+    {
+        if (changedType == ItemChangedType.Add)
+        {
+            await db.Insertable(item).ExecuteReturnSnowflakeIdAsync();
+        }
+        else
+        {
+            await db.Updateable(item).ExecuteCommandAsync();
+        }
+        return true;
+    }
+}

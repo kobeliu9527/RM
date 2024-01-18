@@ -1,57 +1,68 @@
-﻿
-<CascadingAuthenticationState >
+﻿@using Models
+@using SqlSugar
+@using System.Diagnostics.CodeAnalysis
+
+<CascadingAuthenticationState>
     <BootstrapBlazorRoot>
-    <CascadingValue Value="this.SysModule" Name="router">
-        <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
-            <Found Context="routeData">
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)" >
-                    <NotAuthorized>
-                        zhe bu shi yige dizhi 
-                    </NotAuthorized>
-                </AuthorizeRouteView>
-                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-            </Found>
-            <NotFound>
-                <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
-                    <p role="alert">对不起,这个访问地址不存在</p>
-                </LayoutView>
-            </NotFound>
-        </Router>
-            </CascadingValue>
+        <CascadingValue Value="this.FunctionGroups" Name="router">
+            <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
+                <Found Context="routeData">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)">
+                        <NotAuthorized>
+                            zhe bu shi yige dizhi
+                        </NotAuthorized>
+                    </AuthorizeRouteView>
+                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                </Found>
+                <NotFound>
+                    <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
+                        <p role="alert">对不起,这个访问地址不存在</p>
+                    </LayoutView>
+                </NotFound>
+            </Router>
+        </CascadingValue>
     </BootstrapBlazorRoot>
 </CascadingAuthenticationState>
 @code
 {
+    public List<FunctionGroup>? FunctionGroups { get; set; }
     public SysModule? SysModule { get; set; }
     public bool MyProperty { get; set; }
     public static bool Isdesigner { get; set; } = true;
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+
+    public bool IsFirst { get; set; } = true;
     protected override void OnInitialized()
     {
-        // SysModule = new Models.System.SysModule() { Name = "我是RouterOnInitialized" };
+        var res =  db.Queryable<FunctionGroup>().Includes(x => x.FunctionPages).ToList();
+        if (res != null)
+        {
+            FunctionGroups = res;
+        }
         base.OnInitialized();
     }
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+       
+        await base.OnInitializedAsync();
     }
     protected override Task OnParametersSetAsync()
     {
-        SysModule = new Models.SystemInfo.SysModule()
-            {
-                FunctionGroups = new List<Models.SystemInfo.FunctionGroup>()
-        {
-        new Models.SystemInfo.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=1,  Name="diyi"} } } ,
-        new Models.SystemInfo.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=2,  Name="diy2"} } },
-        new Models.SystemInfo.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=3,  Name="diyi3"} } },
-        new Models.SystemInfo.FunctionGroup(){ FunctionPages=new List<Models.FunctionPage>(){ new Models.FunctionPage() {Id=4,  Name="diyi33"} } }
-
-        }
-            };
+        IsFirst = false;
         return base.OnParametersSetAsync();
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
     }
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
 
+        }
         return base.OnAfterRenderAsync(firstRender);
     }
 }

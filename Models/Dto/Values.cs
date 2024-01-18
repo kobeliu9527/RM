@@ -7,7 +7,7 @@ namespace Models.Dto
     {
         private object? value;
 
-        public DbType DbType { get; set; }= DbType.String;
+        public DbType DbType { get; set; } = DbType.String;
         public bool ValueBool { get; set; }
         public int ValueInt { get; set; }
         public string ValueString { get; set; } = "";
@@ -79,6 +79,73 @@ namespace Models.Dto
                         break;
                 }
                 return ValueString;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    switch (DbType)
+                    {
+                        case DbType.AnsiString:
+                            break;
+                        case DbType.Binary:
+                            break;
+                        case DbType.Byte:
+                            break;
+                        case DbType.Boolean:
+                            break;
+                        case DbType.Currency:
+                            break;
+                        case DbType.Date:
+                            break;
+                        case DbType.DateTime:
+                            break;
+                        case DbType.Decimal:
+                            break;
+                        case DbType.Double:
+                            break;
+                        case DbType.Guid:
+                            break;
+                        case DbType.Int16:
+                            break;
+                        case DbType.Int32:
+                            break;
+                        case DbType.Int64:
+                            break;
+                        case DbType.Object:
+                            break;
+                        case DbType.SByte:
+                            break;
+                        case DbType.Single:
+                            break;
+                        case DbType.String:
+                            ValueString = value.ToString();
+                            break;
+                        case DbType.Time:
+                            break;
+                        case DbType.UInt16:
+                            break;
+                        case DbType.UInt32:
+                            break;
+                        case DbType.UInt64:
+                            break;
+                        case DbType.VarNumeric:
+                            break;
+                        case DbType.AnsiStringFixedLength:
+                            break;
+                        case DbType.StringFixedLength:
+                            break;
+                        case DbType.Xml:
+                            break;
+                        case DbType.DateTime2:
+                            break;
+                        case DbType.DateTimeOffset:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
             }
         }
 

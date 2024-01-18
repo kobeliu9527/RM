@@ -15,7 +15,7 @@ namespace Models.SystemInfo
         /// <summary>
         /// 所属的模块Id
         /// </summary>
-        public int ModuleId { get; set; }
+        public long ModuleId { get; set; }
         /// <summary>
         /// 这个功能组包括的所有页面
         /// </summary>

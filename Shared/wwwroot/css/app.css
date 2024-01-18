@@ -1388,6 +1388,19 @@ body .layout is-page {
     --bs-table-color-state: #fff;
     --bs-table-hover-color: #fff;
 }
+/*分页控件自定义*/
+.Pagination .nav-pages {
+    align-content: start;
+}
+.Pagination .custom {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    align-content: start;
+    justify-content: flex-start;
+}
+
 /*自定义控件*/
 .custom-row {
     margin: 0px;
@@ -1396,6 +1409,11 @@ body .layout is-page {
     border-style: dashed;
     border-color: slategrey;
     border-width: 1px;
+}
+.custom-row-run {
+    margin: 0px;
+    padding: 0px;
+    position: relative;
 }
     .custom-row :hover {
    

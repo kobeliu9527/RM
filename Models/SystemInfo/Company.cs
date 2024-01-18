@@ -21,6 +21,6 @@ namespace Models.SystemInfo
         /// <summary>
         /// 所属集团Id
         /// </summary>
-        public int CompanyGroupId { get; set; }
+        public long CompanyGroupId { get; set; }
     }
 }

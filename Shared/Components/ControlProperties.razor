@@ -212,6 +212,7 @@
                                 </div>
                                 <Select @bind-Value="@Data.TableInfo.RequestAddress" IsVirtualize="true" OnQueryAsync="QueryForStoreName" ShowLabel="true" ShowSearch="true"></Select>
                                 <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.TableInfo.RequestParmeter" ShowLabel="true" />
+                                <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData2" @bind-Value="@Data.TableInfo.FieldNameList" ShowLabel="true" />
                             </CollapseItem>
                         </CollapseItems>
                     </Collapse>

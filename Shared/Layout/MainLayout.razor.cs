@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
+using Models;
 using Models.SystemInfo;
 using Shared.Page;
+using System.Collections.Generic;
 
 namespace Shared.Layout
 {
@@ -20,15 +22,16 @@ namespace Shared.Layout
 
         private bool IsFixedHeader { get; set; } = true;
 
-        private bool IsFixedFooter { get; set; } 
+        private bool IsFixedFooter { get; set; }
 
-        private bool IsFullSide { get; set; } 
+        private bool IsFullSide { get; set; }
 
-        private bool ShowFooter { get; set; } 
+        private bool ShowFooter { get; set; }
 
         private List<MenuItem>? Menus { get; set; }
+
         [CascadingParameter(Name = "router")]
-        public SysModule? SysModule { get; set; }
+        public List<FunctionGroup>? FunctionGroups { get; set; }
 
         [Inject]
         [NotNull]
@@ -41,13 +44,79 @@ namespace Shared.Layout
         /// </summary>
         protected override void OnInitialized()
         {
+            List<MenuItem> Root = new List<MenuItem>();
+            var PageManger = new MenuItem("页面配置");
+            List<MenuItem> pgs = new List<MenuItem>();
+            pgs.Add(new("页面管理", "/FunctionPageManger"));
+            pgs.Add(new("功能组管理", "/FunctionGroupManger"));
+            pgs.Add(new("人员管理", "/UserManger"));
+            pgs.Add(new("角色管理", "/RoleManger"));
+            PageManger.Items = pgs;
+            Root.Add(PageManger);
+            var PageManger2 = new MenuItem("设计器");
+            List<MenuItem> pgs2 = new List<MenuItem>();
+            pgs2.Add(new("普通界面设计", "/DesiginerPro"));
+            pgs2.Add(new("流程图设计", "/WorkFlowDesigner"));
+            PageManger2.Items = pgs2;
+            Root.Add(PageManger2);
+
+            if (FunctionGroups != null)
+            {
+                //MenuItem list0 = new MenuItem();
+                foreach (var item in FunctionGroups)
+                {
+                    var menu = new MenuItem() { Text = item.Name };
+                    if (item.FunctionPages != null)
+                    {
+                        List<MenuItem> list = new List<MenuItem>();
+                        foreach (var item2 in item.FunctionPages)
+                        {
+                            var menu2 = new MenuItem() { Text = item2.Name, Url = "/runing/" + item2.Id.ToString() };
+                            list.Add(menu2);
+                        }
+                        menu.Items = list;
+                    }
+                    Root.Add(menu);
+                }
+            }
+            Menus = Root;
             base.OnInitialized();
 
-            Menus = GetIconSideMenuItems();
         }
+        protected override Task OnInitializedAsync()
+        {
 
+            return base.OnInitializedAsync();
+        }
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+        }
+        protected override Task OnParametersSetAsync()
+        {
+            return base.OnParametersSetAsync();
+        }
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                //List<MenuItem> list = new List<MenuItem>();
+
+                //if (FunctionPages != null)
+                //{
+                //    foreach (var item in FunctionPages)
+                //    {
+                //        list.Add(new MenuItem() { Text = item.Name, Url = item.Id.ToString() });
+                //    }
+                //}
+                //Menus = list;
+            }
+
+            base.OnAfterRender(firstRender);
+        }
         private static List<MenuItem> GetIconSideMenuItems()
         {
+
             var menus = new List<MenuItem>
             {
 

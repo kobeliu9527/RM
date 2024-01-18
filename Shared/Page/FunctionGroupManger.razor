@@ -1,0 +1,19 @@
+﻿@page "/FunctionGroupManger"
+<Table TItem="FunctionGroup"
+       IsPagination="true" PageItemsSource="new int[]{20,10,30}"
+       IsStriped="true" IsBordered="true" IsMultipleSelect="true"
+       IsExtendButtonsInRowHeader="false"
+       ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true"
+       OnQueryAsync="@OnQueryAsync"
+       OnAddAsync="@OnAddAsync"
+       OnSaveAsync="@OnSaveAsync"
+       OnDeleteAsync="@OnDeleteAsync">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.Name" Width="300" />
+        @* <TableColumn @bind-Field="@context.Id" Width="180" /> *@
+    </TableColumns>
+    <BeforeRowButtonTemplate Context="value">
+        <TableCellButton OnClick="()=>{OnClick(value.Id);}">页面管理</TableCellButton>
+    </BeforeRowButtonTemplate>
+</Table>
+

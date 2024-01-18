@@ -26,6 +26,7 @@ namespace Models
         /// <summary>
         /// 页面类型 todo:如果一个页面既是网页也是移动端,会被限制,考虑放到下级?
         /// </summary>
+        [DisplayName("页面类型")]
         public PageType PageType { get; set; }
         /// <summary>
         /// 表示这个页面的布局
@@ -39,6 +40,7 @@ namespace Models
         /// <summary>
         /// 消息框的类型
         /// </summary>
+        [DisplayName("返回消息框类型")]
         public ShowMsgType ShowMsgType { get; set; } = ShowMsgType.None;
         /// <summary>
         /// 这个功能属于那些功能组

@@ -121,7 +121,7 @@ namespace Models.Dto
         /// 子控件
         /// </summary>
         [DisplayName("子控件:"), Description("容器控件的子控件:")]
-        public List<Control> Controls { get; set; } =new List<Control>();
+        public List<Control> Controls { get; set; } = new List<Control>();
         /// <summary>
         /// 数据源
         /// </summary>
@@ -146,7 +146,7 @@ namespace Models.Dto
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public Func<Task>? UpdateSelf { get; set; }
-        
+
 
         public Control()
         {
@@ -266,11 +266,11 @@ namespace Models.Dto
     }
     public class Table : ControInfoBase
     {
-        /// <summary>
-        /// 这张表的父级表,通常为父级表的Key
-        /// </summary>
-        [DisplayName("父级表名:"), Description("如果有父级表,在这设置:")]
-        public string ParentTableName { get; set; } = "";
+        ///// <summary>
+        ///// 这张表的父级表,通常为父级表的Key
+        ///// </summary>
+        //[DisplayName("父级表名:"), Description("如果有父级表,在这设置:")]
+        //public string ParentTableName { get; set; } = "";
 
         public TableSize TableSize { get; set; } = TableSize.Compact;
 
@@ -309,6 +309,12 @@ namespace Models.Dto
         /// </summary>
         [DisplayName("父级表:"), Description("如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key):")]
         public string RequestParentTable { get; set; } = "";
+
+        /// <summary>
+        /// 表格中那些字段需要跟界面控件绑定
+        /// </summary>
+        [DisplayName("绑定那些字段:"), Description("表格中那些字段需要跟界面控件绑定:")]
+        public List<string> FieldNameList { get; set; } = new List<string>();
         /// <summary>
         /// 存储过程需要的参数名字
         /// </summary>

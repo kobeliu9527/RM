@@ -1,29 +1,67 @@
 ﻿@page "/runing/{id}"
-
 @inject IHttpClientFactory httpClientFactory
-<h3>Runing @id</h3>
-@if (FunctionPage != null && FunctionPage.Name != null)
-{
-    @FunctionPage.Name
-}
-<Button OnClick="onclik">asfd</Button>
+@inject ISqlSugarClient db
+<div class="dmain-main" style="z-index:1;width:100%">
+    @if (FunctionPage != null && FunctionPage.MainPage != null)
+    {
+        <CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
+            <ControlComponentRun Data="FunctionPage.MainPage.Controlmain" ParentData="FunctionPage.MainPage.Controlmain"></ControlComponentRun>
+        </CascadingValue>
+    }
+    else
+    {
+        <span>未获取到页面,请新建或者选择一个页面</span>
+    }
+</div>
 @code {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [Parameter]
     public string id { get; set; } = "-1";
     public FunctionPage? FunctionPage { get; set; }
     [CascadingParameter(Name = "router")]
-    public SysModule? SysModule { get; set; }
+    public List<FunctionGroup>? FunctionGroups { get; set; }
     protected override void OnInitialized()
     {
+        // var pages = db.Queryable<FunctionPage>().ToList();
+
         base.OnInitialized();
     }
+    protected override Task OnInitializedAsync()
+    {
+        if (FunctionGroups != null)
+        {
+            foreach (var item in FunctionGroups)
+            {
+                if (item != null && item.FunctionPages!=null)
+                {
+                    foreach (var item2 in item.FunctionPages)
+                    {
+                        if (item2.Id.ToString()==id)
+                        {
+                            FunctionPage = item2;
+                            FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+                            return Task.CompletedTask;
+                        }
+                    }
+                }
+            }
+        }
+        return base.OnInitializedAsync();
+    }
+
     protected override Task OnParametersSetAsync()
     {
-        FunctionPage = SysModule?.Find(id.ToString());
         return base.OnParametersSetAsync();
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+          
+        }
+        base.OnAfterRender(firstRender);
     }
     public void onclik()
     {

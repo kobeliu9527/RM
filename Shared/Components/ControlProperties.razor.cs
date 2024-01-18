@@ -30,6 +30,7 @@ namespace Shared.Components
         /// 当前页面所有的表单元素
         /// </summary>
         List<SelectedItem>? BoxListData;
+        List<SelectedItem>? BoxListData2;
         /// <summary>
         /// 获取存储过程列表
         /// </summary>
@@ -53,6 +54,8 @@ namespace Shared.Components
             {
                 BoxListData = new();
                 MainPage.Controlmain.ToSelectedItemList(BoxListData);
+                BoxListData2 = new();
+                MainPage.Controlmain.ToSelectedItemList(BoxListData2);
                 await MainPage.StateHasChangedInvoke();
             }
         }
@@ -141,6 +144,8 @@ namespace Shared.Components
         {
             await Task.Delay(200);
             var items = MainPage.FindAll(x=>x.CtrType==  WidgetType.Table);
+            items.Add(new Control() {DisplayName="无" });
+
             //if (!string.IsNullOrEmpty(option.SearchText))
             //{
             //    items = items.Where(i => i.Name!.Contains(option.SearchText, StringComparison.OrdinalIgnoreCase)).ToList();

@@ -18,7 +18,7 @@ namespace Models.SystemInfo
         /// <summary>
         /// 所属的工厂Id
         /// </summary>
-        public int FactoryId { get; set; }
+        public long FactoryId { get; set; }
         /// <summary>
         /// 功能组
         /// </summary>

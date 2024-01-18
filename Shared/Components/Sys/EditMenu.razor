@@ -1,0 +1,40 @@
+﻿@implements IResultDialog
+
+<MultiSelect Items="Items" @bind-Value="SelectedArrayValues"></MultiSelect>
+
+@code {
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+    public IEnumerable<SelectedItem> Items = new List<SelectedItem>();
+    /// <summary>
+    /// 要编辑的功能组的Id
+    /// </summary>
+    [Parameter]
+    public long Id { get; set; }
+    private IEnumerable<long> SelectedArrayValues { get; set; } = Enumerable.Empty<long>();
+    protected override async Task OnInitializedAsync()
+    {
+        var pagelist = await db.Queryable<FunctionPage>().ToListAsync();
+        var pageByfg = await db.Queryable<FunctionGroup>()
+        .Includes(x => x.FunctionPages).Where(x=>x.Id==Id).FirstAsync();
+        Items = pagelist.Select(x => new SelectedItem(x.Id.ToString(), x.Name));
+        if (pageByfg != null && pageByfg.FunctionPages!=null)
+        {
+            SelectedArrayValues = pageByfg.FunctionPages.Select(x => x.Id);
+        }
+        await base.OnInitializedAsync();
+    }
+    public async Task OnClose(DialogResult result)
+    {
+        if (result == DialogResult.Yes)
+        {
+            var fplist = SelectedArrayValues.Select(x => new FunctionPage() { Id = x }).ToList();
+            List<FunctionGroup> list = new List<FunctionGroup>()
+        {
+            new FunctionGroup(){ Id=Id,FunctionPages=fplist} };
+            await db.UpdateNav(list).Include(x => x.FunctionPages).ExecuteCommandAsync();
+        }
+
+    }
+}

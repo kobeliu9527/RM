@@ -8,12 +8,13 @@ using Shared.Page;
 using SQLitePCL;
 using SqlSugar;
 using System.Data;
+using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Console = System.Console;
 
 namespace Shared.Components
 {
-    public partial class ControlComponent
+    public partial class ControlComponentRun
     {
         [Inject]
         [NotNull]
@@ -100,7 +101,11 @@ namespace Shared.Components
                 await MainPage.StateHasChangedInvoke();
             }
         }
-      
+        protected async  override Task OnInitializedAsync()
+        {
+            
+            await  base.OnInitializedAsync();
+        }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -140,11 +145,15 @@ namespace Shared.Components
             //2.找到这个页面中所有的Table控件并且ta的父级表名称是这个Row所在表的表名
             List<Control> list = new List<Control>();
             var controllist = MainPage.FindAll(x => x.CtrType == WidgetType.Table && x.TableInfo.RequestParentTable == tabName);
-            //3.更新找到的控件
+            //3.更新找到的表格控件
             foreach (var control in controllist)
             {
                 control.UpdateSelf?.Invoke();
             }
+            //一个表格,有一个对应字段表 ,表示这个表格绑定了页面中那些控件(key)
+            //找到这些控件,就能知道这个控件的数据类型,也就知道了他的字段名,根据这个字段名,
+            //调用row.GetValue(name)获取值object类型;
+            //调用Data.Values.Value = id;设置值
             foreach (var item in Data.TableInfo.FieldNameList)
             {
                 var c = MainPage.FindFirst(item);
@@ -155,6 +164,8 @@ namespace Shared.Components
                     c.Values.Value = val;
                 }
             }
+            //var ss =Data.TableInfo
+
             await MainPage.StateHasChangedInvoke();
         }
         /// <summary>
@@ -201,7 +212,7 @@ namespace Shared.Components
                 });
             }
             InitPageDataTable();
-            //StateHasChanged();
+           
         }
         /// <summary>
         /// 获取分页参数,然后调用RebuildPaginationDataTable生成分页上下文
@@ -326,7 +337,7 @@ namespace Shared.Components
                     foreach (var item in Data.Button.EnterStoreParmeter)
                     {
                         var ctr = MainPage.FindFirst(item);
-                        if (ctr!=null)
+                        if (ctr != null)
                         {
                             var pname = ctr.FieldName;
                             var pval = ctr.Values.Value;

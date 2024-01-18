@@ -1,4 +1,5 @@
 ﻿using SqlSugar;
+using System.ComponentModel;
 
 namespace Models.SystemInfo
 {
@@ -7,14 +8,17 @@ namespace Models.SystemInfo
         /// <summary>
         /// 用户名,全局唯一
         /// </summary>
+        [DisplayName("系统名")]
         public string SysName { get; set; } = "";
         /// <summary>
         /// 真实名字
         /// </summary>
+        [DisplayName("真实名字")]
         public string RealName { get; set; } = "";
         /// <summary>
         /// 密码
         /// </summary>
+        [DisplayName("密码")]
         public string PassWord { get; set; } = "";
         /// <summary>
         /// 角色列表

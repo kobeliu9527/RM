@@ -1,0 +1,40 @@
+﻿@implements IResultDialog
+
+<MultiSelect Items="Items" @bind-Value="SelectedArrayValues"></MultiSelect>
+
+@code {
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+    public IEnumerable<SelectedItem> Items = new List<SelectedItem>();
+    /// <summary>
+    /// 要编辑的功能组的Id
+    /// </summary>
+    [Parameter]
+    public long Id { get; set; }
+    private IEnumerable<long> SelectedArrayValues { get; set; } = Enumerable.Empty<long>();
+    protected override async Task OnInitializedAsync()
+    {
+        var all = await db.Queryable<Role>().ToListAsync();
+        var haved = await db.Queryable<User>()
+        .Includes(x => x.Roles).Where(x=>x.Id==Id).FirstAsync();
+        Items = all.Select(x => new SelectedItem(x.Id.ToString(), x.Name));
+        if (haved != null && haved.Roles!=null)
+        {
+            SelectedArrayValues = haved.Roles.Select(x => x.Id);
+        }
+        await base.OnInitializedAsync();
+    }
+    public async Task OnClose(DialogResult result)
+    {
+        if (result == DialogResult.Yes)
+        {
+            var fplist = SelectedArrayValues.Select(x => new Role() { Id = x }).ToList();
+            List<User> list = new List<User>()
+        {
+            new User(){ Id=Id,Roles=fplist} };
+            await db.UpdateNav(list).Include(x => x.Roles).ExecuteCommandAsync();
+        }
+
+    }
+}
