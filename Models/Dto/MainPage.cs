@@ -1,8 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Blazor.Diagrams.Core.Geometry;
+using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace Models.Dto
 {
+    /// <summary>
+    /// 表示一个页面:有委托,有具体布局,有选中的control..
+    /// </summary>
     public class MainPage
     {
         /// <summary>
@@ -21,6 +25,11 @@ namespace Models.Dto
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public Control? SelectControlParent { get; set; }
+        /// <summary>
+        /// Used to save the Id of the currently selected row for each table
+        /// </summary>
+        [System.Text.Json.Serialization.JsonIgnore] 
+        public Dictionary<string,object?> IdList { get; set; }=new();
 
         public WidgetType SelectedWidgetType { get; set; }
         /// <summary>
@@ -65,57 +74,10 @@ namespace Models.Dto
             }
             return Task.CompletedTask;
         }
-        /// <summary>
-        /// 递归找到第一个符合条件的
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="Match"></param>
-        /// <returns></returns>
-        public Control? FindFirst(string name, Func<Control, bool>? Match= null)
-        {
-            if (Match==null)
-            {
-                return FindFirst(Controlmain.Controls, (s) => { return s.Key == name; });
-            }
-            return FindFirst(Controlmain.Controls, Match);
-        }
+       
 
-        public static Control? FindFirst(IEnumerable<Control> collection, Func<Control, bool> math)
-        {
-            foreach (Control item in collection)
-            {
-                if (math(item))
-                {
-                    return item;
-                }
-                if (item.Controls.Count > 0)
-                {
-                    var control = FindFirst(item.Controls, math);
-                    if (control != null)
-                    {
-                        return control;
-                    }
-                }
-            }
-            return default;
-        }
-        public static List<Control> FindAll(IEnumerable<Control> collection, Func<Control, bool> math)
-        {
-            List<Control> list = new List<Control>();
-            foreach (Control item in collection)
-            {
-                if (math(item))
-                {
-                    list.Add(item);
-                }
-                if (item.Controls.Count > 0)
-                {
-                    var control = FindAll(item.Controls, math);
-                    list.AddRange(control);
-                }
-            }
-            return list;
-        }
+        
+        
 
     }
 }

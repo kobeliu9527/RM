@@ -5,9 +5,9 @@ namespace Models.Dto
 {
     public class Values
     {
-        private object value;
+        private object? value;
 
-        public DbType DbType { get; set; }
+        public DbType DbType { get; set; }= DbType.String;
         public bool ValueBool { get; set; }
         public int ValueInt { get; set; }
         public string ValueString { get; set; } = "";
@@ -28,7 +28,7 @@ namespace Models.Dto
                     case DbType.Byte:
                         break;
                     case DbType.Boolean:
-                        break;
+                        return ValueBool;
                     case DbType.Currency:
                         break;
                     case DbType.Date:
@@ -54,7 +54,7 @@ namespace Models.Dto
                     case DbType.Single:
                         break;
                     case DbType.String:
-                        break;
+                        return ValueString;
                     case DbType.Time:
                         break;
                     case DbType.UInt16:

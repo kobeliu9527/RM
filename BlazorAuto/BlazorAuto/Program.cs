@@ -22,6 +22,8 @@ using Models.Dto.SVG;
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.SignalR;
 using Models.SystemInfo;
+Dictionary<string, object?> dic = new Dictionary<string, object?>();
+
 
 var builder = WebApplication.CreateBuilder(args);
 SnowFlakeSingle.WorkId = 1;
@@ -135,7 +137,6 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
     SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
     {
         DbType = DbType.SqlServer,
-
         ConnectionString = Appsetting.SqlSugarOption.ConnectString,
         // ConnectionString = "DataSource=WMS.db",
         IsAutoCloseConnection = true,

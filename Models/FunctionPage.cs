@@ -32,7 +32,7 @@ namespace Models
         /// </summary>
         [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
         [NotNull]
-        [JsonIgnore] 
+        [Newtonsoft.Json. JsonIgnore] 
         public ContainerDto? ContainerData { get; set; }
         [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
         public MainPage? MainPage { get; set; }

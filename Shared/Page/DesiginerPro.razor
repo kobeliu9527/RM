@@ -6,11 +6,18 @@
         @if (isdesigner)
         {
             <div class="dmain-left" style="width:20%">
-                <Tab >
+                <Tab>
                     <TabItem Text="菜单管理">
-                        <Table TItem="FunctionPage" ShowEditButton="false" IsPagination="true" PageItemsSource="new int[]{20,10,50}"
-                               IsStriped="true" IsBordered="true" IsMultipleSelect="false" AutoGenerateColumns="true"
-                               ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true" IsExtendButtonsInRowHeader="true"
+                        <Table TItem="FunctionPage" TableSize="TableSize.Compact" IsPagination="true" 
+                               PageItemsSource="new int[]{20,10,50}"
+                               ShowExtendButtons="true" ShowExtendEditButton="true" 
+                               ShowExtendDeleteButton="false"
+                               ShowToolbar="true" ShowEditButton="false" ShowAddButton="false" 
+                               ShowDeleteButton="false"
+                               ShowSearch="true" ShowAdvancedSearch="false" ShowResetButton="false"
+                               IsStriped="true" IsBordered="true" IsMultipleSelect="false" 
+                               AutoGenerateColumns="true"
+                               ShowSkeleton="true" IsExtendButtonsInRowHeader="true"
                                ClickToSelect="true"
                                OnClickRowCallback="OnClickRowCallbackProduct"
                                OnQueryAsync="OnQueryAsync" OnDeleteAsync="OnDeleteAsync" OnSaveAsync="OnSaveAsync"
@@ -70,8 +77,19 @@
             <div class="dmain-right" style="width:20%">
                 <Tab>
                     <TabItem Text="属性管理">
+                        @if (FunctionPage != null && FunctionPage.MainPage != null)
+                        {
+                            <div style="height:8%">
+                                <Button OnClick="SaveLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Success">保存</Button>
+                                <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">复制</Button>
+                                <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">删除</Button>
+                                <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">新建</Button>
+                            </div>
+                        }
+
                         @if (FunctionPage != null && FunctionPage.MainPage != null && FunctionPage.MainPage.SelectControl != null)
                         {
+
                             <ControlProperties Data="FunctionPage.MainPage.SelectControl"></ControlProperties>
                         }
                     </TabItem>
@@ -88,12 +106,16 @@
 @code {
     [Inject]
     [NotNull]
+    private MessageService? MessageService { get; set; }
+    [Inject]
+    [NotNull]
     private SwalService? SwalService { get; set; }
     [Inject]
     [NotNull]
     private ToastService? ToastService { get; set; }
     [Inject]
     [NotNull]
+
     public ISqlSugarClient? db { get; set; }
     private List<TreeViewItem<Control>>? ControlTree { get; set; }
     public bool isdesigner { get; set; } = true;
@@ -198,7 +220,7 @@
     public void TreeRefresh()
     {
         List<TreeViewItem<Control>> treelist = new();
-        if (FunctionPage != null && FunctionPage.MainPage!=null)
+        if (FunctionPage != null && FunctionPage.MainPage != null)
         {
             FunctionPage.MainPage.Controlmain.ToTree(treelist);
             ControlTree = treelist;
@@ -206,12 +228,63 @@
     }
     private Task OnTreeItemClick(TreeViewItem<Control> item)
     {
-        if (FunctionPage != null && FunctionPage.MainPage!=null)
+        if (FunctionPage != null && FunctionPage.MainPage != null)
         {
             FunctionPage.MainPage.SelectControl = item.Value;
         }
         StateHasChanged();
         return Task.CompletedTask;
     }
-    
+    /// <summary>
+    /// 保存布局
+    /// </summary>
+    public async Task SaveLayout()
+    {
+        try
+        {
+            await db.Updateable(FunctionPage).ExecuteCommandAsync();
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = "保存成功",
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Success
+                });
+        }
+        catch (Exception ex)
+        {
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = ex.Message,
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Warning
+                });
+        }
+        StateHasChanged();
+    }
+    /// <summary>
+    /// 复制布局
+    /// </summary>
+    public async Task CopyLayout()
+    {
+        try
+        {
+            await db.Insertable<FunctionPage>(new FunctionPage() { MainPage = FunctionPage.MainPage }).ExecuteReturnSnowflakeIdAsync();
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = "复制成功,请手动刷新左侧菜单栏",
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Success
+                });
+        }
+        catch (Exception ex)
+        {
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = ex.Message,
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Warning
+                });
+        }
+        StateHasChanged();
+    }
 }
