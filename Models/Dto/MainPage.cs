@@ -28,9 +28,15 @@ namespace Models.Dto
         /// <summary>
         /// Used to save the Id of the currently selected row for each table
         /// </summary>
-        [System.Text.Json.Serialization.JsonIgnore] 
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public Dictionary<string,object?> IdList { get; set; }=new();
-
+        /// <summary>
+        /// key:表名  SelectRow:一行中列名-列值的KeyValue
+        /// </summary>
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        public Dictionary<string, CurrentRowValue> TableValues { get; set; } = new();
         public WidgetType SelectedWidgetType { get; set; }
         /// <summary>
         /// 立即刷新主页面
@@ -74,10 +80,9 @@ namespace Models.Dto
             }
             return Task.CompletedTask;
         }
-       
-
-        
-        
-
+    }
+    public class CurrentRowValue
+    {
+        public Dictionary<string, object?> KeyValues { get; set; } = new();
     }
 }

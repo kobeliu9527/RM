@@ -102,6 +102,12 @@
                             </CollapseItem>
                             <CollapseItem Text="事件数据源">
                                 <Switch @bind-Value="@Data.Button.EnterEnAble" OnText="启用确认(Enter)键" OffText="不启用确认(Enter)键"></Switch>
+                                <div class="input-n">
+                                    <Select @bind-Value="@Data.Button.RequestParentTable" IsVirtualize="true" OnQueryAsync="OnQueryAsync" ShowLabel="true"></Select>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInput @bind-Value="@Data.Button.RequestParentTableIdName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
+                                </div>
                                 <Select TValue="string" @bind-Value="@Data.Button.EnterStoreName" IsVirtualize="true" OnQueryAsync="QueryForStoreName" ShowSearch="true" DisplayText="存储过程名字"></Select>
                                 <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.Button.EnterStoreParmeter" ShowLabel="true" DisplayText="存储过程需要的参数" />
                             </CollapseItem>

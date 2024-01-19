@@ -1,4 +1,5 @@
 using BootstrapBlazor.Components;
+using Dm.parser;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Models;
@@ -127,16 +128,22 @@ namespace Shared.Components
         }
         /// <summary>
         /// 点击一行后执行的方法
+        /// <para>1.记录当前行的值 </para>
+        /// <para>2.找到依赖于本Table的其他Table,调用委托,刷新他们</para>
+        /// <para>3.找到本Table绑定的需要更新的表单元素,为其赋值</para>
+        /// <para>4.刷新主界面</para>
         /// </summary>
-        /// <param name="row"></param>
+        /// <param name="row">行信息</param>
         /// <returns></returns>
         public async Task OnClickedRow(DynamicObject row)
         {
             //1.以这张表的名字/Key为Key,这一行中的Id字段的值为Value,保存在字典中
-            var id = row.GetValue("Id");
             var tabName = Data.Key;
-            //var tabName = Data.DisplayName;
-            MainPage.IdList[tabName] = id;
+            foreach (var item in Data.TableInfo.TableFieldNames.Split(",",StringSplitOptions.RemoveEmptyEntries))
+            {
+                var v= row.GetValue(item);
+                MainPage.TableValues[tabName].KeyValues[item] = v;
+            }
             //2.找到这个页面中所有的Table控件并且ta的父级表名称是这个Row所在表的表名
             List<Control> list = new List<Control>();
             var controllist = MainPage.FindAll(x => x.CtrType == WidgetType.Table && x.TableInfo.RequestParentTable == tabName);
@@ -159,6 +166,8 @@ namespace Shared.Components
         }
         /// <summary>
         /// 初始化数据源
+        /// <para>1.找到本Table绑定的父级Table</para>
+        /// <para>2.找到本Table绑定的需要更新的表单元素</para>
         /// </summary>
         /// <returns></returns>
         private async Task InitDataTable()
@@ -168,14 +177,21 @@ namespace Shared.Components
                 //逻辑:一张表,可能对应一张父级表,所以在获取数据的时候要先判断是否有父级表以及父级表Id是否存在
                 var parentName = Data.TableInfo.RequestParentTable;
                 DataTable? res = null;
-                if (!string.IsNullOrEmpty(parentName) && MainPage.IdList.TryGetValue(parentName, out object? val))
+                if (!string.IsNullOrEmpty(parentName) &&MainPage.TableValues.TryGetValue(parentName, out CurrentRowValue? crv))
                 {
-                    SugarParameter sp = new SugarParameter("PId", val);
-                    res = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.TableInfo!.RequestAddress, sp);
+                    if (crv!=null)
+                    {
+                        var na = Data.TableInfo.RequestParentTableIdName;
+                        if (crv.KeyValues.TryGetValue(na, out object? vl))
+                        {
+                            SugarParameter sp = new SugarParameter("PId", vl);
+                            res = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.TableInfo!.RequestAddress, sp);
+                        }
+                    }
                 }
                 else
                 {
-                    res = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.TableInfo!.RequestAddress);
+                    res = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.TableInfo.RequestAddress);
                 }
                 if (res != null)
                 {
@@ -323,6 +339,13 @@ namespace Shared.Components
                     List<SugarParameter> parameters = new List<SugarParameter>();
                     var name = Data.Button.EnterStoreName;
                     var spp = Data.Button.EnterStoreParmeter;
+                    var tableName = Data.Button.RequestParentTable;
+                    var id = Data.Button.RequestParentTableIdName;
+                    if (MainPage.IdList.TryGetValue("tableName", out object? valu))
+                    {
+                        parameters.Add(new SugarParameter(id, valu));
+                    }
+
                     foreach (var item in Data.Button.EnterStoreParmeter)
                     {
                         var ctr = MainPage.FindFirst(item);

@@ -248,6 +248,16 @@ namespace Models.Dto
         public ButtonStyle ButtonStyle { get; set; }
         [DisplayName("按钮图标:"), Description("按钮图标:")]
         public string? Icon { get; set; }
+        /// <summary>
+        /// 如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key)
+        /// </summary>
+        [DisplayName("父级表:"), Description("如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key):")]
+        public string RequestParentTable { get; set; } = "";
+        /// <summary>
+        /// 如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key)
+        /// </summary>
+        [DisplayName("父级表主键Id名:"), Description("父级表中哪一个字段的名字作为主键Id:")]
+        public string RequestParentTableIdName { get; set; } = "Id";
     }
     public class InputText : ControInfoBase
     {//IsTrim
@@ -273,7 +283,8 @@ namespace Models.Dto
         //public string ParentTableName { get; set; } = "";
 
         public TableSize TableSize { get; set; } = TableSize.Compact;
-
+        [DisplayName("绑定字段名集合:"), Description("这个表对应的字段名:逗号分割")]
+        public string TableFieldNames { get; set; } = "";
         /// <summary>
         /// 全部数据,只有第一次或者手动刷新才会更新这个
         /// </summary>
@@ -309,6 +320,11 @@ namespace Models.Dto
         /// </summary>
         [DisplayName("父级表:"), Description("如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key):")]
         public string RequestParentTable { get; set; } = "";
+        /// <summary>
+        /// 父级表中哪一个字段的名字作为主键Id
+        /// </summary>
+        [DisplayName("父级表主键Id名:"), Description("父级表中哪一个字段的名字作为主键Id:")]
+        public string RequestParentTableIdName { get; set; } = "Id";
 
         /// <summary>
         /// 表格中那些字段需要跟界面控件绑定

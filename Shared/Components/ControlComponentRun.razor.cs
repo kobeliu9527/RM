@@ -137,7 +137,7 @@ namespace Shared.Components
         /// <returns></returns>
         public async Task OnClickedRow(DynamicObject row)
         {
-            //1.以这张表的名字/Key为Key,这一行中的Id字段的值为Value,保存在字典中
+            //1.以这张表的名字/Key为Key,这一行中的主键字段字段的值为Value,保存在字典中
             var id = row.GetValue("Id");
             var tabName = Data.Key;
             //var tabName = Data.DisplayName;
