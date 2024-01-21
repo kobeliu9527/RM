@@ -2,7 +2,7 @@
 <div draggable="true" class="fd-palette-widget text-center draggable"
      @ondragstart="@(async () => await DragStartAsync(Data))">
     <i class="@Icon" style="font-size:30px"></i>
-    <h5 class="fd-palette-widget-label">@(Data.ToSqlValue())</h5>
+    <h5 class="fd-palette-widget-label">@(Text)</h5>
 </div>
 
 @code {
@@ -14,6 +14,8 @@
     public WidgetType Data { get; set; } = WidgetType.Bottom;
     [Parameter]
     public string? Icon { get; set; } = "fa-solid fa-language";
+    [Parameter]
+    public string? Text { get; set; } = "按钮";
     /// <summary>
     /// 控件开始拖动的时候会触发
     /// </summary>

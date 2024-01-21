@@ -38,9 +38,9 @@ namespace Shared.Extensions
         {
             foreach (var item in ctr.Controls)
             {
-                if (item.CtrType == WidgetType.InputText)
+                if (item.CtrType == WidgetType.InputText|| item.CtrType == WidgetType.CheckBox)
                 {
-                    list.Add(new SelectedItem(item.Key, item.FieldName));
+                    list.Add(new SelectedItem(item.Key, item.FieldName+":"+item.DisplayName));
                 }
                 if (item.Controls.Count > 0)
                 {

@@ -2,6 +2,7 @@
 
 namespace Models.SystemInfo
 {
+    [SqlSugar.SugarTable("sys_"+nameof(RelationFunctionAndFunctionGroup))]
     public class RelationFunctionAndFunctionGroup
     {
         /// <summary>

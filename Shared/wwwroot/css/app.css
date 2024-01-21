@@ -1388,18 +1388,7 @@ body .layout is-page {
     --bs-table-color-state: #fff;
     --bs-table-hover-color: #fff;
 }
-/*分页控件自定义*/
-.Pagination .nav-pages {
-    align-content: start;
-}
-.Pagination .custom {
-    display: flex;
-    position: relative;
-    flex-direction: row;
-    align-items: center;
-    align-content: start;
-    justify-content: flex-start;
-}
+
 
 /*自定义控件*/
 .custom-row {
@@ -1410,14 +1399,16 @@ body .layout is-page {
     border-color: slategrey;
     border-width: 1px;
 }
+
 .custom-row-run {
     margin: 0px;
     padding: 0px;
     position: relative;
 }
-    .custom-row :hover {
-   
-    }
+
+.custom-row :hover {
+}
+
 .designer-select {
     border: solid;
     border-color: #06d006;
@@ -1457,14 +1448,16 @@ body .layout is-page {
     .input-n .form-control {
         flex: 1;
     }
+
     .input-n .dropdown {
         flex: 1;
     }
-    .dmain-left .table-toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+
+.dmain-left .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .dmain-left .float-end {
     flex: auto;
@@ -1472,4 +1465,60 @@ body .layout is-page {
 
 .dmain-left .d-sm-inline-block {
     display: none !important;
+}
+
+.cus-drawer .drawer-body {
+    width: 210px !important;
+}
+
+.cus-drawer .fd-palette-widget {
+    width: 40%;
+}
+
+.cus-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cus-table-table {
+    max-height: 90%;
+    overflow-y: hidden;
+}
+
+    .cus-table-table .table-toolbar-button {
+        display:flex;
+    }
+
+.cus-table-pagination {
+    max-height: 30%;
+}
+
+.cus-table .table-shim {
+    max-height: calc(100% - 40px);
+}
+/*分页控件自定义*/
+.cus-table-pagination .nav-pages {
+    align-content: start;
+}
+
+.cus-table-pagination .custom {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    align-content: start;
+    justify-content: flex-start;
+}
+/*split*/
+.cus-first-panel {
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+.cus-second-panel {
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
 }

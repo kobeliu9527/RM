@@ -1,6 +1,7 @@
 ﻿using Models.Dto;
 using Models.NotEntity;
 using Models.Services.Base;
+using Models.SystemInfo;
 
 namespace Models.Services.ServerByHttp
 {

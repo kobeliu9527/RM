@@ -10,7 +10,8 @@
        OnSaveAsync="@OnSaveAsync"
        OnDeleteAsync="@OnDeleteAsync">
     <TableColumns>
-        <TableColumn @bind-Field="@context.Name"  />
+        <TableColumn @bind-Field="@context.Name" />
+        <TableColumn @bind-Field="@context.Icon" />
         <TableColumn @bind-Field="@context.PageType"   />
         <TableColumn @bind-Field="@context.ShowMsgType"   />
     </TableColumns>
@@ -43,7 +44,7 @@
     }
     private Task<FunctionPage> OnAddAsync()
     {
-        return Task.FromResult(new FunctionPage() { });
+        return Task.FromResult(new FunctionPage() {  MainPage=new MainPage()});
     }
 
     private async Task<QueryData<FunctionPage>> OnQueryAsync(QueryPageOptions options)

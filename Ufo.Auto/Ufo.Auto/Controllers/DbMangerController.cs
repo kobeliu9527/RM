@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Models;
+using Models.SystemInfo;
 using SqlSugar;
 
 namespace Ufo.Auto.Controllers

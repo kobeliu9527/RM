@@ -1,19 +1,20 @@
 ﻿@page "/DesiginerPro"
-<div style="height:100%;width:100%;display:flex">
-    <CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
+<CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
+
+    <div style="height:100%;width:100%;display:flex">
         @if (isdesigner)
         {
             <div class="dmain-left" style="width:20%">
                 <Tab>
                     <TabItem Text="菜单管理">
-                        <Table TItem="FunctionPage" TableSize="TableSize.Compact" IsPagination="true" 
+                        <Table TItem="FunctionPage" TableSize="TableSize.Compact" IsPagination="true"
                                PageItemsSource="new int[]{20,10,50}"
-                               ShowExtendButtons="true" ShowExtendEditButton="true" 
+                               ShowExtendButtons="true" ShowExtendEditButton="true"
                                ShowExtendDeleteButton="false"
-                               ShowToolbar="true" ShowEditButton="false" ShowAddButton="false" 
+                               ShowToolbar="true" ShowEditButton="false" ShowAddButton="false"
                                ShowDeleteButton="false"
                                ShowSearch="true" ShowAdvancedSearch="false" ShowResetButton="false"
-                               IsStriped="true" IsBordered="true" IsMultipleSelect="false" 
+                               IsStriped="true" IsBordered="true" IsMultipleSelect="false"
                                AutoGenerateColumns="true"
                                ShowSkeleton="true" IsExtendButtonsInRowHeader="true"
                                ClickToSelect="true"
@@ -26,15 +27,16 @@
                         <Collapse>
                             <CollapseItems>
                                 <CollapseItem Text="普通控件" IsCollapsed="false">
-                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.InputText"></WidgetBtn>
-                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Table"></WidgetBtn>
-                                    <WidgetBtn></WidgetBtn>
+                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.InputText" Text="文本框"></WidgetBtn>
+                                    <WidgetBtn Icon="fas fa-table" Data="WidgetType.Table" Text="表格"></WidgetBtn>
+                                    <WidgetBtn Icon="fas fa-bullseye" Data="WidgetType.Bottom" Text="按钮"></WidgetBtn>
+                                    <WidgetBtn Icon="far fa-check-circle" Data="WidgetType.CheckBox" Text="复选框"></WidgetBtn>
                                 </CollapseItem>
                                 <CollapseItem Text="容器控件">
-                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitH"></WidgetBtn>
-                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.SplitV"></WidgetBtn>
-                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Row"></WidgetBtn>
-                                    <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.Tab"></WidgetBtn>
+                                    <WidgetBtn Icon="fas fa-tent-arrow-left-right" Data="WidgetType.SplitH" Text="水平分割"></WidgetBtn>
+                                    <WidgetBtn Icon="fas fa-arrows-up-down" Data="WidgetType.SplitV" Text="垂直分割"></WidgetBtn>
+                                    <WidgetBtn Icon="fas fa-box-archive" Data="WidgetType.Row" Text="行控件"></WidgetBtn>
+                                    <WidgetBtn Icon="fas fa-toilets-portable" Data="WidgetType.Tab" Text="多页签"></WidgetBtn>
                                 </CollapseItem>
                                 <CollapseItem Text="图标控件">
                                     早晚会有..
@@ -44,9 +46,6 @@
                                 </CollapseItem>
                             </CollapseItems>
                         </Collapse>
-                        @*    <div class="fd-palette-widgets">
-
-                    </div> *@
                     </TabItem>
                     <TabItem Text="控件树">
                         <Button OnClick="TreeRefresh">刷新</Button>
@@ -59,7 +58,7 @@
             </div>
         }
 
-        <div class="dmain-main" style="z-index:1;width:@(isdesigner?60:100)%">
+        <div class="dmain-main" style="z-index:1;width:@(isdesigner?60:80)%">
             @if (FunctionPage != null && FunctionPage.MainPage != null)
             {
                 <ControlComponent Data="FunctionPage.MainPage.Controlmain" ParentData="FunctionPage.MainPage.Controlmain"></ControlComponent>
@@ -69,38 +68,86 @@
                 <span>未获取到页面,请新建或者选择一个页面</span>
             }
         </div>
-        @if (isdesigner)
+
+
+        @if (true)
         {
             <div class="dmain-right" style="width:20%">
                 <Tab>
                     <TabItem Text="属性管理">
-                        @if (FunctionPage != null && FunctionPage.MainPage != null)
+                        @if (FunctionPage != null)
                         {
                             <div style="height:8%">
-                                <Button OnClick="SaveLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Success">保存</Button>
-                                <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">复制</Button>
-                                <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">删除</Button>
-                                <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">新建</Button>
+                                @if (FunctionPage.MainPage != null && FunctionPage.Id != 0)
+                                {
+                                    <Button OnClick="SaveLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Success">保存</Button>
+                                    <Button OnClick="CopyLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Primary">复制</Button>
+                                    <Button OnClick="DeleteLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Warning">删除</Button>
+                                }
+                                <Button OnClick="NewLayout" ButtonStyle="ButtonStyle.Round" Color="Color.Info">新建</Button>
                             </div>
+
                         }
 
                         @if (FunctionPage != null && FunctionPage.MainPage != null && FunctionPage.MainPage.SelectControl != null)
                         {
-
                             <ControlProperties Data="FunctionPage.MainPage.SelectControl"></ControlProperties>
                         }
                     </TabItem>
-                    <TabItem Text="详情">
-                        角色
+                    <TabItem Text="工具箱">
+                        <Button OnClick="()=>{IsShowBackdropOpen=!IsShowBackdropOpen;isdesigner=!isdesigner;}">工具箱</Button>
                     </TabItem>
                 </Tab>
             </div>
         }
-    </CascadingValue>
-</div>
 
+
+
+    </div>
+    <div class="cus-drawer">
+
+   
+    <Drawer Placement="Placement.Left" @bind-IsOpen="@IsShowBackdropOpen" ShowBackdrop="false">
+        <div style="width:100%;height:100%;">
+            <Tab>
+                <TabItem Text="工具箱">
+                    <Collapse>
+                        <CollapseItems>
+                            <CollapseItem Text="普通控件" IsCollapsed="false">
+                                <WidgetBtn Icon="fa-solid fa-language" Data="WidgetType.InputText" Text="文本框"></WidgetBtn>
+                                <WidgetBtn Icon="fas fa-table" Data="WidgetType.Table" Text="表格"></WidgetBtn>
+                                <WidgetBtn Icon="fas fa-bullseye" Data="WidgetType.Bottom" Text="按钮"></WidgetBtn>
+                            </CollapseItem>
+                            <CollapseItem Text="容器控件">
+                                <WidgetBtn Icon="fas fa-tent-arrow-left-right" Data="WidgetType.SplitH" Text="水平分割"></WidgetBtn>
+                                <WidgetBtn Icon="fas fa-arrows-up-down" Data="WidgetType.SplitV" Text="垂直分割"></WidgetBtn>
+                                <WidgetBtn Icon="fas fa-box-archive" Data="WidgetType.Row" Text="行控件"></WidgetBtn>
+                                <WidgetBtn Icon="fas fa-toilets-portable" Data="WidgetType.Tab" Text="多页签"></WidgetBtn>
+                            </CollapseItem>
+                            <CollapseItem Text="图标控件">
+                                早晚会有..
+                            </CollapseItem>
+                            <CollapseItem Text="交互控件">
+                                早晚会有..
+                            </CollapseItem>
+                        </CollapseItems>
+                    </Collapse>
+                </TabItem>
+                <TabItem Text="控件树">
+                    <Button OnClick="TreeRefresh">刷新</Button>
+                    @if (ControlTree != null)
+                    {
+                        <TreeView TItem="Control" Items="@ControlTree" OnTreeItemClick="@OnTreeItemClick" />
+                    }
+                </TabItem>
+            </Tab>
+        </div>
+    </Drawer>
+    </div>
+</CascadingValue>
 
 @code {
+    public bool IsShowBackdropOpen { get; set; }
     [Inject]
     [NotNull]
     private MessageService? MessageService { get; set; }
@@ -269,6 +316,57 @@
             await MessageService.Show(new MessageOption()
                 {
                     Content = "复制成功,请手动刷新左侧菜单栏",
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Success
+                });
+        }
+        catch (Exception ex)
+        {
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = ex.Message,
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Warning
+                });
+        }
+        StateHasChanged();
+    }
+    public async Task DeleteLayout()
+    {
+        try
+        {
+            await db.DeleteNav<FunctionPage>(x => x.Id == FunctionPage.Id)
+                   .Include(x => x.Roles, new DeleteNavOptions()
+                       {
+                           ManyToManyIsDeleteA = true
+                       })
+                   .ExecuteCommandAsync();
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = "删除成功,请手动刷新左侧菜单栏",
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Success
+                });
+        }
+        catch (Exception ex)
+        {
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = ex.Message,
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Warning
+                });
+        }
+        StateHasChanged();
+    }
+    public async Task NewLayout()
+    {
+        try
+        {
+            await db.Insertable<FunctionPage>(new FunctionPage() { Name = "新建", MainPage = new MainPage() { } }).ExecuteReturnSnowflakeIdAsync();
+            await MessageService.Show(new MessageOption()
+                {
+                    Content = "新建成功,请手动刷新左侧菜单栏",
                     Icon = "fa-solid fa-circle-info",
                     Color = Color.Success
                 });

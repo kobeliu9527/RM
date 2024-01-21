@@ -1,5 +1,4 @@
-﻿using Models;
-using Models.NotEntity;
+﻿using Models.NotEntity;
 using Models.SystemInfo;
 using Ufo.Auto.Client.Services.Base;
 

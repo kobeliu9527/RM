@@ -37,6 +37,7 @@
     protected override void OnInitialized()
     {
         var res =  db.Queryable<FunctionGroup>().Includes(x => x.FunctionPages).ToList();
+
         if (res != null)
         {
             FunctionGroups = res;
@@ -50,7 +51,6 @@
     }
     protected override Task OnParametersSetAsync()
     {
-        IsFirst = false;
         return base.OnParametersSetAsync();
     }
     protected override void OnAfterRender(bool firstRender)

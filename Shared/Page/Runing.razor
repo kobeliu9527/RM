@@ -24,8 +24,7 @@
     public List<FunctionGroup>? FunctionGroups { get; set; }
     protected override void OnInitialized()
     {
-        // var pages = db.Queryable<FunctionPage>().ToList();
-
+        System.Console.WriteLine("run-start"+DateTime.Now);
         base.OnInitialized();
     }
     protected override Task OnInitializedAsync()
@@ -34,14 +33,17 @@
         {
             foreach (var item in FunctionGroups)
             {
-                if (item != null && item.FunctionPages!=null)
+                if (item != null && item.FunctionPages != null)
                 {
                     foreach (var item2 in item.FunctionPages)
                     {
-                        if (item2.Id.ToString()==id)
+                        if (item2.Id.ToString() == id)
                         {
                             FunctionPage = item2;
-                            FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+                            if (FunctionPage != null && FunctionPage.MainPage != null)
+                            {
+                                FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+                            }
                             return Task.CompletedTask;
                         }
                     }
@@ -59,13 +61,14 @@
     {
         if (firstRender)
         {
-          
+
         }
         base.OnAfterRender(firstRender);
+        System.Console.WriteLine("run-end" + DateTime.Now);
+
     }
     public void onclik()
     {
-
         using HttpClient http = httpClientFactory.CreateClient("http");
         var ss = http.BaseAddress;
     }

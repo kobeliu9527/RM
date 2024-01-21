@@ -15,6 +15,7 @@
         Bottom,
         InputText,
         Tab,
-        TabItem
+        TabItem,
+        CheckBox
     }
 }

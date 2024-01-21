@@ -1,0 +1,58 @@
+﻿@* 编辑一个表格控件的列 *@
+@implements IResultDialog
+<Table TItem="TableCol" @bind-Items="Control.TableInfo.TableFields"
+       IsTracking="true"
+       AutoGenerateColumns="true" IsStriped="true" IsBordered="true" IsMultipleSelect="false"
+       ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true">
+
+    <BeforeRowButtonTemplate Context="value">
+        <TableCellButton OnClick="()=>{OnClick(value,Items);}">绑定控件</TableCellButton>
+    </BeforeRowButtonTemplate>
+</Table>
+
+@code {
+    [Inject]
+    [NotNull]
+    private DialogService? DialogService { get; set; }
+    [NotNull]
+    [Parameter]
+    public List<SelectedItem>? Items { get; set; }
+    [Parameter]
+    [NotNull]
+    public Control? Control { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        //数据请求放这会执行两次
+
+
+
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        
+
+
+    }
+    public async Task OnClose(DialogResult result)
+    {
+        var ss = Control.TableInfo.TableFields;
+        if (result == DialogResult.Yes)
+        {
+            // await Task.CompletedTask;
+        }
+    }
+    public void OnClick(TableCol col, List<SelectedItem> list)
+    {
+        DialogService.ShowModal<UpdateTableBindField>(new ResultDialogOption()
+            {
+                ComponentParameters = new Dictionary<string, object>
+                {
+                    [nameof(UpdateTableBindField.TableCol)] = col,
+                    [nameof(UpdateTableBindField.Items)] = list,
+                }
+            });
+    }
+}

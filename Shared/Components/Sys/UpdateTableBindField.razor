@@ -1,0 +1,26 @@
+﻿@* 为某一列指定要绑定哪些控件 *@
+@implements IResultDialog
+<MultiSelect Items="Items" @bind-Value="TableCol.FieldNameList"></MultiSelect>
+
+@code {
+
+    [NotNull]
+    [Parameter]
+    public List<SelectedItem>? Items { get; set; }
+    [Parameter]
+    [NotNull]
+    public TableCol? TableCol { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+    public async Task OnClose(DialogResult result)
+    {
+        if (result == DialogResult.Yes)
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+}

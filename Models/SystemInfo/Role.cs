@@ -5,6 +5,7 @@ namespace Models.SystemInfo
     /// <summary>
     /// 
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(Role))]
     public class Role : EntityBase, IEquatable<Role>, IComparable<Role>
     {
         /// <summary>

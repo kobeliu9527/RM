@@ -6,6 +6,7 @@ namespace Models.SystemInfo
     /// <summary>
     /// 公司
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(Company))]
     public class Company : EntityBase
     {
         /// <summary>

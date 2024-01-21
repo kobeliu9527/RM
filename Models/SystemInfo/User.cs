@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 namespace Models.SystemInfo
 {
+    [SqlSugar.SugarTable("sys_"+nameof(User))]
     public class User : EntityBase
     {
         /// <summary>

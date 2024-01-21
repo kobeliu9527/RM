@@ -1,6 +1,7 @@
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Models;
+using Models.SystemInfo;
 using SqlSugar;
 using System.Diagnostics.CodeAnalysis;
 

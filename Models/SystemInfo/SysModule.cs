@@ -5,6 +5,7 @@ namespace Models.SystemInfo
     /// <summary>
     /// 模块
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(SysModule))]
     public class SysModule : EntityBase
     {
         /// <summary>

@@ -6,7 +6,7 @@
         <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" @onclick:stopPropagation="true">
             <Split Basis="@(Data.Basis.ToString()+"%")">
                 <FirstPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;"
+                    <div class="cus-first-panel"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 0)
                         {
@@ -18,7 +18,7 @@
                     </div>
                 </FirstPaneTemplate>
                 <SecondPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;"
+                    <div class="cus-first-panel"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 1)
                         {
@@ -37,7 +37,7 @@
         <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative;" @onclick:stopPropagation="true">
             <Split Basis="@(Data.Basis.ToString()+"%")" IsVertical="true">
                 <FirstPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;"
+                    <div class="cus-first-panel"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 0)
                         {
@@ -49,7 +49,7 @@
                     </div>
                 </FirstPaneTemplate>
                 <SecondPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;"
+                    <div class="cus-second-panel"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 1)
                         {
@@ -98,19 +98,24 @@
     }
     else if (Data.CtrType == WidgetType.Table)
     {
-        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%"
+        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="cus-table"
              @onclick:stopPropagation="true">
-            <div style="height:calc(100% - 80px)">
-                <Table TItem="DynamicObject" DynamicContext="DataTablePageDynamicContext" IsFixedHeader="true"
+            <div class="cus-table-table">
+                <Table TItem="DynamicObject" DynamicContext="DataTablePageDynamicContext"
+                       IsFixedHeader="true"
                        TableSize="TableSize.Compact"
                        ClickToSelect="true" OnClickRowCallback="OnClickedRow"
-                       ShowToolbar="true" ShowDeleteButton="true" ShowSearchButton="false" ShowRefresh="false" ShowAddButton="false" ShowEditButton="false">
+                       ShowToolbar="true" ShowDeleteButton="false" ShowSearchButton="false"
+                       ShowSearch="false"
+                       ShowRefresh="false" ShowAddButton="false" ShowEditButton="false">
                     <TableToolbarTemplate>
-                        <TableToolbarButton Color="Color.Info" Icon="fa-fw fa-solid fa-circle-plus" Text="刷新" OnClick="InitDataTable" />
+                        <BootstrapInput @bind-Value="@SearchText" TValue="string"></BootstrapInput>
+                        <Button Color="Color.Info" Icon="fas fa-search" Text="" OnClick="InitDataTable" />
+                        <Button Color="Color.Info" Icon="fas fa-sync" Text="" OnClick="InitDataTable" />
                     </TableToolbarTemplate>
                 </Table>
             </div>
-            <div style="height:80px;padding:10px 0 0 0" class="Pagination">
+            <div class="cus-table-pagination">
                 <Pagination ShowGotoNavigator="false" ShowPageInfo="true" PageCount="@Data.TableInfo!.PageCount" PageIndex="@Data.TableInfo!.PageIndex" OnPageLinkClick="@OnPageLinkClick" MaxPageLinkCount="1">
                     <PageInfoTemplate>
                         @if (Data != null && Data.TableInfo != null)
@@ -186,6 +191,26 @@
         </div>
 
     }
+    else if (Data.CtrType == WidgetType.CheckBox)
+    {
+        @if (Data.CheckBox != null)
+        {
+            <div style="z-index:@(Data.Zindex);position:relative;"
+                 @onclick:stopPropagation="true">
+                <Checkbox @bind-Value=@Data.Values.ValueBool
+                          IsDisabled="@Data.CheckBox.IsDisabled"
+                          Size="@Data.CheckBox.Size"
+                          Color="@Data.CheckBox.Color"
+                          DisplayText="@Data.DisplayName"
+                          ShowAfterLabel="@Data.CheckBox.ShowLabel"
+                          OnValueChanged="ValueChangedCheckBox"
+                          ShowLabel="false">
+                </Checkbox>
+                @* <DropArea Data="@Data" ParentData="@ParentData"></DropArea> *@
+            </div>
+        }
+    }
+
 }
 
 

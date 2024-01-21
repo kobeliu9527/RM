@@ -6,6 +6,7 @@ namespace Models.SystemInfo
     /// <summary>
     /// 功能组,把多个功能页面形成一个功能组
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(FunctionGroup))]
     public class FunctionGroup : EntityBase
     {
         /// <summary>

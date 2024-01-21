@@ -2,6 +2,7 @@ using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
+using Models.SystemInfo;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 

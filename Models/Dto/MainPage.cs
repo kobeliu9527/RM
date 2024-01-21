@@ -18,7 +18,7 @@ namespace Models.Dto
         /// <summary>
         /// 根控件
         /// </summary>
-        public Control Controlmain { get; set; } = new() {  CtrType = WidgetType.None, Zindex = 5 };
+        public Control Controlmain { get; set; } = new() {DisplayName="根",  CtrType = WidgetType.None, Zindex = 5 };
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public Control? SelectControl { get; set; }

@@ -1,7 +1,7 @@
 ﻿@if (Data != null)
 {
     <div class="Prop">
-        <Button Color="Color.Danger" OnClick="DeleteControl" ButtonStyle="ButtonStyle.None">删除</Button>
+        <Button Color="Color.Danger" OnClick="DeleteControl" ButtonStyle="ButtonStyle.None">删除选中控件</Button>
         @if (Data.CtrType == WidgetType.Tab)
         {
             <Button Color="Color.Primary" OnClick="AddTabItem">增加Tab页面</Button>
@@ -10,7 +10,7 @@
         {
             case WidgetType.SplitH:
             case WidgetType.SplitV:
-                <Collapse>
+                <Collapse IsAccordion="true">
                     <CollapseItems>
                         <CollapseItem Text="布局外观">
                             <div class="input-n">
@@ -67,7 +67,7 @@
             case WidgetType.Bottom:
                 @if (@Data.Button != null)
                 {
-                    <Collapse OnCollapseChanged="CollapseChangedForInputText">
+                    <Collapse OnCollapseChanged="CollapseChangedForInputText" IsAccordion="true">
                         <CollapseItems>
                             <CollapseItem Text="布局外观">
                                 <Switch @bind-Value="@Data.Button.IsDisabled" OffText="可编辑" OnText="只读" OnColor="Color.Dark" OffColor="Color.Success" ShowLabel="false" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
@@ -102,13 +102,15 @@
                             </CollapseItem>
                             <CollapseItem Text="事件数据源">
                                 <Switch @bind-Value="@Data.Button.EnterEnAble" OnText="启用确认(Enter)键" OffText="不启用确认(Enter)键"></Switch>
+
                                 <div class="input-n">
                                     <Select @bind-Value="@Data.Button.RequestParentTable" IsVirtualize="true" OnQueryAsync="OnQueryAsync" ShowLabel="true"></Select>
                                 </div>
                                 <div class="input-n">
                                     <BootstrapInput @bind-Value="@Data.Button.RequestParentTableIdName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
                                 </div>
-                                <Select TValue="string" @bind-Value="@Data.Button.EnterStoreName" IsVirtualize="true" OnQueryAsync="QueryForStoreName" ShowSearch="true" DisplayText="存储过程名字"></Select>
+                                <Select @bind-Value="@Data.Button.EnterStoreName" IsVirtualize="false" Items="StoreItems" ShowLabel="true" ShowSearch="true"></Select>
+
                                 <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.Button.EnterStoreParmeter" ShowLabel="true" DisplayText="存储过程需要的参数" />
                             </CollapseItem>
                         </CollapseItems>
@@ -118,20 +120,24 @@
             case WidgetType.InputText:
                 @if (@Data.InputText != null)
                 {
-                    <Collapse OnCollapseChanged="CollapseChangedForInputText">
+                    <Collapse OnCollapseChanged="CollapseChangedForInputText" IsAccordion="true">
                         <CollapseItems>
                             <CollapseItem Text="布局外观">
                                 <div class="input-n">
                                     <Switch @bind-Value="@Data.InputText.IsDisabled" OffText="可编辑" OnText="只读" OnColor="Color.Dark" OffColor="Color.Success" ShowLabel="false" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
-                                </div>
-                                <div class="input-n">
                                     <Switch @bind-Value="@Data.InputText.ShowLabel" OffText="不显示标签" OnText="显示标签" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
                                 </div>
                                 <div class="input-n">
                                     <BootstrapInput @bind-Value="@Data.DisplayName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
                                 </div>
                                 <div class="input-n">
-                                    <BootstrapInputNumber @bind-Value="@Data.Width" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                    <BootstrapInput @bind-Value="@Data.FieldName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
+                                </div>
+                                <div class="input-n">
+                                    <Select @bind-Value="@Data.ParameterType" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Select>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInputNumber  @bind-Value="@Data.Width" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
                                 </div>
                                 <div class="input-n">
                                     <BootstrapInputNumber @bind-Value="@Data.Offset" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
@@ -148,11 +154,8 @@
                             <CollapseItem Text="事件数据源">
                                 @if (@Data.InputText != null)
                                 {
-                                    <div class="input-n">
-                                        <BootstrapInput @bind-Value="@Data.FieldName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
-                                    </div>
                                     <Switch @bind-Value="@Data.InputText.EnterEnAble" OnText="启用确认(Enter)键" OffText="不启用确认(Enter)键"></Switch>
-                                    <Select TValue="string" @bind-Value="@Data.InputText.EnterStoreName" IsVirtualize="true" OnQueryAsync="QueryForStoreName" ShowSearch="true" DisplayText="存储过程名字"></Select>
+                                    <Select @bind-Value="@Data.InputText.EnterStoreName" IsVirtualize="false" Items="StoreItems" ShowLabel="true" ShowSearch="true"></Select>
                                     <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.InputText.EnterStoreParmeter" ShowLabel="true" DisplayText="存储过程需要的参数" />
                                     <Switch @bind-Value="@Data.InputText.EscEnAble" OnText="启用返回(Esc)键" OffText="不启用返回(Esc)键"></Switch>
                                 }
@@ -196,7 +199,7 @@
             case WidgetType.Table:
                 @if (Data.TableInfo != null)
                 {
-                    <Collapse OnCollapseChanged="CollapseChangedForInputText">
+                    <Collapse OnCollapseChanged="CollapseChangedForInputText" IsAccordion="true">
                         <CollapseItems>
                             <CollapseItem Text="外观布局">
                                 <div class="input-n">
@@ -210,13 +213,20 @@
                                 </div>
                             </CollapseItem>
                             <CollapseItem Text="特有属性">
-
+                                <Button OnClick="AddColumnForTable">编辑列信息</Button>
                             </CollapseItem>
                             <CollapseItem Text="事件数据源">
                                 <div class="input-n">
                                     <Select @bind-Value="@Data.TableInfo.RequestParentTable" IsVirtualize="true" OnQueryAsync="OnQueryAsync" ShowLabel="true"></Select>
                                 </div>
-                                <Select @bind-Value="@Data.TableInfo.RequestAddress" IsVirtualize="true" OnQueryAsync="QueryForStoreName" ShowLabel="true" ShowSearch="true"></Select>
+                                <div class="input-n">
+                                    <BootstrapInput @bind-Value="@Data.TableInfo.RequestParentTableIdName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInput @bind-Value="@Data.TableInfo.TableFieldNames" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
+                                </div>
+                                @* OnQueryAsync="QueryForStoreName" *@
+                                <Select @bind-Value="@Data.TableInfo.RequestAddress" IsVirtualize="false"  Items="StoreItems" ShowLabel="true" ShowSearch="true"></Select>
                                 <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.TableInfo.RequestParmeter" ShowLabel="true" />
                                 <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData2" @bind-Value="@Data.TableInfo.FieldNameList" ShowLabel="true" />
                             </CollapseItem>
@@ -225,7 +235,7 @@
                 }
                 break;
             case WidgetType.Tab:
-                <Collapse>
+                <Collapse IsAccordion="true">
                     <CollapseItems>
                         <CollapseItem Text="外观布局">
                             <div class="input-n">
@@ -248,7 +258,7 @@
                 </Collapse>
                 break;
             case WidgetType.TabItem:
-                <Collapse>
+                <Collapse IsAccordion="true">
                     <CollapseItems>
                         <CollapseItem Text="外观布局">
                             <div class="input-n">
@@ -263,6 +273,52 @@
                         </CollapseItem>
                     </CollapseItems>
                 </Collapse>
+                break;
+            case WidgetType.CheckBox:
+                @if (@Data.CheckBox != null)
+                {
+                    <Collapse OnCollapseChanged="CollapseChangedForInputText" IsAccordion="true">
+                        <CollapseItems>
+                            <CollapseItem Text="布局外观">
+                                <div class="input-n">
+                                    <Switch @bind-Value="@Data.CheckBox.IsDisabled" OffText="可编辑" OnText="只读" OnColor="Color.Dark" OffColor="Color.Success" ShowLabel="false" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
+                                    <Switch @bind-Value="@Data.CheckBox.ShowLabel" OffText="不显示" OnText="显示标签" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInput @bind-Value="@Data.DisplayName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInput @bind-Value="@Data.FieldName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInputNumber @bind-Value="@Data.Width" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInputNumber @bind-Value="@Data.Offset" TValue="int" Step="1" Max="12" Min="1" ShowButton="true" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInputNumber>
+                                </div>
+                                <div class="input-n">
+                                    <Select @bind-Value="@Data.CheckBox.Size" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Select>
+                                </div>
+                                <div class="input-n">
+                                    <Select @bind-Value="@Data.CheckBox.Color" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Select>
+                                </div>
+                            </CollapseItem>
+                            <CollapseItem Text="控件属性">
+                                <div class="input-n">
+                                    <Switch @bind-Value="@Data.Values.ValueBool" OffText="勾选" OnText="未勾选" OnColor="Color.Dark" OffColor="Color.Success" ShowLabel="false" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
+                                </div>
+                            </CollapseItem>
+                            <CollapseItem Text="事件数据源">
+                                @if (@Data.CheckBox != null)
+                                {
+                                    <Switch @bind-Value="@Data.CheckBox.ChangeEnAble" OnText="状态改变执行" OffText="状态改变不执行"></Switch>
+                                    <Select @bind-Value="@Data.CheckBox.ChangeStoreName" IsVirtualize="false" Items="StoreItems" ShowLabel="true" ShowSearch="true"></Select>
+                                    <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.CheckBox.ChangeStoreParmeter" ShowLabel="true" DisplayText="存储过程需要的参数" />
+                                }
+                            </CollapseItem>
+                        </CollapseItems>
+                    </Collapse>
+                }
                 break;
             default:
                 break;

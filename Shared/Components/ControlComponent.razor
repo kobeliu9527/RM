@@ -6,10 +6,10 @@
         <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" class="@(Data.IsSelect?"designer-select":"designer")" @onclick:stopPropagation="true">
             <Split Basis="@(Data.Basis.ToString()+"%")">
                 <FirstPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[0].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="cus-first-panel @(Data.Controls[0].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 0)
-                        {
+                        {//class="cus-first-panel"
                             @foreach (var item in Data.Controls[0].Controls)
                             {
                                 <ControlComponent Data="item" ParentData="Data.Controls[0]"></ControlComponent>
@@ -19,7 +19,7 @@
                     </div>
                 </FirstPaneTemplate>
                 <SecondPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[1].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="cus-first-panel @(Data.Controls[1].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 1)
                         {
@@ -39,7 +39,7 @@
         <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;position:relative" class="@(Data.IsSelect?"designer-select":"designer")" @onclick:stopPropagation="true">
             <Split Basis="@(Data.Basis.ToString()+"%")" IsVertical="true">
                 <FirstPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[0].IsSelect?"designer-select":"designer")"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="cus-first-panel @(Data.Controls[0].IsSelect?"designer-select":"designer")"
                          @onclick="async ()=>{await SetSelectedAsync(Data);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 0)
@@ -53,7 +53,7 @@
                     </div>
                 </FirstPaneTemplate>
                 <SecondPaneTemplate>
-                    <div style="height:100%;position:relative;overflow-y:auto;" class="@(Data.Controls[1].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data);}"
+                    <div style="height:100%;position:relative;overflow-y:auto;" class="cus-first-panel @(Data.Controls[1].IsSelect?"designer-select":"designer")" @onclick="async ()=>{await SetSelectedAsync(Data);}"
                          @onclick:stopPropagation="true">
                         @if (Data.Controls.Count > 1)
                         {
@@ -109,17 +109,19 @@
         <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="table @(Data.IsSelect?"designer-select":"")"
              @onclick="SelectComponentAsync"
              @onclick:stopPropagation="true">
-            <div style="height:calc(100% - 60px)">
-                <Table TItem="DynamicObject" DynamicContext="DataTablePageDynamicContext" IsFixedHeader="true"
+            <div class="cus-table-table">
+                <Table TItem="DynamicObject" DynamicContext="DataTablePageDynamicContext"
+                       IsFixedHeader="true"
                        TableSize="TableSize.Compact"
                        ClickToSelect="true" OnClickRowCallback="OnClickedRow"
-                       ShowToolbar="true" ShowDeleteButton="true" ShowSearchButton="false" ShowRefresh="false" ShowAddButton="false" ShowEditButton="false">
+                       ShowToolbar="true" ShowDeleteButton="false" ShowSearchButton="false" ShowRefresh="false" ShowAddButton="false" ShowEditButton="false">
                     <TableToolbarTemplate>
-                        <TableToolbarButton Color="Color.Info" Icon="fa-fw fa-solid fa-circle-plus" Text="刷新" OnClick="InitDataTable" />
+                        <BootstrapInput @bind-Value="@SearchText" TValue="string"></BootstrapInput>
+                        <TableToolbarButton Color="Color.Info" Icon="fa-fw fa-solid fa-circle-plus" Text="" OnClick="InitDataTable" />
                     </TableToolbarTemplate>
                 </Table>
             </div>
-            <div style="height:60px;">
+            <div class="cus-table-pagination">
                 <Pagination ShowGotoNavigator="false" ShowPageInfo="true" PageCount="@Data.TableInfo!.PageCount" PageIndex="@Data.TableInfo!.PageIndex" OnPageLinkClick="@OnPageLinkClick">
                     <PageInfoTemplate>
                         @if (Data != null && Data.TableInfo != null)
@@ -197,6 +199,25 @@
 
         </div>
 
+    }
+    else if (Data.CtrType == WidgetType.CheckBox)
+    {
+        @if (Data.CheckBox != null)
+        {
+            <div style="z-index:@(Data.Zindex);position:relative" class="@(Data.IsSelect?"designer-select":"")"
+                 @onclick="SelectComponentAsync"
+                 @onclick:stopPropagation="true">
+                <Checkbox @bind-Value=@Data.Values.ValueBool
+                          IsDisabled="@Data.CheckBox.IsDisabled"
+                          Size="@Data.CheckBox.Size"
+                          Color="@Data.CheckBox.Color"
+                          DisplayText="@Data.DisplayName"
+                          ShowAfterLabel="@Data.CheckBox.ShowLabel"
+                          ShowLabel="false">
+                </Checkbox>
+                <DropArea Data="@Data" ParentData="@ParentData"></DropArea>
+            </div>
+        }
     }
 }
 

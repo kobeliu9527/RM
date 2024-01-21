@@ -61,6 +61,11 @@ namespace Models.Dto
         [DisplayName("绑定字段名:"), Description("用于绑定数据库中的字段或者参数:")]
         public string FieldName { get; set; } = "Na";
         /// <summary>
+        /// 参数类型,output?
+        /// </summary>
+        [DisplayName("是否为输入输出参数:"), Description("用于绑定数据库中的字段或者参数:")]
+        public ParameterDirection ParameterType { get; set; }
+        /// <summary>
         /// 控件的类型
         /// </summary>
         public WidgetType CtrType { get; set; } = WidgetType.Bottom;
@@ -141,11 +146,15 @@ namespace Models.Dto
 
         #endregion
         /// <summary>
+        /// 复选框信息
+        /// </summary>
+        public CheckBox? CheckBox { get; set; }
+        /// <summary>
         /// 用于其他控件更新自己
         /// </summary>
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
-        public Func<Task>? UpdateSelf { get; set; }
+        public Action? UpdateSelf { get; set; }
 
 
         public Control()
@@ -215,6 +224,11 @@ namespace Models.Dto
                     Controls.Add(tab1);
                     Controls.Add(tab2);
                     break;
+                case WidgetType.CheckBox:
+                    Values.DbType = System.Data.DbType.Boolean;
+                    DisplayName = "复选框";
+                    CheckBox = new CheckBox();
+                    break;
                 default:
                     break;
             }
@@ -225,16 +239,42 @@ namespace Models.Dto
     {
         [DisplayName("禁用:"), Description("是否禁用此图标:")]
         public bool IsDisabled { get; set; }
+        [DisplayName("是否显示标题名:"), Description("是否显示标签:")]
+        public bool ShowLabel { get; set; } = true;
         [DisplayName("外观颜色:"), Description("边框或者整体颜色:")]
         public Color Color { get; set; } = Color.Primary;
         [DisplayName("自动获取焦点:"), Description("是否自动获取焦点:")]
         public bool IsAutoFocus { get; set; }
+        [DisplayName("大小:"), Description("按钮等的大小:")]
+        public Size Size { get; set; } = Size.None;
+        #region 值改变后
+        /// <summary>
+        /// 值改变后执行允许
+        /// </summary>
+        [DisplayName("值改变后执行允许:"), Description("值改变后执行允许:")]
+        public bool ChangeEnAble { get; set; }
+        /// <summary>
+        /// 执行的存储过程名
+        /// </summary>
+        [DisplayName("执行的存储过程名:"), Description("执行的存储过程名:")]
+        public string ChangeStoreName { get; set; } = "";
+        /// <summary>
+        /// 执行存储过程需要的参数
+        /// </summary>
+        [DisplayName("执行存储过程需要的参数:"), Description("执行存储过程需要的参数:")]
+        public List<string>? ChangeStoreParmeter { get; set; } = new();///
+        #endregion
+        #region 回车后,或者按钮点击后
         [DisplayName("回车执行:"), Description("文本框是否执行回车事件:")]
         public bool EnterEnAble { get; set; }
+        /// <summary>
+        /// 按回车后执行的存储过程
+        /// </summary>
         [DisplayName("回车执行的存储过程:"), Description("按回车后执行的存储过程:")]
         public string EnterStoreName { get; set; } = "";
         [DisplayName("回车执行的存储过程的参数:"), Description("按回车后执行的存储过程需要的参数:")]
         public List<string> EnterStoreParmeter { get; set; } = new List<string>();
+        #endregion
     }
     public class Button : ControInfoBase
     {
@@ -242,49 +282,52 @@ namespace Models.Dto
         public bool IsAsync { get; set; }
         [DisplayName("外边框线:"), Description("是否显示外边框线:")]
         public bool IsOutline { get; set; }
-        [DisplayName("大小:"), Description("按钮等的大小:")]
-        public Size Size { get; set; } = Size.None;
         [DisplayName("按钮风格:"), Description("按钮风格:")]
         public ButtonStyle ButtonStyle { get; set; }
         [DisplayName("按钮图标:"), Description("按钮图标:")]
-        public string? Icon { get; set; }
+        public string Icon { get; set; } = "";
         /// <summary>
         /// 如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key)
         /// </summary>
         [DisplayName("父级表:"), Description("如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key):")]
         public string RequestParentTable { get; set; } = "";
         /// <summary>
-        /// 如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key)
+        /// 如有父级主键的话,绑定表中的哪一个字段,需要手动输入,内部逻辑:每次点击行都会保存 
+        /// 表key+字段key
         /// </summary>
-        [DisplayName("父级表主键Id名:"), Description("父级表中哪一个字段的名字作为主键Id:")]
+        [DisplayName("父级表主键参数名:"), Description("父级表中哪一个字段的名字作为主键Id:")]
         public string RequestParentTableIdName { get; set; } = "Id";
     }
     public class InputText : ControInfoBase
-    {//IsTrim
+    {
         [DisplayName("自动去头尾空格:"), Description("点击确认后,自动去头尾空格:")]
         public bool IsTrim { get; set; }
         [DisplayName("提示水印信息:"), Description("文本框的提示信息:")]
         public string PlaceHolder { get; set; } = "请输入";
-        [DisplayName("是否显示标题名:"), Description("是否显示标签:")]
-        public bool ShowLabel { get; set; } = true;
-        [DisplayName("返回执行:"), Description("文本框是否执行Esc事件:")]
+        #region 按ESC键后
+        [DisplayName("按ESC键后执行允许:"), Description("文本框是否执行Esc事件:")]
         public bool EscEnAble { get; set; }
         [DisplayName("返回键执行的存储过程:"), Description("按返回键后执行的存储过程:")]
         public string EscStoreName { get; set; } = "";
         [DisplayName("返回键执行的存储过程的参数:"), Description("按返回键后执行的存储过程需要的参数:")]
         public IEnumerable<string>? EscStoreParmeter { get; set; }
+        #endregion
+
     }
     public class Table : ControInfoBase
     {
-        ///// <summary>
-        ///// 这张表的父级表,通常为父级表的Key
-        ///// </summary>
-        //[DisplayName("父级表名:"), Description("如果有父级表,在这设置:")]
-        //public string ParentTableName { get; set; } = "";
-
+        /// <summary>
+        /// 表格大小
+        /// </summary>
         public TableSize TableSize { get; set; } = TableSize.Compact;
-        [DisplayName("绑定字段名集合:"), Description("这个表对应的字段名:逗号分割")]
+        
+        [DisplayName("需要绑定字段名集合:"), Description("这个表对应的字段名:逗号分割")]
         public string TableFieldNames { get; set; } = "";
+        /// <summary>
+        /// 这个表格的列信息
+        /// </summary>
+        [DisplayName("字段名集合:"), Description("这个表对应的字段名:逗号分割")]
+        public IEnumerable<TableCol> TableFields { get; set; } = new List<TableCol>();
         /// <summary>
         /// 全部数据,只有第一次或者手动刷新才会更新这个
         /// </summary>
@@ -297,9 +340,6 @@ namespace Models.Dto
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public DataTable PageDataTable = new();
-        //public List<SelectedItem>? PageItemsSource { get; set; } = new List<SelectedItem>() {
-        //    new("10", "10条/页"),
-        //    new("20", "20条/页")};
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public List<SelectedItem>? PageItemsSource { get; set; } = [
@@ -313,7 +353,7 @@ namespace Models.Dto
         /// <summary>
         /// 执行的存储过程(url)需要的参数名
         /// </summary>
-        [DisplayName("请求数据需要参数名:"), Description("执行的存储过程(url)需要的参数名:")]
+        [DisplayName("请求数据需要参数名:"), Description("执行的存储过程(url)需要的参数名(key):")]
         public List<string> RequestParmeter { get; set; } = new List<string>();
         /// <summary>
         /// 如有父级主键的话,需要指定父级表的名字(内部绑定的是唯一Key)
@@ -327,14 +367,14 @@ namespace Models.Dto
         public string RequestParentTableIdName { get; set; } = "Id";
 
         /// <summary>
-        /// 表格中那些字段需要跟界面控件绑定
+        /// 过期,不建议使用
         /// </summary>
         [DisplayName("绑定那些字段:"), Description("表格中那些字段需要跟界面控件绑定:")]
         public List<string> FieldNameList { get; set; } = new List<string>();
         /// <summary>
-        /// 存储过程需要的参数名字
+        /// 存储过程需要的参数名字 todo :这个参数没有用,可以删除
         /// </summary>
-        public string Parameter { get; set; } = "";
+        //public string Parameter { get; set; } = "";
         /// <summary>
         /// 每一页显示多少条
         /// </summary>
@@ -361,5 +401,43 @@ namespace Models.Dto
         //public TableSize TableSize { get; set; } = TableSize.Compact;
         //public TableSize TableSize { get; set; } = TableSize.Compact;
         //public TableSize TableSize { get; set; } = TableSize.Compact;
+    }
+    /// <summary>
+    /// 表格中列信息
+    /// </summary>
+    public class TableCol
+    {
+        /// <summary>
+        /// 用于绑定数据库中的字段或者参数
+        /// </summary>
+        [DisplayName("绑定字段名:"), Description("用于绑定数据库中的字段或者参数:")]
+        public string FieldName { get; set; } = "Na";
+        [DisplayName("前台显示:"), Description("前台显示,后续应该支持多语言")]
+        public string DisplayName { get; set; } = "DisplayName";
+        [DisplayName("绑定字段名:"), Description("用于绑定数据库中的字段或者参数:")]
+        public System.Data.DbType DbType { get; set; } = System.Data.DbType.String;
+        [DisplayName("是否可编辑:"), Description("是否可编辑:")]
+        public bool Editable { get; set; } =true;
+        [DisplayName("是否显示:"), Description("是否显示:")]
+        public bool Visible { get; set; } =true;
+        /// <summary>
+        /// 这一列是否要用来筛选
+        /// </summary>
+        [DisplayName("是否为筛选列:"), Description("是否为筛选列:")]
+        public bool Filterable { get; set; } = true;
+        /// <summary>
+        /// 选中列的值
+        /// </summary>
+        [DisplayName("选中列的值:"), Description("选中列的值:")]
+        public object? val { get; set; } 
+        /// <summary>
+        /// 这一列要跟那些控件做绑定
+        /// </summary>
+        [DisplayName("绑定哪些控件"), Description("绑定哪些控件:")]
+        public List<string> FieldNameList { get; set; } = new List<string>();
+    }
+    public class CheckBox : ControInfoBase
+    {
+
     }
 }

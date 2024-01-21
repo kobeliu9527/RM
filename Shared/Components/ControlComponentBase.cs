@@ -14,7 +14,7 @@ using Console = System.Console;
 
 namespace Shared.Components
 {
-    public class ControlComponentBase:ComponentBase
+    public class ControlComponentBase : ComponentBase
     {
         [Inject]
         [NotNull]
@@ -50,6 +50,8 @@ namespace Shared.Components
         public Control? ParentData { get; set; }
         [NotNull]
         public DataTableDynamicContext? DataTablePageDynamicContext { get; set; }
+
+        public string SearchText { get; set; } = "";
         /// <summary>
         /// 
         /// </summary>
@@ -102,20 +104,28 @@ namespace Shared.Components
                 await MainPage.StateHasChangedInvoke();
             }
         }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        #region 生命周期函数
+        protected override void OnInitialized()
         {
-            if (firstRender)
+            //Console.WriteLine("组件开始:" + DateTime.Now);
+            if (Data.CtrType == WidgetType.Table)
             {
-                if (Data.CtrType == WidgetType.Table)
-                {
-                    await InitDataTable();
-                    StateHasChanged();
-                    Data.UpdateSelf = InitDataTable;
-                }
+                InitDataTable();
+
+                StateHasChanged();
+                Data.UpdateSelf = InitDataTable;
             }
-            await base.OnAfterRenderAsync(firstRender);
+            base.OnInitialized();
+
         }
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            //Console.WriteLine("组件结束:" + DateTime.Now);
+
+        }
+        #endregion
+
         #region 表格
         /// <summary>
         /// 判断两行是否相等
@@ -139,30 +149,53 @@ namespace Shared.Components
         public async Task OnClickedRow(DynamicObject row)
         {
             //1.以这张表的名字/Key为Key,这一行中的Id字段的值为Value,保存在字典中
-            var tabName = Data.Key;
-            foreach (var item in Data.TableInfo.TableFieldNames.Split(",", StringSplitOptions.RemoveEmptyEntries))
+            var tabKey = Data.Key;
+            foreach (var col in Data.TableInfo.TableFields)
             {
-                var v = row.GetValue(item);
-                MainPage.TableValues[tabName].KeyValues[item] = v;
+                var val = row.GetValue(col.FieldName);
+                col.val = val;
+                foreach (var ctrkey in col.FieldNameList)
+                {
+                    var ctr = MainPage.FindFirst(ctrkey);
+                    if (ctr != null)
+                    {
+                        ctr.Values.Value = val;
+                    }
+                }
             }
+            //foreach (var item in Data.TableInfo.TableFieldNames.Split(",", StringSplitOptions.RemoveEmptyEntries))
+            //{
+            //    var v = row.GetValue(item);
+            //    if (MainPage.TableValues.ContainsKey(tabKey))
+            //    {
+            //        MainPage.TableValues[tabKey].KeyValues[item] = v;
+            //    }
+            //    else
+            //    {
+            //        CurrentRowValue crv = new CurrentRowValue();
+            //        crv.KeyValues.Add(item, v);
+            //        MainPage.TableValues.Add(tabKey, crv);
+            //    }
+            //    MainPage.TableValues[tabKey].KeyValues[item] = v;
+            //}
             //2.找到这个页面中所有的Table控件并且ta的父级表名称是这个Row所在表的表名
-            List<Control> list = new List<Control>();
-            var controllist = MainPage.FindAll(x => x.CtrType == WidgetType.Table && x.TableInfo.RequestParentTable == tabName);
+            //List<Control> list = new List<Control>();
+            var controllist = MainPage.FindAll(x => x.CtrType == WidgetType.Table && x.TableInfo.RequestParentTable == tabKey);
             //3.更新找到的控件
             foreach (var control in controllist)
             {
                 control.UpdateSelf?.Invoke();
             }
-            foreach (var item in Data.TableInfo.FieldNameList)
-            {
-                var c = MainPage.FindFirst(item);
-                if (c != null)
-                {
-                    var n = c.FieldName;
-                    var val = row.GetValue(n);
-                    c.Values.Value = val;
-                }
-            }
+            //foreach (var item in Data.TableInfo.FieldNameList)//找到跟这个表格绑定了的所有控件
+            //{
+            //    var c = MainPage.FindFirst(item);
+            //    if (c != null)
+            //    {
+            //        var n = c.FieldName;
+            //        var val = row.GetValue(n);
+            //        c.Values.Value = val;
+            //    }
+            //}
             await MainPage.StateHasChangedInvoke();
         }
         /// <summary>
@@ -171,12 +204,13 @@ namespace Shared.Components
         /// <para>2.找到本Table绑定的需要更新的表单元素</para>
         /// </summary>
         /// <returns></returns>
-        public async Task InitDataTable()
+        public async void  InitDataTable()
         {
             try
             {
                 //逻辑:一张表,可能对应一张父级表,所以在获取数据的时候要先判断是否有父级表以及父级表Id是否存在
                 var parentName = Data.TableInfo.RequestParentTable;
+                List<SugarParameter> sps = new List<SugarParameter>();
                 DataTable? res = null;
                 if (!string.IsNullOrEmpty(parentName) && MainPage.TableValues.TryGetValue(parentName, out CurrentRowValue? crv))
                 {
@@ -186,14 +220,32 @@ namespace Shared.Components
                         if (crv.KeyValues.TryGetValue(na, out object? vl))
                         {
                             SugarParameter sp = new SugarParameter("PId", vl);
-                            res = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.TableInfo!.RequestAddress, sp);
+                            sps.Add(sp);
                         }
                     }
                 }
-                else
+                if (Data.TableInfo.RequestParmeter.Count > 0)
                 {
-                    res = await Db.Ado.UseStoredProcedure().GetDataTableAsync(Data.TableInfo.RequestAddress);
+                    foreach (var item in Data.TableInfo.RequestParmeter)
+                    {
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            var con = MainPage.FindFirst(item);
+                            if (con != null)
+                            {
+                                var val = con.Values.Value;
+                                var pname = con.FieldName;
+                                if (val != null && !string.IsNullOrEmpty(pname))
+                                {
+                                    SugarParameter sp1 = new SugarParameter(pname, val);
+                                    sps.Add(sp1);
+                                }
+                            }
+                        }
+                    }
                 }
+                res =  Db.Ado.UseStoredProcedure().GetDataTable(Data.TableInfo!.RequestAddress, sps);
+
                 if (res != null)
                 {
                     Data.TableInfo.UserData = res;
@@ -219,6 +271,11 @@ namespace Shared.Components
             }
             InitPageDataTable();
             //StateHasChanged();
+        }
+
+        public void Search(string val)
+        { 
+
         }
         /// <summary>
         /// 获取分页参数,然后调用RebuildPaginationDataTable生成分页上下文
@@ -246,6 +303,13 @@ namespace Shared.Components
                 var ss = context;
                 var ccc = col;
                 col.Width = 120;
+                var res = Data.TableInfo.TableFields.FirstOrDefault(x => x.FieldName.ToLower() == propertyName.ToLower());
+                if (res != null)
+                {
+                    col.Text = res.DisplayName;
+                    col.Editable = res.Editable;
+                    col.Visible = res.Visible;
+                }
                 //if (propertyName == nameof(Foo.DateTime))
                 //{
                 //    context.AddRequiredAttribute(nameof(Foo.DateTime));
@@ -272,9 +336,16 @@ namespace Shared.Components
                 //}
             })
             {
-                OnDeleteAsync = (e) =>
+                OnDeleteAsync = async (e) =>
                 {
-                    return Task.FromResult(false);
+                    
+                    await MessageService.Show(new MessageOption()
+                    {
+                        Content = $"获取到返回值{Data.Id}",
+                        Icon = "fa-solid fa-circle-info",
+                        Color = Color.Danger
+                    });
+                    return (false);
                 },
                 OnAddAsync = (e) =>
                 {
@@ -338,15 +409,19 @@ namespace Shared.Components
                 if (Data.Button != null && Data.Button.EnterEnAble)
                 {
                     List<SugarParameter> parameters = new List<SugarParameter>();
-                    var name = Data.Button.EnterStoreName;
-                    var spp = Data.Button.EnterStoreParmeter;
-                    var tableName = Data.Button.RequestParentTable;
-                    var id = Data.Button.RequestParentTableIdName;
-                    if (MainPage.IdList.TryGetValue("tableName", out object? valu))
+                    var StoreName = Data.Button.EnterStoreName;
+                    var StoreParmeter = Data.Button.EnterStoreParmeter;
+                    var ParentTable = Data.Button.RequestParentTable;
+                    var ParentTableFieldId = Data.Button.RequestParentTableIdName;
+                    var pTable = MainPage.FindFirst(ParentTable);
+                    if (pTable != null)
                     {
-                        parameters.Add(new SugarParameter(id, valu));
+                        var Colnum = pTable.TableInfo.TableFields.FirstOrDefault(x=>x.FieldName.ToLower()==ParentTableFieldId.ToLower());
+                        if (Colnum != null)
+                        {
+                            parameters.Add(new SugarParameter(ParentTableFieldId, Colnum.val));
+                        }
                     }
-
                     foreach (var item in Data.Button.EnterStoreParmeter)
                     {
                         var ctr = MainPage.FindFirst(item);
@@ -354,12 +429,26 @@ namespace Shared.Components
                         {
                             var pname = ctr.FieldName;
                             var pval = ctr.Values.Value;
-                            parameters.Add(new SugarParameter(pname, pval));
+                            parameters.Add(new SugarParameter(pname, pval, ctr.ParameterType == ParameterDirection.Output) { DbType=ctr.Values.DbType});
                         }
                     }
-                    if (!(string.IsNullOrEmpty(name)))
+                    if (!(string.IsNullOrEmpty(StoreName)))
                     {
-                        var tab = await Db.Ado.UseStoredProcedure().GetDataTableAsync(name, parameters);
+                        var tab =  Db.Ado.UseStoredProcedure().GetDataTable(StoreName, parameters);
+                        foreach (var item in parameters)
+                        {
+                            if (item.Direction== ParameterDirection.Output)
+                            {
+                                await MessageService.Show(new MessageOption()
+                                {
+                                    Content = $"获取到返回值{item.Value}",
+                                    Icon = "fa-solid fa-circle-info",
+                                    Color = Color.Danger
+                                });
+                                return;
+                            }
+                        }
+                        
                     }
                     else
                     {
@@ -374,7 +463,7 @@ namespace Shared.Components
                     //await ToastService.Success("执行成功", $"我成功执行了存储过程:{name}");
                     await MessageService.Show(new MessageOption()
                     {
-                        Content = $"我成功执行了存储过程:{name}",
+                        Content = $"我成功执行了存储过程:{StoreName}",
                         Icon = "fa-solid fa-circle-info",
                         Color = Color.Success
                     });
@@ -430,9 +519,22 @@ namespace Shared.Components
             {
                 await ToastService.Success("执行成功", $"我成功执行了存储过程:{Data.InputText.EscStoreName}");
             }
-            await Task.Delay(100);
         }
 
+        #endregion
+        #region CheckBox
+        public async Task ValueChangedCheckBox(bool val)
+        {
+            if (Data.CheckBox != null && Data.CheckBox.ChangeEnAble)
+            {
+                await MessageService.Show(new MessageOption()
+                {
+                    Content = $"我成功执行了存储过程:{Data.CheckBox.ChangeStoreName}",
+                    Icon = "fa-solid fa-circle-info",
+                    Color = Color.Success
+                });
+            }
+        }
         #endregion
     }
 }

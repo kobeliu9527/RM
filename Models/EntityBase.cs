@@ -12,5 +12,9 @@ namespace Models
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]
         public long Id { get; set; }
+        /// <summary>
+        /// 图标
+        /// </summary>
+        public string? Icon { get; set; }
     }
 }

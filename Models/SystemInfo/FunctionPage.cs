@@ -1,5 +1,4 @@
 ﻿using Models.Dto;
-using Models.SystemInfo;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -11,17 +10,18 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models.SystemInfo
 {
     /// <summary>
     /// 
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(FunctionPage))]
     public class FunctionPage : EntityBase
     {
         /// <summary>
         /// 页面名字
         /// </summary>
-        [SqlSugar.SugarColumn(Length = 20)]
+        [SugarColumn(Length = 20)]
         public string Name { get; set; } = "";
         /// <summary>
         /// 页面类型 todo:如果一个页面既是网页也是移动端,会被限制,考虑放到下级?
@@ -31,11 +31,11 @@ namespace Models
         /// <summary>
         /// 表示这个页面的布局
         /// </summary>
-        [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
+        [SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
         [NotNull]
-        [Newtonsoft.Json. JsonIgnore] 
+        [Newtonsoft.Json.JsonIgnore]
         public ContainerDto? ContainerData { get; set; }
-        [SqlSugar.SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
+        [SugarColumn(IsJson = true, ColumnDataType = "nvarchar(max)")]
         public MainPage? MainPage { get; set; }
         /// <summary>
         /// 消息框的类型
@@ -51,7 +51,7 @@ namespace Models
             nameof(RelationFunctionAndFunctionGroup.FunctionGroupId))]
         public List<FunctionGroup>? FunctionGroups { get; set; }
         [Navigate(typeof(RoleFunction), nameof(RoleFunction.FunctionPageId), nameof(RoleFunction.RoleId))]
-          public List<Role>? Roles { get; set; }
+        public List<Role>? Roles { get; set; }
     }
     public enum ShowMsgType
     {

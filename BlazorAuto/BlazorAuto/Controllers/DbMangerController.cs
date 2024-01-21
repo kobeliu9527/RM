@@ -48,15 +48,15 @@ namespace BlazorAuto.Controllers
                     typeof(RoleFunction),
                     typeof(UserRole),
                     typeof(FwHistory),
-                    typeof(Production),
-                    typeof(WorkFlow),
+                    //typeof(Production),
+                    //typeof(WorkFlow),
                     typeof(NodeModel),
                     typeof(LinkModel), 
-                    typeof(Product),
+                    //typeof(Product),
                     typeof(Part),
-                    typeof(Mo), 
-                    typeof(WorkFlowTemplate), 
-                    typeof(Lot)
+                    //typeof(Mo), 
+                    typeof(WorkFlowTemplate)
+                    //typeof(Lot)
                     );
                 IEnumerable<string> tabs = db.DbMaintenance.GetTableInfoList().Select(x => x.Name + ":" + x.Description);
                 res.Data = tabs;

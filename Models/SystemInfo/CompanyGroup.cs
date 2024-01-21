@@ -10,6 +10,7 @@ namespace Models.SystemInfo
     /// <summary>
     /// 集团 架构顶层
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(CompanyGroup))]
     public class CompanyGroup : EntityBase
     {
         /// <summary>

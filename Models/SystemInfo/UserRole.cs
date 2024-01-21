@@ -2,6 +2,7 @@
 
 namespace Models.SystemInfo
 {
+    [SqlSugar.SugarTable("sys_"+nameof(UserRole))]
     public class UserRole
     {
         /// <summary>

@@ -2,6 +2,7 @@ using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Models.Dto;
+using Shared.Components.Sys;
 using Shared.Extensions;
 using SqlSugar;
 
@@ -15,6 +16,9 @@ namespace Shared.Components
         [Inject]
         [NotNull]
         private ToastService? ToastService { get; set; }
+        [Inject]
+        [NotNull]
+        private DialogService? DialogService { get; set; }
         [Inject]
         [NotNull]
         public ISqlSugarClient? Db { get; set; }
@@ -32,6 +36,10 @@ namespace Shared.Components
         List<SelectedItem>? BoxListData;
         List<SelectedItem>? BoxListData2;
         /// <summary>
+        /// todo:后续应该优化为全局刷新的时候在更新这个值,应该这个值经常用,但是不会经常变
+        /// </summary>
+        private List<SelectedItem> StoreItems { get; set; } = new();
+        /// <summary>
         /// 获取存储过程列表
         /// </summary>
         /// <param name="option"></param>
@@ -39,7 +47,7 @@ namespace Shared.Components
         private async Task<QueryData<SelectedItem>> QueryForStoreName(VirtualizeQueryOption option)
         {
             await Task.Delay(200);
-            var storeList = Db.DbMaintenance.GetProcList("ManagementServer3");
+            var storeList = Db.DbMaintenance.GetProcList("OrBitMOM");
             var sourse = storeList.Select(x => new SelectedItem() { Text = x, Value = x }).ToList();
             return new QueryData<SelectedItem> { Items = sourse, TotalCount = sourse.Count };
         }
@@ -56,6 +64,8 @@ namespace Shared.Components
                 MainPage.Controlmain.ToSelectedItemList(BoxListData);
                 BoxListData2 = new();
                 MainPage.Controlmain.ToSelectedItemList(BoxListData2);
+                var storeList= Db.DbMaintenance.GetProcList("OrBitMOM");
+                StoreItems = storeList.Select(x=>new SelectedItem(x,x)).ToList();
                 await MainPage.StateHasChangedInvoke();
             }
         }
@@ -155,6 +165,27 @@ namespace Shared.Components
                 Items = items.Skip(option.StartIndex).Take(option.Count).Select(i => new SelectedItem(i.Key!, i.DisplayName!)),
                 TotalCount = items.Count
             };
+        }
+
+        /// <summary>
+        /// 设置表格的列信息
+        /// </summary>
+        public void AddColumnForTable()
+        {
+            if (Data!=null)
+            {
+                List<SelectedItem>? Items=new();
+                MainPage.Controlmain.ToSelectedItemList(Items);
+                DialogService.ShowModal<UpdateTableColumn>(new ResultDialogOption()
+                {
+                    ComponentParameters = new Dictionary<string, object>
+                    {
+                        [nameof(UpdateTableColumn.Control)] = Data,
+                        [nameof(UpdateTableColumn.Items)] = Items,
+                    }
+                });
+            }
+           
         }
         #endregion
     }

@@ -7,6 +7,7 @@ namespace Models.SystemInfo
     /// <summary>
     /// 工厂信息
     /// </summary>
+    [SqlSugar.SugarTable("sys_"+nameof(Factory))]
     public class Factory : EntityBase
     {
         /// <summary>
