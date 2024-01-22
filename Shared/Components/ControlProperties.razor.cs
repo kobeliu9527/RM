@@ -31,10 +31,11 @@ namespace Shared.Components
         public MainPage? MainPage { get; set; }
         public Size Size { get; set; }
         /// <summary>
-        /// 当前页面所有的表单元素
+        /// 当前页面所有的表单元素 InputTextItems
         /// </summary>
         List<SelectedItem>? BoxListData;
         List<SelectedItem>? BoxListData2;
+        List<SelectedItem>? InputTextItems=new () { new("block", "上面"), new("flex", "前面") };
         /// <summary>
         /// todo:后续应该优化为全局刷新的时候在更新这个值,应该这个值经常用,但是不会经常变
         /// </summary>

@@ -2,14 +2,14 @@
 @using SqlSugar
 @using System.Diagnostics.CodeAnalysis
 
-<CascadingAuthenticationState>
+<CascadingAuthenticationState >
     <BootstrapBlazorRoot>
         <CascadingValue Value="this.FunctionGroups" Name="router">
             <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
                 <Found Context="routeData">
                     <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)">
                         <NotAuthorized>
-                            zhe bu shi yige dizhi
+                            没有经过权限认证的地址
                         </NotAuthorized>
                     </AuthorizeRouteView>
                     <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -26,13 +26,14 @@
 @code
 {
     public List<FunctionGroup>? FunctionGroups { get; set; }
-    public SysModule? SysModule { get; set; }
+    public Module? SysModule { get; set; }
     public bool MyProperty { get; set; }
     public static bool Isdesigner { get; set; } = true;
     [Inject]
     [NotNull]
     public ISqlSugarClient? db { get; set; }
-
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
     public bool IsFirst { get; set; } = true;
     protected override void OnInitialized()
     {
@@ -46,7 +47,16 @@
     }
     protected override async Task OnInitializedAsync()
     {
-       
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                // authMessage = $"{user.Identity.Name} is authenticated.";
+            }
+        }
         await base.OnInitializedAsync();
     }
     protected override Task OnParametersSetAsync()

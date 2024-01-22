@@ -34,7 +34,7 @@ namespace AutoServer.Controllers
                     typeof(CompanyGroup),
                     typeof(Company),
                     typeof(Factory),
-                    typeof(SysModule),
+                    typeof(Module),
                     typeof(FunctionGroup),
                     typeof(FunctionPage),
                     typeof(User),

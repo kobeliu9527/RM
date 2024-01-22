@@ -1,18 +1,29 @@
 ﻿@page "/runing/{id}"
 @inject IHttpClientFactory httpClientFactory
 @inject ISqlSugarClient db
-<div class="dmain-main" style="z-index:1;width:100%">
-    @if (FunctionPage != null && FunctionPage.MainPage != null)
-    {
-        <CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
-            <ControlComponentRun Data="FunctionPage.MainPage.Controlmain" ParentData="FunctionPage.MainPage.Controlmain"></ControlComponentRun>
-        </CascadingValue>
-    }
-    else
-    {
-        <span>未获取到页面,请新建或者选择一个页面</span>
-    }
-</div>
+
+@* @attribute [Authorize] *@
+<AuthorizeView>
+    <Authorized>
+        <div class="dmain-main" style="z-index:1;width:100%">
+            @if (FunctionPage != null && FunctionPage.MainPage != null)
+            {
+                <CascadingValue Value="FunctionPage.MainPage" Name="MainPage" IsFixed="false">
+                    <ControlComponentRun Data="FunctionPage.MainPage.Controlmain" ParentData="FunctionPage.MainPage.Controlmain"></ControlComponentRun>
+                </CascadingValue>
+            }
+            else
+            {
+                <span>未获取到页面,请新建或者选择一个页面</span>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Redirect Url="/login"></Redirect>
+    </NotAuthorized>
+</AuthorizeView>
+
+
 @code {
     /// <summary>
     ///
@@ -22,35 +33,45 @@
     public FunctionPage? FunctionPage { get; set; }
     [CascadingParameter(Name = "router")]
     public List<FunctionGroup>? FunctionGroups { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
     protected override void OnInitialized()
     {
         System.Console.WriteLine("run-start"+DateTime.Now);
         base.OnInitialized();
     }
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (FunctionGroups != null)
+        if (authenticationState is not null)
         {
-            foreach (var item in FunctionGroups)
+            var authState = await authenticationState;
+            var user = authState?.User;
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
             {
-                if (item != null && item.FunctionPages != null)
+                if (FunctionGroups != null)
                 {
-                    foreach (var item2 in item.FunctionPages)
+                    foreach (var item in FunctionGroups)
                     {
-                        if (item2.Id.ToString() == id)
+                        if (item != null && item.FunctionPages != null)
                         {
-                            FunctionPage = item2;
-                            if (FunctionPage != null && FunctionPage.MainPage != null)
+                            foreach (var item2 in item.FunctionPages)
                             {
-                                FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+                                if (item2.Id.ToString() == id)
+                                {
+                                    FunctionPage = item2;
+                                    if (FunctionPage != null && FunctionPage.MainPage != null)
+                                    {
+                                        FunctionPage.MainPage.StateHasChanged = StateHasChanged;
+                                    }
+                                }
                             }
-                            return Task.CompletedTask;
                         }
                     }
                 }
             }
         }
-        return base.OnInitializedAsync();
+        
+        await  base.OnInitializedAsync();
     }
 
     protected override Task OnParametersSetAsync()

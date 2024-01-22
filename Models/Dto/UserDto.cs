@@ -23,6 +23,6 @@ namespace Models.Dto
         /// <summary>
         /// 模块名字
         /// </summary>
-        public string ModuleName { get; set; }
+        public string ModuleName { get; set; } 
     }
 }

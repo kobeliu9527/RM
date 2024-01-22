@@ -1,8 +1,6 @@
 ﻿@* 为一个用户添加/删除角色 *@
 @implements IResultDialog
-
 <MultiSelect Items="Items" @bind-Value="SelectedArrayValues"></MultiSelect>
-
 @code {
     [Inject]
     [NotNull]
@@ -36,6 +34,5 @@
             new User(){ Id=Id,Roles=fplist} };
             await db.UpdateNav(list).Include(x => x.Roles).ExecuteCommandAsync();
         }
-
     }
 }

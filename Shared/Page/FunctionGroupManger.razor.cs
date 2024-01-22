@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Models.SystemInfo;
 using Shared.Components.Sys;
 using SqlSugar;
+using System.Collections.Generic;
 
 namespace Shared.Page
 {
@@ -52,7 +53,13 @@ namespace Shared.Page
         {
             if (changedType == ItemChangedType.Add)
             {
-                await db.Insertable(item).ExecuteReturnSnowflakeIdAsync();
+                var id = db.Queryable<Module>().First(x => x.Name == "Éè¼ÆÆ÷").Id;
+                item.ModuleGroups = new List<Module>() { new Module() { Id = id } };
+                List<FunctionGroup> List = new List<FunctionGroup> { item };
+                db.InsertNav(List)
+                           .Include(z1 => z1.ModuleGroups)
+                           .ExecuteCommand();
+                //await db.Insertable(item).ExecuteReturnSnowflakeIdAsync();
             }
             else
             {

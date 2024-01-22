@@ -27,7 +27,7 @@ namespace Models.Dto
         /// <summary>
         /// 模块
         /// </summary>
-        public SysModule? Module { get; set; }
+        public Module? Module { get; set; }
 
     }
 }

@@ -1380,7 +1380,7 @@ body .layout is-page {
     overflow: auto;
 }
 /*table增加高亮特效*/
-.table .active {
+.cus-table .active {
     --bs-table-striped-bg: #409eff;
     --bs-table-bg: #409eff;
     --bs-table-hover-bg: #409eff;
@@ -1391,7 +1391,7 @@ body .layout is-page {
 
 
 /*自定义控件*/
-.custom-row {
+.cus-row {
     margin: 0px;
     padding: 0px;
     position: relative;
@@ -1400,13 +1400,13 @@ body .layout is-page {
     border-width: 1px;
 }
 
-.custom-row-run {
+.cus-row-run {
     margin: 0px;
     padding: 0px;
     position: relative;
 }
 
-.custom-row :hover {
+.cus-row :hover {
 }
 
 .designer-select {
@@ -1476,18 +1476,24 @@ body .layout is-page {
 }
 
 .cus-table {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+    .cus-table .table-fixed-body {
+        height: calc(100% - 45px) !important;
+    }
+
 .cus-table-table {
     max-height: 90%;
     overflow-y: hidden;
+    height: 100%;
 }
 
     .cus-table-table .table-toolbar-button {
-        display:flex;
+        display: flex;
     }
 
 .cus-table-pagination {
@@ -1521,4 +1527,38 @@ body .layout is-page {
     height: 100%;
     position: relative;
     overflow-y: auto;
+}
+/*文本框inputtext*/
+.cus-inputtext {
+    position: relative;
+    font-weight: bold;
+    align-items: center;
+}
+
+    .cus-inputtext input {
+        flex: 1;
+       
+    }
+
+    .cus-inputtext label {
+        margin: 0px;
+    }
+/*按钮*/
+.cus-bottom {
+    position: relative;
+}
+/*Tab*/
+.cus-tab {
+    position: relative;
+}
+    .cus-tab .tabs-item-text {
+    font-weight:bolder;
+    }
+    /*tabitem*/
+    .cus-tab-tabitem {
+        position: relative;
+    }
+
+.cus-check {
+    position: relative;
 }

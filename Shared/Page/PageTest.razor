@@ -1,7 +1,7 @@
 ﻿@page "/pagetest"
 @using Models
 @using Models.Services.Base
-@inject ICrudBase<SysModule> db
+@inject ICrudBase<Module> db
 <h3>PageTest</h3>
 @CompanyGroup.Name
 <button @onclick="test"></button>
@@ -10,6 +10,6 @@
     public CompanyGroup CompanyGroup { get; set; }
     public void test()
     {
-        db.Insert(new SysModule() {  Name="asfdasdf"});
+        db.Insert(new Module() {  Name="asfdasdf"});
     }
 }

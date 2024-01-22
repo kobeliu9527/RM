@@ -165,7 +165,7 @@ internal class Program
             return sqlSugar;
         });
 
-        builder.Services.AddScoped<ICrudBase<SysModule>, ModuleServerByDB>();
+        builder.Services.AddScoped<ICrudBase<Models.SystemInfo.Module>, ModuleServerByDB>();
         builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
         builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
         var app = builder.Build();

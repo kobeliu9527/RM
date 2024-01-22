@@ -123,6 +123,7 @@
                     <Collapse OnCollapseChanged="CollapseChangedForInputText" IsAccordion="true">
                         <CollapseItems>
                             <CollapseItem Text="布局外观">
+                                <Select @bind-Value="Data.InputText.LabelPositon" Items="InputTextItems" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Select>
                                 <div class="input-n">
                                     <Switch @bind-Value="@Data.InputText.IsDisabled" OffText="可编辑" OnText="只读" OnColor="Color.Dark" OffColor="Color.Success" ShowLabel="false" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
                                     <Switch @bind-Value="@Data.InputText.ShowLabel" OffText="不显示标签" OnText="显示标签" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></Switch>
@@ -222,13 +223,13 @@
                                 <div class="input-n">
                                     <BootstrapInput @bind-Value="@Data.TableInfo.RequestParentTableIdName" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
                                 </div>
-                                <div class="input-n">
+                              @*   <div class="input-n">
                                     <BootstrapInput @bind-Value="@Data.TableInfo.TableFieldNames" TValue="string" ShowLabel="true" OnValueChanged="async(e)=>{await MainPage.StateHasChangedInvoke();}"></BootstrapInput>
-                                </div>
+                                </div> *@
                                 @* OnQueryAsync="QueryForStoreName" *@
                                 <Select @bind-Value="@Data.TableInfo.RequestAddress" IsVirtualize="false"  Items="StoreItems" ShowLabel="true" ShowSearch="true"></Select>
                                 <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData" @bind-Value="@Data.TableInfo.RequestParmeter" ShowLabel="true" />
-                                <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData2" @bind-Value="@Data.TableInfo.FieldNameList" ShowLabel="true" />
+                                @* <CheckboxList IsButton="true" TValue="List<string>" Items="@BoxListData2" @bind-Value="@Data.TableInfo.FieldNameList" ShowLabel="true" /> *@
                             </CollapseItem>
                         </CollapseItems>
                     </Collapse>

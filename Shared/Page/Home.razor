@@ -8,25 +8,26 @@
 @inject ISqlSugarClient db
 <PageTitle>Home</PageTitle>
 
-<Button OnClick="OnClick">测试</Button>
-<Button OnClick="OnClick2">泛型测试</Button>
-<BootstrapInput @bind-Value="meg"></BootstrapInput>
+
 <AuthorizeView>
     <Authorized>
         登录成功,欢迎欢迎
+        <Button OnClick="OnClick">消息推送测试</Button>
+        <Button OnClick="OnClick2">泛型测试</Button>
+        <BootstrapInput @bind-Value="meg"></BootstrapInput>
     </Authorized>
     <NotAuthorized>
-        你没有登录哦
+        <Redirect Url="/login"></Redirect>
     </NotAuthorized>
 </AuthorizeView>
 @code
 {
-    public string meg { get; set; } = "请输入通知消息";
+    public string meg { get; set; } = "";
     [Inject]
     [NotNull]
     private IDispatchService<Msg>? DispatchService { get; set; }
     [CascadingParameter(Name = "router")]
-    public SysModule? SysModule { get; set; }
+    public Module? SysModule { get; set; }
     public async void OnClick2(MouseEventArgs e)
     {
         DispatchService.Dispatch(new DispatchEntry<Msg>() { Entry = new Msg() { Message = meg } });

@@ -110,7 +110,7 @@ namespace AutoServer.Controllers
             var user = HttpContext.User.Identity?.Name;
             var cliams = HttpContext.User.Claims.ToList().FindAll(x => x.Type == ClaimTypes.Role).Select(x => new Role() { Name = x.Value }).ToList();
 
-            var ss = await db.Queryable<SysModule>().Includes(x => x.FunctionGroups, y => y.FunctionPages).Where(x => x.Name == "").ToListAsync();
+            var ss = await db.Queryable<Module>().Includes(x => x.FunctionGroups, y => y.FunctionPages).Where(x => x.Name == "").ToListAsync();
 
             ss.ForEach(x => x.FunctionGroups?
             .ForEach(y => y.FunctionPages?

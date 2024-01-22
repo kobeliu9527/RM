@@ -16,6 +16,6 @@ namespace Models.Dto
         /// <summary>
         /// 
         /// </summary>
-        public SysModule? Module { get; set; }
+        public Module? Module { get; set; }
     }
 }

@@ -1,19 +1,34 @@
 ﻿@page "/login"
-@layout EmptyLayout
+@* @layout EmptyLayout *@
 
 @inject IAuthService auth
 @inject NavigationManager go
-<h3>Login(直接以访客的方式登录)</h3>
+
 <BootstrapInput TValue="string" @bind-Value="UserDto.SysName" ShowLabel="true" DisplayText="用户名"></BootstrapInput>
-<BootstrapInput TValue="string" @bind-Value="UserDto.PassWord" ShowLabel="true" DisplayText="密码"></BootstrapInput>
+<BootstrapInput TValue="string" type="password" @bind-Value="UserDto.PassWord" ShowLabel="true" DisplayText="密码"></BootstrapInput>
+<Select Items="items" @bind-Value="UserDto.ModuleName"></Select>
 <Button OnClick="Log">登录</Button>
 <Button OnClick="Louut">注销</Button>
 <Button OnClick="Register">注册</Button>
+<Button OnClick="Register">访客登录</Button>
 @code {
     [Inject]
     [NotNull]
     private ToastService? ToastService { get; set; }
-    public Models.Dto.UserDto UserDto { get; set; } = new() { SysName="guest",PassWord="1",RealName=""};
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+    private IEnumerable<SelectedItem>? items=new List<SelectedItem>();
+    public Models.Dto.UserDto UserDto { get; set; } = new() { SysName = "guest", PassWord = "1", RealName = "" };
+    protected override void OnInitialized()
+    {
+        var sysmodel = db.Queryable<Models.SystemInfo.Module>().ToList();
+        if (sysmodel != null)
+        {
+            items = sysmodel.Select(x => new SelectedItem(x.Name, x.Name));
+        }
+        base.OnInitialized();
+    }
     public async void Log()
     {
         var res = await auth.SignInAsync(UserDto);
@@ -25,12 +40,23 @@
         {
             await ToastService.Success("提示", "登录失败", autoHide: true);
         }
-
+    }
+    public async void LogByGuest()
+    {
+        var res = await auth.SignInAsync(new UserDto() { SysName = "guest", PassWord = "", RealName = "" });
+        if (res.IsSucceeded)
+        {
+            go.NavigateTo("/", true);
+        }
+        else
+        {
+            await ToastService.Success("提示", "登录失败", autoHide: true);
+        }
     }
     public async void Louut()
     {
         await auth.SignOutAsync();
-        go.NavigateTo("/", true); 
+        go.NavigateTo("/", true);
     }
     public async void Register()
     {

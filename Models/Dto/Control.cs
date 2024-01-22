@@ -241,6 +241,8 @@ namespace Models.Dto
         public bool IsDisabled { get; set; }
         [DisplayName("是否显示标题名:"), Description("是否显示标签:")]
         public bool ShowLabel { get; set; } = true;
+        [DisplayName("标签位置:"), Description("标签位置:")]
+        public string LabelPositon { get; set; } = "block";
         [DisplayName("外观颜色:"), Description("边框或者整体颜色:")]
         public Color Color { get; set; } = Color.Primary;
         [DisplayName("自动获取焦点:"), Description("是否自动获取焦点:")]
@@ -317,12 +319,17 @@ namespace Models.Dto
     public class Table : ControInfoBase
     {
         /// <summary>
-        /// 表格大小
+        /// 表格大小ShowLineNo AllowResizing
         /// </summary>
         public TableSize TableSize { get; set; } = TableSize.Compact;
-        
-        [DisplayName("需要绑定字段名集合:"), Description("这个表对应的字段名:逗号分割")]
-        public string TableFieldNames { get; set; } = "";
+        [DisplayName("显示手动控制列按钮:"), Description("显示手动控制列按钮,调整哪些列不暂时不显示")]
+        public bool ShowColumnList { get; set; }
+        [DisplayName("显示行号:"), Description("是否显示行号")]
+        public bool ShowLineNo { get; set; }
+        [DisplayName("允许手动调整列宽:"), Description("允许手动调整列宽")]
+        public bool AllowResizing { get; set; }=true;
+        //[DisplayName("需要绑定字段名集合:"), Description("这个表对应的字段名:逗号分割")]
+        //public string TableFieldNames { get; set; } = "";
         /// <summary>
         /// 这个表格的列信息
         /// </summary>
@@ -349,7 +356,7 @@ namespace Models.Dto
         /// 获取数据源的存储过程名字
         /// </summary>
         [DisplayName("请求数据地址:"), Description("一般是存储过程的名字:")]
-        public string RequestAddress { get; set; } = "GetTableDemo";
+        public string RequestAddress { get; set; } = "";
         /// <summary>
         /// 执行的存储过程(url)需要的参数名
         /// </summary>
@@ -366,14 +373,14 @@ namespace Models.Dto
         [DisplayName("父级表主键Id名:"), Description("父级表中哪一个字段的名字作为主键Id:")]
         public string RequestParentTableIdName { get; set; } = "Id";
 
-        /// <summary>
-        /// 过期,不建议使用
-        /// </summary>
-        [DisplayName("绑定那些字段:"), Description("表格中那些字段需要跟界面控件绑定:")]
-        public List<string> FieldNameList { get; set; } = new List<string>();
-        /// <summary>
-        /// 存储过程需要的参数名字 todo :这个参数没有用,可以删除
-        /// </summary>
+        ///// <summary>
+        ///// 过期,不建议使用
+        ///// </summary>
+        //[DisplayName("绑定那些字段:"), Description("表格中那些字段需要跟界面控件绑定:")]
+        //public List<string> FieldNameList { get; set; } = new List<string>();
+        ///// <summary>
+        ///// 存储过程需要的参数名字 todo :这个参数没有用,可以删除
+        ///// </summary>
         //public string Parameter { get; set; } = "";
         /// <summary>
         /// 每一页显示多少条
@@ -391,16 +398,6 @@ namespace Models.Dto
         /// 一共有多少页
         /// </summary>
         public int PageCount { get; set; }
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
-        //public TableSize TableSize { get; set; } = TableSize.Compact;
     }
     /// <summary>
     /// 表格中列信息
@@ -412,26 +409,68 @@ namespace Models.Dto
         /// </summary>
         [DisplayName("绑定字段名:"), Description("用于绑定数据库中的字段或者参数:")]
         public string FieldName { get; set; } = "Na";
-        [DisplayName("前台显示:"), Description("前台显示,后续应该支持多语言")]
+        [DisplayName("前台显示"), Description("前台显示,后续应该支持多语言")]
         public string DisplayName { get; set; } = "DisplayName";
-        [DisplayName("绑定字段名:"), Description("用于绑定数据库中的字段或者参数:")]
+        [DisplayName("数据类型"), Description("用于绑定数据库中的字段或者参数:")]
+        [AutoGenerateColumn(Ignore = true)]
         public System.Data.DbType DbType { get; set; } = System.Data.DbType.String;
-        [DisplayName("是否可编辑:"), Description("是否可编辑:")]
+        /// <summary>
+        /// 固定列:
+        /// </summary>
+        [DisplayName("固定列"), Description("固定")]
+        public bool Fixed { get; set; } = false;
+        [DisplayName("可编辑"), Description("是否可编辑:")]
         public bool Editable { get; set; } =true;
-        [DisplayName("是否显示:"), Description("是否显示:")]
+        [DisplayName("可见"), Description("是否显示:")]
         public bool Visible { get; set; } =true;
         /// <summary>
-        /// 这一列是否要用来筛选
+        /// 这一列是否要用来筛选,用于后续扩展,更加快速的实现搜索功能
         /// </summary>
-        [DisplayName("是否为筛选列:"), Description("是否为筛选列:")]
+        [DisplayName("是否为筛选列"), Description("是否为筛选列:")]
+        [AutoGenerateColumn(Ignore = true)]
         public bool Filterable { get; set; } = true;
         /// <summary>
         /// 选中列的值
         /// </summary>
         [DisplayName("选中列的值:"), Description("选中列的值:")]
+        [AutoGenerateColumn(Ignore =true)]
         public object? val { get; set; } 
+        
         /// <summary>
-        /// 这一列要跟那些控件做绑定
+        /// 列宽:默认120
+        /// </summary>
+        [DisplayName("列宽"), Description("列宽:默认120")]
+        public int Width { get; set; } = 120;
+
+        /// <summary>
+        /// 是否支持整列复制:
+        /// </summary>
+        [DisplayName("整列复制功能"), Description("支持整列复制")]
+        public bool ShowCopyColumn { get; set; } = false;
+        /// <summary>
+        /// 对齐方式:
+        /// </summary>
+        [DisplayName("对齐方式"), Description("对齐方式")]
+        public Alignment Align { get; set; }= Alignment.Left;
+        /// <summary>
+        /// 固定列:
+        /// </summary>
+        [DisplayName("支持排序"), Description("是否支持排序")]
+        public bool Sortable { get; set; } = false;
+        /// <summary>
+        /// 显示提示信息,应该跟TextEllipsis的属性一样
+        /// </summary>
+        [DisplayName("显示全部信息"), Description("显示全部信息")]
+        [AutoGenerateColumn(Ignore = true)]
+        public bool ShowTips { get; set; }
+        /// <summary>
+        /// 文本超出用...代替,应该跟ShowTips的属性一样
+        /// </summary>
+        [DisplayName("文本超出用...代替:"), Description("文本超出用...代替")]
+        public bool TextEllipsis { get; set; }
+        
+        /// <summary>
+        /// 这一列要跟哪些控件做绑定
         /// </summary>
         [DisplayName("绑定哪些控件"), Description("绑定哪些控件:")]
         public List<string> FieldNameList { get; set; } = new List<string>();

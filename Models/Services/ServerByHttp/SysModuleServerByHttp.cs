@@ -10,7 +10,7 @@ namespace Models.Services.ServerByHttp
     /// <summary>
     /// 通过数据库
     /// </summary>
-    public class SysModuleServerByHttp : ServerByHttpBase<SysModule>
+    public class SysModuleServerByHttp : ServerByHttpBase<Module>
     {
         /// <summary>
         /// 

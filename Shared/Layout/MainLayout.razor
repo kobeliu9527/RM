@@ -2,11 +2,11 @@
 
 <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
         IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter"
-        TabDefaultUrl="/"
+        TabDefaultUrl="/" IsAccordion="true"
         Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly}" class="@Theme">
     <Header>
         <span class="ms-3 flex-sm-fill d-none d-sm-block">
-            <img class="layout-logo111" src="RM.png" style="height:45px;"/>
+            <img class="layout-logo111" src="./logo/@log" style="height:45px;width:145px;margin-left:1px;" />
         </span>
         <div class="flex-fill d-sm-none"></div>
         <Widget></Widget>
@@ -24,7 +24,7 @@
                 </Logout>
             </Authorized>
             <NotAuthorized>
-                <Logout ImageUrl="images/naozhong.ico" DisplayName="未登录" UserName="Admin">
+                <Logout ImageUrl="images/naozhong.ico" DisplayName="未登录" UserName="未登录">
                     <LinkTemplate>
                         <a href="#"><i class="fa-solid fa-suitcase"></i>个人中心</a>
                         <a href="#"><i class="fa-solid fa-cog"></i>设置</a>
@@ -35,7 +35,6 @@
                     </LinkTemplate>
                 </Logout>
             </NotAuthorized>
-            
         </AuthorizeView>
         <div class="layout-drawer" @onclick="@(e => IsOpen = !IsOpen)"><i class="fa fa-gears"></i></div>
     </Header>
@@ -48,11 +47,9 @@
         </div>
     </Side>
     <Main>
-     
             <CascadingValue Value="this" IsFixed="true">
                 @Body
             </CascadingValue>
-
     </Main>
     <Footer>
         <div class="text-center flex-fill">
@@ -60,14 +57,14 @@
         </div>
     </Footer>
     <NotFound>
-        <p>Sorry, there's nothing at this address.</p>
+        <p>地址错误,请检查</p>
     </NotFound>
 </Layout>
 
 <Drawer Placement="Placement.Right" @bind-IsOpen="@IsOpen" IsBackdrop="true">
     <div class="layout-drawer-body">
         <div class="btn btn-info w-100" @onclick="@(e => IsOpen = false)">点击关闭</div>
-        <div class="page-layout-demo-option">
+ @*        <div class="page-layout-demo-option">
             <p>布局调整</p>
             <div class="row">
                 <div class="col-6">
@@ -98,9 +95,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> *@
 
-        <div class="page-layout-demo-option">
+      @*   <div class="page-layout-demo-option">
             <p>固定调整</p>
             <div class="row">
                 <div class="col-6 d-flex align-items-center">
@@ -126,7 +123,7 @@
                     <span class="cell-label">显示页脚</span>
                 </div>
             </div>
-        </div>
+        </div> *@
 
         <div class="page-layout-demo-option">
             <p>主题配色</p>
@@ -152,7 +149,7 @@
             </div>
         </div>
 
-        <div class="page-layout-demo-option">
+        @* <div class="page-layout-demo-option">
             <p>更多设置</p>
             <div class="row">
                 <div class="col-6 d-flex align-items-center">
@@ -162,7 +159,7 @@
                     <span class="cell-label">@(UseTabSet ? "多标签" : "单页")</span>
                 </div>
             </div>
-        </div>
+        </div> *@
     </div>
 </Drawer>
 

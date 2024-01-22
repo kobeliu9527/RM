@@ -26,6 +26,6 @@ builder.Services.AddHttpClient(
         client.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-docs");
     });
 
-builder.Services.AddScoped<ICrudBase<SysModule>, ServerByHttpBase<SysModule>>();
+builder.Services.AddScoped<ICrudBase<Module>, ServerByHttpBase<Module>>();
 
 await builder.Build().RunAsync();

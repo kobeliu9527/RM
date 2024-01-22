@@ -66,20 +66,20 @@ namespace BlazorAuto.Controllers
         /// <summary>
         /// 登录
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="userdto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<string>> Login([FromBody]UserDto user)
+        public async Task<Result<string>> Login([FromBody]UserDto userdto)
         {
             Result<string> res = new Result<string>();
-            var userlist = await db.Queryable<User>()
+            var user = await db.Queryable<User>()
                             .Includes(x => x.Roles)
-                            .FirstAsync(x => x.SysName == user.SysName && x.PassWord == user.PassWord)
+                            .FirstAsync(x => x.SysName == userdto.SysName && x.PassWord == userdto.PassWord)
                             ;
             //var userlist = await db.SelectBy(x=>x.SysName==user.SysName);
-            if (userlist != null)
+            if (user != null)
             {
-                var j = GetJwt(userlist, appsettings.JwtOption);
+                var j = GetJwt(user, appsettings.JwtOption,userdto.ModuleName);
                 return res.End(j.Data);
             }
             else
@@ -90,21 +90,21 @@ namespace BlazorAuto.Controllers
         /// <summary>
         /// 修改密码
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="userDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<string>> UpdatePassWord([FromBody] UserDto user)
+        public async Task<Result<string>> UpdatePassWord([FromBody] UserDto userDto)
         {
             Result<string> res = new Result<string>();
             var u = await db.Queryable<User>()
                             .Includes(x => x.Roles)
-                            .FirstAsync(x => x.SysName == user.SysName && x.PassWord == user.PassWord)
+                            .FirstAsync(x => x.SysName == userDto.SysName && x.PassWord == userDto.PassWord)
                             ;
             if (u != null)
             {
-                u.PassWord = user.NewPassWord;
+                u.PassWord = userDto.NewPassWord;
                 await db.Updateable(u).ExecuteCommandAsync();
-                var j = GetJwt(u, appsettings.JwtOption);
+                var j = GetJwt(u, appsettings.JwtOption,userDto.ModuleName);
                 return res.End(j.Data);
             }
             else
@@ -123,7 +123,7 @@ namespace BlazorAuto.Controllers
             var user = HttpContext.User.Identity?.Name;
             var cliams = HttpContext.User.Claims.ToList().FindAll(x => x.Type == ClaimTypes.Role).Select(x => new Role() { Name = x.Value }).ToList();
 
-            var ss = await db.Queryable<SysModule>().Includes(x => x.FunctionGroups, y => y.FunctionPages).Where(x => x.Name == "").ToListAsync();
+            var ss = await db.Queryable<Module>().Includes(x => x.FunctionGroups, y => y.FunctionPages).Where(x => x.Name == "").ToListAsync();
 
             ss.ForEach(x => x.FunctionGroups?
             .ForEach(y => y.FunctionPages?
@@ -133,7 +133,7 @@ namespace BlazorAuto.Controllers
 
         }
         [NonAction]
-        public Result<string> GetJwt(User user, JwtOption op)
+        public Result<string> GetJwt(User user, JwtOption op,string modName)
         {
             Result<string> res = new Result<string>();
             try
@@ -143,7 +143,7 @@ namespace BlazorAuto.Controllers
                     var cliaims = new List<Claim>();
                     cliaims.Add(new Claim(ClaimTypes.Name, user.SysName));
                     cliaims.Add(new Claim(ClaimTypes.Sid, user.RealName));
-                    cliaims.Add(new Claim(nameof(UserDto.ModuleName), user.RealName));
+                    cliaims.Add(new Claim("moduleName", modName));
                     foreach (var item in user.Roles)
                     {
                         cliaims.Add(new Claim(ClaimTypes.Role, item.Name));

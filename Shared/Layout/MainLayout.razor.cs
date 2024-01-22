@@ -7,20 +7,23 @@ using Models.SystemInfo;
 using Shared.Page;
 using System.Collections.Generic;
 using Models.NotEntity;
+using SqlSugar;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 namespace Shared.Layout
 {
     /// <summary>
     /// 
     /// </summary>
-    public partial class MainLayout:IDisposable
+    public partial class MainLayout : IDisposable
     {
-        
+
         [Inject]
         [NotNull]
         private IDispatchService<Msg>? DispatchService { get; set; }
         private bool UseTabSet { get; set; } = true;
-
-        private string Theme { get; set; } = "";
+        private string log = "log1.png";
+        private string Theme { get; set; } = "color1";
 
         private bool IsOpen { get; set; }
 
@@ -43,6 +46,9 @@ namespace Shared.Layout
         [Inject]
         [NotNull]
         private DialogService? DialogService { get; set; }
+        [Inject]
+        [NotNull]
+        public ISqlSugarClient? db { get; set; }
         private async Task Notify(DispatchEntry<Msg> payload)
         {
             if (payload.Entry != null)
@@ -51,7 +57,7 @@ namespace Shared.Layout
                 {
                     Category = ToastCategory.Information,
                     Title = "通知",
-                    Content =payload.Entry.Message
+                    Content = payload.Entry.Message
                 };
                 await ToastService.Show(option);
             }
@@ -62,49 +68,75 @@ namespace Shared.Layout
         protected override void OnInitialized()
         {
             DispatchService.Subscribe(Notify);
-            List<MenuItem> Root = new List<MenuItem>();
-            var PageManger = new MenuItem("页面配置", "fas fa-house-crack");
-            List<MenuItem> pgs = new List<MenuItem>();
-            pgs.Add(new("页面管理", "/FunctionPageManger", "fas fa-boxes-stacked"));
-            pgs.Add(new("功能组管理", "/FunctionGroupManger", "fas fa-school-circle-xmark"));
-            pgs.Add(new("人员管理", "/UserManger", "fas fa-tent-arrow-turn-left"));
-            pgs.Add(new("角色管理", "/RoleManger", "fas fa-warehouse"));
-            PageManger.Items = pgs;
-            Root.Add(PageManger);
-            var PageManger2 = new MenuItem("设计器", "fas fa-cubes");
-            List<MenuItem> pgs2 = new List<MenuItem>();
-            pgs2.Add(new("普通界面设计", "/DesiginerPro", "fas fa-hill-avalanche"));
-            pgs2.Add(new("流程图设计", "/WorkFlowDesigner", "fas fa-plant-wilt"));
-            PageManger2.Items = pgs2;
-            Root.Add(PageManger2);
 
-            if (FunctionGroups != null)
-            {
-                //MenuItem list0 = new MenuItem();
-                foreach (var item in FunctionGroups)
-                {
-                    var menu = new MenuItem() { Text = item.Name,Icon=item.Icon };
-                    if (item.FunctionPages != null)
-                    {
-                        List<MenuItem> list = new List<MenuItem>();
-                        foreach (var item2 in item.FunctionPages)
-                        {
-                            var menu2 = new MenuItem() { Text = item2.Name, Url = "/runing/" + item2.Id.ToString(),Icon=item2.Icon };
-                            list.Add(menu2);
-                        }
-                        menu.Items = list;
-                    }
-                    Root.Add(menu);
-                }
-            }
-            Menus = Root;
             base.OnInitialized();
 
         }
-        protected override Task OnInitializedAsync()
+        [CascadingParameter]
+        private Task<AuthenticationState>? authenticationState { get; set; }
+        protected async override Task OnInitializedAsync()
         {
+            System.Console.WriteLine("开始生成左侧菜单:" + DateTime.Now);
+            if (authenticationState is not null)
+            {
+                var authState = await authenticationState;
+                var user = authState?.User;
+                if (user?.Identity is not null && user.Identity.IsAuthenticated)
+                {
+                    var modname = user.Claims.FirstOrDefault(x => x.Type == "moduleName")?.Value ?? "";
+                    var roles = user.Claims
+                        .Where(x => x.Type == ClaimTypes.Role)
+                        .Select(x => new Role() { Name = x.Value })
+                        .ToList() ?? new List<Role>();
+                    var model = db.Queryable<Module>().Includes(mod => mod.FunctionGroups, fg => fg.FunctionPages, fp => fp.Roles).First(x => x.Name == modname);
 
-            return base.OnInitializedAsync();
+                    model?.FunctionGroups?.ForEach(y => y.FunctionPages?.RemoveAll(fp => fp.Roles?.Intersect(roles, new RoleEquality()).Count() == 0));
+                    FunctionGroups = model?.FunctionGroups ?? new List<FunctionGroup>();
+                    List<MenuItem> Root = new List<MenuItem>();
+
+                    if (modname == "设计器" && roles.Contains(new Role() { Name = "admin" }, new RoleEquality()))
+                    {
+                        var PageManger = new MenuItem("页面配置", "/Page", "fas fa-house-crack");
+                        List<MenuItem> pgs = new List<MenuItem>();
+                        pgs.Add(new("页面管理", "/FunctionPageManger", "fas fa-boxes-stacked"));
+                        pgs.Add(new("功能组管理", "/FunctionGroupManger", "fas fa-school-circle-xmark"));
+                        pgs.Add(new("模块管理", "/SysModuleManger", "fas fa-tent-arrow-turn-left"));
+                        pgs.Add(new("人员管理", "/UserManger", "fas fa-tent-arrow-turn-left"));
+                        pgs.Add(new("角色管理", "/RoleManger", "fas fa-warehouse"));
+                        PageManger.Items = pgs;
+                        Root.Add(PageManger);
+                        var PageManger2 = new MenuItem("设计器", "/designer", "fas fa-cubes");
+                        List<MenuItem> pgs2 = new List<MenuItem>();
+                        pgs2.Add(new("界面设计", "/DesiginerPro", "fas fa-hill-avalanche"));
+                        pgs2.Add(new("流程图设计", "/WorkFlowDesigner", "fas fa-plant-wilt"));
+                        PageManger2.Items = pgs2;
+                        Root.Add(PageManger2);
+                    }
+
+                    if (FunctionGroups != null)
+                    {
+                        foreach (var item in FunctionGroups)
+                        {
+                            var menu = new MenuItem() { Text = item.Name, Icon = item.Icon };
+                            if (item.FunctionPages != null)
+                            {
+                                List<MenuItem> list = new List<MenuItem>();
+                                foreach (var item2 in item.FunctionPages)
+                                {
+                                    var menu2 = new MenuItem() { Text = item2.Name, Url = "/runing/" + item2.Id.ToString(), Icon = item2.Icon };
+                                    list.Add(menu2);
+                                }
+                                menu.Items = list;
+                            }
+                            Root.Add(menu);
+                        }
+                    }
+                    Menus = Root;
+                }
+            }
+            System.Console.WriteLine("结束生成左侧菜单:" + DateTime.Now);
+
+            await base.OnInitializedAsync();
         }
         protected override void OnParametersSet()
         {
@@ -119,7 +151,6 @@ namespace Shared.Layout
             if (firstRender)
             {
             }
-
             base.OnAfterRender(firstRender);
         }
         private static List<MenuItem> GetIconSideMenuItems()
@@ -168,10 +199,18 @@ namespace Shared.Layout
             });
             await DialogService.Show(option);
         }
-
+        private bool IsDispose;
+        public void Dispose(bool isdispose)
+        {
+            if (!IsDispose)
+            {
+                IsDispose = true;
+                DispatchService?.UnSubscribe(Notify);
+            }
+        }
         public void Dispose()
         {
-           DispatchService?.UnSubscribe(Notify);
+            Dispose(IsDispose);
         }
     }
 }

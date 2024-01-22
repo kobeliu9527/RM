@@ -1,0 +1,38 @@
+﻿@* 为一个模块添加功能组 *@
+@implements IResultDialog
+<MultiSelect Items="Items" @bind-Value="SelectedId"></MultiSelect>
+@code {
+    [Inject]
+    [NotNull]
+    public ISqlSugarClient? db { get; set; }
+    public IEnumerable<SelectedItem> Items = new List<SelectedItem>();
+    /// <summary>
+    /// 要编辑的功能组的Id
+    /// </summary>
+    [Parameter]
+    public long Id { get; set; }
+    private IEnumerable<long> SelectedId { get; set; } = Enumerable.Empty<long>();
+    protected override async Task OnInitializedAsync()
+    {
+        var all = await db.Queryable<FunctionGroup>().ToListAsync();
+        var haved = await db.Queryable<Module>()
+        .Includes(x => x.FunctionGroups).Where(x => x.Id == Id).FirstAsync();
+        Items = all.Select(x => new SelectedItem(x.Id.ToString(), x.Name));
+        if (haved != null && haved.FunctionGroups != null)
+        {
+            SelectedId = haved.FunctionGroups.Select(x => x.Id);
+        }
+        await base.OnInitializedAsync();
+    }
+    public async Task OnClose(DialogResult result)
+    {
+        if (result == DialogResult.Yes)
+        {
+            var fplist = SelectedId.Select(x => new FunctionGroup() { Id = x }).ToList();
+            List<Module> list = new List<Module>()
+        {
+            new Module(){ Id=Id,FunctionGroups=fplist} };
+            await db.UpdateNav(list).Include(x => x.FunctionGroups).ExecuteCommandAsync();
+        }
+    }
+}

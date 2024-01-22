@@ -9,6 +9,7 @@ using Shared.Page;
 using SQLitePCL;
 using SqlSugar;
 using System.Data;
+using System.Reflection;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Console = System.Console;
 
@@ -137,15 +138,22 @@ namespace Shared.Components
         {
             return x.GetValue("Id")?.ToString() == y.GetValue("Id")?.ToString();
         }
-        /// <summary>
-        /// 点击一行后执行的方法
-        /// <para>1.记录当前行的值 </para>
-        /// <para>2.找到依赖于本Table的其他Table,调用委托,刷新他们</para>
-        /// <para>3.找到本Table绑定的需要更新的表单元素,为其赋值</para>
-        /// <para>4.刷新主界面</para>
-        /// </summary>
-        /// <param name="row">行信息</param>
-        /// <returns></returns>
+        public string OnSortTable(string a, SortOrder s)
+        {
+            return "";
+        }
+        public List<SearchFilterAction> GetAdvancedSearchFilterCallback(PropertyInfo i, DynamicObject i2)
+        {
+            return null;
+        }/// <summary>
+         /// 点击一行后执行的方法
+         /// <para>1.记录当前行的值 </para>
+         /// <para>2.找到依赖于本Table的其他Table,调用委托,刷新他们</para>
+         /// <para>3.找到本Table绑定的需要更新的表单元素,为其赋值</para>
+         /// <para>4.刷新主界面</para>
+         /// </summary>
+         /// <param name="row">行信息</param>
+         /// <returns></returns>
         public async Task OnClickedRow(DynamicObject row)
         {
             //1.以这张表的名字/Key为Key,这一行中的Id字段的值为Value,保存在字典中
@@ -204,25 +212,22 @@ namespace Shared.Components
         /// <para>2.找到本Table绑定的需要更新的表单元素</para>
         /// </summary>
         /// <returns></returns>
-        public async void  InitDataTable()
+        public async void InitDataTable()
         {
+            this.SearchText = "";
             try
             {
                 //逻辑:一张表,可能对应一张父级表,所以在获取数据的时候要先判断是否有父级表以及父级表Id是否存在
                 var parentName = Data.TableInfo.RequestParentTable;
+                var na = Data.TableInfo.RequestParentTableIdName;
+
                 List<SugarParameter> sps = new List<SugarParameter>();
                 DataTable? res = null;
-                if (!string.IsNullOrEmpty(parentName) && MainPage.TableValues.TryGetValue(parentName, out CurrentRowValue? crv))
+                var col = MainPage.FindFirst(parentName)?.TableInfo.TableFields.FirstOrDefault(x => x.FieldName == na)?.val;
+                if (col != null)
                 {
-                    if (crv != null)
-                    {
-                        var na = Data.TableInfo.RequestParentTableIdName;
-                        if (crv.KeyValues.TryGetValue(na, out object? vl))
-                        {
-                            SugarParameter sp = new SugarParameter("PId", vl);
-                            sps.Add(sp);
-                        }
-                    }
+                    SugarParameter sp = new SugarParameter(na, col);
+                    sps.Add(sp);
                 }
                 if (Data.TableInfo.RequestParmeter.Count > 0)
                 {
@@ -244,7 +249,7 @@ namespace Shared.Components
                         }
                     }
                 }
-                res =  Db.Ado.UseStoredProcedure().GetDataTable(Data.TableInfo!.RequestAddress, sps);
+                res = Db.Ado.UseStoredProcedure().GetDataTable(Data.TableInfo!.RequestAddress, sps);
 
                 if (res != null)
                 {
@@ -274,8 +279,41 @@ namespace Shared.Components
         }
 
         public void Search(string val)
-        { 
-
+        {
+            if (string.IsNullOrEmpty(val))
+            {
+                //InitDataTable();
+                return;
+            }
+            if (Data.TableInfo.UserData != null)
+            {
+                var res = Data.TableInfo.UserData.Clone();
+                res.AcceptChanges();
+                foreach (DataRow row in Data.TableInfo.UserData.Rows)
+                {
+                    foreach (var item2 in row.ItemArray)
+                    {
+                        if (item2 != null)
+                        {
+                            var valstring = item2.ToString()?.ToLower();
+                            if (valstring != null)
+                            {
+                                if (valstring.Contains(val))
+                                {
+                                    res.Rows.Add(row.ItemArray);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                Data.TableInfo!.TotalCount = res.Rows.Count;
+                Data.TableInfo!.PageCount = (int)Math.Ceiling(Data.TableInfo!.TotalCount * 1.0 / Data.TableInfo!.PageItems);
+                Data.TableInfo.PageDataTable.Rows.Clear();
+                Data.TableInfo.PageDataTable.AcceptChanges();
+                Data.TableInfo.PageDataTable = GetPagedData(res, 1, Data.TableInfo!.PageItems);
+                FenPage();
+            }
         }
         /// <summary>
         /// 获取分页参数,然后调用RebuildPaginationDataTable生成分页上下文
@@ -295,72 +333,36 @@ namespace Shared.Components
             Data.TableInfo.PageDataTable.Rows.Clear();
             Data.TableInfo.PageDataTable.AcceptChanges();
             Data.TableInfo.PageDataTable = GetPagedData(Data.TableInfo.UserData, Data.TableInfo!.PageIndex, Data.TableInfo!.PageItems);
+            FenPage();
+        }
+        public void FenPage()
+        {
             //单表分页
             DataTablePageDynamicContext = new DataTableDynamicContext(Data.TableInfo.PageDataTable, (context, col) =>
             {
                 var propertyName = col.GetFieldName();
-                var sss = col.GetDisplayName();
-                var ss = context;
-                var ccc = col;
-                col.Width = 120;
                 var res = Data.TableInfo.TableFields.FirstOrDefault(x => x.FieldName.ToLower() == propertyName.ToLower());
                 if (res != null)
                 {
                     col.Text = res.DisplayName;
                     col.Editable = res.Editable;
                     col.Visible = res.Visible;
+                    col.Width = res.Width;
+                    col.ShowCopyColumn = res.ShowCopyColumn;//有用的功能
+                    col.Align = res.Align;
+                    col.Fixed = res.Fixed;//横向拖动的时候,不会跟着滚动
+                    col.Sortable = res.Sortable;
+                    col.ShowTips = res.TextEllipsis;
+                    col.TextEllipsis = res.TextEllipsis;//影响全局
                 }
-                //if (propertyName == nameof(Foo.DateTime))
-                //{
-                //    context.AddRequiredAttribute(nameof(Foo.DateTime));
-                //    // 使用 AutoGenerateColumnAttribute 设置显示名称示例
-                //    context.AddAutoGenerateColumnAttribute(nameof(Foo.DateTime), new KeyValuePair<string, object?>[] { new(nameof(AutoGenerateColumnAttribute.Text),
-                //        nameof(Foo.DateTime)) });
-                //}
-                //else if (propertyName == nameof(Foo.Name))
-                //{
-                //    context.AddRequiredAttribute(nameof(Foo.Name), "NameRequired");
-                //    // 使用 Text 设置显示名称示例
-                //    col.Text = nameof(Foo.Name);
-                //}
-                //else if (propertyName == nameof(Foo.Count))
-                //{
-                //    context.AddRequiredAttribute(nameof(Foo.Count));
-                //    // 使用 DisplayNameAttribute 设置显示名称示例
-                //    context.AddDisplayNameAttribute(nameof(Foo.Count), nameof(Foo.Count));
-                //}
-                //else if (propertyName == nameof(Foo.Id))
-                //{
-                //    col.Editable = false;
-                //    col.Visible = false;
-                //}
+                else
+                {
+                    col.Width = 100;
+                    //col.Filter =  ;
+
+                }
             })
             {
-                OnDeleteAsync = async (e) =>
-                {
-                    
-                    await MessageService.Show(new MessageOption()
-                    {
-                        Content = $"获取到返回值{Data.Id}",
-                        Icon = "fa-solid fa-circle-info",
-                        Color = Color.Danger
-                    });
-                    return (false);
-                },
-                OnAddAsync = (e) =>
-                {
-                    return Task.FromResult(true);
-                },
-                OnChanged = (e) =>
-                {
-                    return Task.FromResult(true);
-                },
-                OnValueChanged = (a, b, c) =>
-                {
-                    return Task.FromResult(true);
-                }
-
-
             };
         }
         /// <summary>
@@ -416,7 +418,7 @@ namespace Shared.Components
                     var pTable = MainPage.FindFirst(ParentTable);
                     if (pTable != null)
                     {
-                        var Colnum = pTable.TableInfo.TableFields.FirstOrDefault(x=>x.FieldName.ToLower()==ParentTableFieldId.ToLower());
+                        var Colnum = pTable.TableInfo.TableFields.FirstOrDefault(x => x.FieldName.ToLower() == ParentTableFieldId.ToLower());
                         if (Colnum != null)
                         {
                             parameters.Add(new SugarParameter(ParentTableFieldId, Colnum.val));
@@ -429,15 +431,15 @@ namespace Shared.Components
                         {
                             var pname = ctr.FieldName;
                             var pval = ctr.Values.Value;
-                            parameters.Add(new SugarParameter(pname, pval, ctr.ParameterType == ParameterDirection.Output) { DbType=ctr.Values.DbType});
+                            parameters.Add(new SugarParameter(pname, pval, ctr.ParameterType == ParameterDirection.Output) { DbType = ctr.Values.DbType });
                         }
                     }
                     if (!(string.IsNullOrEmpty(StoreName)))
                     {
-                        var tab =  Db.Ado.UseStoredProcedure().GetDataTable(StoreName, parameters);
+                        var tab = Db.Ado.UseStoredProcedure().GetDataTable(StoreName, parameters);
                         foreach (var item in parameters)
                         {
-                            if (item.Direction== ParameterDirection.Output)
+                            if (item.Direction == ParameterDirection.Output)
                             {
                                 await MessageService.Show(new MessageOption()
                                 {
@@ -448,7 +450,7 @@ namespace Shared.Components
                                 return;
                             }
                         }
-                        
+
                     }
                     else
                     {

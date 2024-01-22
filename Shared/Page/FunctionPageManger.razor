@@ -65,7 +65,13 @@
     {
         if (changedType == ItemChangedType.Add)
         {
-            await db.Insertable(item).ExecuteReturnSnowflakeIdAsync();
+            var id = db.Queryable<Role>().First(x => x.Name == "admin").Id;
+            item.Roles = new List<Role>() { new Role() { Id = id } };
+            List<FunctionPage> List = new List<FunctionPage> { item };
+            db.InsertNav(List)
+                       .Include(z1 => z1.Roles)
+                       .ExecuteCommand();
+            // await db.Insertable(item).ExecuteReturnSnowflakeIdAsync();
         }
         else
         {

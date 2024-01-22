@@ -10,9 +10,9 @@ using System.Security.Claims;
 namespace Models.Services.ServerByDb
 {
     /// <summary>
-    /// 通过数据库获取<see cref="SysModule"/>
+    /// 通过数据库获取<see cref="Module"/>
     /// </summary>
-    public class ModuleServerByDB : ServerByDbBase<SysModule>
+    public class ModuleServerByDB : ServerByDbBase<Module>
     {
         /// <summary>
         /// 
@@ -20,12 +20,12 @@ namespace Models.Services.ServerByDb
         public ModuleServerByDB(ISqlSugarClient db) : base(db)
         {
         }
-        public async override Task<Result<SysModule>> SelectByRole(Query<SysModule> obj)
+        public async override Task<Result<Module>> SelectByRole(Query<Module> obj)
         {
-            Result<SysModule> res = new();
+            Result<Module> res = new();
             if (obj.QueryDto != null && obj.Roles != null)
             {
-                var ss = await db.Queryable<SysModule>()
+                var ss = await db.Queryable<Module>()
                             .Includes(x => x.FunctionGroups, y => y.FunctionPages)
                             .FirstAsync(x => x.Name == obj.QueryDto.Name)
                             ;

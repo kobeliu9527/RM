@@ -1,4 +1,6 @@
 ﻿using SqlSugar;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.SystemInfo
 {
@@ -6,7 +8,7 @@ namespace Models.SystemInfo
     /// 
     /// </summary>
     [SqlSugar.SugarTable("sys_"+nameof(Role))]
-    public class Role : EntityBase, IEquatable<Role>, IComparable<Role>
+    public class Role : EntityBase, IEquatable<Role>, IComparable<Role>,IEqualityComparer
     {
         /// <summary>
         /// 角色名字
@@ -24,6 +26,39 @@ namespace Models.SystemInfo
         }
 
         public int CompareTo(Role? other)
+        {
+            return 1;
+        }
+
+        public bool Equals(Role? x, Role? y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetHashCode([DisallowNull] Role obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public new bool Equals(object? x, object? y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetHashCode(object obj)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class RoleEquality : IEqualityComparer<Role>
+    {
+        public bool Equals(Role? x, Role? y)
+        {
+            return x?.Name==y?.Name;
+        }
+
+        public int GetHashCode([DisallowNull] Role obj)
         {
             return 1;
         }

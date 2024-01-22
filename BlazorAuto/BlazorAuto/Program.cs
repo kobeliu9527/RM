@@ -22,8 +22,6 @@ using Models.Dto.SVG;
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.SignalR;
 using Models.SystemInfo;
-Dictionary<string, object?> dic = new Dictionary<string, object?>();
-
 
 var builder = WebApplication.CreateBuilder(args);
 SnowFlakeSingle.WorkId = 1;
@@ -49,7 +47,7 @@ builder.Services.AddHttpClient(
     "http",
     client =>
     {
-        client.BaseAddress = new Uri("http://localhost:5049/api/");
+        client.BaseAddress = new Uri("http://localhost:5555/api/");
         // Add a user-agent default request header.http://*:2222
         client.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-docs");
     });
@@ -58,7 +56,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddBootstrapBlazor();
-
+builder.Services.AddBootstrapBlazorTableExportService();
 builder.Services.AddTableDemoDataService();
 
 builder.Services.AddControllers(
@@ -133,6 +131,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddHttpContextAccessor();//不确定有什么用,应该可以关闭
+
+
+
 builder.Services.AddSingleton<ISqlSugarClient>(s =>
 {
     SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
@@ -177,7 +178,7 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
 
 
 
-builder.Services.AddScoped<ICrudBase<SysModule>, ModuleServerByDB>();
+builder.Services.AddScoped<ICrudBase<Models.SystemInfo.Module>, ModuleServerByDB>();
 builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
 builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
 

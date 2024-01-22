@@ -52,7 +52,7 @@ namespace Ufo.Auto.Controllers
         {
             throw new Exception("adfasf");
             List<Role> roles = user.Roles!;
-            var ss = db.Queryable<SysModule>()
+            var ss = db.Queryable<Module>()
                     .Includes(x => x.FunctionGroups, y => y.FunctionPages)
                     .ToList();
             ss.ForEach(x => x.FunctionGroups?

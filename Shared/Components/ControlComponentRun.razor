@@ -65,7 +65,7 @@
     }
     else if (Data.CtrType == WidgetType.Row)
     {
-        <div style="z-index:@(Data.Zindex);min-height:@(Data.MinHeight+Data.MinHeightUnit);position:relative" class="row custom-row-run"
+        <div style="z-index:@(Data.Zindex);min-height:@(Data.MinHeight+Data.MinHeightUnit);" class="row cus-row-run"
              @onclick:stopPropagation="true">
             @foreach (var item in Data.Controls)
             {
@@ -79,7 +79,7 @@
     {
         @if (Data.InputText != null)
         {
-            <div style="z-index:@(Data.Zindex);position:relative;"
+            <div style="z-index:@(Data.Zindex);display:@(Data.InputText.LabelPositon);" class="cus-inputtext"
                  @onclick:stopPropagation="true">
                 <BootstrapInput @bind-Value="Data.Values.ValueString"
                                 PlaceHolder="@Data.InputText.PlaceHolder"
@@ -98,19 +98,24 @@
     }
     else if (Data.CtrType == WidgetType.Table)
     {
-        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%" class="cus-table"
+        <div style="z-index:@(Data.Zindex);height:@(Data.Height)%;" class="cus-table"
              @onclick:stopPropagation="true">
             <div class="cus-table-table">
                 <Table TItem="DynamicObject" DynamicContext="DataTablePageDynamicContext"
                        IsFixedHeader="true"
+                       ShowExportButton="true"
                        TableSize="TableSize.Compact"
+                       AllowResizing="true"
+                       ShowColumnList="Data.TableInfo.ShowColumnList"
+                       ShowLineNo="Data.TableInfo.ShowLineNo"
+                       OnSort="OnSortTable"
                        ClickToSelect="true" OnClickRowCallback="OnClickedRow"
                        ShowToolbar="true" ShowDeleteButton="false" ShowSearchButton="false"
                        ShowSearch="false"
                        ShowRefresh="false" ShowAddButton="false" ShowEditButton="false">
                     <TableToolbarTemplate>
                         <BootstrapInput @bind-Value="@SearchText" TValue="string"></BootstrapInput>
-                        <Button Color="Color.Info" Icon="fas fa-search" Text="" OnClick="InitDataTable" />
+                        <Button Color="Color.Info" Icon="fas fa-search" Text="" OnClick="()=>{Search(SearchText);}" />
                         <Button Color="Color.Info" Icon="fas fa-sync" Text="" OnClick="InitDataTable" />
                     </TableToolbarTemplate>
                 </Table>
@@ -135,7 +140,7 @@
     {
         @if (Data.Button != null)
         {
-            <div style="z-index:@(Data.Zindex);position:relative"
+            <div style="z-index:@(Data.Zindex);" class="cus-bottom"
                  @onclick:stopPropagation="true">
                 <Button OnClick="ButtonClick"
                         Text="@Data.DisplayName"
@@ -153,13 +158,13 @@
     }
     else if (Data.CtrType == WidgetType.Tab)
     {
-        <div style="z-index:@(Data.Zindex);position:relative;height:@(Data.Height)%"
+        <div style="z-index:@(Data.Zindex);height:@(Data.Height)%" class="cus-tab"
              @onclick:stopPropagation="true">
             <Tab OnClickTabItemAsync="OnClickTabItemAsync">
                 @foreach (var item in Data.Controls)
                 {
                     <TabItem Text="@item.DisplayName">
-                        <div style="position:relative;height:100%"
+                        <div style="height:100%" class="cus-tab-tabitem"
                              @onclick:stopPropagation="true">
                             @foreach (var item2 in item.Controls)
                             {
@@ -195,7 +200,7 @@
     {
         @if (Data.CheckBox != null)
         {
-            <div style="z-index:@(Data.Zindex);position:relative;"
+            <div style="z-index:@(Data.Zindex);" class="cus-check"
                  @onclick:stopPropagation="true">
                 <Checkbox @bind-Value=@Data.Values.ValueBool
                           IsDisabled="@Data.CheckBox.IsDisabled"

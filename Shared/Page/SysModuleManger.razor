@@ -1,5 +1,6 @@
-﻿@page "/UserManger"
-<Table TItem="User"
+﻿@page "/SysModuleManger"
+
+<Table TItem="Module"
        IsPagination="true" PageItemsSource="new int[]{20,10,30}"
        IsStriped="true" IsBordered="true" IsMultipleSelect="true"
        IsExtendButtonsInRowHeader="false" AutoGenerateColumns="true"
@@ -9,11 +10,9 @@
        OnSaveAsync="@OnSaveAsync"
        OnDeleteAsync="@OnDeleteAsync">
     <TableColumns>
-        <TableColumn @bind-Field="@context.SysName"  />
-        <TableColumn @bind-Field="@context.RealName"  />
     </TableColumns>
     <BeforeRowButtonTemplate Context="value">
-        <TableCellButton OnClick="()=>{OnClick(value.Id);}">权限管理</TableCellButton>
+        <TableCellButton OnClick="()=>{OnClick(value.Id);}">添加功能组</TableCellButton>
     </BeforeRowButtonTemplate>
 </Table>
 
@@ -26,39 +25,38 @@
     private DialogService? DialogService { get; set; }
     protected override Task OnInitializedAsync()
     {
-
         return base.OnInitializedAsync();
     }
     public void OnClick(long id)
     {
-        DialogService.ShowModal<UpdateRole>(new ResultDialogOption()
+        DialogService.ShowModal<UpdateFuncGroupForSysModule>(new ResultDialogOption()
             {
                 ComponentParameters = new Dictionary<string, object>
                 {
-                    [nameof(UpdateRole.Id)] = id,
+                    [nameof(UpdateFuncGroupForSysModule.Id)] = id,
                 }
             });
     }
-    private Task<User> OnAddAsync()
+    private Task<Module> OnAddAsync()
     {
-        return Task.FromResult(new User() { });
+        return Task.FromResult(new Module() {});
     }
 
-    private async Task<QueryData<User>> OnQueryAsync(QueryPageOptions options)
+    private async Task<QueryData<Module>> OnQueryAsync(QueryPageOptions options)
     {
-        var item = await db.Queryable<User>().ToListAsync();
-        return new QueryData<User>()
+        var item = await db.Queryable<Module>().ToListAsync();
+        return new QueryData<Module>()
             {
                 Items = item,
                 TotalCount = item.Count,
             };
     }
-    private async Task<bool> OnDeleteAsync(IEnumerable<User> items)
+    private async Task<bool> OnDeleteAsync(IEnumerable<Module> items)
     {
-        var res = await db.Deleteable<User>(items).ExecuteCommandAsync();
+        var res = await db.Deleteable<Module>(items).ExecuteCommandAsync();
         return res > 0 ? true : false;
     }
-    private async Task<bool> OnSaveAsync(User item, ItemChangedType changedType)
+    private async Task<bool> OnSaveAsync(Module item, ItemChangedType changedType)
     {
         if (changedType == ItemChangedType.Add)
         {
@@ -71,3 +69,4 @@
         return true;
     }
 }
+
