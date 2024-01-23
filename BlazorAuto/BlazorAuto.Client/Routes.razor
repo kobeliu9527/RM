@@ -1,13 +1,11 @@
-﻿@using Models
-@using SqlSugar
-@using System.Diagnostics.CodeAnalysis
+﻿
 
 <CascadingAuthenticationState >
     <BootstrapBlazorRoot>
         <CascadingValue Value="this.FunctionGroups" Name="router">
-            <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Designer.FormDesigner).Assembly}">
+            <Router AppAssembly="@typeof(BlazorAuto.Client.Layout.MainLayout).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}">
                 <Found Context="routeData">
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
                         <NotAuthorized>
                             没有经过权限认证的地址
                         </NotAuthorized>
@@ -15,7 +13,7 @@
                     <FocusOnNavigate RouteData="@routeData" Selector="h1" />
                 </Found>
                 <NotFound>
-                    <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
+                    <LayoutView Layout="@typeof(Layout. MainLayout)">
                         <p role="alert">对不起,这个访问地址不存在</p>
                     </LayoutView>
                 </NotFound>

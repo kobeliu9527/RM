@@ -1,0 +1,8 @@
+﻿<BootstrapBlazorRoot>
+    <Router AppAssembly="@typeof(RMApp.Components.Layout.MainLayout).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.EmptyLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+    </Router>
+</BootstrapBlazorRoot>

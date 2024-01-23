@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace BlazorAuto.Client.Extensions
 {
     /// <summary>
     /// BootstrapBlazor 服务扩展类

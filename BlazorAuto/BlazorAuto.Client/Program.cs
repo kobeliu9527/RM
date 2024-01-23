@@ -1,7 +1,7 @@
-﻿using Blazored.LocalStorage;
+﻿using BlazorAuto.Client.Extensions;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Models;
 using Models.Services.Base;
 using Models.Services.ServerByHttp;

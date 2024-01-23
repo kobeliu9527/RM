@@ -10,7 +10,8 @@ using Models.NotEntity;
 using SqlSugar;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
-namespace Shared.Layout
+using System.Diagnostics.CodeAnalysis;
+namespace BlazorAuto.Client.Layout
 {
     /// <summary>
     /// 

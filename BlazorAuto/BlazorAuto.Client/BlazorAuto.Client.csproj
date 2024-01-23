@@ -29,9 +29,4 @@
     <ProjectReference Include="..\..\Shared\Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Layout\" />
-    <Folder Include="Pages\" />
-  </ItemGroup>
-
 </Project>

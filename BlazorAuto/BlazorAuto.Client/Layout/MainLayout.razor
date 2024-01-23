@@ -1,9 +1,10 @@
-﻿@inherits LayoutComponentBase
+﻿@using Shared.Layout
+@inherits LayoutComponentBase
 
 <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
         IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter"
         TabDefaultUrl="/" IsAccordion="true"
-        Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly}" class="@Theme">
+        Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly,typeof(Shared.Page.Runing).Assembly}" class="@Theme">
     <Header>
         <span class="ms-3 flex-sm-fill d-none d-sm-block">
             <img class="layout-logo111" src="./logo/@log" style="height:45px;width:145px;margin-left:1px;" />

@@ -22,6 +22,7 @@ using Models.Dto.SVG;
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.SignalR;
 using Models.SystemInfo;
+using BlazorAuto.Client.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 SnowFlakeSingle.WorkId = 1;
@@ -218,6 +219,6 @@ app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(BlazorAuto.Client.Routes).Assembly, typeof(Shared.Designer.FormDesigner).Assembly);
+    .AddAdditionalAssemblies(typeof(BlazorAuto.Client.Routes).Assembly, typeof(Shared.Page.Runing).Assembly);
 
 app.Run();
