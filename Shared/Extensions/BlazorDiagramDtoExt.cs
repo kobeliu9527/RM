@@ -72,16 +72,25 @@ namespace Shared.Extensions
             }
             return obj;
         }
+        /// <summary>
+        /// 转化成数据库对象
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static WorkFlowTemplate ToBlazorDiagramDto(this BlazorDiagram obj,long id=0)
         {
-            var dto = new WorkFlowTemplate() { WorkFlowTemplateId=id};
+            var dto = new WorkFlowTemplate() { Id=id};
             dto.Links=new ();
             dto.Nodes = new ();
             foreach (var node in obj.Nodes)
             {
                 if (node is NodeModelFW nodefw)
                 {
-                    var n = new Models.Dto.SVG.NodeModel() { Id = node.Id, Position = node.Position };
+                    var n = new Models.Dto.SVG.NodeModel() { 
+                        Id = node.Id, 
+                        Title = node.Title,
+                        Position = node.Position };
                     n.SoursesIdList = node.PortLinks.Select(x => (x.Source.Model as PortModel)!.Id).ToList();
                     n.TargetsIdList = node.PortLinks.Select(x => (x.Target.Model as PortModel)!.Id).ToList();
                     dto.Nodes.Add(n);

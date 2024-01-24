@@ -12,17 +12,17 @@ namespace Models.Dto.SVG
     public enum NodeType
     {
         /// <summary>
-        /// 1v1节点,这个节点只有一个父级节点
+        /// 矩形节点
         /// </summary>
-        Single,
+        Square,
         /// <summary>
-        /// 有多个父级节点,父级有一个完成就能进入
+        /// 菱形节点
         /// </summary>
-        AnyOne,
+        Diamond,//菱形
         /// <summary>
-        /// 有多个父级节点,父级全部完成才能进入
+        /// 椭圆节点
         /// </summary>
-        All,
+        Ellipse,//椭圆
         /// <summary>
         /// 指定的的节点完成
         /// </summary>

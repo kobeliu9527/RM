@@ -50,11 +50,11 @@ namespace Models.Dto.SVG
             {
                 switch (node.NodeType)
                 {
-                    case NodeType.Single:
+                    case NodeType.Square:
                         break;
-                    case NodeType.AnyOne:
+                    case NodeType.Diamond:
                         break;
-                    case NodeType.All:
+                    case NodeType.Ellipse:
                         break;
                     case NodeType.Appoint:
                         break;

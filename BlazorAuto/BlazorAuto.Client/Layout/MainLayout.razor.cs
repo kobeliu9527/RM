@@ -132,6 +132,8 @@ namespace BlazorAuto.Client.Layout
                             Root.Add(menu);
                         }
                     }
+                    var fw = new MenuItem("流程管理", "/fwmanger", "fas fa-house-crack");
+                    Root.Add(fw);
                     Menus = Root;
                 }
             }

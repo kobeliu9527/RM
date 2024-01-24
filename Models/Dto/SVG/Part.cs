@@ -33,5 +33,6 @@ namespace Models.Dto.SVG
         public Part? Parent { get; set; } 
         [SugarColumn(IsIgnore = true)]
         public List<Part>? Parts { get; set; }
+        
     }
 }
