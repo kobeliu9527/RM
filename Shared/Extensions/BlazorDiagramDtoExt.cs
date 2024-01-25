@@ -45,10 +45,10 @@ namespace Shared.Extensions
                 };
                 return link;
             };
-            foreach (Models.Dto.SVG.NodeModel item in dto.Nodes)
+            foreach (Models.Dto.SVG.AppearanceInfo item in dto.Nodes)
             {
                 
-                var Node = new NodeModelFW(position: new Point(item.Position.X, item.Position.Y), id: item.Id)
+                var Node = new CustomNode(position: new Point(item.Position.X, item.Position.Y), id: item.Id)
                 {
                     Title = item.Title,
                    
@@ -85,9 +85,9 @@ namespace Shared.Extensions
             dto.Nodes = new ();
             foreach (var node in obj.Nodes)
             {
-                if (node is NodeModelFW nodefw)
+                if (node is CustomNode nodefw)
                 {
-                    var n = new Models.Dto.SVG.NodeModel() { 
+                    var n = new Models.Dto.SVG.AppearanceInfo() { 
                         Id = node.Id, 
                         Title = node.Title,
                         Position = node.Position };
@@ -115,6 +115,11 @@ namespace Shared.Extensions
             }
             return dto;
         }
+        /// <summary>
+        /// 从Dto反序列化为实体
+        /// </summary>
+        /// <param name="wft"></param>
+        /// <returns></returns>
         public static BlazorDiagram ToBlazorDiagram(this WorkFlowTemplate wft)
         {
             BlazorDiagram _blazorDiagram = new BlazorDiagram();
@@ -152,12 +157,12 @@ namespace Shared.Extensions
             //    }
 
             //};
-            _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
+            _blazorDiagram.RegisterComponent<CustomNode, NodeFW>(true);
             if (wft.Nodes!=null)
             {
-                foreach (Models.Dto.SVG.NodeModel item in wft.Nodes)
+                foreach (Models.Dto.SVG.AppearanceInfo item in wft.Nodes)
                 {
-                    var Node = new NodeModelFW(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
+                    var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
                     {
                         Title = item.Title,
                     };

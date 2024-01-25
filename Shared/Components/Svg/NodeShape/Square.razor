@@ -1,0 +1,16 @@
+﻿<rect x="0" y="0" rx="@Node.AppearanceInfo.Corner" ry="30" width="90" height="90" stroke="Green" fill="transparent" stroke-width="2">
+
+</rect>
+<text y="50" x="45" width="90" height="90" style="text-anchor:middle">
+    <tspan font-weight="bold" fill="green">@Node.Title</tspan>
+</text>
+
+@code {
+    [Parameter]
+    [NotNull]
+    public CustomNode Node { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

@@ -64,7 +64,7 @@
     };
     private int? _draggedType;
     public Models.Dto.SVG.WorkFlowTemplate WorkFlowTemplate { get; set; } = new();
-    public NodeModelFW? SelectedNode { get; set; }
+    public CustomNode? SelectedNode { get; set; }
     public void Init()
     {
         
@@ -92,7 +92,7 @@
         };
         _blazorDiagram.SelectionChanged += (m) =>
         {
-            if (m is NodeModelFW nm)
+            if (m is CustomNode nm)
             {
                 if (nm.Selected)
                 {
@@ -102,7 +102,7 @@
             }
 
         };
-        _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
+        _blazorDiagram.RegisterComponent<CustomNode, NodeFW>();
         _blazorDiagram.PanChanged += () =>
         {
             ;
@@ -118,7 +118,7 @@
         // if (_draggedType == null) // Unkown item
         //     return;
         var position = _blazorDiagram.GetRelativeMousePoint(e.ClientX - 87, e.ClientY - 30);
-        var node = new NodeModelFW(position);
+        var node = new CustomNode(position);
 
         node.AddPort(PortAlignment.Top);
         node.AddPort(PortAlignment.TopLeft);
@@ -206,9 +206,9 @@
             _blazorDiagram.Links.Clear();
             if (WorkFlowTemplate.Nodes != null)
             {
-                foreach (Models.Dto.SVG.NodeModel item in WorkFlowTemplate.Nodes)
+                foreach (Models.Dto.SVG.AppearanceInfo item in WorkFlowTemplate.Nodes)
                 {
-                    var Node = new NodeModelFW(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
+                    var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
                         {
                             Title = item.Title,
                         };

@@ -14,6 +14,10 @@ namespace Shared.Page
 {
     public partial class WorkFlowDesigner
     {
+        /// <summary>
+        /// 拖动选中的节点类型
+        /// </summary>
+        public NodeType? SelectedNodeType { get; set; }
         [Inject]
         [NotNull]
         public ISqlSugarClient? db { get; set; }
@@ -21,8 +25,8 @@ namespace Shared.Page
         {
         };
         private int? _draggedType;
-        public Models.Dto.SVG.WorkFlowTemplate WorkFlowTemplate { get; set; } = new();
-        public NodeModelFW? SelectedNode { get; set; }
+        public WorkFlowTemplate WorkFlowTemplate { get; set; } = new();
+        public CustomNode? SelectedNode { get; set; }
         public void Init()
         {
             _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
@@ -45,25 +49,19 @@ namespace Shared.Page
                 }
                 ;
                 return link;
-
             };
             _blazorDiagram.SelectionChanged += (m) =>
             {
-                if (m is NodeModelFW nm)
+                if (m is CustomNode cusNode)
                 {
-                    if (nm.Selected)
+                    if (cusNode.Selected)
                     {
-                        SelectedNode = nm;
+                        SelectedNode = cusNode;
                         StateHasChanged();
                     }
                 }
-
             };
-            _blazorDiagram.RegisterComponent<NodeModelFW, NodeFW>();
-            _blazorDiagram.PanChanged += () =>
-            {
-                ;
-            };
+            _blazorDiagram.RegisterComponent<CustomNode, NodeFW>(true);
         }
         protected override void OnInitialized()
         {
@@ -72,27 +70,53 @@ namespace Shared.Page
         }
         private void OnDrop(DragEventArgs e)
         {
-            // if (_draggedType == null) // Unkown item
-            //     return;
             var position = _blazorDiagram.GetRelativeMousePoint(e.ClientX - 87, e.ClientY - 30);
-            var node = new NodeModelFW(position);
-
-            node.AddPort(PortAlignment.Top);
-            node.AddPort(PortAlignment.TopLeft);
-            node.AddPort(PortAlignment.TopRight);
-            node.AddPort(PortAlignment.Left);
-            node.AddPort(PortAlignment.Right);
-            node.AddPort(PortAlignment.Bottom);
-            node.AddPort(PortAlignment.BottomLeft);
-            node.AddPort(PortAlignment.BottomRight);
-
+            var node = new CustomNode(position);
+            
+            if (SelectedNodeType!=null)
+            {
+                node.AppearanceInfo.NodeType = SelectedNodeType;
+                switch (SelectedNodeType)
+                {
+                    case NodeType.Square:
+                        node.AddPort(PortAlignment.Top);
+                        node.AddPort(PortAlignment.TopLeft);
+                        node.AddPort(PortAlignment.TopRight);
+                        node.AddPort(PortAlignment.Left);
+                        node.AddPort(PortAlignment.Right);
+                        node.AddPort(PortAlignment.Bottom);
+                        node.AddPort(PortAlignment.BottomLeft);
+                        node.AddPort(PortAlignment.BottomRight);
+                        break;
+                    case NodeType.Diamond:
+                        node.AddPort(PortAlignment.Top);
+                        node.AddPort(PortAlignment.Left);
+                        node.AddPort(PortAlignment.Right);
+                        node.AddPort(PortAlignment.Bottom);
+                        break;
+                    case NodeType.Ellipse:
+                        break;
+                    case NodeType.Appoint:
+                        break;
+                    case NodeType.Other:
+                        break;
+                    case null:
+                        break;
+                    default:
+                        break;
+                }
+            }
             _blazorDiagram.Nodes.Add(node);
-            _draggedType = null;
         }
         public async Task OnChangeString(string a)
         {
             SelectedNode?.Refresh();
             await Task.CompletedTask;
+        }
+        public Task RefreshInvoke()
+        {
+            SelectedNode?.Refresh();
+            return Task.CompletedTask;
         }
         public Task<bool> OnSaveAsync(WorkFlowTemplate obj, ItemChangedType type)
         {
@@ -163,7 +187,7 @@ namespace Shared.Page
                 _blazorDiagram.Links.Clear();
                 if (WorkFlowTemplate.Nodes != null)
                 {
-                    foreach (Models.Dto.SVG.NodeModel item in WorkFlowTemplate.Nodes)
+                    foreach (Models.Dto.SVG.AppearanceInfo item in WorkFlowTemplate.Nodes)
                     {   
                         switch (item.NodeType)
                         {
@@ -180,7 +204,7 @@ namespace Shared.Page
                             default:
                                 break;
                         }
-                        var Node = new NodeModelFW(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
+                        var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
                         {
                             Title = item.Title,
                         };
@@ -207,7 +231,7 @@ namespace Shared.Page
                 }
                 _blazorDiagram.Refresh();
             }
-            // StateHasChanged();
+             StateHasChanged();
             await Task.Delay(50);
         }
         public void SaveSelect()
@@ -220,5 +244,12 @@ namespace Shared.Page
                 db.Updateable(WorkFlowTemplate).ExecuteCommand();
             }
         }
+
+        #region MyRegion
+        public void OnDragStartWithWidetPanel(NodeType type)
+        {
+            SelectedNodeType = type;
+        }
+        #endregion
     }
 }

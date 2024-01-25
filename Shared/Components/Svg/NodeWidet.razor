@@ -1,0 +1,20 @@
+﻿@using Models.Dto.SVG
+<div draggable="true" class="fd-palette-widget text-center draggable"
+     @ondragstart="@(async () => {OnDragStart?.Invoke(NodeType); })">
+    <i class="@Icon" style="font-size:30px"></i>
+    <h5 class="fd-palette-widget-label">@(Text)</h5>
+</div>
+
+@code {
+    /// <summary>
+    /// 拖动节点的委托
+    /// </summary>
+    [Parameter]
+    public Action<NodeType>? OnDragStart { get; set; }
+    [Parameter]
+    public NodeType NodeType { get; set; } = NodeType.Square;
+    [Parameter]
+    public string Icon { get; set; } = "";
+    [Parameter]
+    public string Text { get; set; } = "方形";
+}

@@ -28,9 +28,9 @@ namespace Shared.Page
         protected override void OnInitialized()
         {
             Diagram = new BlazorDiagram();
-            Diagram.RegisterComponent<NodeModelFW, NodeFW>();
-            var node = new NodeModelFW(new Point(50, 50));
-            var node2 = new NodeModelFW(new Point(10, 10));
+            Diagram.RegisterComponent<CustomNode, NodeFW>();
+            var node = new CustomNode(new Point(50, 50));
+            var node2 = new CustomNode(new Point(10, 10));
             node.AddPort(PortAlignment.Left);
             node2.AddPort(PortAlignment.Left);
             node2.AddPort(PortAlignment.Top);

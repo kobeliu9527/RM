@@ -1,0 +1,15 @@
+﻿@using Models.Dto.SVG
+<div class="node-widet-panel">
+    @foreach (var item in Enum.GetValues<NodeType>())
+    {
+        <NodeWidet NodeType="item" Text="@item.ToString()" OnDragStart="OnDragStart"></NodeWidet>
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// 拖动节点的委托
+    /// </summary>
+    [Parameter][NotNull]
+    public Action<NodeType>? OnDragStart { get; set; }
+}
