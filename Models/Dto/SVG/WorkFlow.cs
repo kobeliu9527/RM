@@ -31,8 +31,8 @@ namespace Models.Dto.SVG
         /// <summary>
         /// 这个流程所有的节点
         /// </summary>
-        [Navigate(NavigateType.OneToMany, nameof(AppearanceInfo.WorkFlowId))]
-        public List<AppearanceInfo>? Nodes { get; set; }
+        [Navigate(NavigateType.OneToMany, nameof(NodeDto.WorkFlowId))]
+        public List<NodeDto>? Nodes { get; set; }
         /// <summary>
         /// 这个流程所有的流向:所有节点之间的关系
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿
 
 using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 using SqlSugar;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -10,13 +11,40 @@ namespace Models.Dto.SVG
     /// <summary>
     /// 一个节点模型Dto
     /// </summary>
-    public class AppearanceInfo
+    public class NodeDto
     {
         #region 外观参数
-        public int Width { get; set; } = 100;
-        public int Height { get; set; }=100;
+        [DisplayName("宽")]
+        public double Width { get; set; } = 100;
+        [DisplayName("高")]
+        public double Height { get; set; }=100;
+        [DisplayName("圆角")]
         public int Corner { get; set; } = 10;
+        [DisplayName("边框颜色")]
         public string BorderColor { get; set; } = "#98F5FF";
+        [DisplayName("填充颜色")]
+        public string FillColor { get; set; } = "#98F5FF";
+        [DisplayName("文字颜色")]
+        public string TextColor { get; set; } = "#000000";
+        [DisplayName("边框宽度")]
+        public int BorderWidth { get; set; } = 2;
+        /// <summary>
+        /// 节点名字
+        /// </summary>
+        [DisplayName("名字"), Description("节点名字")]
+        public string? NodeModelName { get; set; }
+        /// <summary>
+        /// 节点形状,外观,正方形,菱形
+        /// </summary>
+        [DisplayName("节点形状"), Description("节点形状")]
+        public NodeType? NodeType { get; set; }
+        /// <summary>
+        /// 节点位置
+        /// </summary>
+        [DisplayName("位置"), Description("位置")]
+        public Point? Position { get; set; }
+        [DisplayName("顺序"), Description("顺序")]
+        public int Order { get; set; }
         #endregion
         /// <summary>
         /// 节点Id,系统全局生成,唯一Key
@@ -25,39 +53,17 @@ namespace Models.Dto.SVG
         public string? Id { get; set; }
         [SugarColumn(IsPrimaryKey = true)]
         public long NodeModelId { get; set; }
-        /// <summary>
-        /// 节点名字
-        /// </summary>
-        [DisplayName("名字"),Description("节点名字")]
-        public string? NodeModelName { get; set; }
-        /// <summary>
-        /// 节点描述
-        /// </summary>
-        [DisplayName("描述"), Description("节点")] 
-        public string? NodeModelDescription { get; set; }
-        /// <summary>
-        /// 节点位置
-        /// </summary>
-        [DisplayName("位置"), Description("位置")]
-        public Point? Position { get; set; }
+
+        
         /// <summary>
         /// 1对多关系:
         /// </summary>
         public int WorkFlowId { get; set; }
         /// <summary>
-        /// 节点形状,外观,正方形,菱形
-        /// </summary>
-        [DisplayName("节点形状"), Description("节点形状")]
-        public NodeType? NodeType { get; set; }
-        /// <summary>
-        /// 节点名称
-        /// </summary>
-        public string? Title { get; set; }
-        /// <summary>
         /// 节点的连接口
         /// </summary>
         [DisplayName("节点的连接口"), Description("节点的连接口")]
-        public List<PortPosition>? Ports { get; set; } 
+        public List<PortAlignment> Ports { get; set; } = new();
         /// <summary>
         /// 当前节点所有可能的结果
         /// </summary>

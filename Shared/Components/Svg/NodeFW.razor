@@ -8,6 +8,7 @@
         <Diamond Node="@Node"></Diamond>
         break;
     case Models.Dto.SVG.NodeType.Ellipse:
+
         break;
     case Models.Dto.SVG.NodeType.Appoint:
         break;
@@ -17,65 +18,12 @@
         break;
 }
 
-@if (Node!=null)
-{
-    @if (Node.GetPort(PortAlignment.TopLeft) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.TopLeft)">
-            <circle class="port" cx="10" cy="10" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.Top) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.Top)">
-            <circle class="port" cx="45" cy="10" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.TopRight) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.TopRight)">
-            <circle class="port" cx="80" cy="10" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.BottomLeft) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.BottomLeft)">
-            <circle class="port" cx="10" cy="80" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.Bottom) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.Bottom)">
-            <circle class="port" cx="45" cy="80" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.BottomRight) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.BottomRight)">
-            <circle class="port" cx="80" cy="80" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.Left) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.Left)">
-            <circle class="port" cx="10" cy="45" r="10"></circle>
-        </PortRenderer>
-    }
-    @if (Node.GetPort(PortAlignment.Right) != null)
-    {
-        <PortRenderer Port="Node.GetPort(PortAlignment.Right)">
-            <circle class="port" cx="80" cy="45" r="10"></circle>
-        </PortRenderer>
-    }
-
-}
-
 @code{
     /// <summary>
     /// 节点的数据
     /// </summary>
-    [Parameter]
-    public CustomNode Node { get; set; }
+    [Parameter][NotNull]
+    public CustomNode? Node { get; set; }
 
 }
 

@@ -51,7 +51,7 @@ namespace BlazorAuto.Controllers
                     typeof(FwHistory),
                     //typeof(Production),
                     //typeof(WorkFlow),
-                    typeof(AppearanceInfo),
+                    typeof(NodeDto),
                     typeof(LinkModel), 
                     //typeof(Product),
                     typeof(Part),

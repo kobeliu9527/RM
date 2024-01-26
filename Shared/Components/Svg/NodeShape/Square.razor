@@ -1,16 +1,71 @@
-﻿<rect x="0" y="0" rx="@Node.AppearanceInfo.Corner" ry="30" width="90" height="90" stroke="Green" fill="transparent" stroke-width="2">
-
+﻿<rect x="0" y="0" rx="@Node.AppearanceInfo.Corner" ry="30"
+      width="@Node.AppearanceInfo.Width"
+      height="@Node.AppearanceInfo.Height"
+      stroke="@Node.AppearanceInfo.BorderColor"
+      fill="transparent"
+      stroke-width="@Node.AppearanceInfo.BorderWidth">
 </rect>
-<text y="50" x="45" width="90" height="90" style="text-anchor:middle">
-    <tspan font-weight="bold" fill="green">@Node.Title</tspan>
+<text y="@(Node.AppearanceInfo.Height/2)" x="@(Node.AppearanceInfo.Width/2)"
+      width="@Node.AppearanceInfo.Width" height="@Node.AppearanceInfo.Width"
+      style="text-anchor:middle">
+    <tspan font-weight="bold" fill="@Node.AppearanceInfo.TextColor">@Node.AppearanceInfo.NodeModelName</tspan>
 </text>
 
+
+@if (Node != null)
+{
+    @if (Node.GetPort(PortAlignment.TopLeft) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.TopLeft)">
+            <circle class="port" cx="10" cy="10" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.Top) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.Top)">
+            <circle class="port" cx="45" cy="10" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.TopRight) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.TopRight)">
+            <circle class="port" cx="80" cy="10" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.BottomLeft) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.BottomLeft)">
+            <circle class="port" cx="10" cy="80" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.Bottom) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.Bottom)">
+            <circle class="port" cx="45" cy="80" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.BottomRight) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.BottomRight)">
+            <circle class="port" cx="80" cy="80" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.Left) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.Left)">
+            <circle class="port" cx="10" cy="45" r="10"></circle>
+        </PortRenderer>
+    }
+    @if (Node.GetPort(PortAlignment.Right) != null)
+    {
+        <PortRenderer Port="Node.GetPort(PortAlignment.Right)">
+            <circle class="port" cx="80" cy="45" r="10"></circle>
+        </PortRenderer>
+    }
+
+}
 @code {
     [Parameter]
     [NotNull]
-    public CustomNode Node { get; set; }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
+    public CustomNode? Node { get; set; }
 }

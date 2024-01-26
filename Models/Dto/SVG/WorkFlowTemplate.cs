@@ -33,7 +33,7 @@ namespace Models.Dto.SVG
         /// </summary>
         //[Navigate(NavigateType.OneToMany, nameof(NodeModel.WorkFlowId))]
         [SugarColumn(IsJson =true, ColumnDataType = "nvarchar(max)")]
-        public List<AppearanceInfo>? Nodes { get; set; }
+        public List<NodeDto>? Nodes { get; set; }
         /// <summary>
         /// 这个流程所有的流向:所有节点之间的关系
         /// </summary>

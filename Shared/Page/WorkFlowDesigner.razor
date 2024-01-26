@@ -19,7 +19,7 @@
                         <Table TItem="WorkFlowTemplate"
                                ShowExtendButtons="true" ShowExtendEditButton="true"
                                ShowToolbar="true"
-                               ClickToSelect="false"
+                               ClickToSelect="true"
                                IsExtendButtonsInRowHeader="true"
                                IsStriped="true" IsBordered="true" IsMultipleSelect="false"
                                OnSaveAsync="OnSaveAsync"
@@ -59,13 +59,16 @@
                     <TabItem Text="属性">
                         @if (SelectedNode != null)
                         {
+                            <BootstrapInput TValue="string" @bind-Value="@SelectedNode.AppearanceInfo.NodeModelName" OnValueChanged="OnChangeString" UseInputEvent="true" ShowLabel="true" DisplayText="流程名"></BootstrapInput>
+                            <BootstrapInput TValue="string" OnValueChanged="OnChangeString" ShowLabel="true" DisplayText="流程详情"></BootstrapInput>
+                            <BootstrapInputNumber TValue="int" @bind-Value="@SelectedNode.AppearanceInfo.Corner" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                            <BootstrapInputNumber TValue="double" @bind-Value="@SelectedNode.AppearanceInfo.Width" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                            <BootstrapInputNumber TValue="double" @bind-Value="@SelectedNode.AppearanceInfo.Height" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                            <Button OnClick="SaveSelect">保存</Button>
                             @switch (SelectedNode.AppearanceInfo.NodeType)
                             {
                                 case NodeType.Square:
-                                    <BootstrapInput TValue="string" @bind-Value=@SelectedNode.Title OnValueChanged="OnChangeString" UseInputEvent="true" ShowLabel="true" DisplayText="流程名"></BootstrapInput>
-                                    <BootstrapInput TValue="string" OnValueChanged="OnChangeString" ShowLabel="true" DisplayText="流程详情"></BootstrapInput>
-                                    <BootstrapInputNumber TValue="int" @bind-Value="@SelectedNode.AppearanceInfo.Corner" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
-                                    <Button OnClick="SaveSelect">保存</Button>
+                                    
                                     break;
                                 case NodeType.Diamond:
                                     break;
@@ -79,6 +82,20 @@
                                     break;
                             }
                         }
+                        else if(SelectedLink!=null)
+                        {
+                            <Button OnClick="()=>{ AddLinkLabel(SelectedLink);}">增加标签</Button>
+                            @foreach (var item in SelectedLink.Labels)
+                            {
+                                <div class="input-n">
+                                    <BootstrapInput TValue="string" @bind-Value=@item.Content OnValueChanged="(e)=>{return RefreshInvoke();}" UseInputEvent="true" ShowLabel="true" DisplayText="标签名"></BootstrapInput>
+                                </div>
+                                <div class="input-n">
+                                    <BootstrapInputNumber @bind-Value="@item.Distance" TValue="double?" Step="10" Max="500" Min="0" ShowButton="true" ShowLabel="true" OnValueChanged="(e)=>{return RefreshInvoke();}"></BootstrapInputNumber>
+                                </div>
+                            }
+                        }
+                        
                     </TabItem>
                 </Tab>
             </div>

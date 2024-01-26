@@ -19,7 +19,7 @@ namespace Shared.Components.Svg
         /// <summary>
         /// 这个节点的信息:外观等等...
         /// </summary>
-        public AppearanceInfo AppearanceInfo { get; set; }=new AppearanceInfo();
+        public NodeDto AppearanceInfo { get; set; }=new NodeDto();
         /// <summary>
         /// 1.必须经过的节点
         /// </summary>
@@ -34,11 +34,11 @@ namespace Shared.Components.Svg
         /// <param name="position"></param>
         public CustomNode(Point? position = null) : base(position) 
         {
-        //    AppearanceInfo.Id = base.Id;
+            AppearanceInfo.Id = base.Id;
         }
         public CustomNode(string id, Point? position = null) :base(id, position)
         {
-          //  AppearanceInfo.Id = base.Id;
+            AppearanceInfo.Id = base.Id;
         }
         /// <summary>
         /// 传到下一个节点

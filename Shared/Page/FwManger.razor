@@ -206,11 +206,11 @@
             _blazorDiagram.Links.Clear();
             if (WorkFlowTemplate.Nodes != null)
             {
-                foreach (Models.Dto.SVG.AppearanceInfo item in WorkFlowTemplate.Nodes)
+                foreach (Models.Dto.SVG.NodeDto item in WorkFlowTemplate.Nodes)
                 {
                     var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
                         {
-                            Title = item.Title,
+                            Title = item.NodeModelName,
                         };
                     Node.Locked = true;
                     foreach

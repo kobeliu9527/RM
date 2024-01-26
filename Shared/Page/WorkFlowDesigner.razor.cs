@@ -27,6 +27,7 @@ namespace Shared.Page
         private int? _draggedType;
         public WorkFlowTemplate WorkFlowTemplate { get; set; } = new();
         public CustomNode? SelectedNode { get; set; }
+        public Blazor.Diagrams.Core.Models.LinkModel? SelectedLink { get; set; }
         public void Init()
         {
             _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
@@ -45,23 +46,47 @@ namespace Shared.Page
                     SourceMarker = LinkMarker.Circle,
                     // SourceMarker = LinkMarker.NewRectangle(10, 20),
                     // TargetMarker = LinkMarker.NewArrow(20, 10),
-                    Segmentable = true
+                    Segmentable = true,
                 }
                 ;
                 return link;
+
             };
             _blazorDiagram.SelectionChanged += (m) =>
             {
+                if (m is LinkVertexModel lvm)
+                {
+                    if (lvm.Selected)
+                    {
+                    }
+                }
                 if (m is CustomNode cusNode)
                 {
                     if (cusNode.Selected)
                     {
                         SelectedNode = cusNode;
+                        foreach (var item in SelectedNode.PortLinks)
+                        {
+                            foreach (var lab in item.Labels)
+                            {
+                                var ss = lab;
+                            }
+                            //item.Labels.Add(new LinkLabelModel(item, SelectedNode.Id, r.Next(200)));
+                        }
+                        StateHasChanged();
+                    }
+                }
+                if (m is Blazor.Diagrams.Core.Models.LinkModel lm)
+                {
+                    if (lm.Selected)
+                    {
+                        SelectedNode = null;
+                        SelectedLink = lm;
                         StateHasChanged();
                     }
                 }
             };
-            _blazorDiagram.RegisterComponent<CustomNode, NodeFW>(true);
+            _blazorDiagram.RegisterComponent<CustomNode, NodeFW>();
         }
         protected override void OnInitialized()
         {
@@ -72,8 +97,8 @@ namespace Shared.Page
         {
             var position = _blazorDiagram.GetRelativeMousePoint(e.ClientX - 87, e.ClientY - 30);
             var node = new CustomNode(position);
-            
-            if (SelectedNodeType!=null)
+
+            if (SelectedNodeType != null)
             {
                 node.AppearanceInfo.NodeType = SelectedNodeType;
                 switch (SelectedNodeType)
@@ -111,11 +136,14 @@ namespace Shared.Page
         public async Task OnChangeString(string a)
         {
             SelectedNode?.Refresh();
+            _blazorDiagram.Refresh();
+            StateHasChanged();
             await Task.CompletedTask;
         }
         public Task RefreshInvoke()
         {
-            SelectedNode?.Refresh();
+            SelectedNode?.RefreshAll();
+            SelectedLink?.RefreshLinks();
             return Task.CompletedTask;
         }
         public Task<bool> OnSaveAsync(WorkFlowTemplate obj, ItemChangedType type)
@@ -185,53 +213,12 @@ namespace Shared.Page
                 WorkFlowTemplate = p;
                 _blazorDiagram.Nodes.Clear();
                 _blazorDiagram.Links.Clear();
-                if (WorkFlowTemplate.Nodes != null)
-                {
-                    foreach (Models.Dto.SVG.AppearanceInfo item in WorkFlowTemplate.Nodes)
-                    {   
-                        switch (item.NodeType)
-                        {
-                            case NodeType.Square:
-                                break;
-                            case NodeType.Diamond:
-                                break;
-                            case NodeType.Ellipse:
-                                break;
-                            case NodeType.Appoint:
-                                break;
-                            case NodeType.Other:
-                                break;
-                            default:
-                                break;
-                        }
-                        var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
-                        {
-                            Title = item.Title,
-                        };
-
-                        foreach
-                            (PortAlignment item2 in Enum.GetValues(typeof(PortAlignment)))
-                        {
-                            Node.AddPort(item2);
-                        }
-                        _blazorDiagram.Nodes.Add(Node);
-                    }
-                }
-                if (WorkFlowTemplate.Links != null)
-                {
-                    foreach (var item in WorkFlowTemplate.Links)
-                    {
-                        var sourse = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.SourceId)?.GetPort(item.SourceAlignment);
-                        var target = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.TargetId)?.GetPort(item.TargetAlignment);
-                        if (sourse != null && target != null)
-                        {
-                            _blazorDiagram.Links.Add(new Blazor.Diagrams.Core.Models.LinkModel(sourse, target) { TargetMarker = LinkMarker.Arrow });
-                        }
-                    }
-                }
-                _blazorDiagram.Refresh();
+                var d = p.ToBlazorDiagram();
+                _blazorDiagram.Nodes.Add(d.Nodes);
+                _blazorDiagram.Links.Add(d.Links);
             }
-             StateHasChanged();
+            _blazorDiagram.Refresh();
+            //StateHasChanged();
             await Task.Delay(50);
         }
         public void SaveSelect()
@@ -241,7 +228,7 @@ namespace Shared.Page
                 var dto = _blazorDiagram.ToBlazorDiagramDto();
                 WorkFlowTemplate.Nodes = dto.Nodes;
                 WorkFlowTemplate.Links = dto.Links;
-                db.Updateable(WorkFlowTemplate).ExecuteCommand();
+                var res = db.Updateable(WorkFlowTemplate).ExecuteCommand();
             }
         }
 
@@ -251,5 +238,12 @@ namespace Shared.Page
             SelectedNodeType = type;
         }
         #endregion
+
+        public void AddLinkLabel(Blazor.Diagrams.Core.Models.LinkModel SelectedLink)
+        {
+            var count = SelectedLink.Labels.Count + 1;
+            SelectedLink.Labels.Add(new LinkLabelModel(SelectedLink, $"±Í«©{count}", count * 50));
+            StateHasChanged();
+        }
     }
 }

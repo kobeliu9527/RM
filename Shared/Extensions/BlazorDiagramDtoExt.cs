@@ -32,7 +32,7 @@ namespace Shared.Extensions
         public static BlazorDiagram ToBlazorDiagram(this WorkFlow dto)
         {
             var obj = new BlazorDiagram() { };
-            
+
             obj.Options.Zoom.Enabled = true;
             obj.Options.Links.Factory = (d, s, ta) =>
             {
@@ -45,16 +45,16 @@ namespace Shared.Extensions
                 };
                 return link;
             };
-            foreach (Models.Dto.SVG.AppearanceInfo item in dto.Nodes)
+            foreach (NodeDto item in dto.Nodes)
             {
-                
+
                 var Node = new CustomNode(position: new Point(item.Position.X, item.Position.Y), id: item.Id)
                 {
-                    Title = item.Title,
-                   
+                    Title = item.NodeModelName,
+
                 };
-                
-                foreach 
+
+                foreach
                     (PortAlignment item2 in Enum.GetValues(typeof(PortAlignment)))
                 {
                     Node.AddPort(item2);
@@ -78,19 +78,30 @@ namespace Shared.Extensions
         /// <param name="obj"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static WorkFlowTemplate ToBlazorDiagramDto(this BlazorDiagram obj,long id=0)
+        public static WorkFlowTemplate ToBlazorDiagramDto(this BlazorDiagram obj, long id = 0)
         {
-            var dto = new WorkFlowTemplate() { Id=id};
-            dto.Links=new ();
-            dto.Nodes = new ();
+            var dto = new WorkFlowTemplate() { Id = id };
+            dto.Links = new();
+            dto.Nodes = new();
             foreach (var node in obj.Nodes)
             {
                 if (node is CustomNode nodefw)
                 {
-                    var n = new Models.Dto.SVG.AppearanceInfo() { 
-                        Id = node.Id, 
-                        Title = node.Title,
-                        Position = node.Position };
+                    var n = new NodeDto()
+                    {
+
+                        Id = node.Id,
+                        Width = nodefw.AppearanceInfo.Width,
+                        Height = nodefw.AppearanceInfo!.Height,
+                        Corner = nodefw.AppearanceInfo.Corner,
+                        BorderColor = nodefw.AppearanceInfo.BorderColor,
+                        BorderWidth = nodefw.AppearanceInfo.BorderWidth,
+                        TextColor = nodefw.AppearanceInfo.TextColor,
+                        NodeType = nodefw.AppearanceInfo.NodeType,
+                        FillColor = nodefw.AppearanceInfo.FillColor,
+                        NodeModelName = nodefw.AppearanceInfo.NodeModelName,
+                        Position = node.Position
+                    };
                     n.SoursesIdList = node.PortLinks.Select(x => (x.Source.Model as PortModel)!.Id).ToList();
                     n.TargetsIdList = node.PortLinks.Select(x => (x.Target.Model as PortModel)!.Id).ToList();
                     dto.Nodes.Add(n);
@@ -101,6 +112,7 @@ namespace Shared.Extensions
             {
                 Models.Dto.SVG.LinkModel lDto = new Models.Dto.SVG.LinkModel();
                 lDto.Id = item.Id;
+                lDto.Labels = item.Labels.Select(x => new LinkLabel() { Content = x.Content, Distance = x.Distance, Offset = x.Offset }).ToList();
                 if (item.Source.Model is PortModel portModels)
                 {
                     lDto.SourceId = portModels.Parent.Id;
@@ -145,38 +157,58 @@ namespace Shared.Extensions
                 return link;
 
             };
-            //_blazorDiagram.SelectionChanged += (m) =>
-            //{
-            //    if (m is NodeModelFW nm)
-            //    {
-            //        if (nm.Selected)
-            //        {
-            //            SelectedNode = nm;
-            //            StateHasChanged();
-            //        }
-            //    }
-
-            //};
             _blazorDiagram.RegisterComponent<CustomNode, NodeFW>(true);
-            if (wft.Nodes!=null)
+            if (wft.Nodes != null)
             {
-                foreach (Models.Dto.SVG.AppearanceInfo item in wft.Nodes)
+                foreach (var node in wft.Nodes)
                 {
-                    var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
+                    var Node = new CustomNode(position: node.Position, id: node.Id!)
                     {
-                        Title = item.Title,
+                        Title = node.NodeModelName,
                     };
-
-                    foreach
-                        (PortAlignment item2 in Enum.GetValues(typeof(PortAlignment)))
+                    Node.AppearanceInfo.NodeModelName = node.NodeModelName;
+                    Node.AppearanceInfo.NodeType = node.NodeType;
+                    Node.AppearanceInfo.Width = node.Width;
+                    Node.AppearanceInfo.Height = node.Height;
+                    Node.AppearanceInfo.Corner = node.Corner;
+                    Node.AppearanceInfo.BorderColor = node.BorderColor;
+                    Node.AppearanceInfo.BorderWidth = node.BorderWidth;
+                    Node.AppearanceInfo.TextColor = node.TextColor;
+                    Node.AppearanceInfo.FillColor = node.FillColor;
+                    switch (node.NodeType)
                     {
-                        Node.AddPort(item2);
+                        case NodeType.Square:
+                            Node.AddPort(PortAlignment.Top);
+                            Node.AddPort(PortAlignment.TopLeft);
+                            Node.AddPort(PortAlignment.TopRight);
+                            Node.AddPort(PortAlignment.Bottom);
+                            Node.AddPort(PortAlignment.BottomLeft);
+                            Node.AddPort(PortAlignment.BottomRight);
+                            Node.AddPort(PortAlignment.Right);
+                            Node.AddPort(PortAlignment.Left);
+                            break;
+                        case NodeType.Diamond:
+                            Node.AddPort(PortAlignment.Top);
+                            Node.AddPort(PortAlignment.Bottom);
+                            Node.AddPort(PortAlignment.Right);
+                            Node.AddPort(PortAlignment.Left);
+                            break;
+                        case NodeType.Ellipse:
+                            break;
+                        case NodeType.Appoint:
+                            break;
+                        case NodeType.Other:
+                            break;
+                        case null:
+                            break;
+                        default:
+                            break;
                     }
                     _blazorDiagram.Nodes.Add(Node);
                 }
             }
 
-            if (wft.Links!=null)
+            if (wft.Links != null)
             {
                 foreach (var item in wft.Links)
                 {
@@ -184,7 +216,17 @@ namespace Shared.Extensions
                     var target = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.TargetId)?.GetPort(item.TargetAlignment);
                     if (sourse != null && target != null)
                     {
-                        _blazorDiagram.Links.Add(new Blazor.Diagrams.Core.Models.LinkModel(sourse, target) { TargetMarker = LinkMarker.Arrow });
+                        var link = new Blazor.Diagrams.Core.Models.LinkModel(sourse, target)
+                        {
+                            TargetMarker = LinkMarker.Arrow,
+                            Segmentable = true,
+                            SourceMarker = LinkMarker.Circle
+                        };
+                        foreach (var lab in item.Labels)
+                        {
+                            link.Labels.Add(new LinkLabelModel(link, $"{lab.Content}", lab.Distance));
+                        }
+                        _blazorDiagram.Links.Add(link);
                     }
                 }
             }

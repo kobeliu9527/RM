@@ -1562,3 +1562,13 @@ body .layout is-page {
 .cus-check {
     position: relative;
 }
+/*流程组件Port口*/
+.port:hover {
+    fill: black;
+}
+
+.port {
+    fill: transparent;
+    /*    stroke-opacity:0;
+    fill-opacity:0;*/
+}
