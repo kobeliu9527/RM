@@ -1,7 +1,10 @@
 ﻿@using Models.Dto.SVG
 <div draggable="true" class="fd-palette-widget text-center draggable"
      @ondragstart="@(async () => {OnDragStart?.Invoke(NodeType); })">
-    <i class="@Icon" style="font-size:30px"></i>
+    <svg t="1706352814541" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2036"
+         width="50" height="50">
+        <path d="@Path" fill="@FillColor"></path>
+    </svg>
     <h5 class="fd-palette-widget-label">@(Text)</h5>
 </div>
 
@@ -13,8 +16,13 @@
     public Action<NodeType>? OnDragStart { get; set; }
     [Parameter]
     public NodeType NodeType { get; set; } = NodeType.Square;
+    /// <summary>
+    /// svg的路径
+    /// </summary>
     [Parameter]
-    public string Icon { get; set; } = "";
+    public string Path { get; set; } = "M960 512L512 769.9 64 512l448-257.9z";
+    [Parameter]
+    public string FillColor { get; set; } = "#45ba84";
     [Parameter]
     public string Text { get; set; } = "方形";
 }

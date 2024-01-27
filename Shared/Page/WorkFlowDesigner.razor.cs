@@ -2,6 +2,9 @@ using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
+using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Routers;
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -23,70 +26,90 @@ namespace Shared.Page
         public ISqlSugarClient? db { get; set; }
         private BlazorDiagram _blazorDiagram = new BlazorDiagram()
         {
+
         };
         private int? _draggedType;
         public WorkFlowTemplate WorkFlowTemplate { get; set; } = new();
+        /// <summary>
+        /// 设计器中被选中的节点
+        /// </summary>
         public CustomNode? SelectedNode { get; set; }
-        public Blazor.Diagrams.Core.Models.LinkModel? SelectedLink { get; set; }
+        /// <summary>
+        /// 设计器中被选中的线条
+        /// </summary>
+        public LinkModel? SelectedLink { get; set; }
+        /// <summary>
+        /// 工具箱中节点默认样式
+        /// </summary>
+        public NodeDto DesginerNode { get; set; } = new() { Width=100};
+        /// <summary>
+        /// 工具箱中线条的默认样式
+        /// </summary>
+        public LinkDto DesginerLink { get; set; } = new() { Router = true, PathGenerator = true };
         public void Init()
         {
+            //_blazorDiagram.Options.Links.DefaultPathGenerator= new StraightPathGenerator();//直线
+            // _blazorDiagram.Options.Links.DefaultPathGenerator= new SmoothPathGenerator(); //曲线
+            // _blazorDiagram.Options.Links.DefaultRouter  = new OrthogonalRouter();//正交的
+            //_blazorDiagram.Options.Links.DefaultRouter  = new NormalRouter();//普通的
             _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
             {
-                var link = new Blazor.Diagrams.Core.Models.LinkModel(new SinglePortAnchor((s as PortModel)!)
+                var link = new LinkModel(
+                    new SinglePortAnchor((s as PortModel)!) { MiddleIfNoMarker = true, UseShapeAndAlignment = false }, ta)
                 {
-                    MiddleIfNoMarker = true,
-                    UseShapeAndAlignment = false
-
-                }, ta)
-                {
-                    // Router = new OrthogonalRouter(),//正交的
-                    // PathGenerator = new StraightPathGenerator(),//直的
+                    Router = DesginerLink.Router ? new OrthogonalRouter() : new NormalRouter(),//正交的
+                    PathGenerator = DesginerLink.PathGenerator ? new StraightPathGenerator() : new SmoothPathGenerator(),//直的
                     TargetMarker = LinkMarker.Arrow,
                     // SourceMarker = LinkMarker.NewCircle(10),
                     SourceMarker = LinkMarker.Circle,
                     // SourceMarker = LinkMarker.NewRectangle(10, 20),
                     // TargetMarker = LinkMarker.NewArrow(20, 10),
-                    Segmentable = true,
+                    Segmentable = false,
+                    Color = DesginerLink.Color,
+                    SelectedColor = DesginerLink.SelectedColor,
+                    Width = DesginerLink.Width,
                 }
                 ;
                 return link;
 
             };
-            _blazorDiagram.SelectionChanged += (m) =>
-            {
-                if (m is LinkVertexModel lvm)
-                {
-                    if (lvm.Selected)
-                    {
-                    }
-                }
-                if (m is CustomNode cusNode)
-                {
-                    if (cusNode.Selected)
-                    {
-                        SelectedNode = cusNode;
-                        foreach (var item in SelectedNode.PortLinks)
-                        {
-                            foreach (var lab in item.Labels)
-                            {
-                                var ss = lab;
-                            }
-                            //item.Labels.Add(new LinkLabelModel(item, SelectedNode.Id, r.Next(200)));
-                        }
-                        StateHasChanged();
-                    }
-                }
-                if (m is Blazor.Diagrams.Core.Models.LinkModel lm)
-                {
-                    if (lm.Selected)
-                    {
-                        SelectedNode = null;
-                        SelectedLink = lm;
-                        StateHasChanged();
-                    }
-                }
-            };
+            _blazorDiagram.SelectionChanged -= SelectionChanged;
+            _blazorDiagram.SelectionChanged += SelectionChanged;
             _blazorDiagram.RegisterComponent<CustomNode, NodeFW>();
+        }
+        public void SelectionChanged(SelectableModel m)
+        {
+            if (m is LinkVertexModel lvm)
+            {
+                if (lvm.Selected)
+                {
+                }
+            }
+            if (m is CustomNode cusNode)
+            {
+                if (cusNode.Selected)
+                {
+                    SelectedNode = cusNode;
+                    foreach (var item in SelectedNode.PortLinks)
+                    {
+                        foreach (var lab in item.Labels)
+                        {
+                            var ss = lab;
+                        }
+                        //item.Labels.Add(new LinkLabelModel(item, SelectedNode.Id, r.Next(200)));
+                    }
+                    StateHasChanged();
+                }
+            }
+            if (m is Blazor.Diagrams.Core.Models.LinkModel lm)
+            {
+                if (lm.Selected)
+                {
+                    SelectedNode = null;
+                    SelectedLink = lm;
+                    StateHasChanged();
+                }
+            }
         }
         protected override void OnInitialized()
         {
@@ -97,55 +120,115 @@ namespace Shared.Page
         {
             var position = _blazorDiagram.GetRelativeMousePoint(e.ClientX - 87, e.ClientY - 30);
             var node = new CustomNode(position);
-
+            node.NodeData.BorderWidth = DesginerNode.BorderWidth;
+            node.NodeData.Corner = DesginerNode.Corner;
+            node.NodeData.FontSize = DesginerNode.FontSize;
+            node.NodeData.Radius = DesginerNode.Radius;
+            node.NodeData.Offset = DesginerNode.Offset;
+            node.NodeData.BorderColor = DesginerNode.BorderColor;
+            node.NodeData.TextColor = DesginerNode.TextColor;
+            node.NodeData.FillColor = DesginerNode.FillColor;
             if (SelectedNodeType != null)
             {
-                node.AppearanceInfo.NodeType = SelectedNodeType;
+                node.NodeData.NodeType = SelectedNodeType;
                 switch (SelectedNodeType)
                 {
                     case NodeType.Square:
-                        node.AddPort(PortAlignment.Top);
-                        node.AddPort(PortAlignment.TopLeft);
-                        node.AddPort(PortAlignment.TopRight);
-                        node.AddPort(PortAlignment.Left);
-                        node.AddPort(PortAlignment.Right);
-                        node.AddPort(PortAlignment.Bottom);
-                        node.AddPort(PortAlignment.BottomLeft);
-                        node.AddPort(PortAlignment.BottomRight);
+                        node.NodeData.Width = 80;
+                        node.NodeData.Height = 80;
                         break;
                     case NodeType.Diamond:
-                        node.AddPort(PortAlignment.Top);
-                        node.AddPort(PortAlignment.Left);
-                        node.AddPort(PortAlignment.Right);
-                        node.AddPort(PortAlignment.Bottom);
+                        node.NodeData.Width = 100;
+                        node.NodeData.Height = 60;
                         break;
                     case NodeType.Ellipse:
+                        node.NodeData.Height = 50;
                         break;
-                    case NodeType.Appoint:
+                    case NodeType.Circle:
+
                         break;
                     case NodeType.Other:
                         break;
                     case null:
                         break;
+                    case NodeType.Parallelogram:
+                        node.NodeData.Width = 80;
+                        node.NodeData.Height = 50;
+                        break;
                     default:
                         break;
                 }
             }
+
+            node.NodeData.Width = node.NodeData.Width * DesginerNode.Width / 100;
+            node.NodeData.Height = node.NodeData.Height * DesginerNode.Width / 100;
+            node.AddPort(PortAlignment.Top);
+            node.AddPort(PortAlignment.Left);
+            node.AddPort(PortAlignment.Right);
+            node.AddPort(PortAlignment.Bottom);
+
+
             _blazorDiagram.Nodes.Add(node);
         }
-        public async Task OnChangeString(string a)
-        {
-            SelectedNode?.Refresh();
-            _blazorDiagram.Refresh();
-            StateHasChanged();
-            await Task.CompletedTask;
-        }
+
+
         public Task RefreshInvoke()
         {
             SelectedNode?.RefreshAll();
             SelectedLink?.RefreshLinks();
             return Task.CompletedTask;
         }
+        public async Task PathGeneratorChange(LinkModel link, bool val)
+        {
+            //StraightPathGenerator  SmoothPathGenerator
+            link.PathGenerator = val ? new StraightPathGenerator() : new SmoothPathGenerator();
+            //link.RefreshLinks();
+            link.Refresh();
+            SelectedNode?.RefreshAll();
+            SelectedLink?.RefreshLinks();
+            await Task.Delay(100);
+        }
+        public async Task PathRouterChange(LinkModel link, bool val)
+        {
+            //StraightPathGenerator  SmoothPathGenerator
+            link.Router = val ? new OrthogonalRouter() : new NormalRouter();
+            //link.RefreshLinks();
+            link.Refresh();
+            SelectedNode?.RefreshAll();
+            SelectedLink?.RefreshLinks();
+            await Task.Delay(100);
+        }
+        public async Task LinkColorChange(LinkModel link, string str)
+        {
+            //StraightPathGenerator  SmoothPathGenerator
+            link.Color = str;
+            link.SelectedColor = str;
+
+            //link.RefreshLinks();
+            link.Refresh();
+            SelectedNode?.RefreshAll();
+            SelectedLink?.RefreshLinks();
+            await Task.Delay(100);
+        }
+        public async Task LinkWidthChange(LinkModel link, double val)
+        {
+            //StraightPathGenerator  SmoothPathGenerator
+            link.Width = val;
+
+            //link.RefreshLinks();
+            link.Refresh();
+            SelectedNode?.RefreshAll();
+            SelectedLink?.RefreshLinks();
+            await Task.Delay(100);
+        }
+        public void AddLinkLabel(LinkModel SelectedLink)
+        {
+            var count = SelectedLink.Labels.Count + 1;
+            SelectedLink.Labels.Add(new LinkLabelModel(SelectedLink, $"标签{count}", count * 50));
+            StateHasChanged();
+        }
+
+
         public Task<bool> OnSaveAsync(WorkFlowTemplate obj, ItemChangedType type)
         {
             switch (type)
@@ -218,9 +301,13 @@ namespace Shared.Page
                 _blazorDiagram.Links.Add(d.Links);
             }
             _blazorDiagram.Refresh();
-            //StateHasChanged();
+            StateHasChanged();
             await Task.Delay(50);
         }
+
+        /// <summary>
+        /// 保存选中的工作流模板
+        /// </summary>
         public void SaveSelect()
         {
             if (WorkFlowTemplate.Id != 0)
@@ -233,17 +320,16 @@ namespace Shared.Page
         }
 
         #region MyRegion
+        /// <summary>
+        /// 工具箱工具被拖动后
+        /// </summary>
+        /// <param name="type"></param>
         public void OnDragStartWithWidetPanel(NodeType type)
         {
             SelectedNodeType = type;
         }
         #endregion
 
-        public void AddLinkLabel(Blazor.Diagrams.Core.Models.LinkModel SelectedLink)
-        {
-            var count = SelectedLink.Labels.Count + 1;
-            SelectedLink.Labels.Add(new LinkLabelModel(SelectedLink, $"标签{count}", count * 50));
-            StateHasChanged();
-        }
+
     }
 }

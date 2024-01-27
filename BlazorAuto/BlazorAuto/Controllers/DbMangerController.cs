@@ -52,7 +52,7 @@ namespace BlazorAuto.Controllers
                     //typeof(Production),
                     //typeof(WorkFlow),
                     typeof(NodeDto),
-                    typeof(LinkModel), 
+                    typeof(LinkDto), 
                     //typeof(Product),
                     typeof(Part),
                     //typeof(Mo), 

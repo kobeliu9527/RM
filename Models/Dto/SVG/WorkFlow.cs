@@ -36,8 +36,8 @@ namespace Models.Dto.SVG
         /// <summary>
         /// 这个流程所有的流向:所有节点之间的关系
         /// </summary>
-        [Navigate(NavigateType.OneToMany, nameof(LinkModel.WorkFlowId))]
-        public List<LinkModel>? Links { get; set; } 
+        [Navigate(NavigateType.OneToMany, nameof(LinkDto.WorkFlowId))]
+        public List<LinkDto>? Links { get; set; } 
 
 
         public BlazorDiagramOptionsDto? Options { get; set; }

@@ -13,6 +13,7 @@
         <Button OnClick="OnClick">消息推送测试</Button>
         <Button OnClick="OnClick2">泛型测试</Button>
         <BootstrapInput @bind-Value="meg"></BootstrapInput>
+        <BarcodeReader OnResult="OnResult" ButtonScanText="摄像头扫描二维码"></BarcodeReader>
     </Authorized>
     <NotAuthorized>
         <Redirect Url="/login"></Redirect>
@@ -20,6 +21,10 @@
 </AuthorizeView>
 @code
 {
+    private Task OnResult(string barcode)
+    {
+        return Task.CompletedTask;
+    }
     public string meg { get; set; } = "";
     [Inject]
     [NotNull]
@@ -34,7 +39,6 @@
 
     public async void OnClick(MouseEventArgs e)
     {
-        
         DispatchService.Dispatch(new DispatchEntry<Msg>() { Entry = new Msg() { Message = meg } });
         await Task.Delay(300);
     }

@@ -13,7 +13,6 @@
         @if (1 == 1)
         {
             <div class="dmain-left" style="width:20%">
-                @* <div class="fd-field-properties-panel h-100 ppp"> *@
                 <Tab>
                     <TabItem Text="模板清单">
                         <Table TItem="WorkFlowTemplate"
@@ -27,21 +26,81 @@
                                OnAddAsync="OnAddAsync"
                                OnDeleteAsync="OnDeleteAsync"
                                OnClickRowCallback="OnClickRowCallbackProduct"
-                               AutoGenerateColumns="true">
+                               AutoGenerateColumns="false">
+                               <TableColumns>
+                                   <TableColumn @bind-Field="context.WorkFlowTemplateName"></TableColumn>
+                               </TableColumns>
                         </Table>
                     </TabItem>
                     <TabItem Text="设计器">
-                        <NodeWidetPanel OnDragStart="OnDragStartWithWidetPanel"></NodeWidetPanel>
+                        <Collapse IsAccordion="true">
+                            <CollapseItems>
+                                <CollapseItem Text="工具箱" IsCollapsed="false">
+                                    <NodeWidetPanel OnDragStart="OnDragStartWithWidetPanel"></NodeWidetPanel>
+                                </CollapseItem>
+                                <CollapseItem Text="节点默认参数">
+                                    <EditorForm Model="@DesginerNode" AutoGenerateAllItem="false">
+                                        <FieldItems>
+                                            <div class="input-n">
+                                                <BootstrapInputNumber @bind-Value="@context.Width" Step="10" Min="10" Max="1000" DisplayText="大小比例" ShowLabel="true"></BootstrapInputNumber>
+                                            </div>
+                                            <div class="input-n">
+                                                <BootstrapInputNumber @bind-Value="@context.BorderWidth" Step="1" Min="1" Max="100"  ShowLabel="true"></BootstrapInputNumber>
+                                            </div>
+                                            <div class="input-n">
+                                                <BootstrapInputNumber @bind-Value="@context.FontSize" Step="1" Min="5" Max="100"  ShowLabel="true"></BootstrapInputNumber>
+                                            </div>
+                                            <div class="input-n">
+                                                <BootstrapInputNumber @bind-Value="@context.Corner" Step="1" Min="0" Max="500"  ShowLabel="true"></BootstrapInputNumber>
+                                            </div>
+                                            <div class="input-n">
+                                                <BootstrapInputNumber @bind-Value="@context.Offset" Step="1" Min="0" Max="500" ShowLabel="true"></BootstrapInputNumber>
+                                            </div>
+                                            <div class="input-n">
+                                                <ColorPicker @bind-Value="@context.BorderColor" ShowLabel="true" />
+                                            </div>
+                                            <div class="input-n">
+                                                <ColorPicker @bind-Value="@context.FillColor" ShowLabel="true" />
+                                            </div>
+                                            <div class="input-n">
+                                                <ColorPicker @bind-Value="@context.TextColor" ShowLabel="true" />
+                                            </div>
+                                        </FieldItems>
+                                    </EditorForm>
+                                </CollapseItem>
+                                <CollapseItem Text="线条默认参数">
+                                    <EditorForm Model="@DesginerLink" AutoGenerateAllItem="false">
+                                        <FieldItems>
+                                            <div class="input-n">
+                                                <BootstrapInputNumber @bind-Value="@context.Width" Step="1" Min="1" Max="100"  ShowLabel="true"></BootstrapInputNumber>
+                                            </div>
+                                            <div class="input-n">
+                                                <ColorPicker @bind-Value="@context.SelectedColor" ShowLabel="true" />
+                                            </div>
+                                            <div class="input-n">
+                                                <ColorPicker @bind-Value="@context.Color" ShowLabel="true" />
+                                            </div>
+                                            <div class="input-n">
+                                                <Switch @bind-Value="@context.PathGenerator" OffText="曲线" OnText="直线" OffColor="Color.Success" ShowLabel="false" DisplayText="线条类型:"></Switch>
+                                            </div>
+                                            <div class="input-n">
+                                                <Switch @bind-Value="@context.Router" OffText="普通" OnText="正交优化" OffColor="Color.Success" ShowLabel="false" DisplayText="路径类型:"></Switch>
+                                            </div>
+                                        </FieldItems>
+                                    </EditorForm>
+                                </CollapseItem>
+                            </CollapseItems>
+                        </Collapse>
+
                     </TabItem>
 
                 </Tab>
-                @* </div> *@
             </div>
         }
         <div class="dmain-main" style="width:80%">
-            @if (WorkFlowTemplate != null)
+            @if (WorkFlowTemplate != null && WorkFlowTemplate.Id!=0)
             {
-                <div class="container-content" ondragover="event.preventDefault();" @ondragover:preventDefault @ondrop="OnDrop">
+                <div class="container-content" ondragover="event.preventDefault();" @ondragover:preventDefault @ondrop="(e)=>{OnDrop(e);}">
                     <CascadingValue Value="_blazorDiagram">
                         <DiagramCanvas>
                             <Widgets>
@@ -51,6 +110,10 @@
                     </CascadingValue>
                 </div>
             }
+            else
+            {
+                <span>请先选择一个工作流</span>
+            }
         </div>
         @if (1 == 1)
         {
@@ -59,22 +122,46 @@
                     <TabItem Text="属性">
                         @if (SelectedNode != null)
                         {
-                            <BootstrapInput TValue="string" @bind-Value="@SelectedNode.AppearanceInfo.NodeModelName" OnValueChanged="OnChangeString" UseInputEvent="true" ShowLabel="true" DisplayText="流程名"></BootstrapInput>
-                            <BootstrapInput TValue="string" OnValueChanged="OnChangeString" ShowLabel="true" DisplayText="流程详情"></BootstrapInput>
-                            <BootstrapInputNumber TValue="int" @bind-Value="@SelectedNode.AppearanceInfo.Corner" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
-                            <BootstrapInputNumber TValue="double" @bind-Value="@SelectedNode.AppearanceInfo.Width" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
-                            <BootstrapInputNumber TValue="double" @bind-Value="@SelectedNode.AppearanceInfo.Height" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
-                            <Button OnClick="SaveSelect">保存</Button>
-                            @switch (SelectedNode.AppearanceInfo.NodeType)
+                            <BootstrapInput @bind-Value="@SelectedNode.NodeData.NodeModelName" OnValueChanged="async (e)=>{await RefreshInvoke();}" UseInputEvent="true" ShowLabel="true" DisplayText="流程名"></BootstrapInput>
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@SelectedNode.NodeData.Width" ShowLabel="true" ShowButton="true" Step="5" Min="10" Max="10000" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                            </div>
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@SelectedNode.NodeData.Height" ShowLabel="true" ShowButton="true" Step="5" Min="10" Max="10000" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                            </div>
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@SelectedNode.NodeData.FontSize" ShowLabel="true" ShowButton="true" Step="5" Min="5" Max="100" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                            </div>
+                            <div class="input-n">
+                                <ColorPicker @bind-Value="@SelectedNode.NodeData.BorderColor" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}" />
+                            </div>
+                            <div class="input-n">
+                                <ColorPicker @bind-Value="@SelectedNode.NodeData.TextColor" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}" />
+                            </div>
+                            <div class="input-n">
+                                <ColorPicker @bind-Value="@SelectedNode.NodeData.FillColor" ShowLabel="true" OnValueChanged="async (e)=>{await RefreshInvoke();}" />
+                            </div>
+                            <div class="input-n"></div>
+                            @switch (SelectedNode.NodeData.NodeType)
                             {
                                 case NodeType.Square:
-                                    
+                                    <div class="input-n">
+                                        <BootstrapInputNumber @bind-Value="@SelectedNode.NodeData.Corner" ShowLabel="true" ShowButton="true" Step="5" Min="0" Max="10000" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                                    </div>
                                     break;
                                 case NodeType.Diamond:
                                     break;
                                 case NodeType.Ellipse:
                                     break;
-                                case NodeType.Appoint:
+                                case NodeType.Circle:
+                                    <div class="input-n">
+                                        <BootstrapInputNumber @bind-Value="@SelectedNode.NodeData.Radius" ShowLabel="true" ShowButton="true" Step="5" Min="10" Max="10000" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                                    </div>
+                                    break;
+                                case NodeType.Parallelogram:
+                                    <div class="input-n">
+                                        <BootstrapInputNumber @bind-Value="@SelectedNode.NodeData.Offset" ShowLabel="true" ShowButton="true" Step="5" Min="0" Max="10000" OnValueChanged="async (e)=>{await RefreshInvoke();}"></BootstrapInputNumber>
+                                    </div>
                                     break;
                                 case NodeType.Other:
                                     break;
@@ -82,20 +169,32 @@
                                     break;
                             }
                         }
-                        else if(SelectedLink!=null)
+                        else if (SelectedLink != null)
                         {
                             <Button OnClick="()=>{ AddLinkLabel(SelectedLink);}">增加标签</Button>
+                            <div class="input-n">
+                                <Switch Value="@(SelectedLink.PathGenerator is StraightPathGenerator?true:false)" OnValueChanged="(e)=>{return PathGeneratorChange(SelectedLink,e);}" OffText="曲线" OnText="直线" OffColor="Color.Success" ShowLabel="false" DisplayText="线条类型:"></Switch>
+                            </div>
+                            <div class="input-n">
+                                <Switch Value="@(SelectedLink.Router is OrthogonalRouter ? true : false)" OnValueChanged="(e)=>{return PathRouterChange(SelectedLink,e);}" OffText="普通" OnText="正交优化" OffColor="Color.Success" ShowLabel="false" DisplayText="路径优化:"></Switch>
+                            </div>
+                            <div class="input-n">
+                                <ColorPicker @bind-Value="@SelectedLink.Color" ShowLabel="true" DisplayText="颜色:" OnValueChanged="async (e)=>{await LinkColorChange(SelectedLink,e);}" />
+                            </div>
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@SelectedLink.Width" ShowLabel="true" DisplayText="线体粗细:" ShowButton="true" Step="1" Min="0" Max="20" OnValueChanged="async (e)=>{await LinkWidthChange(SelectedLink,e);}"></BootstrapInputNumber>
+                            </div>
                             @foreach (var item in SelectedLink.Labels)
                             {
                                 <div class="input-n">
-                                    <BootstrapInput TValue="string" @bind-Value=@item.Content OnValueChanged="(e)=>{return RefreshInvoke();}" UseInputEvent="true" ShowLabel="true" DisplayText="标签名"></BootstrapInput>
+                                    <BootstrapInput @bind-Value=@item.Content OnValueChanged="(e)=>{return RefreshInvoke();}" UseInputEvent="true" ShowLabel="true" DisplayText="标签名:"></BootstrapInput>
                                 </div>
                                 <div class="input-n">
-                                    <BootstrapInputNumber @bind-Value="@item.Distance" TValue="double?" Step="10" Max="500" Min="0" ShowButton="true" ShowLabel="true" OnValueChanged="(e)=>{return RefreshInvoke();}"></BootstrapInputNumber>
+                                    <BootstrapInputNumber @bind-Value="@item.Distance" TValue="double?" Step="10" Max="500" Min="0" ShowButton="true" ShowLabel="true" DisplayText="标签位置:" OnValueChanged="(e)=>{return RefreshInvoke();}"></BootstrapInputNumber>
                                 </div>
                             }
                         }
-                        
+                        <Button OnClick="SaveSelect">保存</Button>
                     </TabItem>
                 </Tab>
             </div>

@@ -56,7 +56,7 @@ namespace Models.Dto.SVG
                         break;
                     case NodeType.Ellipse:
                         break;
-                    case NodeType.Appoint:
+                    case NodeType.Circle:
                         break;
                     case NodeType.Other:
                         break;

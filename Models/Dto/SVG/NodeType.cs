@@ -20,7 +20,11 @@
         /// <summary>
         /// 指定的的节点完成
         /// </summary>
-        Appoint,
+        Circle,
+        /// <summary>
+        /// 平行四边形
+        /// </summary>
+        Parallelogram,
         /// <summary>
         /// 其他情况
         /// </summary>

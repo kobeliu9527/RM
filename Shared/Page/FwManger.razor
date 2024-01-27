@@ -29,7 +29,7 @@
                                OnClickRowCallback="OnClickRowCallbackProduct"
                                AutoGenerateColumns="false">
                                <TableColumns>
-                                   <TableColumn @bind-Field="context.WorkFlowTemplateDescription" Text="描述"></TableColumn>
+                                   <TableColumn @bind-Field="context.WorkFlowTemplateName" Text="描述"></TableColumn>
                                </TableColumns>
                         </Table>
                     </TabItem>
@@ -67,46 +67,7 @@
     public CustomNode? SelectedNode { get; set; }
     public void Init()
     {
-        
-        _blazorDiagram.Options.Links.Factory = (d, s, ta) =>
-        {
-            var link = new Blazor.Diagrams.Core.Models.LinkModel(new SinglePortAnchor((s as PortModel)!)
-                {
-                    MiddleIfNoMarker = true,
-                    UseShapeAndAlignment = false
-
-                }, ta)
-                {
-                    // Router = new OrthogonalRouter(),//正交的
-                    // PathGenerator = new StraightPathGenerator(),//直的
-                    TargetMarker = LinkMarker.Arrow,
-                    // SourceMarker = LinkMarker.NewCircle(10),
-                    SourceMarker = LinkMarker.Circle,
-                    // SourceMarker = LinkMarker.NewRectangle(10, 20),
-                    // TargetMarker = LinkMarker.NewArrow(20, 10),
-                    Segmentable = true
-                }
-            ;
-            return link;
-
-        };
-        _blazorDiagram.SelectionChanged += (m) =>
-        {
-            if (m is CustomNode nm)
-            {
-                if (nm.Selected)
-                {
-                    SelectedNode = nm;
-                    StateHasChanged();
-                }
-            }
-
-        };
         _blazorDiagram.RegisterComponent<CustomNode, NodeFW>();
-        _blazorDiagram.PanChanged += () =>
-        {
-            ;
-        };
     }
     protected override void OnInitialized()
     {
@@ -204,39 +165,12 @@
             WorkFlowTemplate = p;
             _blazorDiagram.Nodes.Clear();
             _blazorDiagram.Links.Clear();
-            if (WorkFlowTemplate.Nodes != null)
-            {
-                foreach (Models.Dto.SVG.NodeDto item in WorkFlowTemplate.Nodes)
-                {
-                    var Node = new CustomNode(position: new Point(item.Position!.X, item.Position.Y), id: item.Id!)
-                        {
-                            Title = item.NodeModelName,
-                        };
-                    Node.Locked = true;
-                    foreach
-                        (PortAlignment item2 in Enum.GetValues(typeof(PortAlignment)))
-                    {
-                        Node.AddPort(item2);
-                    }
-                    _blazorDiagram.Nodes.Add(Node);
-                }
-            }
-            if (WorkFlowTemplate.Links != null)
-            {
-                foreach (var item in WorkFlowTemplate.Links)
-                {
-                    var sourse = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.SourceId)?.GetPort(item.SourceAlignment);
-                    var target = _blazorDiagram.Nodes.FirstOrDefault(x => x.Id == item.TargetId)?.GetPort(item.TargetAlignment);
-                    if (sourse != null && target != null)
-                    {
-                        _blazorDiagram.Links.Add(new Blazor.Diagrams.Core.Models.LinkModel(sourse, target) { TargetMarker = LinkMarker.Arrow ,Locked=true});
-                    }
-                }
-            }
-          
+            var wf = p.ToBlazorDiagram(true);
+            _blazorDiagram.Nodes.Add(wf.Nodes);
+            _blazorDiagram.Links.Add(wf.Links);
             _blazorDiagram.Refresh();
         }
-        // StateHasChanged();
+        StateHasChanged();
         await Task.Delay(50);
     }
     public void SaveSelect()

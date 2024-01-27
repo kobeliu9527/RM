@@ -1,12 +1,11 @@
-﻿<rect x="0" y="0" rx="@(Node.NodeData.Corner)" ry="@(Node.NodeData.Corner)"
-      width="@Node.NodeData.Width"
-      height="@Node.NodeData.Height"
-      stroke="@Node.NodeData.BorderColor"
-      fill="@Node.NodeData.FillColor"
-      stroke-width="@Node.NodeData.BorderWidth">
-</rect>
+﻿
+<ellipse cx="@(Node.NodeData.Width/2)" cy="@(Node.NodeData.Height/2)"
+         rx="@(Node.NodeData.Width/2)" ry="@(Node.NodeData.Height/2)"
+         stroke-width="@Node.NodeData.BorderWidth"
+         stroke="@Node.NodeData.BorderColor"
+         fill="@Node.NodeData.FillColor" />
 <text y="@(Node.NodeData.Height/2+Node.NodeData.FontSize/2)" x="@(Node.NodeData.Width/2)"
-      width="@Node.NodeData.Width" height="@Node.NodeData.Width"
+      width="@(Node.NodeData.Width)" height="@(Node.NodeData.Height)"
       style="text-anchor:middle;font-size:@(Node.NodeData.FontSize)px">
     <tspan font-weight="bold" fill="@Node.NodeData.TextColor">@Node.NodeData.NodeModelName</tspan>
 </text>
@@ -14,7 +13,7 @@
 
 @if (Node != null)
 {
- @*    @if (Node.GetPort(PortAlignment.TopLeft) != null)
+    @*    @if (Node.GetPort(PortAlignment.TopLeft) != null)
     {
         <PortRenderer Port="Node.GetPort(PortAlignment.TopLeft)">
             <circle class="port" cx="10" cy="10" r="10"></circle>
@@ -26,7 +25,7 @@
             <circle class="port" cx="@(Node.NodeData.Width/2)" cy="10" r="10"></circle>
         </PortRenderer>
     }
-  @*   @if (Node.GetPort(PortAlignment.TopRight) != null)
+    @*   @if (Node.GetPort(PortAlignment.TopRight) != null)
     {
         <PortRenderer Port="Node.GetPort(PortAlignment.TopRight)">
             <circle class="port" cx="80" cy="10" r="10"></circle>
@@ -44,7 +43,7 @@
             <circle class="port" cx="@(Node.NodeData.Width/2)" cy="@(Node.NodeData.Height-10)" r="10"></circle>
         </PortRenderer>
     }
-@*     @if (Node.GetPort(PortAlignment.BottomRight) != null)
+    @*     @if (Node.GetPort(PortAlignment.BottomRight) != null)
     {
         <PortRenderer Port="Node.GetPort(PortAlignment.BottomRight)">
             <circle class="port" cx="80" cy="80" r="10"></circle>

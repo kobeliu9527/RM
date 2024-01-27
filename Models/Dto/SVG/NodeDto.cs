@@ -2,6 +2,7 @@
 
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using BootstrapBlazor.Components;
 using SqlSugar;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -14,30 +15,41 @@ namespace Models.Dto.SVG
     public class NodeDto
     {
         #region 外观参数
-        [DisplayName("宽")]
-        public double Width { get; set; } = 100;
-        [DisplayName("高")]
-        public double Height { get; set; }=100;
-        [DisplayName("圆角")]
-        public int Corner { get; set; } = 10;
-        [DisplayName("边框颜色")]
-        public string BorderColor { get; set; } = "#98F5FF";
-        [DisplayName("填充颜色")]
-        public string FillColor { get; set; } = "#98F5FF";
-        [DisplayName("文字颜色")]
-        public string TextColor { get; set; } = "#000000";
-        [DisplayName("边框宽度")]
-        public int BorderWidth { get; set; } = 2;
+        /// <summary>
+        /// 节点Id,系统全局生成,唯一Key
+        /// </summary>
+        [DisplayName("节点Id"), Description("节点Id")]
+        public string? Id { get; set; }
         /// <summary>
         /// 节点名字
         /// </summary>
         [DisplayName("名字"), Description("节点名字")]
-        public string? NodeModelName { get; set; }
+        public string NodeModelName { get; set; } = "节点名";
         /// <summary>
         /// 节点形状,外观,正方形,菱形
         /// </summary>
         [DisplayName("节点形状"), Description("节点形状")]
         public NodeType? NodeType { get; set; }
+        [DisplayName("宽")]
+        public double Width { get; set; } = NotEntity.Constants.Width;
+        [DisplayName("高")]
+        public double Height { get; set; }= NotEntity.Constants.Height;
+        [DisplayName("半径")]
+        public double Radius { get; set; } = NotEntity.Constants.Radius;
+        [DisplayName("平行偏移")]
+        public double Offset { get; set; } = 20;
+        [DisplayName("圆角")]
+        public int Corner { get; set; } = NotEntity.Constants.Corner;
+        [DisplayName("边框颜色")]
+        public string BorderColor { get; set; } = NotEntity.Constants.BorderColor;
+        [DisplayName("填充颜色")]
+        public string FillColor { get; set; } = NotEntity.Constants.FillColor;
+        [DisplayName("文字颜色")]
+        public string TextColor { get; set; } = NotEntity.Constants.TextColor;
+        [DisplayName("边框宽度")]
+        public int BorderWidth { get; set; } = NotEntity.Constants.BorderWidth;
+        [DisplayName("字体大小")]
+        public int FontSize { get; set; } = 16;
         /// <summary>
         /// 节点位置
         /// </summary>
@@ -46,21 +58,16 @@ namespace Models.Dto.SVG
         [DisplayName("顺序"), Description("顺序")]
         public int Order { get; set; }
         #endregion
-        /// <summary>
-        /// 节点Id,系统全局生成,唯一Key
-        /// </summary>
-        [DisplayName("节点Id"),Description("节点Id")]
-        public string? Id { get; set; }
+        
         [SugarColumn(IsPrimaryKey = true)]
         public long NodeModelId { get; set; }
 
-        
         /// <summary>
         /// 1对多关系:
         /// </summary>
         public int WorkFlowId { get; set; }
         /// <summary>
-        /// 节点的连接口
+        /// 这个节点所拥有的连接口,后续可以用这个字段优化代码
         /// </summary>
         [DisplayName("节点的连接口"), Description("节点的连接口")]
         public List<PortAlignment> Ports { get; set; } = new();

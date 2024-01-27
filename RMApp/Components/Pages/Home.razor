@@ -2,7 +2,9 @@
 <div style="height:100%">
 <Tab Placement="Placement.Bottom">
     <TabItem Text="用户管理">
-        <div>我是用户管理</div>
+            <BootstrapInput @bind-Value="MyProperty"></BootstrapInput>
+    <BarcodeReader OnResult="OnResult" AutoStart="true" AutoStop="true"></BarcodeReader>
+
     </TabItem>
     <TabItem Text="菜单管理">
         <div style="height:100%"><Button OnClick="OnClick">点我</Button></div>
@@ -23,6 +25,12 @@
 </div>
 @code
 {
+    public string MyProperty { get; set; }
+    private Task OnResult(string barcode)
+    {
+        MyProperty = barcode;
+        return Task.CompletedTask;
+    }
     [Inject][NotNull]
     public TodoItemDatabase? database { get; set; }
     public async void OnClick()

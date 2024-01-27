@@ -7,11 +7,6 @@ namespace Models.Dto.SVG
     /// </summary>
     public class WorkFlowTemplate: EntityBase
     {
-        ///// <summary>
-        ///// 主键
-        ///// </summary>
-        //[SugarColumn(IsPrimaryKey = true)]
-        //public long WorkFlowTemplateId { get; set; }
         /// <summary>
         /// 当一个工作流有多个版本的时候,用这个字段表示同一类工作流
         /// </summary>
@@ -39,7 +34,7 @@ namespace Models.Dto.SVG
         /// </summary>
         [SugarColumn(IsJson =true, ColumnDataType = "nvarchar(max)")]
         //[Navigate(NavigateType.OneToMany, nameof(LinkModel.WorkFlowId))]
-        public List<LinkModel>? Links { get; set; }
+        public List<LinkDto>? Links { get; set; }
 
         /// <summary>
         /// 判断一个条码能否流到下一个节点
@@ -49,6 +44,5 @@ namespace Models.Dto.SVG
         { 
         
         }
-
     }
 }

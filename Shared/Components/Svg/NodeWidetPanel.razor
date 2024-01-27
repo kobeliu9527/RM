@@ -2,7 +2,7 @@
 <div class="node-widet-panel">
     @foreach (var item in Enum.GetValues<NodeType>())
     {
-        <NodeWidet NodeType="item" Text="@item.ToString()" OnDragStart="OnDragStart"></NodeWidet>
+        <NodeWidet NodeType="item"  Text="@item.GetText()" Path="@item.GetIcon()" OnDragStart="OnDragStart"></NodeWidet>
     }
 </div>
 

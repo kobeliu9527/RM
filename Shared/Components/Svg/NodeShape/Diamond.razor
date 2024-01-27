@@ -1,12 +1,13 @@
-﻿<path stroke="@Node.AppearanceInfo.BorderColor"
-      width="@Node.AppearanceInfo.Width"
-      height="@Node.AppearanceInfo.Height"
-      d="m0,@(Node.AppearanceInfo.Height/2)l@(Node.AppearanceInfo.Width/2),-@(Node.AppearanceInfo.Height/2)l@(Node.AppearanceInfo.Width/2),@(Node.AppearanceInfo.Height/2)l-@(Node.AppearanceInfo.Width/2),@(Node.AppearanceInfo.Height/2)l-@(Node.AppearanceInfo.Width/2),-@(Node.AppearanceInfo.Height/2)z"
-      fill="#fff" />
-<text y="@(Node.AppearanceInfo.Height/2)" x="@(Node.AppearanceInfo.Width/2)"
-      width="@Node.AppearanceInfo.Width" height="@Node.AppearanceInfo.Width"
-      style="text-anchor:middle">
-    <tspan font-weight="bold" fill="@Node.AppearanceInfo.TextColor">@Node.AppearanceInfo.NodeModelName</tspan>
+﻿<path stroke="@Node.NodeData.BorderColor"
+      stroke-width="@Node.NodeData.BorderWidth"
+      width="@Node.NodeData.Width"
+      height="@Node.NodeData.Height"
+      d="m0,@(Node.NodeData.Height/2)l@(Node.NodeData.Width/2),-@(Node.NodeData.Height/2)l@(Node.NodeData.Width/2),@(Node.NodeData.Height/2)l-@(Node.NodeData.Width/2),@(Node.NodeData.Height/2)l-@(Node.NodeData.Width/2),-@(Node.NodeData.Height/2)z"
+      fill="@Node.NodeData.FillColor" />
+<text y="@(Node.NodeData.Height/2+Node.NodeData.FontSize/2)" x="@(Node.NodeData.Width/2)"
+      width="@Node.NodeData.Width" height="@Node.NodeData.Width"
+      style="text-anchor:middle;font-size:@(Node.NodeData.FontSize)px">
+    <tspan font-weight="bold" fill="@Node.NodeData.TextColor">@Node.NodeData.NodeModelName</tspan>
 </text>
 @if (Node != null)
 {
@@ -19,7 +20,7 @@
     @if (Node.GetPort(PortAlignment.Top) != null)
     {
         <PortRenderer Port="Node.GetPort(PortAlignment.Top)">
-            <circle class="port" cx="@(Node.AppearanceInfo.Width/2)" cy="10" r="10"></circle>
+            <circle class="port" cx="@(Node.NodeData.Width/2)" cy="10" r="10"></circle>
         </PortRenderer>
     }
 @*     @if (Node.GetPort(PortAlignment.TopRight) != null)
@@ -36,10 +37,10 @@
     } *@
     @if (Node.GetPort(PortAlignment.Bottom) != null)
     {
-        var xx = Node.AppearanceInfo;
+        var xx = Node.NodeData;
         ;
         <PortRenderer Port="Node.GetPort(PortAlignment.Bottom)">
-            <circle class="port" cx="@(Node.AppearanceInfo.Width/2)" cy="@(Node.AppearanceInfo.Height-10)" r="10"></circle>
+            <circle class="port" cx="@(Node.NodeData.Width/2)" cy="@(Node.NodeData.Height-10)" r="10"></circle>
         </PortRenderer>
     }
 @*     @if (Node.GetPort(PortAlignment.BottomRight) != null)
@@ -51,13 +52,13 @@
     @if (Node.GetPort(PortAlignment.Left) != null)
     {
         <PortRenderer Port="Node.GetPort(PortAlignment.Left)">
-            <circle class="port" cx="10" cy="@(Node.AppearanceInfo.Height/2)" r="10"></circle>
+            <circle class="port" cx="10" cy="@(Node.NodeData.Height/2)" r="10"></circle>
         </PortRenderer>
     }
     @if (Node.GetPort(PortAlignment.Right) != null)
     {
         <PortRenderer Port="Node.GetPort(PortAlignment.Right)">
-            <circle class="port" cx="@(Node.AppearanceInfo.Width-10)" cy="@(Node.AppearanceInfo.Height/2)" r="10"></circle>
+            <circle class="port" cx="@(Node.NodeData.Width-10)" cy="@(Node.NodeData.Height/2)" r="10"></circle>
         </PortRenderer>
     }
 

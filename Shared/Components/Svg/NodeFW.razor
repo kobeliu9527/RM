@@ -1,5 +1,6 @@
-﻿@* <path stroke="#000" id="svg_2" d="m0,30l50,-30l50,30l-50,30l-50,-30z" fill="#fff" /> *@
-@switch (Node.AppearanceInfo.NodeType)
+﻿@using Shared.Components.Svg.NodeShape
+@* <path stroke="#000" id="svg_2" d="m0,30l50,-30l50,30l-50,30l-50,-30z" fill="#fff" /> *@
+@switch (Node.NodeData.NodeType)
 {
     case Models.Dto.SVG.NodeType.Square:
         <Square Node="@Node"></Square>
@@ -8,9 +9,13 @@
         <Diamond Node="@Node"></Diamond>
         break;
     case Models.Dto.SVG.NodeType.Ellipse:
-
+        <Ellipse Node="@Node"></Ellipse>
         break;
-    case Models.Dto.SVG.NodeType.Appoint:
+    case Models.Dto.SVG.NodeType.Circle:
+        <Shared.Components.Svg.NodeShape.Circle  Node="@Node"></Shared.Components.Svg.NodeShape.Circle>
+        break;
+    case Models.Dto.SVG.NodeType.Parallelogram:
+        <Parallelogram Node="@Node"></Parallelogram>
         break;
     case Models.Dto.SVG.NodeType.Other:
         break;
