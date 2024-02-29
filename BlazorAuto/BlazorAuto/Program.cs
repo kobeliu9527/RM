@@ -26,7 +26,8 @@ using BlazorAuto.Client.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 SnowFlakeSingle.WorkId = 1;
-//
+//泛型
+
 var Configuration = builder.Configuration;
 var Appsetting = Configuration.GetSection(nameof(Appsettings)).Get<Appsettings>()!;
 builder.Services.Configure<Appsettings>(Configuration.GetSection(nameof(Appsettings)));
