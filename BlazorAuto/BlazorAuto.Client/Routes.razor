@@ -3,9 +3,9 @@
 <CascadingAuthenticationState >
     <BootstrapBlazorRoot>
         <CascadingValue Value="this.FunctionGroups" Name="router">
-            <Router AppAssembly="@typeof(BlazorAuto.Client.Layout.MainLayout).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}">
+            <Router AppAssembly="@typeof(BlazorAuto.Client.Routes).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}">
                 <Found Context="routeData">
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)">
                         <NotAuthorized>
                             没有经过权限认证的地址
                         </NotAuthorized>
@@ -13,7 +13,7 @@
                     <FocusOnNavigate RouteData="@routeData" Selector="h1" />
                 </Found>
                 <NotFound>
-                    <LayoutView Layout="@typeof(Layout. MainLayout)">
+                    <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
                         <p role="alert">对不起,这个访问地址不存在</p>
                     </LayoutView>
                 </NotFound>
@@ -35,26 +35,26 @@
     public bool IsFirst { get; set; } = true;
     protected override void OnInitialized()
     {
-        var res =  db.Queryable<FunctionGroup>().Includes(x => x.FunctionPages).ToList();
+        // var res =  db.Queryable<FunctionGroup>().Includes(x => x.FunctionPages).ToList();
 
-        if (res != null)
-        {
-            FunctionGroups = res;
-        }
+        // if (res != null)
+        // {
+        //     FunctionGroups = res;
+        // }
         base.OnInitialized();
     }
     protected override async Task OnInitializedAsync()
     {
-        if (authenticationState is not null)
-        {
-            var authState = await authenticationState;
-            var user = authState?.User;
+        // if (authenticationState is not null)
+        // {
+        //     var authState = await authenticationState;
+        //     var user = authState?.User;
 
-            if (user?.Identity is not null && user.Identity.IsAuthenticated)
-            {
-                // authMessage = $"{user.Identity.Name} is authenticated.";
-            }
-        }
+        //     if (user?.Identity is not null && user.Identity.IsAuthenticated)
+        //     {
+        //         // authMessage = $"{user.Identity.Name} is authenticated.";
+        //     }
+        // }
         await base.OnInitializedAsync();
     }
     protected override Task OnParametersSetAsync()

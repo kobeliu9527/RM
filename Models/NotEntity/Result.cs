@@ -31,7 +31,7 @@ namespace Models.NotEntity
         {
 
             Exception = ex;
-            ErrorMsg += ex.Message;
+            ReturnMsg += ex.Message;
             ErrorPosition = ex.StackTrace;
             StatusCode = ErrCode;
             IsSucceeded = false;
@@ -56,7 +56,7 @@ namespace Models.NotEntity
         {
             this.IsSucceeded = false;
             EndTime= DateTime.Now;
-            ErrorMsg += err;
+            ReturnMsg += err;
             return this;//fail
         }
     }
@@ -78,7 +78,7 @@ namespace Models.NotEntity
         /// <summary>
         /// 错误信息
         /// </summary>
-        public string ErrorMsg { get; set; } = "";
+        public string ReturnMsg { get; set; } = "";
 
         /// <summary>
         /// 错误代码位置
