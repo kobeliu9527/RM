@@ -64,7 +64,7 @@ namespace BlazorAuto.Controllers
             }
             catch (Exception e)
             {
-                return res.CatchException(e);
+                return res.HasException(e);
             }
             return res;
         }

@@ -30,9 +30,9 @@ namespace Models.Services.ServerByDb
                             .FirstAsync(x => x.Name == obj.QueryDto.Name)
                             ;
                 ss.FunctionGroups?.ForEach(y => y.FunctionPages?.RemoveAll(fp => fp.Roles?.Intersect(obj.Roles).Count() == 0));
-                return res.End(ss);
+                return res.Ok(ss);
             }
-            return res.End();
+            return res.Ok();
 
 
 

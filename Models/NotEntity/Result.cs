@@ -13,7 +13,7 @@ namespace Models.NotEntity
     /// 结果类
     /// </summary>
     /// <typeparam name="T">返回的数据</typeparam>
-    public class Result<T>:Result
+    public class Result<T> : Result
     {
 
         /// <summary>
@@ -27,9 +27,8 @@ namespace Models.NotEntity
         /// <param name="ex">异常</param>
         /// <param name="ErrCode"></param>
         /// <returns></returns>
-        public Result<T> CatchException(Exception ex, int ErrCode = 200)
+        public Result<T> HasException(Exception ex, int ErrCode = 200)
         {
-
             Exception = ex;
             ReturnMsg += ex.Message;
             ErrorPosition = ex.StackTrace;
@@ -39,26 +38,33 @@ namespace Models.NotEntity
             return this;
         }
 
-        public Result<T> End()
+        public Result<T> Ok()
         {
             EndTime = DateTime.Now;
             return this;
         }
 
-        public Result<T> End(T? t)
+        public Result<T> Ok(T? data, string msg = "")
         {
             EndTime = DateTime.Now;
-            Data = t;
+            ReturnMsg += msg;
+            Data = data;
             return this;
         }
-  
-        public Result<T> Fail(string err = "")
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="err"></param>
+        /// <returns></returns>
+        public new Result<T> Fail(string err = "")
         {
-            this.IsSucceeded = false;
-            EndTime= DateTime.Now;
+            IsSucceeded = false;
+            EndTime = DateTime.Now;
             ReturnMsg += err;
             return this;//fail
         }
+
+
     }
     /// <summary>
     /// 结果类
@@ -106,11 +112,43 @@ namespace Models.NotEntity
         ///// </summary>
         [JsonIgnore]
         public Exception? Exception { get; set; }
+        /// <summary>
+        /// 失败
+        /// </summary>
+        /// <param name="err"></param>
+        /// <returns></returns>
+        public Result Fail(string err = "失败")
+        {
+            IsSucceeded = false;
+            EndTime = DateTime.Now;
+            ReturnMsg += err;
+            return this;//fail
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public Result HasException(Exception e)
+        {
+            IsSucceeded = false;
+            EndTime = DateTime.Now;
+            Exception = e;
+            ErrorPosition = e.StackTrace;
+            ReturnMsg += e.Message;
+            return this;
+        }
 
-        public Result End()
+        /// <summary>
+        /// 成功
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public Result Ok(string msg = "成功")
         {
             EndTime = DateTime.Now;
-            return this;
+            ReturnMsg += msg;
+            return this;//fail
         }
     }
 }

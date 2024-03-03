@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Models.Dto;
 using Models.NotEntity;
+using Models.SystemInfo;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -74,8 +75,8 @@ namespace Shared.AuthenticationStateCustom
         public async Task<Result<string>> SignInAsync(UserDto user)
         {
             //
-            using HttpClient http = httpClientFactory.CreateClient("http");
-            var res = await http.PostAsJsonAsync("auth/login", user);
+            using HttpClient http = httpClientFactory.CreateClient();
+            var res = await http.PostAsJsonAsync(user.Url+"auth/login", user);
             if (res.IsSuccessStatusCode)
             {
                 var token = await res.Content.ReadFromJsonAsync<Result<string>>();
@@ -106,24 +107,23 @@ namespace Shared.AuthenticationStateCustom
             }
 
         }
-        public async Task<Result<string>> Register(UserDto user)
+        public async Task<Result<User>> Register(UserDto user)
         {
-            using HttpClient http = httpClientFactory.CreateClient("http");
-            var res = await http.PostAsJsonAsync("auth/Register", user);
+            using HttpClient http = httpClientFactory.CreateClient();
+            var res = await http.PostAsJsonAsync(user.Url +"auth/Register", user);
             if (res.IsSuccessStatusCode)
             {
-                var token = await res.Content.ReadFromJsonAsync<Result<string>>();
+                var token = await res.Content.ReadFromJsonAsync<Result<User>>();
                 if (token != null && token.IsSucceeded)
                 {
-                    await SetTokenAsync(token.Data!);
-                    return new Result<string>() { Data = "注册成功" };
+                    return token;
                 }
                 else
                 {
-                    return new Result<string>() { Data = "登录失败", IsSucceeded = false };
+                    return new Result<User>() { Data = null, IsSucceeded = false };
                 }
             }
-            return new Result<string>() { Data = "登录失败", IsSucceeded = false };
+            return new Result<User>() { Data = null, IsSucceeded = false };
         }
 
         public async Task<Result<string>> WrittenOff(UserDto user)
@@ -158,7 +158,7 @@ namespace Shared.AuthenticationStateCustom
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task<Result<string>> Register(UserDto user);
+        Task<Result<User>> Register(UserDto user);
         /// <summary>
         /// 注销
         /// </summary>

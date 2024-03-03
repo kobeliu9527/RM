@@ -8,6 +8,7 @@ using Models.Dto;
 using Models.NotEntity;
 using Models.Services.Base;
 using Models.SystemInfo;
+using Shared.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -40,28 +41,35 @@ namespace BlazorAuto.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<string>> Register([FromBody] UserDto user)
+        public async Task<Result<User>> Register([FromBody] UserDto user)
         {
-            //1.验证权限
-            Result<string> res = new();
+            Result<User> result = new Result<User>();
             try
             {
                 var has = await db.Queryable<User>().SingleAsync(x => x.SysName == user.SysName);
-                if (has !=null)
+                if (has != null)
                 {
-                    return res.Fail("用户名重复");
+                    return result.Fail("用户名重复");
                 }
                 else
                 {
-                  //  var res1 = await db.Insertable(user.Adapt<User>()).ExecuteCommandAsync();
-                    var res1 = await db.Insertable(user.Adapt<User>()).ExecuteReturnSnowflakeIdAsync();
+                    User newUser = new User()
+                    {
+                        RealName = user.RealName,
+                        SysName = user.SysName,
+                        PassWord = user.PassWord.ToHashPassword(),
+                        Roles = user.Roles.Select(x => new Role() { Id = x.Id, Name = x.Name }).ToList()
+                    };
+                    List<User> list = new List<User>() { newUser };
+                    var obj = await db.InsertNav(list).Include(x => x.Roles).ExecuteReturnEntityAsync();
+                    obj.PassWord = "";
+                    return result.Ok(obj, "注册成功");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return res.CatchException(ex);
+                return result.HasException(e);
             }
-            return res.End();
         }
         /// <summary>
         /// 登录
@@ -69,18 +77,18 @@ namespace BlazorAuto.Controllers
         /// <param name="userdto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<string>> Login([FromBody]UserDto userdto)
+        public async Task<Result<string>> Login([FromBody] UserDto userdto)
         {
             Result<string> res = new Result<string>();
+            userdto.PassWord=userdto.PassWord.ToHashPassword();
             var user = await db.Queryable<User>()
                             .Includes(x => x.Roles)
                             .FirstAsync(x => x.SysName == userdto.SysName && x.PassWord == userdto.PassWord)
                             ;
-            //var userlist = await db.SelectBy(x=>x.SysName==user.SysName);
             if (user != null)
             {
-                var j = GetJwt(user, appsettings.JwtOption,userdto.ModuleName);
-                return res.End(j.Data);
+                var j = GetJwt(user, appsettings.JwtOption, userdto.ModuleName, userdto.Url);
+                return res.Ok(j.Data);
             }
             else
             {
@@ -104,8 +112,8 @@ namespace BlazorAuto.Controllers
             {
                 u.PassWord = userDto.NewPassWord;
                 await db.Updateable(u).ExecuteCommandAsync();
-                var j = GetJwt(u, appsettings.JwtOption,userDto.ModuleName);
-                return res.End(j.Data);
+                var j = GetJwt(u, appsettings.JwtOption, userDto.ModuleName);
+                return res.Ok(j.Data);
             }
             else
             {
@@ -133,7 +141,7 @@ namespace BlazorAuto.Controllers
 
         }
         [NonAction]
-        public Result<string> GetJwt(User user, JwtOption op,string modName)
+        public Result<string> GetJwt(User user, JwtOption op, string modName,string url="")
         {
             Result<string> res = new Result<string>();
             try
@@ -144,6 +152,7 @@ namespace BlazorAuto.Controllers
                     cliaims.Add(new Claim(ClaimTypes.Name, user.SysName));
                     cliaims.Add(new Claim(ClaimTypes.Sid, user.RealName));
                     cliaims.Add(new Claim("moduleName", modName));
+                    cliaims.Add(new Claim(ClaimTypes.Uri, url));
                     foreach (var item in user.Roles)
                     {
                         cliaims.Add(new Claim(ClaimTypes.Role, item.Name));
@@ -163,9 +172,9 @@ namespace BlazorAuto.Controllers
             }
             catch (Exception e)
             {
-                return res.CatchException(e);
+                return res.HasException(e);
             }
-            return res.End();
+            return res.Ok();
         }
         [Authorize]
         [HttpPost]

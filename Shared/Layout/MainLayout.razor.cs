@@ -11,6 +11,7 @@ using SqlSugar;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Diagnostics.CodeAnalysis;
+
 namespace Shared.Layout
 {
     /// <summary>
@@ -47,9 +48,7 @@ namespace Shared.Layout
         [Inject]
         [NotNull]
         private DialogService? DialogService { get; set; }
-        [Inject]
-        [NotNull]
-        public ISqlSugarClient? db { get; set; }
+
         private async Task Notify(DispatchEntry<Msg> payload)
         {
             if (payload.Entry != null)
@@ -69,28 +68,30 @@ namespace Shared.Layout
         protected override void OnInitialized()
         {
             DispatchService.Subscribe(Notify);
-
             base.OnInitialized();
-
         }
         [CascadingParameter]
         private Task<AuthenticationState>? authenticationState { get; set; }
+        [CascadingParameter]
+        [NotNull]
+        public Models.Dto.GlobalInfo? GlobalInfo { get; set; }
         protected async override Task OnInitializedAsync()
         {
             System.Console.WriteLine("开始生成左侧菜单```:" + DateTime.Now);
-            
+            ;
             if (authenticationState is not null)
             {
                 var authState = await authenticationState;
                 var user = authState?.User;
                 if (user?.Identity is not null && user.Identity.IsAuthenticated)
                 {
-                    var modname = user.Claims.FirstOrDefault(x => x.Type == "moduleName")?.Value ?? "";
+                    var modname = user.Claims.FirstOrDefault(x => x.Type.ToLower() == "modulename")?.Value ?? "";
                     var roles = user.Claims
                         .Where(x => x.Type == ClaimTypes.Role)
                         .Select(x => new Role() { Name = x.Value })
                         .ToList() ?? new List<Role>();
-                    var model = db.Queryable<Module>().Includes(mod => mod.FunctionGroups, fg => fg.FunctionPages, fp => fp.Roles).First(x => x.Name == modname);
+                    //var model = db.Queryable<Module>().Includes(mod => mod.FunctionGroups, fg => fg.FunctionPages, fp => fp.Roles).First(x => x.Name == modname);
+                    var model = new Module();
 
                     model?.FunctionGroups?.ForEach(y => y.FunctionPages?.RemoveAll(fp => fp.Roles?.Intersect(roles, new RoleEquality()).Count() == 0));
                     FunctionGroups = model?.FunctionGroups ?? new List<FunctionGroup>();
@@ -143,21 +144,6 @@ namespace Shared.Layout
             return;
 
         }
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-        }
-        protected override Task OnParametersSetAsync()
-        {
-            return base.OnParametersSetAsync();
-        }
-        protected override void OnAfterRender(bool firstRender)
-        {
-            if (firstRender)
-            {
-            }
-            base.OnAfterRender(firstRender);
-        }
         private static List<MenuItem> GetIconSideMenuItems()
         {
 
@@ -186,7 +172,7 @@ namespace Shared.Layout
         {
             var option = new DialogOption()
             {
-                Title = "Close the popup with DialogCloseButton",
+                Title = "请登录",
                 Component = BootstrapDynamicComponent.CreateComponent<Login>()
             };
             await DialogService.Show(option);

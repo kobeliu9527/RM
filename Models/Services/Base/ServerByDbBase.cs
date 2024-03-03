@@ -34,7 +34,7 @@ namespace Models.Services.Base
             }
             catch (Exception ex)
             {
-                return result.CatchException(ex);
+                return result.HasException(ex);
             }
             return result;
         }
@@ -47,7 +47,7 @@ namespace Models.Services.Base
             }
             catch (Exception ex)
             {
-                return result.CatchException(ex);
+                return result.HasException(ex);
             }
             return result;
         }
@@ -60,7 +60,7 @@ namespace Models.Services.Base
             }
             catch (Exception ex)
             {
-                return result.CatchException(ex);
+                return result.HasException(ex);
             }
             return result;
         }
@@ -73,7 +73,7 @@ namespace Models.Services.Base
             }
             catch (Exception ex)
             {
-                return result.CatchException(ex);
+                return result.HasException(ex);
             }
             return result;
         }
@@ -86,7 +86,7 @@ namespace Models.Services.Base
             }
             catch (Exception ex)
             {
-                return result.CatchException(ex);
+                return result.HasException(ex);
             }
             return result;
         }
@@ -99,7 +99,7 @@ namespace Models.Services.Base
             }
             catch (Exception ex)
             {
-                return result.CatchException(ex);
+                return result.HasException(ex);
             }
             return result;
         }

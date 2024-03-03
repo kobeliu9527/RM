@@ -1,76 +1,45 @@
-﻿
-
-<CascadingAuthenticationState >
+﻿@using Models.Dto
+@using System.Security.Claims
+<CascadingAuthenticationState>
     <BootstrapBlazorRoot>
-        <CascadingValue Value="this.FunctionGroups" Name="router">
-            <Router AppAssembly="@typeof(BlazorAuto.Client.Routes).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}">
-                <Found Context="routeData">
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)">
-                        <NotAuthorized>
-                            没有经过权限认证的地址
-                        </NotAuthorized>
-                    </AuthorizeRouteView>
-                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-                </Found>
-                <NotFound>
-                    <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
-                        <p role="alert">对不起,这个访问地址不存在</p>
-                    </LayoutView>
-                </NotFound>
-            </Router>
+        <CascadingValue Value="this.GlobalInfo">
+            <CascadingValue Value="this.FunctionGroups" Name="router">
+                <Router AppAssembly="@typeof(BlazorAuto.Client.Routes).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}">
+                    <Found Context="routeData">
+                        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.Layout.MainLayout)">
+                            <NotAuthorized>
+                                没有经过权限认证的地址
+                            </NotAuthorized>
+                        </AuthorizeRouteView>
+                        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                    </Found>
+                    <NotFound>
+                        <LayoutView Layout="@typeof(Shared.Layout.MainLayout)">
+                            <p role="alert">对不起,这个访问地址不存在</p>
+                        </LayoutView>
+                    </NotFound>
+                </Router>
+            </CascadingValue>
         </CascadingValue>
     </BootstrapBlazorRoot>
 </CascadingAuthenticationState>
 @code
 {
+    public GlobalInfo GlobalInfo { get; set; } = new GlobalInfo() { User = new User() { RealName = "未登录" } };
     public List<FunctionGroup>? FunctionGroups { get; set; }
-    public Module? SysModule { get; set; }
-    public bool MyProperty { get; set; }
-    public static bool Isdesigner { get; set; } = true;
-    [Inject]
-    [NotNull]
-    public ISqlSugarClient? db { get; set; }
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-    public bool IsFirst { get; set; } = true;
-    protected override void OnInitialized()
-    {
-        // var res =  db.Queryable<FunctionGroup>().Includes(x => x.FunctionPages).ToList();
+    [Inject, NotNull]
+    private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
-        // if (res != null)
-        // {
-        //     FunctionGroups = res;
-        // }
-        base.OnInitialized();
-    }
     protected override async Task OnInitializedAsync()
     {
-        // if (authenticationState is not null)
-        // {
-        //     var authState = await authenticationState;
-        //     var user = authState?.User;
-
-        //     if (user?.Identity is not null && user.Identity.IsAuthenticated)
-        //     {
-        //         // authMessage = $"{user.Identity.Name} is authenticated.";
-        //     }
-        // }
-        await base.OnInitializedAsync();
-    }
-    protected override Task OnParametersSetAsync()
-    {
-        return base.OnParametersSetAsync();
-    }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-    }
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+        System.Console.WriteLine("Router刷新" + DateTime.Now);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState?.User;
+        if (user?.Identity is not null && user.Identity.IsAuthenticated)
         {
-
+            var modname = user.Claims.FirstOrDefault(x => x.Type.ToLower() == "modulename")?.Value ?? "";
+            GlobalInfo.Url = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Uri)?.Value ?? "服务器地址为空";
         }
-        return base.OnAfterRenderAsync(firstRender);
+        await base.OnInitializedAsync();
     }
 }

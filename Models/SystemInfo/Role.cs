@@ -50,7 +50,15 @@ namespace Models.SystemInfo
             throw new NotImplementedException();
         }
     }
+    public class RoleDto
+    {
+        public long Id { get; set; }
+        /// <summary>
+        /// 角色名字
+        /// </summary>
+        public string Name { get; set; } = "";
 
+    }
     public class RoleEquality : IEqualityComparer<Role>
     {
         public bool Equals(Role? x, Role? y)

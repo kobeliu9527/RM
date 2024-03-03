@@ -49,9 +49,9 @@ namespace Models.Services.Base
             }
             catch (Exception e)
             {
-                return res.CatchException(e);
+                return res.HasException(e);
             }
-            return res.End();
+            return res.Ok();
             //using HttpClient http = httpClientFactory.CreateClient("http");
 
             ////执行http请求
@@ -106,9 +106,9 @@ namespace Models.Services.Base
             }
             catch (Exception e)
             {
-                return res.CatchException(e);
+                return res.HasException(e);
             }
-            return res.End();
+            return res.Ok();
         }
 
 

@@ -9,7 +9,7 @@
 
 
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <None Include="Designer\FieldProperties\FieldPropertiesPanel.razor" />
     <None Include="Designer\FieldProperties\Properties\CheckboxProperties.razor" />
     <None Include="Designer\FieldProperties\Properties\DateTimeProperties.razor" />
@@ -45,7 +45,7 @@
     <None Include="Designer\Whiteboard\ContainerRuning.razor" />
     <None Include="Designer\Whiteboard\DropZone.razor" />
     <None Include="wwwroot\js\form-designer.js" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 
   <ItemGroup>

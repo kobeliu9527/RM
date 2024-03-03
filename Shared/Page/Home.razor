@@ -1,29 +1,34 @@
 ﻿@page "/"
 @using Models.NotEntity
 @using Models.Services.Base
-
-
-@inject ICrudBase<User> userdb
-@inject IAuthService auth
-@inject ISqlSugarClient db
+@inject NavigationManager go
+@* @inject ICrudBase<User> userdb
+@inject IAuthService auth *@
+@* @inject ISqlSugarClient db *@
 <PageTitle>Home</PageTitle>
-
 
 <AuthorizeView>
     <Authorized>
-        登录成功,欢迎欢迎
         <Button OnClick="OnClick">消息推送测试</Button>
         <Button OnClick="OnClick2">泛型测试</Button>
         <BootstrapInput @bind-Value="meg"></BootstrapInput>
         <BarcodeReader OnResult="OnResult" ButtonScanText="摄像头扫描二维码"></BarcodeReader>
     </Authorized>
     <NotAuthorized>
-        请先登录,跳转中......
-        @* <Redirect Url="/login"></Redirect> *@
+        验证登录状态中,请稍等
+        @* <Redirect Url="/login"></Redirect>  *@
+        @* 需要优化为一个界面 *@
     </NotAuthorized>
 </AuthorizeView>
 @code
 {
+    [CascadingParameter]
+    [NotNull]
+    public GlobalInfo? GlobalInfo { get; set; }
+    public void Log()
+    {
+        go.NavigateTo("/login");
+    }
     private Task OnResult(string barcode)
     {
         return Task.CompletedTask;
@@ -32,8 +37,7 @@
     [Inject]
     [NotNull]
     private IDispatchService<Msg>? DispatchService { get; set; }
-    [CascadingParameter(Name = "router")]
-    public Module? SysModule { get; set; }
+  
     public async void OnClick2(MouseEventArgs e)
     {
         DispatchService.Dispatch(new DispatchEntry<Msg>() { Entry = new Msg() { Message = meg } });

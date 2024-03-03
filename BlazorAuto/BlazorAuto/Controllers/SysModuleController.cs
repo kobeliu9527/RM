@@ -19,15 +19,15 @@ namespace BlazorAuto.Controllers
         /// <summary>
         /// 
         /// </summary>
-        public ISqlSugarClient db { get; set; }
+        public ISqlSugarClient? db { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="db"></param>
+        /// <param name="db1"></param>
         public SysModuleController(ICrudBaseByDb<Module> db1)
         {
             this.db1 = db1;
-            var cli = HttpContext.User.Claims;
+            //var cli = HttpContext.User.Claims;
         }
         /// <summary>
         /// 
