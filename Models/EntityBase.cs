@@ -16,7 +16,7 @@ namespace Models
         /// <summary>
         /// 图标
         /// </summary>
-        [DisplayName("图标"),Description("系统采用知名的fontawesome图标,网址:https://fontawesome.com.cn/v5")]
+        [DisplayName("图标"),Description("系统采用知名的fontawesome图标,网址:https://fontawesome.com.cn/v5"),SugarColumn( IsNullable =true )]
         public string? Icon { get; set; }
     }
 }

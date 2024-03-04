@@ -11,12 +11,10 @@ namespace Shared.AuthenticationStateCustom
 {
     public class AuthenticationStateProviderByClient : AuthenticationStateProvider, IAuthService
     {
-        private readonly ILocalStorageService local;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthenticationStateProviderByClient(ILocalStorageService local, IHttpClientFactory httpClientFactory)
+        public AuthenticationStateProviderByClient( IHttpClientFactory httpClientFactory)
         {
-            this.local = local;
             this.httpClientFactory = httpClientFactory;
         }
         /// <summary>
@@ -27,7 +25,8 @@ namespace Shared.AuthenticationStateCustom
         {
             try
             {
-                return await local.GetItemAsStringAsync("token");
+                await Task.Delay(100);
+                return "1";
 
             }
             catch (Exception ex)
@@ -39,7 +38,7 @@ namespace Shared.AuthenticationStateCustom
         {
             try
             {
-                await local.SetItemAsStringAsync("token", token);
+                
 
             }
             catch (Exception ex)
@@ -97,7 +96,6 @@ namespace Shared.AuthenticationStateCustom
         {
             try
             {
-                await local.SetItemAsStringAsync("token", "");
                 return new Result<string>() { Data = "退出登录成功", IsSucceeded = true };
             }
             catch (Exception)

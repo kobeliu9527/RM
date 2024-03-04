@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Logging;
+using Shared.AuthenticationStateCustom;
 using SqlSugar;
 using System.Reflection;
 
@@ -18,7 +20,6 @@ namespace RMApp
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
-
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddBootstrapBlazor();
 
@@ -68,6 +69,10 @@ namespace RMApp
                });
                 return sqlSugar;
             });
+            builder.Services.AddHttpClient();
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClient>();
+            builder.Services.AddScoped<IAuthService, AuthenticationStateProviderByClient>();
+            
             return builder.Build();
         }
     }

@@ -1,4 +1,6 @@
-﻿<BootstrapBlazorRoot>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<CascadingAuthenticationState>
+<BootstrapBlazorRoot>
     <Router AppAssembly="@typeof(MauiProgram).Assembly"            >
         <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
@@ -6,4 +8,5 @@
         </Found>
     </Router>
 </BootstrapBlazorRoot>
+</CascadingAuthenticationState>
 

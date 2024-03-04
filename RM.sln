@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wasm", "Wasm", "{A0355E84-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.移动端", "2.移动端", "{622461FA-7586-44C0-9C17-E64A2DD1CC2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMApp", "RMApp\RMApp.csproj", "{4AEC3284-563D-49C7-8AD0-B271442A9571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMApp", "RMApp\RMApp.csproj", "{4AEC3284-563D-49C7-8AD0-B271442A9571}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

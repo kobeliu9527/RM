@@ -26,7 +26,9 @@
 @code
 {
     public GlobalInfo GlobalInfo { get; set; } = new GlobalInfo() { User = new User() { RealName = "未登录" } };
+   
     public List<FunctionGroup>? FunctionGroups { get; set; }
+
     [Inject, NotNull]
     private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
