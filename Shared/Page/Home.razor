@@ -6,7 +6,6 @@
 @inject IAuthService auth *@
 @* @inject ISqlSugarClient db *@
 <PageTitle>Home</PageTitle>
-
 <AuthorizeView>
     <Authorized>
         <Button OnClick="OnClick">消息推送测试</Button>
@@ -16,10 +15,11 @@
     </Authorized>
     <NotAuthorized>
         验证登录状态中,请稍等
-        @* <Redirect Url="/login"></Redirect>  *@
-        @* 需要优化为一个界面 *@
+         <Redirect Url="/login"></Redirect>  
+         需要优化为一个界面 
     </NotAuthorized>
 </AuthorizeView>
+
 @code
 {
     [CascadingParameter]
@@ -37,7 +37,7 @@
     [Inject]
     [NotNull]
     private IDispatchService<Msg>? DispatchService { get; set; }
-  
+
     public async void OnClick2(MouseEventArgs e)
     {
         DispatchService.Dispatch(new DispatchEntry<Msg>() { Entry = new Msg() { Message = meg } });

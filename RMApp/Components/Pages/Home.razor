@@ -1,0 +1,24 @@
+﻿@page "/"
+@using Models.SystemInfo
+@using SqlSugar
+@inject ISqlSugarClient db
+<h1>Hello, world!</h1>
+<Button>boot</Button>
+Welcome to your new app.
+<Button OnClick="Create">创建数据库</Button>
+<Button OnClick="Get">获取所有表</Button>
+<Button OnClick="Insert">插入一条数据</Button>
+<Button OnClick="Select">获取数据</Button>
+@if (userlist != null)
+{
+    @foreach (var item in userlist)
+    {
+        @item.RealName
+        <br />
+    }
+}
+
+@createResult
+@TableName
+@MauiProgram.ConnectionString2
+
