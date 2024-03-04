@@ -9,12 +9,17 @@ using System.Security.Claims;
 
 namespace Shared.AuthenticationStateCustom
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AuthenticationStateProviderByClient : AuthenticationStateProvider, IAuthService
     {
+        private readonly ILocalStorageService local;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthenticationStateProviderByClient( IHttpClientFactory httpClientFactory)
+        public AuthenticationStateProviderByClient(ILocalStorageService local, IHttpClientFactory httpClientFactory)
         {
+            this.local = local;
             this.httpClientFactory = httpClientFactory;
         }
         /// <summary>
@@ -25,8 +30,7 @@ namespace Shared.AuthenticationStateCustom
         {
             try
             {
-                await Task.Delay(100);
-                return "1";
+                return await local.GetItemAsStringAsync("token");
 
             }
             catch (Exception ex)
@@ -38,7 +42,7 @@ namespace Shared.AuthenticationStateCustom
         {
             try
             {
-                
+                await local.SetItemAsStringAsync("token", token);
 
             }
             catch (Exception ex)
@@ -75,7 +79,7 @@ namespace Shared.AuthenticationStateCustom
         {
             //
             using HttpClient http = httpClientFactory.CreateClient();
-            var res = await http.PostAsJsonAsync(user.Url+"auth/login", user);
+            var res = await http.PostAsJsonAsync(user.Url + "auth/login", user);
             if (res.IsSuccessStatusCode)
             {
                 var token = await res.Content.ReadFromJsonAsync<Result<string>>();
@@ -96,6 +100,7 @@ namespace Shared.AuthenticationStateCustom
         {
             try
             {
+                await local.SetItemAsStringAsync("token", "");
                 return new Result<string>() { Data = "退出登录成功", IsSucceeded = true };
             }
             catch (Exception)
@@ -108,7 +113,7 @@ namespace Shared.AuthenticationStateCustom
         public async Task<Result<User>> Register(UserDto user)
         {
             using HttpClient http = httpClientFactory.CreateClient();
-            var res = await http.PostAsJsonAsync(user.Url +"auth/Register", user);
+            var res = await http.PostAsJsonAsync(user.Url + "auth/Register", user);
             if (res.IsSuccessStatusCode)
             {
                 var token = await res.Content.ReadFromJsonAsync<Result<User>>();
@@ -150,7 +155,7 @@ namespace Shared.AuthenticationStateCustom
     /// </summary>
     public interface IAuthService
     {
-        
+
         /// <summary>
         /// 注册
         /// </summary>
