@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
+using Models.Dto;
+using RMApp.Services;
 using Shared.AuthenticationStateCustom;
 using SqlSugar;
 using System.Reflection;
@@ -8,7 +10,7 @@ namespace RMApp
 {
     public static class MauiProgram
     {
-       
+        public static GlobalInfo GlobalInfo=new GlobalInfo();
         public static string ConnectionString2 = @"DataSource=" + Path.Combine(FileSystem.AppDataDirectory, "TodoSQLite.db3");
         public static MauiApp CreateMauiApp()
         {
@@ -70,8 +72,8 @@ namespace RMApp
                 return sqlSugar;
             });
             builder.Services.AddHttpClient();
-            builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClient>();
-            builder.Services.AddScoped<IAuthService, AuthenticationStateProviderByClient>();
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClientForMaui>();
+            builder.Services.AddScoped<IAuthService, AuthenticationStateProviderByClientForMaui>();
             
             return builder.Build();
         }

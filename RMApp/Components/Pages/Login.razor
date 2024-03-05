@@ -1,8 +1,37 @@
 ﻿@page "/login"
+@using Models.Dto
 @using RMApp.Components.Layout
+@using Shared.AuthenticationStateCustom
+@using System.Diagnostics.CodeAnalysis
 @layout LoginLayout
-<h3>Login</h3>
-
+@inject IAuthService auth
+@inject NavigationManager go
+<BootstrapInput TValue="string" @bind-Value="UserDto.SysName" ShowLabel="true" DisplayText="用户名"></BootstrapInput>
+<BootstrapInput TValue="string" @bind-Value="UserDto.PassWord" ShowLabel="true" DisplayText="密码"></BootstrapInput>
+<BootstrapInput TValue="string" @bind-Value="UserDto.Url" ShowLabel="true" DisplayText="服务器地址"></BootstrapInput>
+<Button OnClick="Log">登录</Button>
+<Button OnClick="Louut">注销</Button>
 @code {
-
+    [CascadingParameter]
+    [NotNull]
+    public GlobalInfo? GlobalInfo { get; set; }
+    public Models.Dto.UserDto UserDto { get; set; } = new() { SysName = "1", PassWord = "1", RealName = "" };
+    public async void Log()
+    {
+        var res = await auth.SignInAsync(UserDto);
+        if (res.IsSucceeded)
+        {
+            go.NavigateTo("/", true);
+        }
+        else
+        {
+           // await ToastService.Success("提示", "登录失败", autoHide: true);
+        }
+    }
+   
+    public async void Louut()
+    {
+        await auth.SignOutAsync();
+        go.NavigateTo("/", true);
+    }
 }

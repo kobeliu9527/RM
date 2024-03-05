@@ -38,5 +38,6 @@ namespace Models.Dto
     {
         public User? User { get; set; }
         public string Url { get; set; } = "Na";
+        public string ModelName { get; set; } = "Na";
     }
 }
