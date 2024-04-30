@@ -1,0 +1,18 @@
+﻿@page "/"
+@using Microsoft.JSInterop
+@inject IJSRuntime js
+@layout SharedPage.Layout.BaseLayout
+<div style="height:5%">header</div>
+<div class="content" style="height:95%">
+    <div class="left">左边</div>
+    <div class="middle">
+        <SharedPage.Components.Pie></SharedPage.Components.Pie>
+    </div>
+    <div class="right">
+        右边
+        <Button OnClick="init">右边</Button>
+        <Button OnClick="setOption">右边</Button>
+    </div>
+</div>
+
+

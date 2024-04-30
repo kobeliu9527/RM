@@ -32,6 +32,7 @@ namespace Models.Services.Base
                 var ControName = obj.GetType().Name;
                 using HttpClient http = httpClientFactory.CreateClient("http");
                 var reshttp = await http.PostAsJsonAsync($"{ControName}/{nameof(Insert)}", obj);
+                
                 if (reshttp.IsSuccessStatusCode)
                 {
 

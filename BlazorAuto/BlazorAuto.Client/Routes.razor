@@ -1,6 +1,6 @@
 ﻿@using Models.Dto
 @using System.Security.Claims
-<CascadingAuthenticationState>
+<CascadingAuthenticationState >
     <BootstrapBlazorRoot>
         <CascadingValue Value="this.GlobalInfo">
             <CascadingValue Value="this.FunctionGroups" Name="router">
@@ -26,7 +26,7 @@
 @code
 {
     public GlobalInfo GlobalInfo { get; set; } = new GlobalInfo() { User = new User() { RealName = "未登录" } };
-   
+
     public List<FunctionGroup>? FunctionGroups { get; set; }
 
     [Inject, NotNull]
@@ -34,9 +34,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        System.Console.WriteLine("Router刷新" + DateTime.Now);
+        System.Console.WriteLine(DateTime.Now+":Router刷新");
+        
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState?.User;
+        
         if (user?.Identity is not null && user.Identity.IsAuthenticated)
         {
             var modname = user.Claims.FirstOrDefault(x => x.Type.ToLower() == "modulename")?.Value ?? "";

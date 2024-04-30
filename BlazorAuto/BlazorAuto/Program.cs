@@ -23,17 +23,23 @@ using Blazor.Diagrams;
 using Microsoft.AspNetCore.SignalR;
 using Models.SystemInfo;
 using BlazorAuto.Client.Extensions;
+var x = 0x46d;
+var ss = x / 256;
+var ss2 = x % 256;
+Decimal a = 11;
 
+bool aa = true;
+bool aa1 = false;
+var resss=Convert.ToDecimal(aa);
+var resss2=Convert.ToDecimal(aa1);
 var builder = WebApplication.CreateBuilder(args);
 SnowFlakeSingle.WorkId = 1;
-//泛型
-
 var Configuration = builder.Configuration;
 var Appsetting = Configuration.GetSection(nameof(Appsettings)).Get<Appsettings>()!;
 builder.Services.Configure<Appsettings>(Configuration.GetSection(nameof(Appsettings)));
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderByClient>();
-builder.Services.AddScoped<IAuthService, AuthenticationStateProviderByClient>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForBrowser>();
+builder.Services.AddScoped<IAuthService, AuthenticationStateProviderForBrowser>();
 builder.Services.AddMemoryCache();
 TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
 TypeAdapterConfig<BlazorDiagram, WorkFlow>
@@ -46,13 +52,14 @@ TypeAdapterConfig<BlazorDiagram, WorkFlow>
 //.Map(dest => dest.FullName,
 //    src => string.Format("{0} {1}", src.FirstName, src.LastName));
 builder.Services.AddHttpClient(
-    "http",
-    client =>
-    {
-        client.BaseAddress = new Uri("http://localhost:5555/api/");
-        // Add a user-agent default request header.http://*:2222
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-docs");
-    });
+    //"http",
+    //client =>
+    //{
+    //    client.BaseAddress = new Uri("http://localhost:5555/api/");
+    //    // Add a user-agent default request header.http://*:2222
+    //    client.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-docs");
+    //}
+    );
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
@@ -70,9 +77,7 @@ builder.Services.AddControllers(
 {
     op.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs);
     op.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-
     //op.JsonSerializerOptions.Converters.Add(new JsonTextConverter("yyyy-MM-dd HH:mm:ss"));
-
 });
 builder.Services.AddAuthentication()
          .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
@@ -134,8 +139,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddHttpContextAccessor();//不确定有什么用,应该可以关闭
 
-
-
 builder.Services.AddSingleton<ISqlSugarClient>(s =>
 {
     SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
@@ -178,8 +181,6 @@ builder.Services.AddSingleton<ISqlSugarClient>(s =>
     return sqlSugar;
 });
 
-
-
 builder.Services.AddScoped<ICrudBase<Models.SystemInfo.Module>, ModuleServerByDB>();
 builder.Services.AddScoped<ICrudBase<CompanyGroup>, CompanyGroupServerByDB>();
 builder.Services.AddScoped<ICrudBase<FunctionPage>, FunctionPageServerByDB>();
@@ -208,8 +209,6 @@ app.UseSwaggerUI(op =>
     op.RoutePrefix = "api";
     //op.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
 });
-//app.UseStaticFiles();
-//app.UseDirectoryBrowser();
 app.UseCors(op => { op.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
 
 app.UseAuthentication();

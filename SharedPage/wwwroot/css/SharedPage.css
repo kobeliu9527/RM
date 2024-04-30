@@ -1,0 +1,17 @@
+﻿/*designer*/
+.content {
+    display: flex;
+}
+
+.left {
+    flex: 1;
+}
+
+.middle {
+    flex: 2;
+}
+
+.right {
+    flex: 1;
+}
+/*designer*/

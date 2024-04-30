@@ -10,14 +10,14 @@ using System.Security.Claims;
 namespace Shared.AuthenticationStateCustom
 {
     /// <summary>
-    /// 
+    /// 通过获取浏览器中token值
     /// </summary>
-    public class AuthenticationStateProviderByClient : AuthenticationStateProvider, IAuthService
+    public class AuthenticationStateProviderForBrowser : AuthenticationStateProvider, IAuthService
     {
         private readonly ILocalStorageService local;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthenticationStateProviderByClient(ILocalStorageService local, IHttpClientFactory httpClientFactory)
+        public AuthenticationStateProviderForBrowser(ILocalStorageService local, IHttpClientFactory httpClientFactory)
         {
             this.local = local;
             this.httpClientFactory = httpClientFactory;
@@ -31,13 +31,17 @@ namespace Shared.AuthenticationStateCustom
             try
             {
                 return await local.GetItemAsStringAsync("token");
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }
         }
+        /// <summary>
+        /// 将获取到的token值写入到浏览器的cokie中
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         private async Task SetTokenAsync(string token)
         {
             try
@@ -45,18 +49,18 @@ namespace Shared.AuthenticationStateCustom
                 await local.SetItemAsStringAsync("token", token);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await Task.CompletedTask;
             }
         }
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
+            System.Console.WriteLine(DateTime.Now+":获取身份信息");
             ClaimsPrincipal principal = new();
             try
             {
                 var jwt = await GetTokenAsync();
-
                 if (!string.IsNullOrEmpty(jwt))
                 {
                     JwtSecurityTokenHandler handler = new();
@@ -66,7 +70,7 @@ namespace Shared.AuthenticationStateCustom
                     principal.AddIdentity(identity);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new(principal);
             }
@@ -77,38 +81,44 @@ namespace Shared.AuthenticationStateCustom
 
         public async Task<Result<string>> SignInAsync(UserDto user)
         {
-            //
             using HttpClient http = httpClientFactory.CreateClient();
-            var res = await http.PostAsJsonAsync(user.Url + "auth/login", user);
-            if (res.IsSuccessStatusCode)
+            Result<string> result=new Result<string>();
+            try
             {
-                var token = await res.Content.ReadFromJsonAsync<Result<string>>();
-                if (token != null && token.IsSucceeded)
+                var res = await http.PostAsJsonAsync(user.Url + "auth/login", user);
+                if (res.IsSuccessStatusCode)
                 {
-                    await SetTokenAsync(token.Data!);
-                    return new Result<string>() { Data = "登录成功" };
-                }
-                else
-                {
-                    return new Result<string>() { Data = "登录失败", IsSucceeded = false };
+                    var token = await res.Content.ReadFromJsonAsync<Result<string>>();
+                    if (token != null && token.IsSucceeded)
+                    {
+                        await SetTokenAsync(token.Data!);
+                        return result.Ok("登录成功");
+                    }
+                    else
+                    {
+                        return result.Fail("登录失败,没有获取到token");
+                    }
                 }
             }
-            return new Result<string>() { Data = "登录失败", IsSucceeded = false };
+            catch (Exception e)
+            {
+                return result.HasException(e);
+            }
+            return result.Fail("登录失败,没有获取到token");
         }
 
         public async Task<Result<string>> SignOutAsync()
         {
+            Result<string> result = new Result<string>();
             try
             {
                 await local.SetItemAsStringAsync("token", "");
-                return new Result<string>() { Data = "退出登录成功", IsSucceeded = true };
+                return result.Ok("退出登录成功");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                return result.HasException(e);
             }
-
         }
         public async Task<Result<User>> Register(UserDto user)
         {

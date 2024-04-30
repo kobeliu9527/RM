@@ -38,6 +38,8 @@ namespace Shared.Page
         private async Task<QueryData<FunctionGroup>> OnQueryAsync(QueryPageOptions options)
         {
             var item = await db.Queryable<FunctionGroup>().ToListAsync();
+
+            
             return new QueryData<FunctionGroup>()
             {
                 Items = item,
