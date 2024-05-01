@@ -1,0 +1,28 @@
+﻿/*designer*/
+.content {
+    display: flex;
+}
+
+.left {
+    flex: 1;
+}
+
+.middle {
+    flex: 2;
+    height:100%;
+}
+
+.right {
+    flex: 1;
+    max-height: 100%;
+    border: 2px solid black;
+}
+.dragbox {
+    cursor: pointer;
+}
+/*designer*/
+/*重写BootstarpBlazor库的样式*/
+.bb .tabs .tabs-body {
+    padding: 0;
+    margin: 0;
+}

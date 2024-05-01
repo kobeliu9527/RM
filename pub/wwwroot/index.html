@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dp.Wasm</title>
+    <base href="/" />
+    <!-- 组件库样式隔离里面 -->
+    <link rel="stylesheet" href="_content/SharedPage/SharedPage.bundle.scp.css">
+    <!-- 组件库非样式隔离里面的 -->
+    <link rel="stylesheet" href="_content/SharedPage/css/SharedPage.css">
+    <!-- bootstarp blazor的样式 -->
+    <link href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css" rel="stylesheet">
+
+    <script  src="_content/SharedPage/js/echarts.min.js"></script>
+    <script type="module" src="_content/SharedPage/js/jsecharts.js"></script>
+
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="Dp.Wasm.styles.css" rel="stylesheet" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+</head>
+
+<body>
+    <div id="app">
+        加载中...........
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+</body>
+
+</html>
