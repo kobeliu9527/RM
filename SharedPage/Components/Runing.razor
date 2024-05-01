@@ -1,0 +1,74 @@
+﻿@implements IAsyncDisposable
+@foreach (var ChartInfo in BigScreen.ChartList)
+{
+    <SharedPage.Components.Line IsDesigner="@BigScreen.IsDesigner" ChartInfo="@ChartInfo"></SharedPage.Components.Line>
+}
+
+@code {
+    [Inject]
+    [NotNull]
+    public JsEcharts? JsEcharts { get; set; }
+
+
+    [CascadingParameter(Name = "BigScreen")]
+    [NotNull]
+    public BigScreen? BigScreen { get; set; }
+
+    public System.Timers.Timer Timer { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    Random r = new();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            Timer.Elapsed += async (a, b) =>
+        {
+            //1.请求数据,返回多个结果集,结果集应该有name属性,用来表示这个结果是给哪一个图表的
+            // System.Text.Json.JsonSerializer.Serialize(BigScreen);
+            //var source = System.Text.Json.JsonSerializer.Deserialize<ApiData>("");
+            ApiData source = new ApiData();
+            var s = new List<object[]>() {
+            new object[] {"2014", r.Next(166), r.Next(400), r.Next(100) }  ,
+            new object[] {"2015", r.Next(166), r.Next(400), r.Next(100) }  ,
+            new object[] {"2013", r.Next(166), r.Next(400), r.Next(100) }  ,
+            new object[] {"2017", r.Next(166), r.Next(400), r.Next(100) } };
+            source.Data.Add("test", s);
+            if (source != null)
+            {
+                foreach (var chart in BigScreen.ChartList)
+                {
+                    if (chart != null)
+                    {
+                        if (chart.InterVal == 0)//说明是统一处理的
+                        {
+                            if (chart.ComponentType == ComponentType.Echarts)
+                            {
+                                if (chart.Option != null)
+                                {
+                                    if (source.Data.TryGetValue(chart.DataName, out var data))
+                                    {
+                                        chart.Option.dataset.source = data;
+                                        await JsEcharts.SetOption(chart.Id, chart.Option);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+            Timer.Interval = BigScreen.InterVal;
+            Timer.Start();
+        }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        Timer.Dispose();
+        GC.SuppressFinalize(this);
+        await Task.Delay(100);
+    }
+}

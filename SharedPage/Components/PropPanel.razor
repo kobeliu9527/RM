@@ -1,0 +1,48 @@
+﻿
+<div class="bb" style="flex:2">
+    @if (@BigScreen.SelectedList.Count == 1)
+    {
+        <Tab>
+            <TabItem Text="adf1">
+                <Collapse>
+                    <CollapseItems>
+                        <CollapseItem Text="通用属性">
+                            <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Id"></BootstrapInput>
+                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                        </CollapseItem>
+                        <CollapseItem Text="特殊属性"></CollapseItem>
+                        <CollapseItem Text="通用属性2"></CollapseItem>
+                    </CollapseItems>
+                </Collapse>
+            </TabItem>
+            <TabItem Text="adf2"></TabItem>
+            <TabItem Text="adf3"></TabItem>
+        </Tab>
+    }
+    else
+    {
+        <div>选定一个组件</div>
+    }
+</div>
+
+@code {
+
+    [CascadingParameter(Name = "BigScreen")]
+    [NotNull]
+    public BigScreen? BigScreen { get; set; }
+
+    [CascadingParameter(Name = "Designer")]
+    [NotNull]
+    public Designer? Designer { get; set; }
+
+    public async Task OnValueChanged(float val)
+    {
+        //BigScreen.SelectedList[0]
+        await Designer.Refresh();
+        await Task.CompletedTask;
+    }
+}
+@* 属性面板 *@

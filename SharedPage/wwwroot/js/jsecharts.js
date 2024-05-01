@@ -26,7 +26,7 @@ export class echartsFunc {
     }
     static setOption(id, option, notMerge, lazyUpdate) {
         var chart = this.liChart[id];
-        console.log(option);
+        //console.log(option);
         chart.setOption(option);
         try {
         } catch (error) {
@@ -50,14 +50,21 @@ export class echartsFunc {
             ]
         });
     }
+    static resize(id)
+    {
+        this.liChart[id].resize(); 
+    }
     static addResizeListener(id) {
         this.ResizeListener[id] = () => { this.liChart[id].resize(); };
         window.addEventListener("resize", this.ResizeListener[id]);
-        console.log(id, 'addResizeListener');
+       // console.log(id, 'addResizeListener');
     }
     static removeResizeListener(id) {
         window.removeEventListener("resize", this.ResizeListener[id]);
         delete this.liChart[id];
-        console.log(id,'removeResizeListener');
+       // console.log(id,'removeResizeListener');
+    }
+    static Log(id) {
+        console.log(id);
     }
 }

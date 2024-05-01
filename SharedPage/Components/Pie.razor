@@ -1,33 +1,8 @@
-﻿@inherits SharedPage.Base.EchartsBase
+﻿
+@inherits SharedPage.Base.EchartsBase
 
-<div id="@Id" style="height:100%;width:100%"></div>
+
 
 @code {
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            var option = new
-            {
-                title = new { text = "ECharts入门示例" },
-                tooltip = new { },
-                xAxis = new { type = "category" },
-                yAxis = new { },
-                dataset = new
-                {
-                    source = new[]{
-                        new[]{ "product", "2015", "2016", "2017"} ,
-                        new[]{ "Matcha Latte", "12", "23", "45"} ,
-                        new[]{ "Milk Tea", "55", "66", "78"} ,
-                        new[]{ "Cheese Cocoa", "12", "45", "37"} ,
-                        new[]{ "Walnut Brownie", "34", "65", "77"} ,
-                }
-                },
-                series = new[] { new { type = "line" }, new { type = "bar" }, new { type = "bar" } }
-            };
-            await JsEcharts.SetOption(Id, option);
-        }
-    }
+    
 }

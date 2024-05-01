@@ -1,18 +1,128 @@
 ﻿@page "/"
 @using Microsoft.JSInterop
-@inject IJSRuntime js
 @layout SharedPage.Layout.BaseLayout
-<div style="height:5%">header</div>
-<div class="content" style="height:95%">
-    <div class="left">左边</div>
-    <div class="middle">
-        <SharedPage.Components.Pie></SharedPage.Components.Pie>
-    </div>
-    <div class="right">
-        右边
-        <Button OnClick="init">右边</Button>
-        <Button OnClick="setOption">右边</Button>
-    </div>
-</div>
+
+<CascadingValue Value="this" Name="Designer">
+    <CascadingValue Value="@BigScreen" Name="BigScreen">
+        <div style="height:5%;display:flex;justify-content: flex-start; ">
+            <div style="flex:2;display:flex">
+                <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="菜单栏" @bind-Value="@ShowMenuBox" OnInnerText="菜单栏" OnValueChanged="OnValueChangedByBool" />
+                <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="属性框" @bind-Value="@ShowPropertityBox" OnValueChanged="OnValueChangedByBool" />
+            </div>
+            <div style="flex:10">
+            </div>
+        </div>
+        <div class="content" style="height:95%;">
+            @if (ShowMenuBox)
+            {
+                <div style="flex:2">左边</div>
+            }
+            <div style="flex:8;position:relative;">
+                <SharedPage.Components.Runing></SharedPage.Components.Runing>
+            </div>
+            @if (ShowPropertityBox)
+            {
+                <SharedPage.Components.PropPanel></SharedPage.Components.PropPanel>
+            }
+
+        </div>
+    </CascadingValue>
+</CascadingValue>
+@code {
+    [Inject]
+    [NotNull]
+    public JsEcharts? jss { get; set; }
+    public BigScreen BigScreen { get; set; } = new() { InterVal = 1000, IsDesigner = true };
+    public DesignerInfo DesignerInfo { get; set; } = new();
+
+    public bool ShowPropertityBox { get; set; } = true;
+    public bool ShowMenuBox { get; set; } = true;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        try
+        {
+            ComponentInfo chart = new ComponentInfo();
+            ComponentInfo chart2 = new ComponentInfo();
+            chart.ComponentType = ComponentType.Echarts;
+            chart.DataName = "test";
+            chart2.DataName = "test";
+            chart.Option = new EOption()
+                {
+                    dataset = new EdataSet()
+                    {
+                        source = new List<object[]>() {
+            new object[] {"2014", "12", "23", "45" }  ,
+            new object[] {"2015", "55", "66", "78" }  ,
+            new object[] {"2013", "12", "45", "37" }  ,
+            new object[] {"2016", "34", "65", "77" }  ,
+            new object[] {"2017", "12", "425", "37" } },
+                        dimensions = new List<EDimension>()
+        {
+            new EDimension(){  name="啊手动阀"},
+            new EDimension(){  name="第一列"},
+            new EDimension(){  name="第二列"},
+            new EDimension(){  name="第三列"},
+        },
+                        sourceHeader = false
+                    }
+                };
+            chart.Option.series = new List<ESerie>() { new ESerie() { type = "bar" }, new ESerie() { type = "line" }, new ESerie() { type = "bar" } };
+            chart2.Top = 50;
+            chart2.Option = chart.Option;
+            chart2.ComponentType = ComponentType.Echarts;
+            BigScreen.ChartList.Add(chart);
+            BigScreen.ChartList.Add(chart2);
+        }
+        catch (Exception ex)
+        {
+
+            throw ex;
+        }
+
+    }
+
+    Random r = new();
+    public void init()
+    {
+        //EChartIntence?.AddData(new object[] { r.Next(2020, 3000), r.Next(100), r.Next(100), r.Next(100) });
+    }
+    public void UpDate()
+    {
+        //EChartIntence?.RemoveAndAddData(new object[] { r.Next(2020, 3000), r.Next(100), r.Next(100), r.Next(100) });
+    }
+    public async void setOption()
+    {
+
+        var option = new
+        {
+            //title = new { text = "ECharts入门示例" },
+            //tooltip = new { },
+            //xAxis = new { data = new object[] { "adsf", "adsfasdf", "啊手动阀", "啊手动阀2", "啊手动阀3" } },
+            //yAxis = new { },
+            series = new[] { new { name = "xiaoliang", type = "bar", data = new[] { r.Next(100), 20, 36, 10, 10, 20 } } }
+        };
+        await jss.SetOption("asdfg", option);
+    }
+
+    private Task OnValueChangedByBool(bool val)
+    {
+        //todo 应该调用js  this.liChart[id].resize();
+        return Task.CompletedTask;
+    }
+    public async Task Refresh()
+    {
+        //todo 应该调用js  this.liChart[id].resize();
+        this.StateHasChanged();
+        if (BigScreen.SelectedList[0].Id!=null)
+        {
+            await jss.Resize(BigScreen.SelectedList[0].Id);
+        }
+        
+        await Task.CompletedTask;
+    }
+}
+
+
 
 

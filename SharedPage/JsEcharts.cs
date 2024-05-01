@@ -24,11 +24,15 @@ namespace SharedPage
             await module.InvokeVoidAsync("echartsFunc.init", id);
             //await module.InvokeVoidAsync("showPrompt", id);
         }
-
-        public async ValueTask SetOption(string id,object option)
+        public async ValueTask SetOption(string id,object? option)
         {
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("echartsFunc.setOption", id,option);
+        }
+        public async ValueTask Resize(string id)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("echartsFunc.resize", id);
         }
         public async ValueTask addResizeListener(string id)
         {
@@ -51,7 +55,11 @@ namespace SharedPage
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync($"echarts.init(document.getElementById({id}))");
         }
-
+        public async ValueTask Log(object id)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("echartsFunc.Log",id);
+        }
         public async ValueTask DisposeAsync()
         {
             if (moduleTask.IsValueCreated)

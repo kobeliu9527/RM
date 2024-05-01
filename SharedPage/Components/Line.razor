@@ -1,0 +1,95 @@
+﻿@using SharedPage.Page
+@inherits SharedPage.Base.EchartsBase
+@implements IAsyncDisposable
+@if (ChartInfo != null)
+{
+    if (@IsDesigner)
+    {
+        <div class="dragbox" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
+             @ondragstart="async (e)=>{
+            ChartInfo.MoveInfo.StartX=e.OffsetX;
+            ChartInfo.MoveInfo.StartY=e.OffsetY;
+        }" @onmousemove="async(e)=>{
+
+        }" @ondragend="async(e)=>{
+
+        }" @onclick=" async(e)=>{
+            if (e.CtrlKey)
+            {
+                if (BigScreen.SelectedList.Find(x=>x.Id==ChartInfo.Id)==null)
+                {
+                    BigScreen.SelectedList.Add(ChartInfo);
+                }
+            }
+            else
+            {
+                BigScreen.SelectedList.Clear();
+                BigScreen.SelectedList.Add(ChartInfo);
+            }
+            await  Designer.Refresh();
+            await JsEcharts.Log(BigScreen);
+
+        }">
+            <div id="@ChartInfo.Id" style="height:100%;width:100%"></div>
+        </div>
+    }
+    else
+    {
+        <div id="@ChartInfo.Id" style="position:absolute;height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%"></div>
+    }
+}
+@code {
+    [CascadingParameter(Name = "BigScreen")]
+    [NotNull]
+    public BigScreen? BigScreen { get; set; }
+
+    [CascadingParameter(Name = "Designer")]
+    [NotNull]
+    public Designer? Designer { get; set; }
+
+    [NotNull]
+    [Parameter]
+    public ComponentInfo? ChartInfo { get; set; } = new();
+
+    [Parameter]
+    public bool IsDesigner { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+    Random r = new();
+    public async void AddData(object[] data)
+    {
+        ChartInfo.Option?.dataset?.source?.Add(data);
+        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+    }
+    public async void RemoveData()
+    {
+        ChartInfo.Option?.dataset?.source?.RemoveAt(0);
+        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+    }
+    public async void RemoveAndAddData(object[] data)
+    {
+        ChartInfo.Option?.dataset?.source?.RemoveAt(0);
+        ChartInfo.Option?.dataset?.source?.Add(data);
+        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await JsEcharts.Init(ChartInfo.Id);
+            await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+            await JsEcharts.addResizeListener(ChartInfo.Id);
+        }
+
+    }
+    public async ValueTask DisposeAsync()
+    {
+        await JsEcharts.removeResizeListener(ChartInfo.Id);
+        GC.SuppressFinalize(this);
+    }
+
+}
