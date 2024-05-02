@@ -61,7 +61,7 @@ namespace SharedPage.Model
         [DisplayName("数据源名字"), Description("数据在统一请求的时候,一次返回多个数据集,用这个标识取哪一个")]
         public string DataName { get; set; } = "";
 
-        public MoveInfo? MoveInfo { get; set; } = new();
+        public MoveInfo MoveInfo { get; set; } = new();
 
         public ComponentInfo Clone()
         {

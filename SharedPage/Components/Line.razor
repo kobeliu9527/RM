@@ -7,12 +7,13 @@
     {
         <div class="dragbox" tabindex="0" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
         @onclick:stopPropagation @oncontextmenu:stopPropagation @oncontextmenu:preventDefault
-             @ondragstart="async (e)=>{
+             @ondragstart="(e)=>{
             ChartInfo.MoveInfo.StartX=e.ScreenX;
             ChartInfo.MoveInfo.StartY=e.ScreenY;
         }" @onmousemove="async(e)=>{
 
-        }" @ondragend="HandleDragend" @onclick=" async(e)=>{
+        }" @ondragend="HandleDragend"
+             @onclick=" async(e)=>{
             if (e.CtrlKey)
             {
                 if (BigScreen.SelectedList.Find(x=>x.Id==ChartInfo.Id)==null)
@@ -52,8 +53,9 @@
     [NotNull]
     public Designer? Designer { get; set; }
 
-    [NotNull]
+    
     [Parameter]
+    [NotNull]
     public ComponentInfo? ChartInfo { get; set; } = new();
 
     [Parameter]
@@ -82,7 +84,13 @@
     async Task HandleDragend(DragEventArgs e)
     {
         var ss = await JsEcharts.getWH("designer");
-        await JsEcharts.Log(ss);
+        var w = ss[0];
+        var h = ss[1];
+        var offsetx = e.ScreenX - ChartInfo.MoveInfo.StartX;
+        var offsety = e.ScreenY - ChartInfo.MoveInfo.StartY;
+        ChartInfo.Top = ChartInfo.Top + Convert.ToSingle((offsety / h * 100));
+        ChartInfo.Left = ChartInfo.Left + Convert.ToSingle((offsetx / w * 100));
+        await Designer.Refresh();
     }
     async Task HandleKeyDown(KeyboardEventArgs e)
     {
