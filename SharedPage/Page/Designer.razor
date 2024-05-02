@@ -12,12 +12,14 @@
             <div style="flex:10">
             </div>
         </div>
-        <div class="content" style="height:95%;">
+        <div class="content" style="height:95%;overflow:hidden">
             @if (ShowMenuBox)
             {
                 <div style="flex:2">左边</div>
             }
-            <div style="flex:8;position:relative;">
+            <div id="designer" style="flex:8;position:relative;overflow:auto" @onclick="async(e)=>{
+await JsEcharts.removeClassForSelect();
+}" >
                 <SharedPage.Components.Runing></SharedPage.Components.Runing>
             </div>
             @if (ShowPropertityBox)
@@ -31,9 +33,10 @@
 @code {
     [Inject]
     [NotNull]
-    public JsEcharts? jss { get; set; }
+    public JsEcharts? JsEcharts { get; set; }
     public BigScreen BigScreen { get; set; } = new() { InterVal = 1000, IsDesigner = true };
-    public DesignerInfo DesignerInfo { get; set; } = new();
+
+    public List<ComponentInfo> CopyList { get; set; } = new();
 
     public bool ShowPropertityBox { get; set; } = true;
     public bool ShowMenuBox { get; set; } = true;
@@ -102,7 +105,7 @@
             //yAxis = new { },
             series = new[] { new { name = "xiaoliang", type = "bar", data = new[] { r.Next(100), 20, 36, 10, 10, 20 } } }
         };
-        await jss.SetOption("asdfg", option);
+        await JsEcharts.SetOption("asdfg", option);
     }
 
     private Task OnValueChangedByBool(bool val)
@@ -110,15 +113,14 @@
         //todo 应该调用js  this.liChart[id].resize();
         return Task.CompletedTask;
     }
-    public async Task Refresh()
+    public async Task Refresh(bool isResize=false)
     {
         //todo 应该调用js  this.liChart[id].resize();
         this.StateHasChanged();
-        if (BigScreen.SelectedList[0].Id!=null)
+        if (BigScreen.SelectedList.Count > 0 && isResize && BigScreen.SelectedList[0].Id != null)
         {
-            await jss.Resize(BigScreen.SelectedList[0].Id);
+            await JsEcharts.Resize(BigScreen.SelectedList[0].Id);
         }
-        
         await Task.CompletedTask;
     }
 }

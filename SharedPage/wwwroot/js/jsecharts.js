@@ -50,21 +50,41 @@ export class echartsFunc {
             ]
         });
     }
-    static resize(id)
-    {
-        this.liChart[id].resize(); 
+    static resize(id) {
+        this.liChart[id].resize();
     }
     static addResizeListener(id) {
         this.ResizeListener[id] = () => { this.liChart[id].resize(); };
         window.addEventListener("resize", this.ResizeListener[id]);
-       // console.log(id, 'addResizeListener');
+        // console.log(id, 'addResizeListener');
     }
     static removeResizeListener(id) {
         window.removeEventListener("resize", this.ResizeListener[id]);
         delete this.liChart[id];
-       // console.log(id,'removeResizeListener');
+        // console.log(id,'removeResizeListener');
+    }
+    static addClassForSelect(id) {
+        var ele = document.getElementById(id);
+        if (!ele.classList.contains('selected')) {
+            ele.classList.add('selected');
+        }
+    }
+    static removeClassForSelect() {
+        for (var id in this.liChart) {
+            var ele = document.getElementById(id);
+            if (ele.classList.contains('selected')) {
+                ele.classList.remove('selected');
+            }
+        }
+
+    }
+    static getWH(id) {
+        var w = document.getElementById(id).clientWidth;
+        var h = document.getElementById(id).clientHeight;
+        return [w, h]
     }
     static Log(id) {
         console.log(id);
     }
+
 }

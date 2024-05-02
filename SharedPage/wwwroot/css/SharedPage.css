@@ -20,6 +20,9 @@
 .dragbox {
     cursor: pointer;
 }
+.selected {
+    border: 2px solid black;
+}
 /*designer*/
 /*重写BootstarpBlazor库的样式*/
 .bb .tabs .tabs-body {

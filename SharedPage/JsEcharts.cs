@@ -22,7 +22,6 @@ namespace SharedPage
         {
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("echartsFunc.init", id);
-            //await module.InvokeVoidAsync("showPrompt", id);
         }
         public async ValueTask SetOption(string id,object? option)
         {
@@ -44,11 +43,27 @@ namespace SharedPage
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("echartsFunc.removeResizeListener", id);
         }
-
+        public async ValueTask addClassForSelect(string id)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("echartsFunc.addClassForSelect", id);
+        }
+        public async ValueTask removeClassForSelect()
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("echartsFunc.removeClassForSelect");
+        }
         public async ValueTask<string> Prompt(string message)
         {
             var module = await moduleTask.Value;
             return await module.InvokeAsync<string>("showPrompt", message);
+        }
+
+
+        public async ValueTask<int[]> getWH(string id)
+        {
+            var module = await moduleTask.Value;
+            return await module.InvokeAsync<int[]>("echartsFunc.getWH", id);
         }
         public async ValueTask Prompt2(string id)
         {

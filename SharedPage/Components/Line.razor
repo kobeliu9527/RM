@@ -5,15 +5,14 @@
 {
     if (@IsDesigner)
     {
-        <div class="dragbox" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
+        <div class="dragbox" tabindex="0" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
+        @onclick:stopPropagation @oncontextmenu:stopPropagation @oncontextmenu:preventDefault
              @ondragstart="async (e)=>{
-            ChartInfo.MoveInfo.StartX=e.OffsetX;
-            ChartInfo.MoveInfo.StartY=e.OffsetY;
+            ChartInfo.MoveInfo.StartX=e.ScreenX;
+            ChartInfo.MoveInfo.StartY=e.ScreenY;
         }" @onmousemove="async(e)=>{
 
-        }" @ondragend="async(e)=>{
-
-        }" @onclick=" async(e)=>{
+        }" @ondragend="HandleDragend" @onclick=" async(e)=>{
             if (e.CtrlKey)
             {
                 if (BigScreen.SelectedList.Find(x=>x.Id==ChartInfo.Id)==null)
@@ -25,10 +24,16 @@
             {
                 BigScreen.SelectedList.Clear();
                 BigScreen.SelectedList.Add(ChartInfo);
+                await JsEcharts.removeClassForSelect();
             }
+            await JsEcharts.addClassForSelect(ChartInfo.Id);
             await  Designer.Refresh();
-            await JsEcharts.Log(BigScreen);
 
+
+        }" @onkeydown="HandleKeyDown"
+             @oncontextmenu="async(e)=>{
+            //调用js程序,将一个右键组件显示出来,通过display属性
+          //await JsEcharts.Log(e);
         }">
             <div id="@ChartInfo.Id" style="height:100%;width:100%"></div>
         </div>
@@ -74,7 +79,63 @@
         ChartInfo.Option?.dataset?.source?.Add(data);
         await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
     }
+    async Task HandleDragend(DragEventArgs e)
+    {
+        var ss = await JsEcharts.getWH("designer");
+        await JsEcharts.Log(ss);
+    }
+    async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowUp":
+                BigScreen.SelectedList.ForEach(x => x.Top--);
+                break;
+            case "ArrowDown":
+                BigScreen.SelectedList.ForEach(x => x.Top++);
+                break;
+            case "ArrowLeft":
+                BigScreen.SelectedList.ForEach(x => x.Left--);
+                break;
+            case "ArrowRight":
+                BigScreen.SelectedList.ForEach(x => x.Left++);
+                break;
+            case "Delete":
+                BigScreen.ChartList.RemoveAll(x => BigScreen.SelectedList.Contains(x));
+                BigScreen.SelectedList.Clear();
+                await Designer.Refresh();
+                break;
+            case "c":
+            case "C":
+                if (e.CtrlKey && BigScreen.SelectedList.Count > 0)
+                {
+                    //BigScreen.SelectedList.Clear();
+                    var obj = BigScreen.SelectedList.Select(x => x.Clone());
+                    Designer.CopyList.Clear();
+                    Designer.CopyList.AddRange(obj);
+                    // BigScreen.ChartList.AddRange(obj);
+                    // await Designer.Refresh();
+                }
+                break;
+            case "v":
+            case "V":
+                if (e.CtrlKey && Designer.CopyList.Count > 0)
+                {
+                    //BigScreen.SelectedList.Clear();
+                    var json = JsonSerializer.Serialize(Designer.CopyList);
+                    var objs = JsonSerializer.Deserialize<List<ComponentInfo>>(json);
+                    objs.ForEach(x => x.Id = Guid.NewGuid().ToString());
+                    BigScreen.ChartList.AddRange(objs);
+                    await Designer.Refresh();
+                }
+                break;
 
+        }
+        if (BigScreen.SelectedList.Count > 1)
+        {
+            await Designer.Refresh();
+        }
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);

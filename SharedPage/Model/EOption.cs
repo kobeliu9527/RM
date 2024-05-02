@@ -18,6 +18,5 @@ namespace SharedPage.Model
         public Etooltip? tooltip { get; set; } = new();
         public List<ESerie>? series { get; set; }
         //tooltip = new { },
-
     }
 }

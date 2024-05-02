@@ -25,4 +25,5 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddBootstrapBlazor();
 builder.Services.AddSingleton<JsEcharts, JsEcharts>();
 
+
 await builder.Build().RunAsync();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SharedPage.Model
@@ -51,18 +52,40 @@ namespace SharedPage.Model
         /// <summary>
         /// 多少秒请求一次
         /// </summary>
-        [DisplayName("请求间隔"), Description("多少秒请求一次,单位毫秒;负数表示只请求一次")] 
+        [DisplayName("请求间隔"), Description("多少秒请求一次,单位毫秒;负数表示只请求一次")]
         public int InterVal { get; set; } = 0;
-        
-        [DisplayName("数据来源"),Description("数据来源")]
-        public DataSourceType  DataSourceType { get; set; }
+
+        [DisplayName("数据来源"), Description("数据来源")]
+        public DataSourceType DataSourceType { get; set; }
 
         [DisplayName("数据源名字"), Description("数据在统一请求的时候,一次返回多个数据集,用这个标识取哪一个")]
         public string DataName { get; set; } = "";
 
-        public MoveInfo MoveInfo { get; set; } = new();
+        public MoveInfo? MoveInfo { get; set; } = new();
+
+        public ComponentInfo Clone()
+        {
+            var json = JsonSerializer.Serialize(this);
+            var res = JsonSerializer.Deserialize<ComponentInfo>(json);
+            if (res != null)
+            {
+                res.Top = Top + 10;
+                res.Left = Left + 10;
+                res.Id= Guid.NewGuid().ToString();
+                if (res.Top > 90)
+                {
+                    res.Top = Top - 10;
+                }
+                if (res.Left > 90)
+                {
+                    res.Left = Left - 10;
+                }
+            }
+            return res;
+        }
     }
-    public class MoveInfo {
+    public class MoveInfo
+    {
         public double StartX { get; set; }
         public double StartY { get; set; }
         public double MoveX { get; set; }
@@ -77,17 +100,17 @@ namespace SharedPage.Model
         /// <summary>
         /// 来自于Api接口;需要能对接上EdataSet
         /// </summary>
-        [Description("web Api 的接口")] 
+        [Description("web Api 的接口")]
         WebApi,
         /// <summary>
         /// 静态的
         /// </summary>
-        [Description("静态的数据源")] 
+        [Description("静态的数据源")]
         StaticJson
     }
     public enum ComponentType
     {
         Echarts,
-        Other    
+        Other
     }
 }
