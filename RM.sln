@@ -63,9 +63,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{6A8B581B-B3E0-4573-9B61-54E8618E4294}"
 	ProjectSection(SolutionItems) = preProject
 		index.html = index.html
+		TextFile1.txt = TextFile1.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dp.Server.Server", "Dp.Server\Server\Dp.Server.Server.csproj", "{58350BF9-5E63-46F5-BE59-973833C41110}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dp.Server.Server", "Dp.Server\Server\Dp.Server.Server.csproj", "{58350BF9-5E63-46F5-BE59-973833C41110}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

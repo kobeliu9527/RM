@@ -28,6 +28,12 @@ namespace SharedPage
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("echartsFunc.setOption", id,option);
         }
+        public async ValueTask dispose(string id)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("echartsFunc.dispose", id);
+        }
+        
         public async ValueTask Resize(string id)
         {
             var module = await moduleTask.Value;

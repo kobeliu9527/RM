@@ -1,67 +1,75 @@
 ﻿
-
-//window.echartsext2 = {
-//    container: {
-
-//    },
-//    api: {
-//        init: (id) => {
-//            console.log("asdf");
-//            // var myChart = echarts.init(document.getElementById(id), theme, opts);
-//            // console.log(myChart);
-//            //window.EchartsExt.Container[id] = myChart;
-//        },
-//        setOption: (id, notMerge, lazyUpdate) => {
-//            var chart = window.EchartsExt.Container[id];
-//            chart.setOption(option, notMerge, lazyUpdate);
-//        }
-//    }
-//};
 export class echartsFunc {
     static liChart = {};
     static ResizeListener = {};
     static init(id) {
-        var myChart = echarts.init(document.getElementById(id));
-        this.liChart[id] = myChart;
+        try {
+            var ele = document.getElementById(id);
+            if (ele) {
+                var myChart = echarts.init(ele);
+                if (myChart) {
+                    echartsFunc.liChart[id] = myChart;
+                    console.log('初始化成功', echartsFunc.liChart,id);
+                }
+                else {
+                    console.log('初始化失败', echartsFunc.liChart,id);
+                }
+            }
+        } catch (e) {
+            console.log('初始化失败',e);
+        }
+
     }
     static setOption(id, option, notMerge, lazyUpdate) {
-        var chart = this.liChart[id];
-        //console.log(option);
-        chart.setOption(option);
         try {
-        } catch (error) {
+            var chart = echartsFunc.liChart[id];
+            if (chart) {
+                chart.setOption(option);
+            }
+            else {
+                console.log('没有这个chart实例', id);
+            }
+        } catch (e) {
+            console.log(e);
         }
-        return;
-        chart.setOption({
-            title: {
-                text: 'ECharts 入门示例'
-            },
-            tooltip: {},
-            xAxis: {
-                data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
-            },
-            yAxis: {},
-            series: [
-                {
-                    name: '销量',
-                    type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20]
+    }
+    static dispose(id) {
+        try {
+            var chart = echartsFunc.liChart[id];
+            if (chart) {
+                if (chart.isDisposed()) {
+                    chart.dispose();//测试永远不会走到这里,不知道是哪里执行了销魂
                 }
-            ]
-        });
+                else {
+                    //console.log("已经被销毁了");
+                }
+                delete echartsFunc.liChart[id];
+            }
+            else {
+                //console.log('已经被销毁了', id);
+            }
+        } catch (e) {
+
+        }
     }
     static resize(id) {
-        this.liChart[id].resize();
+        try {
+            if (echartsFunc.liChart[id]) {
+                echartsFunc.liChart[id].resize();
+            }
+        } catch (e) {
+            console.log('resize失败', e);
+        }
+        
     }
     static addResizeListener(id) {
-        this.ResizeListener[id] = () => { this.liChart[id].resize(); };
-        window.addEventListener("resize", this.ResizeListener[id]);
-        // console.log(id, 'addResizeListener');
+        echartsFunc.ResizeListener[id] = () => { echartsFunc.liChart[id].resize(); };
+        window.addEventListener("resize", echartsFunc.ResizeListener[id]);
+     
     }
     static removeResizeListener(id) {
-        window.removeEventListener("resize", this.ResizeListener[id]);
-        delete this.liChart[id];
-        // console.log(id,'removeResizeListener');
+        window.removeEventListener("resize", echartsFunc.ResizeListener[id]);
+
     }
     static addClassForSelect(id) {
         var ele = document.getElementById(id);
@@ -70,12 +78,22 @@ export class echartsFunc {
         }
     }
     static removeClassForSelect() {
-        for (var id in this.liChart) {
-            var ele = document.getElementById(id);
-            if (ele.classList.contains('selected')) {
-                ele.classList.remove('selected');
+        try {
+            for (var id in echartsFunc.liChart) {
+                console.log(id);
+                var ele = document.getElementById(id);
+                if (ele) {
+                    if (ele.classList.contains('selected')) {
+                        ele.classList.remove('selected');
+                    }
+                }
             }
         }
+        catch (e) {
+            console.log(e);
+            console.log('cuocuole');
+        }
+
 
     }
     static getWH(id) {

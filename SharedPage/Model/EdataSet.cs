@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,44 @@ namespace SharedPage.Model
 {
     public class Etitle 
     {
-        //text = "ECharts入门示例" 
-        public string? text { get; set; } = "ECharts入门示例";
+        public string text { get; set; } = "标题";
+        public bool show { get; set; } = true;
+        public textStyle textStyle { get; set; }=new textStyle();
+    }
+    public class textStyle
+    {
+        public string color { get; set; } = "#333";
+    }
+
+    public class Legend 
+    {
+        [DisplayName("图例类型"),Description("图例的类型。可选值:'plain'：普通图例。缺省就是普通图例。'scroll'：可滚动翻页的图例。当图例数量较多时可以使用。 https://echarts.apache.org/zh/option.html#legend ")]
+        public string type { get; set; } = "plain";
+        public bool show { get; set; }=true;
+    }
+    public class Grid
+    {
+        /// <summary>
+        /// https://echarts.apache.org/zh/option.html#grid.left
+        /// </summary>
+        [DisplayName("左边距"), Description("可以是数字,百分比,或者'top', 'middle', 'bottom'")]
+        public string left { get; set; } = "10%";
+        [DisplayName("右边距"), Description("可以是数字,百分比,或者'top', 'middle', 'bottom'")]
+        public string right { get; set; } = "10%";
+
+        [DisplayName("上边距"), Description("可以是数字,百分比")]
+        public string top { get; set; } = "60";
+        [DisplayName("下边距"), Description("可以是数字,百分比")]
+        public string bottom { get; set; } = "60";
+        [DisplayName("宽度"), Description("可以是数字,百分比")]
+        public string width { get; set; } = "auto";
+        [DisplayName("高度"), Description("可以是数字,百分比")]
+        public string height { get; set; } = "auto";
+        /// <summary>
+        /// https://echarts.apache.org/zh/option.html#grid.containLabel
+        /// </summary>
+        [DisplayName("是否强制显示坐标轴标签"), Description("是否强制显示坐标轴标签")]
+        public bool containLabel { get; set; } = true;
     }
     public class ExAxis
     {
@@ -43,6 +80,7 @@ namespace SharedPage.Model
     {
         public string? type { get; set; } = "line";
         public string? name { get; set; }
+        public string? data { get; set; }
         /// <summary>
         /// 
         /// </summary>

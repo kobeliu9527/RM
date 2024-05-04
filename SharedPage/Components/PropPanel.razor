@@ -7,8 +7,12 @@
                 <Collapse>
                     <CollapseItems>
                         <CollapseItem Text="通用属性">
-                            <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Id"></BootstrapInput>
-                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            <BootstrapInput @bind-Value="@(BigScreen.SelectedList[0].Id)"></BootstrapInput>
+                            <div>
+                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            </div>
+                            <ColorPicker @bind-Value="@BigScreen.SelectedList[0].Option.backgroundColor" OnValueChanged="OnValueChangedForString"></ColorPicker>
+                            <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Option.grid.left" OnValueChanged="OnValueChangedForString"></BootstrapInput>
                             <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
@@ -41,7 +45,13 @@
     public async Task OnValueChanged(float val)
     {
         //BigScreen.SelectedList[0]
-        await Designer.Refresh();
+        await Designer.Refresh(true);
+        await Task.CompletedTask;
+    }
+    public async Task OnValueChangedForString(string val)
+    {
+        //BigScreen.SelectedList[0]
+        await Designer.Refresh(true);
         await Task.CompletedTask;
     }
 }

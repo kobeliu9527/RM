@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SharedPage.Model
@@ -25,6 +26,7 @@ namespace SharedPage.Model
         /// 这个大屏的所有Echart图表
         /// </summary>
         public List<ComponentInfo> ChartList { get; set; } = new();
+        [JsonIgnore]
         public List<ComponentInfo> SelectedList { get; set; } = new();
 
 

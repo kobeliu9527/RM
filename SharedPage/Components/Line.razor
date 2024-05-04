@@ -53,7 +53,7 @@
     [NotNull]
     public Designer? Designer { get; set; }
 
-    
+
     [Parameter]
     [NotNull]
     public ComponentInfo? ChartInfo { get; set; } = new();
@@ -109,6 +109,11 @@
                 BigScreen.SelectedList.ForEach(x => x.Left++);
                 break;
             case "Delete":
+                var ss = BigScreen.ChartList.FindAll(x => BigScreen.SelectedList.Contains(x));
+                ss.ForEach(async (x) =>
+                {
+                    await JsEcharts.dispose(x.Id);
+                });
                 BigScreen.ChartList.RemoveAll(x => BigScreen.SelectedList.Contains(x));
                 BigScreen.SelectedList.Clear();
                 await Designer.Refresh();
@@ -117,12 +122,9 @@
             case "C":
                 if (e.CtrlKey && BigScreen.SelectedList.Count > 0)
                 {
-                    //BigScreen.SelectedList.Clear();
                     var obj = BigScreen.SelectedList.Select(x => x.Clone());
                     Designer.CopyList.Clear();
                     Designer.CopyList.AddRange(obj);
-                    // BigScreen.ChartList.AddRange(obj);
-                    // await Designer.Refresh();
                 }
                 break;
             case "v":

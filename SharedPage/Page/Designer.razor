@@ -10,6 +10,10 @@
                 <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="属性框" @bind-Value="@ShowPropertityBox" OnValueChanged="OnValueChangedByBool" />
             </div>
             <div style="flex:10">
+                <Button Size="Size.ExtraSmall" OnClick="UpMove">上移</Button>
+                <Button Size="Size.ExtraSmall" OnClick="DownMove">下移</Button>
+                <Button Size="Size.ExtraSmall" OnClick="UpMove">置顶</Button>
+                <Button Size="Size.ExtraSmall" OnClick="UpMove">置底</Button>
             </div>
         </div>
         <div class="content" style="height:95%;overflow:hidden">
@@ -19,7 +23,7 @@
             }
             <div id="designer" style="flex:8;position:relative;overflow:auto" @onclick="async(e)=>{
 await JsEcharts.removeClassForSelect();
-}" >
+}">
                 <SharedPage.Components.Runing></SharedPage.Components.Runing>
             </div>
             @if (ShowPropertityBox)
@@ -34,6 +38,10 @@ await JsEcharts.removeClassForSelect();
     [Inject]
     [NotNull]
     public JsEcharts? JsEcharts { get; set; }
+    [Inject]
+    [NotNull]
+    private MessageService? Msg { get; set; }
+
     public BigScreen BigScreen { get; set; } = new() { InterVal = 1000, IsDesigner = true };
 
     public List<ComponentInfo> CopyList { get; set; } = new();
@@ -113,15 +121,94 @@ await JsEcharts.removeClassForSelect();
         //todo 应该调用js  this.liChart[id].resize();
         return Task.CompletedTask;
     }
-    public async Task Refresh(bool isResize=false)
+    public async Task Refresh(bool isResize = false)
     {
         //todo 应该调用js  this.liChart[id].resize();
         this.StateHasChanged();
         if (BigScreen.SelectedList.Count > 0 && isResize && BigScreen.SelectedList[0].Id != null)
         {
+            await JsEcharts.SetOption(BigScreen.SelectedList[0].Id, BigScreen.SelectedList[0].Option);
             await JsEcharts.Resize(BigScreen.SelectedList[0].Id);
         }
         await Task.CompletedTask;
+
+    }
+    
+    private async void DownMove(MouseEventArgs e)
+    {
+        if (BigScreen.SelectedList.Count == 0)
+        {
+            await Msg.Show(new MessageOption()
+                {
+                    Content = "请选择一个组件",
+                    Color = Color.Danger
+                });
+        }
+        else if (BigScreen.SelectedList.Count > 1)
+        {
+            await Msg.Show(new MessageOption()
+                {
+                    Content = "不能选择多个组件",
+                    Color = Color.Danger
+                });
+        }
+        else
+        {
+            var res = BigScreen.ChartList.IndexOf(BigScreen.SelectedList[0]);
+            if (res!=0)
+            {
+                BigScreen.ChartList.Swap(res, res-1);
+                this.StateHasChanged();
+            }
+            else
+            {
+                await Msg.Show(new MessageOption()
+                    {
+                        Content = "当前在最底层了",
+                        Color = Color.Danger
+                    });
+            }
+            
+        }
+    }
+    private async void UpMove(MouseEventArgs e)
+    {
+        if (BigScreen.SelectedList.Count == 0)
+        {
+            await Msg.Show(new MessageOption()
+                {
+                    Content = "请选择一个组件",
+                    Color = Color.Danger
+                });
+        }
+        else if (BigScreen.SelectedList.Count > 1)
+        {
+            await Msg.Show(new MessageOption()
+                {
+                    Content = "不能选择多个组件",
+                    Color = Color.Danger
+                });
+        }
+        else
+        {
+            var res = BigScreen.ChartList.IndexOf(BigScreen.SelectedList[0]);
+            var count = BigScreen.ChartList.Count;
+            if (res == count-1)
+            {
+                await Msg.Show(new MessageOption()
+                    {
+                        Content = "当前在最上层了",
+                        Color = Color.Danger
+                    });
+                
+            }
+            else
+            {
+                BigScreen.ChartList.Swap(res, res + 1);
+                this.StateHasChanged();
+            }
+
+        }
     }
 }
 

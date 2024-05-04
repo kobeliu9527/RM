@@ -1,7 +1,7 @@
-@charset "UTF-8";
+﻿$Select-color: blue;//被选中后边框颜色
 /*designer*/
 .content {
-  display: flex;
+    display: flex;
 }
 
 /*.left {
@@ -18,16 +18,17 @@
     max-height: 100%;
     border: 2px solid black;
 }*/
+
 /*.dragbox {
     cursor: pointer;
 }*/
-.selected {
-  border: 2px solid blue;
-}
 
+.selected {
+    border: 2px solid $Select-color;
+}
 /*designer*/
 /*重写BootstarpBlazor库的样式*/
 .bb .tabs .tabs-body {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
