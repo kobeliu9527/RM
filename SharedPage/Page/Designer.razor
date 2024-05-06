@@ -78,7 +78,7 @@ await JsEcharts.removeClassForSelect();
                         sourceHeader = false
                     }
                 };
-            chart.Option.series = new List<ESerie>() { new ESerie() { type = "bar" }, new ESerie() { type = "line" }, new ESerie() { type = "bar" } };
+            chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = "bar" }, new SeriePie() { type = "line" }, new SeriePie() { type = "bar" } };
             chart2.Top = 50;
             chart2.Option = chart.Option;
             chart2.ComponentType = ComponentType.Echarts;

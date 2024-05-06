@@ -24,6 +24,8 @@ export class echartsFunc {
         try {
             var chart = echartsFunc.liChart[id];
             if (chart) {
+               // let opt = eval('(' + option + ')');
+              //  chart.setOption(opt);
                 chart.setOption(option);
             }
             else {

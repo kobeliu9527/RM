@@ -12,7 +12,7 @@
                                 <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             </div>
                             <ColorPicker @bind-Value="@BigScreen.SelectedList[0].Option.backgroundColor" OnValueChanged="OnValueChangedForString"></ColorPicker>
-                            <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Option.grid.left" OnValueChanged="OnValueChangedForString"></BootstrapInput>
+                            <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Option.grid[0].left" OnValueChanged="OnValueChangedForString"></BootstrapInput>
                             <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />

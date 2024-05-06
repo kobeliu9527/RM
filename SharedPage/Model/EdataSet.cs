@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedPage.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -51,6 +52,7 @@ namespace SharedPage.Model
     public class ExAxis
     {
         public string type { get; set; } = "category";
+        public List<object> data { get; set; } = new();
     }
     public class EyAxis
     {
@@ -76,15 +78,11 @@ namespace SharedPage.Model
         public string? type { get; set; }
         public string? displayName { get; set; }
     }
-    public class ESerie
+    public class SerieLine : ESerieBase
     {
-        public string? type { get; set; } = "line";
-        public string? name { get; set; }
-        public string? data { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string? seriesLayoutBy { get; set; } = "column";
+        //public string? type { get; set; }
+        //public string? name { get; set; }
+        //public List<object>? data { get; set; }
     }
     public class EEncode
     {

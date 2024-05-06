@@ -1,4 +1,9 @@
 using Microsoft.JSInterop;
+using System.ComponentModel;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Unicode;
 
 namespace SharedPage
 {
@@ -26,7 +31,20 @@ namespace SharedPage
         public async ValueTask SetOption(string id,object? option)
         {
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("echartsFunc.setOption", id,option);
+            //System.Text.Json.JsonSerializerOptions op = new JsonSerializerOptions()
+            //{
+            //    //Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
+            //    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            //    //PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            //    //Converters =
+            //    //{
+            //    //    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+            //    //    //new JFuncConverter(),
+            //    //    //new Array2DConverter()
+            //    //}
+            //};
+            //var json=System.Text.Json.JsonSerializer.Serialize(option, op);
+            await module.InvokeVoidAsync("echartsFunc.setOption", id, option);
         }
         public async ValueTask dispose(string id)
         {

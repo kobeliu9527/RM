@@ -1,0 +1,41 @@
+﻿@page "/line"
+
+@layout SharedPage.Layout.BaseLayout
+<div style="display:flex">
+    <div style="flex:10;height:400px;width:400px">
+        <CascadingValue Value="@BigScreen" Name="BigScreen">
+            <SharedPage.Components.Runing></SharedPage.Components.Runing>
+        </CascadingValue>
+    </div>
+    <div style="flex:2"></div>
+</div>
+
+@code {
+    [NotNull]
+    public BigScreen? BigScreen { get; set; } = new();
+    protected override Task OnInitializedAsync()
+    {
+        var ctr = new ComponentInfo();
+        var op = new EOption();
+        op.title = new();
+        op.grid = new()
+        {
+         new Grid(){  left="40%" }
+        };
+        op.xAxis = new List<ExAxis>() { new ExAxis() { type = "category" ,data=new List<object>() { "a","b","c"} } };
+        op.yAxis = new() { new EyAxis() { type="value"} };
+        op.series = new List<ESerieBase>()
+        {
+            new SerieLine(){
+                type="line",
+                data=new List<object>()
+                {
+                  120, 200, 150
+                }}
+        };
+        ctr.Option = op;
+        BigScreen.IsDesigner = false;
+        BigScreen.ChartList.Add(ctr);
+        return base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,123 @@
+﻿@page "/pie"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager Navigation
+@layout SharedPage.Layout.BaseLayout
+<div style="height:5%">
+
+</div>
+<div style="display:flex;height:95%;">
+    <div style="flex:2;position:relative;"></div>
+    <div style="flex:7;position:relative;">
+        <CascadingValue Value="@BigScreen" Name="BigScreen">
+            <SharedPage.Components.Runing></SharedPage.Components.Runing>
+        </CascadingValue>
+        @ss
+    </div>
+    <div style="flex:3;position:relative;">
+        <Tab>
+            <TabItem Text="数据源">
+                <Button OnClick="RequestData">请求数据</Button>
+                <Textarea placeholder="请输入 ..." style="height:90%" Value="@(BigScreen.ChartList[0].Option.series[0].data.Serialize())" OnValueChanged="UpdateDataSource" />
+            </TabItem>
+            <TabItem Text="所有配置">
+                <Textarea placeholder="请输入 ..." style="height:100%" Value="@(BigScreen.ChartList[0].Option.Serialize())" OnValueChanged="UpdateOption" />
+            </TabItem>
+        </Tab>
+    </div>
+</div>
+
+@code {
+    [NotNull]
+    public BigScreen? BigScreen { get; set; } = new();
+    [Inject]
+    [NotNull]
+    public JsEcharts? JsEcharts { get; set; }
+    private HubConnection? hubConnection;
+    public string ss { get; set; } = "aaa";
+    protected async override Task OnInitializedAsync()
+    {
+        var ctr = new ComponentInfo();
+        var op = new EOption();
+        op.title = new();
+        op.series = new List<ESerieBase>()
+        {
+            new SeriePie()
+            {
+                roseType="area"
+            }
+        };
+        ctr.Option = op;
+        BigScreen.IsDesigner = false;
+        BigScreen.ChartList.Add(ctr);
+        await base.OnInitializedAsync();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            try
+            {
+                hubConnection = new HubConnectionBuilder()
+                 .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
+                .Build();
+                ss = Navigation.ToAbsoluteUri("/chathub").AbsoluteUri;
+                System.Console.WriteLine(ss);
+                hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+                {
+                    ss = message;
+                    this.InvokeAsync(StateHasChanged);
+                });
+                await JsEcharts.Log("kaishi");
+                await hubConnection.StartAsync();
+                await JsEcharts.Log("jieshu");
+                var sss = hubConnection.State == HubConnectionState.Connected;
+                await JsEcharts.Log(sss);
+            }
+            catch (Exception ex)
+            {
+                await JsEcharts.Log("chucuo:" + ex.Message);
+            }
+        }
+       
+    }
+
+    private async Task UpdateDataSource(string val)
+    {
+        try
+        {
+            var ss = System.Text.Json.JsonSerializer.Deserialize<List<object>>(val);
+            BigScreen.ChartList[0].Option.series[0].data = ss;
+            await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
+        }
+        catch (Exception ex)
+        {
+            await JsEcharts.Log(ex);
+        }
+    }
+    private async Task UpdateOption(string val)
+    {
+        try
+        {
+            var ss = System.Text.Json.JsonSerializer.Deserialize<EOption>(val);
+            BigScreen.ChartList[0].Option = ss;
+            await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
+        }
+        catch (Exception ex)
+        {
+            await JsEcharts.Log(ex);
+        }
+    }
+    private async void RequestData()
+    {
+        await Task.Delay(100);
+        Random r = new Random();
+        BigScreen.ChartList[0].Option.series[0].data = new List<object>()
+                {
+                    new { value=r.Next(1000),name="直接访问" },
+                    new { value=r.Next(1000),name="联盟广告" },
+                    new { value=r.Next(1000),name="搜索引擎" },
+                };
+        await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
+    }
+}

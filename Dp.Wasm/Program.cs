@@ -7,7 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 using System.Timers;
-
+using Microsoft.AspNetCore.SignalR;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 //JsonSerializerOptions.Default = new JsonSerializerOptions() { };
 System.Text.Json.JsonSerializerOptions op= new JsonSerializerOptions() {
