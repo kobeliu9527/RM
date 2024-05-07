@@ -1,7 +1,11 @@
 ﻿@page "/pie"
+@using Dp.Wasm.Hubs
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager Navigation
-@layout SharedPage.Layout.BaseLayout
+@layout BaseLayout
+@* @attribute [Authorize(Roles ="afafd")] *@
+
 <div style="height:5%">
 
 </div>
@@ -9,9 +13,11 @@
     <div style="flex:2;position:relative;"></div>
     <div style="flex:7;position:relative;">
         <CascadingValue Value="@BigScreen" Name="BigScreen">
-            <SharedPage.Components.Runing></SharedPage.Components.Runing>
+            <SharedPage.Components.Runing ></SharedPage.Components.Runing>
         </CascadingValue>
-        @ss
+        <span>---</span>
+        <span>---</span>
+        @("值是"+Program.aaa)
     </div>
     <div style="flex:3;position:relative;">
         <Tab>
@@ -34,6 +40,7 @@
     public JsEcharts? JsEcharts { get; set; }
     private HubConnection? hubConnection;
     public string ss { get; set; } = "aaa";
+    public Action<string,object>? SetOptionHandel { get; set; }
     protected async override Task OnInitializedAsync()
     {
         var ctr = new ComponentInfo();
@@ -53,35 +60,15 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        SetOptionHandel = SetOption;
         await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            try
-            {
-                hubConnection = new HubConnectionBuilder()
-                 .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
-                .Build();
-                ss = Navigation.ToAbsoluteUri("/chathub").AbsoluteUri;
-                System.Console.WriteLine(ss);
-                hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-                {
-                    ss = message;
-                    this.InvokeAsync(StateHasChanged);
-                });
-                await JsEcharts.Log("kaishi");
-                await hubConnection.StartAsync();
-                await JsEcharts.Log("jieshu");
-                var sss = hubConnection.State == HubConnectionState.Connected;
-                await JsEcharts.Log(sss);
-            }
-            catch (Exception ex)
-            {
-                await JsEcharts.Log("chucuo:" + ex.Message);
-            }
-        }
-       
     }
-
+    public void SetOption(string id ,object option)
+    {
+        var chart = BigScreen.ChartList.Find(x=>x.Id==id);
+        //chart.Option = option;
+        chart?.SetOption?.Invoke();
+    }
     private async Task UpdateDataSource(string val)
     {
         try

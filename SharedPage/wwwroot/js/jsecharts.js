@@ -24,9 +24,9 @@ export class echartsFunc {
         try {
             var chart = echartsFunc.liChart[id];
             if (chart) {
-               // let opt = eval('(' + option + ')');
-              //  chart.setOption(opt);
-                chart.setOption(option);
+                let opt = eval('(' + option + ')');
+                chart.setOption(opt);
+              //  chart.setOption(option);
             }
             else {
                 console.log('没有这个chart实例', id);

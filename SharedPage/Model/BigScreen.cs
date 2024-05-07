@@ -1,4 +1,5 @@
-﻿using SharedPage.Components;
+﻿using Microsoft.AspNetCore.Components;
+using SharedPage.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -63,6 +64,10 @@ namespace SharedPage.Model
         [DisplayName("数据源名字"), Description("数据在统一请求的时候,一次返回多个数据集,用这个标识取哪一个")]
         public string DataName { get; set; } = "";
 
+        /// <summary>
+        /// 更新这个控件的委托
+        /// </summary>
+        [JsonIgnore] public Action? SetOption { get; set; }
         public MoveInfo MoveInfo { get; set; } = new();
 
         public ComponentInfo Clone()

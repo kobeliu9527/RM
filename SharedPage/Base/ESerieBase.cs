@@ -1,4 +1,5 @@
-﻿using SharedPage.Model;
+﻿using SharedPage.JsonConvert;
+using SharedPage.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace SharedPage.Base
 {
-    [JsonDerivedType(typeof(ESerieBase),typeDiscriminator:"base")]
-    [JsonDerivedType(typeof(SeriePie), typeDiscriminator: "SeriePie")]
-    [JsonDerivedType(typeof(SerieLine), typeDiscriminator: "SerieLine")]
-    
+    //[JsonDerivedType(typeof(ESerieBase),typeDiscriminator:"base")]
+    //[JsonDerivedType(typeof(SeriePie), typeDiscriminator: "SeriePie")]
+    //[JsonDerivedType(typeof(SerieLine), typeDiscriminator: "SerieLine")]
+
     public class ESerieBase
     {
         public virtual string? type { get; set; } = "line";
@@ -24,9 +25,17 @@ namespace SharedPage.Base
         /// 数据源为dataset的时候,只能维度是按照列还是行来
         /// </summary>
         public virtual string? seriesLayoutBy { get; set; } = "column";
+
+        /////// <summary>
+        /////// 备用
+        /////// </summary>
+        /////public string? id { get; set; }
+
         /// <summary>
-        /// 备用
+        /// 延迟动画
         /// </summary>
-        //public string? id { get; set; }
+        [JsonConverter(typeof(JsFuncConverter))]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public JsFunc? animationDelay { get; set; } = new JsFunc() { RAW = "function (idx) {return idx * 100 ;}" };
     }
 }

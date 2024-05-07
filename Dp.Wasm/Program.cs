@@ -8,22 +8,42 @@ using System.Text.Json;
 using System.Text.Unicode;
 using System.Timers;
 using Microsoft.AspNetCore.SignalR;
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
-//JsonSerializerOptions.Default = new JsonSerializerOptions() { };
-System.Text.Json.JsonSerializerOptions op= new JsonSerializerOptions() {
-    Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs)
-};
-ApiData apiData = new ApiData();
-apiData.Data.Add("≤‚ ‘1", new List<object[]>() { new object[] { "1", "2" }, new object[] { "3", "4" } });
-apiData.Data.Add("≤‚ ‘2", new List<object[]>() { new object[] { "11", "21" }, new object[] { "13", "14" } });
-string json = System.Text.Json.JsonSerializer.Serialize(apiData, op);
-var obj = System.Text.Json.JsonSerializer.Deserialize<ApiData>(json, op);
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
+using Microsoft.AspNetCore.Components.Authorization;
+using SharedPage.JsonConvert;
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddBootstrapBlazor();
-builder.Services.AddSingleton<JsEcharts, JsEcharts>();
+internal class Program
+{
+    public static string aaa="1111111111111111";
+    private static async Task Main(string[] args)
+    {
+        Test();
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        WebAssemblyHostConfiguration Configuration = builder.Configuration!;
+        aaa = Configuration.GetSection("wasma")!.Value!;
+        //JsonSerializerOptions.Default = new JsonSerializerOptions() { };
+        //JsonSerializerOptions op= new JsonSerializerOptions() {
+        //    Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs)
+        //};
+        //var Appsetting = Configuration.GetSection(nameof(Appsettings)).Get<Appsettings>()!;
+        builder.RootComponents.Add<App>("#app");
+        builder.RootComponents.Add<HeadOutlet>("head::after");
+        builder.Services.AddHttpClient();
+        //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+        builder.Services.AddBootstrapBlazor();
+        builder.Services.AddAuthorizationCore();
+        builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForWasm>();
+        builder.Services.AddSingleton<JsEcharts, JsEcharts>();
 
 
-await builder.Build().RunAsync();
+        await builder.Build().RunAsync();
+    }
+
+    private static void Test()
+    { 
+    EOption option = new EOption();
+        JsonSerializerOptions op = new JsonSerializerOptions() {
+            Converters = { new ListConvert () }
+        };
+        var s=JsonSerializer.Serialize(option,op);
+    }
+}

@@ -1,15 +1,60 @@
-﻿<BootstrapBlazorRoot>
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(SharedPage.Page.Designer).Assembly}">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
-</BootstrapBlazorRoot>
-@* "new System.Reflection.Assembly[]{typeof(Shared.Page.Runing).Assembly}" *@
+﻿@using Dp.Wasm.Hubs
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.SignalR.Client
+<CascadingAuthenticationState>
+    <CascadingValue Value="this">
+        <BootstrapBlazorRoot>
+            <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(SharedPage.Page.Designer).Assembly}">
+                <Found Context="routeData">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(BaseLayout)">
+                        <NotAuthorized>
+                            <span>没有权限,即将跳转..</span>
+                        </NotAuthorized>
+                    </AuthorizeRouteView>
+                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                </Found>
+                <NotFound>
+                    <PageTitle>Not found</PageTitle>
+                    <LayoutView Layout="@typeof(BaseLayout)">
+                        <p role="alert">Sorry, there's nothing at this address.</p>
+                    </LayoutView>
+                </NotFound>
+            </Router>
+        </BootstrapBlazorRoot>
+    </CascadingValue>
+</CascadingAuthenticationState>
+@code {
+    private HubConnection? hubConnection;
+    [Inject]
+    [NotNull]
+    public NavigationManager? Navigation { get; set; }
+    [Inject]
+    [NotNull]
+    public JsEcharts? JsEcharts { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            try
+            {
+                hubConnection = new HubConnectionBuilder()
+                 .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
+                 .WithAutomaticReconnect(new SignalRReconnectInterVal())
+                .Build();
+                hubConnection.On<string, object>("ReceiveOption", (id, option) =>
+                {
+                    this.InvokeAsync(StateHasChanged);
+                });
+                await hubConnection.StartAsync();
+                var sss = hubConnection.State == HubConnectionState.Connected ? "连接成功" : "连接失败";
+                await JsEcharts.Log(sss);
+            }
+            catch (Exception ex)
+            {
+                await JsEcharts.Log("singlr连接失败:" + ex.Message);
+            }
+        }
+    }
+}

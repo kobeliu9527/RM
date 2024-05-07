@@ -19,5 +19,11 @@ namespace Dp.Server.Server.Controllers
             _hubContext.Clients.All.SendAsync("ReceiveMessage","1",DateTime.Now.ToString());
             return DateTime.Now.ToString();
         }
+        [HttpPost]
+        public string GetClients()
+        {
+           
+            return DateTime.Now.ToString();
+        }
     }
 }

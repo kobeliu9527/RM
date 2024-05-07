@@ -43,8 +43,8 @@ namespace SharedPage
             //    //    //new Array2DConverter()
             //    //}
             //};
-            //var json=System.Text.Json.JsonSerializer.Serialize(option, op);
-            await module.InvokeVoidAsync("echartsFunc.setOption", id, option);
+            var json=JsonSerializer.Serialize(option);
+            await module.InvokeVoidAsync("echartsFunc.setOption", id, json);
         }
         public async ValueTask dispose(string id)
         {
