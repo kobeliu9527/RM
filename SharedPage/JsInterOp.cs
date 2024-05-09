@@ -123,7 +123,7 @@ namespace SharedPage
         {
             try
             {
-                await jsRun.InvokeVoidAsync("localforage.removeItem", key);
+                await jsRun.InvokeVoidAsync("localforage.removeItem", key);  
             }
             catch (JSException ex)
             {
