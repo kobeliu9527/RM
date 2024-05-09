@@ -1,41 +1,118 @@
 ﻿@page "/line"
+@using Dp.Wasm.Hubs
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Text.Json
+@inject NavigationManager Navigation
+@layout BaseLayout
+@* @attribute [Authorize(Roles ="afafd")] *@
 
-@layout SharedPage.Layout.BaseLayout
-<div style="display:flex">
-    <div style="flex:10;height:400px;width:400px">
+<div style="height:5%">
+</div>
+<div style="display:flex;height:95%;">
+    <div style="flex:2;position:relative;"></div>
+    <div style="flex:7;position:relative;">
         <CascadingValue Value="@BigScreen" Name="BigScreen">
             <SharedPage.Components.Runing></SharedPage.Components.Runing>
         </CascadingValue>
     </div>
-    <div style="flex:2"></div>
+    <div style="flex:3;position:relative;">
+        <Tab>
+            <TabItem Text="数据源">
+                <Button OnClick="RequestData">请求数据</Button>
+                <Textarea placeholder="请输入 ..." style="height:90%" Value="@(BigScreen.ChartList[0].Option.dataset.source. Serialize())" OnValueChanged="UpdateDataSource" />
+            </TabItem>
+            <TabItem Text="所有配置">
+                <Textarea placeholder="请输入 ..." style="height:90%" Value="@(BigScreen.ChartList[0].Option.Serialize())" OnValueChanged="UpdateOption" />
+            </TabItem>
+        </Tab>
+    </div>
 </div>
 
 @code {
     [NotNull]
     public BigScreen? BigScreen { get; set; } = new();
-    protected override Task OnInitializedAsync()
+    [Inject]
+    [NotNull]
+    public JsInterOp? JsEcharts { get; set; }
+    private HubConnection? hubConnection;
+    public Action<string, List<object[]>?>? SetOptionHandel { get; set; }
+    protected async override Task OnInitializedAsync()
     {
-        var ctr = new ComponentInfo();
+        var ctr = new ComponentInfo() {  Width=80,Height=60};
         var op = new EOption();
-        op.title = new();
-        op.grid = new()
-        {
-         new Grid(){  left="40%" }
-        };
-        op.xAxis = new List<ExAxis>() { new ExAxis() { type = "category" ,data=new List<object>() { "a","b","c"} } };
-        op.yAxis = new() { new EyAxis() { type="value"} };
+        op.legend = new Legend();
+        op.tooltip = new Etooltip();
+        op.title = new() { };
+        op.xAxis = new() { new ExAxis() { type =  EAxisType.category } };
+        op.yAxis = new() { new ExAxis() };
         op.series = new List<ESerieBase>()
         {
-            new SerieLine(){
-                type="line",
-                data=new List<object>()
-                {
-                  120, 200, 150
-                }}
+            new SerieLine()
+            {
+            },new SerieLine()
+            {
+            },new SerieLine()
+            {
+            }
         };
+        op.dataset.sourceHeader = true;
         ctr.Option = op;
         BigScreen.IsDesigner = false;
         BigScreen.ChartList.Add(ctr);
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        SetOptionHandel = SetOption;
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    public void SetOption(string id, List<object[]>? option)
+    {
+        var chart = BigScreen.ChartList.Find(x => x.Id == id);
+        chart?.SetOption?.Invoke(option);
+    }
+    private async Task UpdateDataSource(string val)
+    {
+        try
+        {
+            var ss = System.Text.Json.JsonSerializer.Deserialize<List<object[]>>(val);
+            BigScreen.ChartList[0].Option.dataset.source = ss;
+            await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
+        }
+        catch (Exception ex)
+        {
+            await JsEcharts.Log(ex);
+        }
+    }
+    private async Task UpdateOption(string val)
+    {
+        try
+        {
+            var ss = System.Text.Json.JsonSerializer.Deserialize<EOption>(val);
+            BigScreen.ChartList[0].Option = ss;
+            await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
+        }
+        catch (Exception ex)
+        {
+            await JsEcharts.Log(ex);
+        }
+    }
+    private async void RequestData()
+    {
+        await Task.Delay(100);
+        Random r = new Random();
+        var src = new List<object[]>()
+                {
+                    new object[] {"直接访问",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {"联盟广告",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {"搜索引擎",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {"搜索引擎1", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {"搜索引擎2", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {"搜索引擎3", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {"搜索引擎4", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                    new object[] {r.Next(1000).ToString(), r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+                };
+        SetOption(BigScreen.ChartList[0].Id, src);
     }
 }

@@ -1,39 +1,105 @@
-﻿
-<div class="bb" style="flex:2">
-    @if (@BigScreen.SelectedList.Count == 1)
-    {
-        <Tab>
-            <TabItem Text="adf1">
-                <Collapse>
-                    <CollapseItems>
-                        <CollapseItem Text="通用属性">
-                            <BootstrapInput @bind-Value="@(BigScreen.SelectedList[0].Id)"></BootstrapInput>
-                            <div>
-                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+﻿@using System.ComponentModel
+@using System.Text.RegularExpressions
+@if (@BigScreen.Selected != null)
+{
+    <Tab>
+        <TabItem Text="基础配置">
+            <Collapse>
+                <CollapseItems>
+                    <CollapseItem Text="通用属性">
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Id")">
+                            <div class="input-n">
+                                <BootstrapInput @bind-Value="@(BigScreen.Selected.Id)" ShowLabel="true" Readonly="true"></BootstrapInput>
                             </div>
-                            <ColorPicker @bind-Value="@BigScreen.SelectedList[0].Option.backgroundColor" OnValueChanged="OnValueChangedForString"></ColorPicker>
-                            <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Option.grid[0].left" OnValueChanged="OnValueChangedForString"></BootstrapInput>
-                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
-                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
-                            <BootstrapInputNumber @bind-Value="@BigScreen.SelectedList[0].Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
-                        </CollapseItem>
-                        <CollapseItem Text="特殊属性"></CollapseItem>
-                        <CollapseItem Text="通用属性2"></CollapseItem>
-                    </CollapseItems>
-                </Collapse>
-            </TabItem>
-            <TabItem Text="adf2"></TabItem>
-            <TabItem Text="adf3"></TabItem>
-        </Tab>
-    }
-    else
-    {
-        <div>选定一个组件</div>
-    }
-</div>
+                        </Tooltip>
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Top")">
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            </div>
+                        </Tooltip>
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Left")">
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            </div>
+                        </Tooltip>
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Width")">
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            </div>
+                        </Tooltip>
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Height")">
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            </div>
+                        </Tooltip>
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Angle")">
+                            <div class="input-n">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Angle" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                            </div>
+                        </Tooltip>
+                        @* <ColorPicker @bind-Value="@BigScreen.SelectedList[0].Option.backgroundColor" OnValueChanged="OnValueChangedForString"></ColorPicker> *@
+                        @* <BootstrapInput @bind-Value="@BigScreen.SelectedList[0].Option.grid[0].left" OnValueChanged="OnValueChangedForString"></BootstrapInput> *@
+                    </CollapseItem>
+                    <CollapseItem Text="X轴设置">
+                        <div>
+                            <Button OnClick="AddXaxis" Size="Size.Small">增加一个轴</Button>
+                        </div>
+                        <Collapse>
+                            <CollapseItems>
+                                @if (@BigScreen.Selected.Option!.xAxis != null)
+                                {
+                                    @foreach (var item in @BigScreen.Selected.Option!.xAxis!)
+                                    {
+                                        <CollapseItem @bind-Text="item.name">
+                                            <Button OnClick="()=>{DeleteXaxis(item);}" Size="Size.Small">删除这个轴</Button>
+                                            <BootstrapInput @bind-Value="@item.name"></BootstrapInput>
+                                            <BootstrapInput Value="@item.animationDelay" OnValueChanged="async(e)=>{await ChanedForanimationDelay(item,e);}"></BootstrapInput>
+                                            <Tooltip Delay="1000" Title="@GetPropertyDescription(item,"animationEasing")">
+                                                <Select @bind-Value="@item.animationEasing" PlaceHolder="默认值" ShowLabel="true"></Select>
+                                            </Tooltip>
+                                        </CollapseItem>
+                                    }
+                                }
+
+                            </CollapseItems>
+                        </Collapse>
+
+                    </CollapseItem>
+                    <CollapseItem Text="Y轴设置">
+
+                    </CollapseItem>
+                </CollapseItems>
+            </Collapse>
+        </TabItem>
+        <TabItem Text="控件树">
+            <Button>根棍下1</Button>
+            <Collapse>
+                <CollapseItems>
+                    <CollapseItem>
+                        <Button>根棍下2</Button>
+                        <Button>根棍下3</Button>
+                    </CollapseItem>
+                    <Button>根棍下4</Button>
+                    <Button>根棍下5</Button>
+                </CollapseItems>
+            </Collapse>
+        </TabItem>
+        <TabItem Text="adf3"></TabItem>
+    </Tab>
+}
+else
+{
+    <div>选定一个组件</div>
+}
+
 
 @code {
-
+    [Inject]
+    [NotNull]
+    private MessageService? Msg { get; set; }
+    [Inject]
+    [NotNull]
+    public JsInterOp? JsEcharts { get; set; }
     [CascadingParameter(Name = "BigScreen")]
     [NotNull]
     public BigScreen? BigScreen { get; set; }
@@ -42,17 +108,81 @@
     [NotNull]
     public Designer? Designer { get; set; }
 
-    public async Task OnValueChanged(float val)
+    public async Task OnValueChanged(double val)
     {
-        //BigScreen.SelectedList[0]
         await Designer.Refresh(true);
         await Task.CompletedTask;
     }
     public async Task OnValueChangedForString(string val)
     {
-        //BigScreen.SelectedList[0]
         await Designer.Refresh(true);
         await Task.CompletedTask;
+        TreeItem a = new();
+
+    }
+    public async void DeleteXaxis(ExAxis axis)
+    {
+        BigScreen.Selected!.Option!.xAxis!.Remove(axis);
+        await Designer.Refresh(true);
+    }
+    public async void AddXaxis()
+    {
+        if (BigScreen.SelectedList[0].Option!.xAxis == null)
+        {
+            BigScreen.SelectedList[0].Option!.xAxis = new List<ExAxis>();
+        }
+        BigScreen.SelectedList[0].Option!.xAxis!.Add(new ExAxis() { name = "X轴" + (BigScreen.SelectedList[0].Option!.xAxis!.Count+1)});
+        await Designer.Refresh(true);
+    }
+
+    static string GetPropertyDescription(object obj, string propertyName)
+    {
+        // 获取属性信息
+        var property = obj.GetType().GetProperty(propertyName);
+        if (property == null)
+            throw new ArgumentException($"Property '{propertyName}' not found.");
+
+        // 获取属性的 DescriptionAttribute
+        var attribute = (Attribute.GetCustomAttribute(property, typeof(DescriptionAttribute))) as DescriptionAttribute;
+
+        // 返回属性的描述
+        return attribute == null ? string.Empty : attribute.Description;
+    }
+
+    Task OnvalueChanged(object o)
+    {
+        return Task.CompletedTask;
+    }
+    private async Task ChanedForanimationDelay(ExAxis axis, object? o)
+    {
+        var st = o?.ToString();
+        if (!string.IsNullOrEmpty(st))
+        {
+            if (int.TryParse(o?.ToString(), out int aa))
+            {
+                axis.animationDelay = aa;
+            }
+            else
+            {
+                if (IsJavaScriptFunction(st))
+                {
+                    axis.animationDelay = new JsFunc(st);
+                }
+                else
+                {
+                    axis.animationDelay = null;
+                    await Msg.Show(new MessageOption() { Content = "非法值,请输入数字或者有效的JS函数体" });
+                    return;
+                }
+            }
+            await Designer.Refresh();
+        }
+    }
+    static bool IsJavaScriptFunction(string input)
+    {
+        // 使用正则表达式匹配 JavaScript 函数的特征
+        string pattern = @"(?i)^\s*function\s*\([^)]*\)\s*{\s*.*\s*}\s*$";
+        return Regex.IsMatch(input, pattern);
     }
 }
 @* 属性面板 *@

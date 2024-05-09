@@ -32,3 +32,18 @@
     padding: 0;
     margin: 0;
 }
+.input-n {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+    .form-label {
+        margin: 0;
+    }
+}
+.PropPanel {
+    overflow: auto;
+    .accordion-body{
+        padding:5px;
+    }
+}

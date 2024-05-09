@@ -14,6 +14,8 @@
                 <Button Size="Size.ExtraSmall" OnClick="DownMove">下移</Button>
                 <Button Size="Size.ExtraSmall" OnClick="UpMove">置顶</Button>
                 <Button Size="Size.ExtraSmall" OnClick="UpMove">置底</Button>
+                <Button Size="Size.ExtraSmall" OnClick="Test">ceshi</Button>
+                <Button Size="Size.ExtraSmall" OnClick="TestWrite">测试读取</Button>
             </div>
         </div>
         <div class="content" style="height:95%;overflow:hidden">
@@ -28,16 +30,17 @@ await JsEcharts.removeClassForSelect();
             </div>
             @if (ShowPropertityBox)
             {
-                <SharedPage.Components.PropPanel></SharedPage.Components.PropPanel>
+                <div class="PropPanel" style="flex:2">
+                    <SharedPage.Components.PropPanel></SharedPage.Components.PropPanel>
+                </div>
             }
-
         </div>
     </CascadingValue>
 </CascadingValue>
 @code {
     [Inject]
     [NotNull]
-    public JsEcharts? JsEcharts { get; set; }
+    public JsInterOp? JsEcharts { get; set; }
     [Inject]
     [NotNull]
     private MessageService? Msg { get; set; }
@@ -57,33 +60,33 @@ await JsEcharts.removeClassForSelect();
             ComponentInfo chart2 = new ComponentInfo();
             chart.ComponentType = ComponentType.Echarts;
             chart.DataName = "test";
-            chart2.DataName = "test";
+
             chart.Option = new EOption()
                 {
                     dataset = new EdataSet()
                     {
                         source = new List<object[]>() {
-            new object[] {"2014", "12", "23", "45" }  ,
-            new object[] {"2015", "55", "66", "78" }  ,
-            new object[] {"2013", "12", "45", "37" }  ,
-            new object[] {"2016", "34", "65", "77" }  ,
-            new object[] {"2017", "12", "425", "37" } },
-                        dimensions = new List<EDimension>()
-        {
-            new EDimension(){  name="啊手动阀"},
-            new EDimension(){  name="第一列"},
-            new EDimension(){  name="第二列"},
-            new EDimension(){  name="第三列"},
-        },
-                        sourceHeader = false
-                    }
+            new object[] {"事件年份",   "系列1",  "系列2", "系列3" }  ,
+            new object[] {"2015",       "155",       "66",   "78" }  ,
+            new object[] {"2013",       "12",       "145",   "37" }  ,
+            new object[] {"2016",       "34",       "65",   "177" }  ,
+            new object[] {"2017",       "12",       "425",  "37" } },
+                    },
+
                 };
-            chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = "bar" }, new SeriePie() { type = "line" }, new SeriePie() { type = "bar" } };
+            chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line } };
+            chart.Option.xAxis = new() { new ExAxis() { type = EAxisType.category } };
+            chart.Option.yAxis = new List<ExAxis>() { new ExAxis() };
+            chart.Option.tooltip = new();
+            chart.Option.legend = new();
+
+
+            chart2.DataName = "test";
             chart2.Top = 50;
             chart2.Option = chart.Option;
             chart2.ComponentType = ComponentType.Echarts;
             BigScreen.ChartList.Add(chart);
-            BigScreen.ChartList.Add(chart2);
+            //BigScreen.ChartList.Add(chart2);
         }
         catch (Exception ex)
         {
@@ -107,10 +110,6 @@ await JsEcharts.removeClassForSelect();
 
         var option = new
         {
-            //title = new { text = "ECharts入门示例" },
-            //tooltip = new { },
-            //xAxis = new { data = new object[] { "adsf", "adsfasdf", "啊手动阀", "啊手动阀2", "啊手动阀3" } },
-            //yAxis = new { },
             series = new[] { new { name = "xiaoliang", type = "bar", data = new[] { r.Next(100), 20, 36, 10, 10, 20 } } }
         };
         await JsEcharts.SetOption("asdfg", option);
@@ -121,19 +120,30 @@ await JsEcharts.removeClassForSelect();
         //todo 应该调用js  this.liChart[id].resize();
         return Task.CompletedTask;
     }
+    /// <summary>
+    /// 强制刷新当前选择的图表
+    /// </summary>
+    /// <param name="isResize"></param>
+    /// <returns></returns>
     public async Task Refresh(bool isResize = false)
     {
         //todo 应该调用js  this.liChart[id].resize();
-        this.StateHasChanged();
-        if (BigScreen.SelectedList.Count > 0 && isResize && BigScreen.SelectedList[0].Id != null)
+        try
         {
-            await JsEcharts.SetOption(BigScreen.SelectedList[0].Id, BigScreen.SelectedList[0].Option);
-            await JsEcharts.Resize(BigScreen.SelectedList[0].Id);
+            this.StateHasChanged();
+            if (BigScreen.SelectedList.Count > 0 && isResize && BigScreen.SelectedList[0].Id != null)
+            {
+                await JsEcharts.SetOption(BigScreen.SelectedList[0].Id, BigScreen.SelectedList[0].Option,true);
+                await JsEcharts.Resize(BigScreen.SelectedList[0].Id);
+            }
+        }
+        catch (Exception ex)
+        {
+            ;
         }
         await Task.CompletedTask;
-
     }
-    
+
     private async void DownMove(MouseEventArgs e)
     {
         if (BigScreen.SelectedList.Count == 0)
@@ -155,9 +165,9 @@ await JsEcharts.removeClassForSelect();
         else
         {
             var res = BigScreen.ChartList.IndexOf(BigScreen.SelectedList[0]);
-            if (res!=0)
+            if (res != 0)
             {
-                BigScreen.ChartList.Swap(res, res-1);
+                BigScreen.ChartList.Swap(res, res - 1);
                 this.StateHasChanged();
             }
             else
@@ -168,7 +178,7 @@ await JsEcharts.removeClassForSelect();
                         Color = Color.Danger
                     });
             }
-            
+
         }
     }
     private async void UpMove(MouseEventArgs e)
@@ -193,14 +203,14 @@ await JsEcharts.removeClassForSelect();
         {
             var res = BigScreen.ChartList.IndexOf(BigScreen.SelectedList[0]);
             var count = BigScreen.ChartList.Count;
-            if (res == count-1)
+            if (res == count - 1)
             {
                 await Msg.Show(new MessageOption()
                     {
                         Content = "当前在最上层了",
                         Color = Color.Danger
                     });
-                
+
             }
             else
             {
@@ -209,6 +219,17 @@ await JsEcharts.removeClassForSelect();
             }
 
         }
+    }
+    private async void Test(MouseEventArgs e)
+    {
+        await JsEcharts.setItem("大屏",new BigScreen());
+
+    }
+    private async void TestWrite(MouseEventArgs e)
+    {
+        var ss = await JsEcharts.getItem<BigScreen>("大屏");
+        await JsEcharts.Log(ss);
+        await JsEcharts.Log(null);
     }
 }
 

@@ -1,13 +1,13 @@
 ﻿@implements IAsyncDisposable
 @foreach (var ChartInfo in BigScreen.ChartList)
 {
-    <SharedPage.Components.Chart  IsDesigner="@BigScreen.IsDesigner" ChartInfo="@ChartInfo"></SharedPage.Components.Chart>
+    <SharedPage.Components.Chart IsDesigner="@BigScreen.IsDesigner" ChartInfo="@ChartInfo"></SharedPage.Components.Chart>
 }
 
 @code {
     [Inject]
     [NotNull]
-    public JsEcharts? JsEcharts { get; set; }
+    public JsInterOp? JsEcharts { get; set; }
 
 
     [CascadingParameter(Name = "BigScreen")]

@@ -5,39 +5,27 @@
 {
     if (@IsDesigner)
     {
-        <div class="dragbox" tabindex="0" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
-        @onclick:stopPropagation @oncontextmenu:stopPropagation @oncontextmenu:preventDefault
-             @ondragstart="(e)=>{
-            ChartInfo.MoveInfo.StartX=e.ScreenX;
-            ChartInfo.MoveInfo.StartY=e.ScreenY;
-        }" @onmousemove="async(e)=>{
+        switch (@ChartInfo.ComponentType)
+        {
+            case ComponentType.Echarts:
+                <div class="dragbox" tabindex="0" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
+                @onclick:stopPropagation @oncontextmenu:stopPropagation @oncontextmenu:preventDefault
+                     @ondragstart="HandleDragStart"
+                     @onmousemove="async(e)=>{        }"
+                     @ondragend="HandleDragend"
+                     @onclick="HandelClick"
+                     @onkeydown="HandleKeyDown"
+                     @oncontextmenu="async(e)=>{ //调用js程序,将一个右键组件显示出来,通过display属性 //await JsEcharts.Log(e);
+       }">
+                    <div id="@ChartInfo.Id" style="height:100%;width:100%"></div>
+                </div>
+                break;
+            case ComponentType.Other:
+                break;
+            default:
+                break;
+        }
 
-        }" @ondragend="HandleDragend"
-             @onclick=" async(e)=>{
-            if (e.CtrlKey)
-            {
-                if (BigScreen.SelectedList.Find(x=>x.Id==ChartInfo.Id)==null)
-                {
-                    BigScreen.SelectedList.Add(ChartInfo);
-                }
-            }
-            else
-            {
-                BigScreen.SelectedList.Clear();
-                BigScreen.SelectedList.Add(ChartInfo);
-                await JsEcharts.removeClassForSelect();
-            }
-            await JsEcharts.addClassForSelect(ChartInfo.Id);
-            await  Designer.Refresh();
-
-
-        }" @onkeydown="HandleKeyDown"
-             @oncontextmenu="async(e)=>{
-            //调用js程序,将一个右键组件显示出来,通过display属性
-          //await JsEcharts.Log(e);
-        }">
-            <div id="@ChartInfo.Id" style="height:100%;width:100%"></div>
-        </div>
     }
     else
     {
@@ -66,12 +54,29 @@
         return base.OnInitializedAsync();
     }
     Random r = new();
-    public async void SetOption()
+    public async void SetOption1(List<object[]>? src)
     {
-        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
-        await InvokeAsync(this.StateHasChanged);
+        if (ChartInfo != null && ChartInfo.Option != null && ChartInfo.Option.dataset != null)
+        {
+            ChartInfo.Option.dataset.source = src;
+            await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+            await InvokeAsync(this.StateHasChanged);
+        }
     }
+    public async void SetOption(List<object[]>? src)
+    {
+        if (ChartInfo != null && ChartInfo.Option != null && ChartInfo.Option.dataset != null)
+        {
+            if (ChartInfo.Option.dataset.source.Count > 10)
+            {
+                ChartInfo.Option.dataset.source.RemoveAt(0);
+            }
 
+            ChartInfo.Option.dataset.source.Add(src.Last());
+            await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+            await InvokeAsync(this.StateHasChanged);
+        }
+    }
     public async void AddData(object[] data)
     {
 
@@ -89,6 +94,48 @@
         ChartInfo.Option?.dataset?.source?.Add(data);
         await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
     }
+    /// <summary>
+    /// 组件被单击后
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    async Task HandelClick(MouseEventArgs e)
+    {
+        if (e.CtrlKey)
+        {
+            if (BigScreen.SelectedList.Find(x => x.Id == ChartInfo.Id) == null)
+            {
+                BigScreen.SelectedList.Add(ChartInfo);
+            }
+        }
+        else
+        {
+            BigScreen.SelectedList.Clear();
+            BigScreen.SelectedList.Add(ChartInfo);
+        }
+        BigScreen.Selected = ChartInfo;
+        await JsEcharts.addClassForSelect(ChartInfo.Id, e.CtrlKey);
+        await Designer.Refresh();//这里全局优化,实际是为了刷新属性面板
+    }
+    /// <summary>
+    /// 拖动开始
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    async Task HandleDragStart(DragEventArgs e)
+    {
+        ChartInfo.MoveInfo.StartX = e.ScreenX;
+        ChartInfo.MoveInfo.StartY = e.ScreenY;
+        BigScreen.Selected = ChartInfo;
+        BigScreen.SelectedList.Clear();
+        BigScreen.SelectedList.Add(ChartInfo);
+        await JsEcharts.addClassForSelect(ChartInfo.Id);
+    }
+    /// <summary>
+    /// 拖动完成后
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
     async Task HandleDragend(DragEventArgs e)
     {
         var ss = await JsEcharts.getWH("designer");
@@ -98,8 +145,9 @@
         var offsety = e.ScreenY - ChartInfo.MoveInfo.StartY;
         ChartInfo.Top = ChartInfo.Top + Convert.ToSingle((offsety / h * 100));
         ChartInfo.Left = ChartInfo.Left + Convert.ToSingle((offsetx / w * 100));
-        await Designer.Refresh();
+        await Designer.Refresh();//这里全局优化,实际是为了刷新属性面板
     }
+
     async Task HandleKeyDown(KeyboardEventArgs e)
     {
         switch (e.Key)
@@ -117,14 +165,16 @@
                 BigScreen.SelectedList.ForEach(x => x.Left++);
                 break;
             case "Delete":
-                var ss = BigScreen.ChartList.FindAll(x => BigScreen.SelectedList.Contains(x));
-                ss.ForEach(async (x) =>
+                // var ss = BigScreen.ChartList.FindAll(x => BigScreen.SelectedList.Contains(x));//找到
+                BigScreen.SelectedList.ForEach(async (x) =>
                 {
                     await JsEcharts.dispose(x.Id);
                 });
                 BigScreen.ChartList.RemoveAll(x => BigScreen.SelectedList.Contains(x));
                 BigScreen.SelectedList.Clear();
+                BigScreen.Selected = null;
                 await Designer.Refresh();
+                await JsEcharts.removeClassForSelect();
                 break;
             case "c":
             case "C":
@@ -139,11 +189,16 @@
             case "V":
                 if (e.CtrlKey && Designer.CopyList.Count > 0)
                 {
-                    //BigScreen.SelectedList.Clear();
-                    var json = JsonSerializer.Serialize(Designer.CopyList);
-                    var objs = JsonSerializer.Deserialize<List<ComponentInfo>>(json);
-                    objs.ForEach(x => x.Id = Guid.NewGuid().ToString());
-                    BigScreen.ChartList.AddRange(objs);
+                    //1.复制
+                    var objs = Designer.CopyList.Select(x => x.Clone()).ToList();
+                    if (objs != null)
+                    {
+                        BigScreen.ChartList.AddRange(objs);//取消下面,是因为性能,我没有批量增加的方法,所以需要多次调用addClassForSelect
+                                                           //BigScreen.SelectedList.Clear();
+                                                           //BigScreen.SelectedList.AddRange(objs);
+                                                           //BigScreen.Selected = null;
+                                                           //await JsEcharts.addClassForSelect(ChartInfo.Id, e.CtrlKey);
+                    }
                     await Designer.Refresh();
                 }
                 break;

@@ -32,18 +32,21 @@ internal class Program
         builder.Services.AddBootstrapBlazor();
         builder.Services.AddAuthorizationCore();
         builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForWasm>();
-        builder.Services.AddSingleton<JsEcharts, JsEcharts>();
+        builder.Services.AddSingleton<JsInterOp, JsInterOp>();
 
 
         await builder.Build().RunAsync();
     }
 
     private static void Test()
-    { 
-    EOption option = new EOption();
-        JsonSerializerOptions op = new JsonSerializerOptions() {
-            Converters = { new ListConvert () }
-        };
-        var s=JsonSerializer.Serialize(option,op);
+    {
+
+      
+     
+    //EOption option = new EOption();
+    //    JsonSerializerOptions op = new JsonSerializerOptions() {
+    //        Converters = { new ListConvert () }
+    //    };
+    //    var s=JsonSerializer.Serialize(option,op);
     }
 }

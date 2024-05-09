@@ -12,6 +12,6 @@ namespace SharedPage.Base
     {
         [Inject]
         [NotNull]
-        public JsEcharts? JsEcharts { get; set; }
+        public JsInterOp? JsEcharts { get; set; }
     }
 }

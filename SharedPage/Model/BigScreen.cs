@@ -3,6 +3,7 @@ using SharedPage.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -29,6 +30,10 @@ namespace SharedPage.Model
         public List<ComponentInfo> ChartList { get; set; } = new();
         [JsonIgnore]
         public List<ComponentInfo> SelectedList { get; set; } = new();
+        [JsonIgnore]
+        public ComponentInfo? Selected { get; set; }
+
+        public EDataSource? DataSet { get; set; }
 
 
     }
@@ -44,14 +49,15 @@ namespace SharedPage.Model
         [DisplayName("配置项"), Description("如果为Echart组件,所对应的Option")]
         public EOption? Option { get; set; }
         [DisplayName("Y轴坐标"), Description("左上角为原点")]
-        public float Top { get; set; }
+        public double Top { get; set; }
         [DisplayName("X轴坐标"), Description("左上角为原点")]
-        public float Left { get; set; }
+        public double Left { get; set; }
         [DisplayName("宽度"), Description("占屏幕宽度的比例;范围0-100")]
-        public float Width { get; set; } = 30;
+        public double Width { get; set; } = 30;
         [DisplayName("高度"), Description("占屏幕高度的比例;范围0-100")]
-        public float Height { get; set; } = 40;
-        public float Angle { get; set; }
+        public double Height { get; set; } = 40;
+        [DisplayName("角度"), Description("旋转的角度")]
+        public double Angle { get; set; }
         /// <summary>
         /// 多少秒请求一次
         /// </summary>
@@ -67,15 +73,23 @@ namespace SharedPage.Model
         /// <summary>
         /// 更新这个控件的委托
         /// </summary>
-        [JsonIgnore] public Action? SetOption { get; set; }
+        [JsonIgnore] 
+        public Action<List<object[]>?>? SetOption { get; set; }
+        [JsonIgnore]
         public MoveInfo MoveInfo { get; set; } = new();
 
+        /// <summary>
+        /// 利用json序列化实现,并且改了主键id;但是没有处理组件的内部组件的Id
+        /// </summary>
+        /// <returns></returns>
         public ComponentInfo Clone()
         {
             var json = JsonSerializer.Serialize(this);
             var res = JsonSerializer.Deserialize<ComponentInfo>(json);
+            
             if (res != null)
             {
+                res.Id = Guid.NewGuid().ToString();
                 res.Top = Top + 10;
                 res.Left = Left + 10;
                 res.Id= Guid.NewGuid().ToString();
@@ -119,5 +133,13 @@ namespace SharedPage.Model
     {
         Echarts,
         Other
+    }
+
+    /// <summary>
+    /// 整个屏幕的数据源
+    /// </summary>
+    public class EDataSource
+    {
+
     }
 }
