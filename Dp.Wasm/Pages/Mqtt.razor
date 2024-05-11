@@ -1,0 +1,29 @@
+﻿@page "/mqtt"
+@using MQTTnet
+@using MQTTnet.Client
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            var mqttFactory = new MqttFactory();//192.168.201.249
+            var mqttClient = mqttFactory.CreateMqttClient();
+            var mqttClientOptions = new MqttClientOptionsBuilder().WithWebSocketServer((MqttClientWebSocketOptionsBuilder e) =>
+            {
+                e.WithUri("192.168.201.249:5000/mqtt");
+            } ).Build();
+            var response = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+             System. Console.WriteLine("The MQTT client is connected.");
+
+            //response.DumpToConsole();
+        }
+        catch (Exception ex)
+        {
+            
+            throw;
+        }
+   
+    }
+}

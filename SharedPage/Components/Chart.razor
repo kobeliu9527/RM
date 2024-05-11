@@ -47,7 +47,6 @@
 
     [Parameter]
     public bool IsDesigner { get; set; }
-
     protected override Task OnInitializedAsync()
     {
 
@@ -165,14 +164,18 @@
                 BigScreen.SelectedList.ForEach(x => x.Left++);
                 break;
             case "Delete":
-                // var ss = BigScreen.ChartList.FindAll(x => BigScreen.SelectedList.Contains(x));//找到
-                BigScreen.SelectedList.ForEach(async (x) =>
+                if (BigScreen.Selected!=null)
                 {
-                    await JsEcharts.dispose(x.Id);
-                });
-                BigScreen.ChartList.RemoveAll(x => BigScreen.SelectedList.Contains(x));
-                BigScreen.SelectedList.Clear();
-                BigScreen.Selected = null;
+                    await JsEcharts.dispose(BigScreen.Selected.Id);
+                    BigScreen.ChartList.RemoveAll(x => x.Id == BigScreen.Selected.Id);//清除了
+                    BigScreen.SelectedList.Clear();
+
+                    BigScreen.Selected = null;
+                }
+                // BigScreen.SelectedList.ForEach(async (x) =>
+                // {
+                //     await JsEcharts.dispose(x.Id);
+                // });
                 await Designer.Refresh();
                 await JsEcharts.removeClassForSelect();
                 break;
@@ -181,6 +184,8 @@
                 if (e.CtrlKey && BigScreen.SelectedList.Count > 0)
                 {
                     var obj = BigScreen.SelectedList.Select(x => x.Clone());
+                    //优化,直接放到剪贴板中
+                    await JsEcharts.Copy(JsonSerializer.Serialize(obj));
                     Designer.CopyList.Clear();
                     Designer.CopyList.AddRange(obj);
                 }
@@ -189,15 +194,19 @@
             case "V":
                 if (e.CtrlKey && Designer.CopyList.Count > 0)
                 {
-                    //1.复制
+                    //1.复制一份剪贴板中的数据出来
                     var objs = Designer.CopyList.Select(x => x.Clone()).ToList();
-                    if (objs != null)
+                    if (objs != null)//当前页面有被复制对象
                     {
                         BigScreen.ChartList.AddRange(objs);//取消下面,是因为性能,我没有批量增加的方法,所以需要多次调用addClassForSelect
                                                            //BigScreen.SelectedList.Clear();
                                                            //BigScreen.SelectedList.AddRange(objs);
                                                            //BigScreen.Selected = null;
                                                            //await JsEcharts.addClassForSelect(ChartInfo.Id, e.CtrlKey);
+                    }
+                    else if (true)//没有,检查剪贴板的
+                    {
+                        
                     }
                     await Designer.Refresh();
                 }

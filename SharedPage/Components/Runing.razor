@@ -1,7 +1,7 @@
 ﻿@implements IAsyncDisposable
 @foreach (var ChartInfo in BigScreen.ChartList)
 {
-    <SharedPage.Components.Chart IsDesigner="@BigScreen.IsDesigner" ChartInfo="@ChartInfo"></SharedPage.Components.Chart>
+    <SharedPage.Components.Chart @key="ChartInfo" IsDesigner="@BigScreen.IsDesigner" ChartInfo="@ChartInfo"></SharedPage.Components.Chart>
 }
 
 @code {

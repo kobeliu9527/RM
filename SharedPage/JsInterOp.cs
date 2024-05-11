@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SharedPage.Ext;
 using SharedPage.JsonConvert;
@@ -21,6 +22,7 @@ namespace SharedPage
     public class JsInterOp : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
+
         private IJSRuntime jsRun;
         public JsInterOp(IJSRuntime jsRuntime)
         {
@@ -123,7 +125,7 @@ namespace SharedPage
         {
             try
             {
-                await jsRun.InvokeVoidAsync("localforage.removeItem", key);  
+                await jsRun.InvokeVoidAsync("localforage.removeItem", key);
             }
             catch (JSException ex)
             {
@@ -143,8 +145,16 @@ namespace SharedPage
         }
         public async ValueTask Log(object? id)
         {
-            var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("JsFunc.Log", id);
+            await jsRun.InvokeVoidAsync("console.log", id);
+        }
+        /// <summary>
+        /// 复制文本到系统剪贴板
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public async ValueTask Copy(string obj)
+        {
+            await jsRun.InvokeVoidAsync("navigator.clipboard.writeText", obj);
         }
         public async ValueTask DisposeAsync()
         {

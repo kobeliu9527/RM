@@ -1,6 +1,5 @@
-﻿window.aaa = { sdf: 'asdf' };
+﻿export class JsFunc {
 
-export class JsFunc {
     static liChart = {};
     static SelectList = {};
     static ResizeListener = {};
@@ -44,19 +43,22 @@ export class JsFunc {
         try {
             var chart = JsFunc.liChart[id];
             if (chart) {
+                console.log(chart);
+                chart.dispose();
                 if (chart.isDisposed()) {
-                    chart.dispose();//测试永远不会走到这里,不知道是哪里执行了销毁
+                    
+                    chart.dispose();
                 }
                 else {
-                    //console.log("已经被销毁了");
+                    console.log("已经被销毁了");
                 }
                 delete JsFunc.liChart[id];
             }
             else {
-                //console.log('已经被销毁了', id);
+                console.log('已经被销毁了', id);
             }
         } catch (e) {
-
+            console.log('chart组件销毁异常'+ id);
         }
     }
     static resize(id) {
@@ -70,13 +72,37 @@ export class JsFunc {
 
     }
     static addResizeListener(id) {
-        JsFunc.ResizeListener[id] = () => { JsFunc.liChart[id].resize(); };
-        window.addEventListener("resize", JsFunc.ResizeListener[id]);
+        try {
+            if (JsFunc.liChart[id]) {
+                JsFunc.ResizeListener[id] = () => { JsFunc.liChart[id].resize(); };
+                window.addEventListener("resize", JsFunc.ResizeListener[id]);
+                console.log(id, "成功");
+
+            }
+            else {
+                console.log(id, "添加失败,因为不存在");
+            }
+           
+        } catch (e) {
+            console.log(id, "添加异常",e);
+        }
+        
 
     }
     static removeResizeListener(id) {
-        window.removeEventListener("resize", JsFunc.ResizeListener[id]);
-
+        try {
+            if (JsFunc.ResizeListener[id]) {
+                window.removeEventListener("resize", JsFunc.ResizeListener[id]);
+                delete JsFunc.ResizeListener[id];
+                console.log(id,"被成功移除");
+            }
+            else {
+                console.log(id,"不存在");
+            }
+        } catch (e) {
+            console.log(id,"异常了",e);
+        }
+     
     }
     static addClassForSelect(id, isCtrl) {
         if (!isCtrl) {
@@ -103,23 +129,10 @@ export class JsFunc {
         var h = document.getElementById(id).clientHeight;
         return [w, h]
     }
-    static isFunction(str) {
-        try {
-            //var func = new Function('return ' + str);
-            //if (typeof func === 'function') {
-            //    return true;
-            //} else {
-            //    return false;
-            //}
-            new Function(str);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
+    
 
-    static Log(id) {
-        console.log(id);
-    }
+  
 
 }
+
+//window.bb = JsFunc;
