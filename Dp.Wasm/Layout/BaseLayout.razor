@@ -1,0 +1,31 @@
+﻿@using Dp.Wasm.IServices
+@inherits LayoutComponentBase
+@inject IBigScreenService BigScreenService
+<CascadingValue Value="this.BigScreen" Name="BigScreen">
+    @Body
+</CascadingValue>
+@code {
+    public BigScreen? BigScreen { get; set; }
+    [Inject]
+    [NotNull]
+    public JsInterOp? JsEcharts { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        BigScreen = await JsEcharts.getItem<BigScreen>("测试大屏");
+       
+    }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            BigScreen = await JsEcharts.getItem<BigScreen>("测试大屏");
+        }
+        if (BigScreen!=null)
+        {
+            ;
+        }
+     
+    }
+}

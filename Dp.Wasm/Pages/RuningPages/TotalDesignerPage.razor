@@ -1,0 +1,86 @@
+﻿@* tdp 当前账号能够看到的所有的设计页面*@
+@page "/"
+@using SharedPage.JsOp
+@inject NavigationManager nav
+@inject IBigScreenService BigScreenService
+<div id="aaaa" style="height:5%">
+    <Button OnClick="CreateDpSc">新建大屏</Button>
+    <Button OnClick="JsHtmlToCanvas">JsHtmlToCanvas</Button>
+</div>
+<div style="height:95%" class="total-pages">
+    <ListView TItem="BigScreen" Items="BigScreens" GroupName="p=>p.GroupName" OnListViewItemClick="OnListViewItemClick">
+        <BodyTemplate>
+            <Card>
+                <BodyTemplate>
+                    <div>
+                        <img src="./img/dp.jpg" alt="示例图像" style="max-width:100%;height:auto" onerror="(e)=>{e. }"/>
+                        <div class="lv-demo-desc">@context.Name</div>
+                        <Button OnClick="(e)=>{ Delete(context.Id);}" StopPropagation="true">删除</Button>
+                    </div>
+                </BodyTemplate>
+            </Card>
+        </BodyTemplate>
+    </ListView>
+</div>
+
+
+@code {
+    [Inject]
+    public IJSRuntime? jSRuntime { get; set; }
+    [Inject]
+    [NotNull]
+    private MessageService? Msg { get; set; }
+    public List<BigScreen> BigScreens { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var res = await BigScreenService.GetBigScreens();
+        if (res.IsSucceeded && res.Data != null)
+        {
+            BigScreens = res.Data.OrderBy(x => x.Order).ToList();
+        }
+    }
+    async Task OnListViewItemClick(BigScreen bs)
+    {
+        nav.NavigateTo($"designer/{bs.Id}");
+        await Task.CompletedTask;
+    }
+    async void CreateDpSc()
+    {
+        await BigScreenService.Insert(new BigScreen() { });
+        var res = await BigScreenService.GetBigScreens();
+        if (res.IsSucceeded && res.Data != null)
+        {
+            BigScreens = res.Data.OrderBy(x => x.Order).ToList();
+        }
+        this.StateHasChanged();
+    }
+    async void JsHtmlToCanvas()
+    {
+        JsHtmlToCanvas a = new JsHtmlToCanvas(jSRuntime);
+        var res = await a.toimg("aaaa");
+        this.StateHasChanged();
+    }
+    async void Delete(long id)
+    {
+        var res = await BigScreenService.Delete(id);
+        if (res.IsSucceeded)
+        {
+            var res2 = await BigScreenService.GetBigScreens();
+            if (res2.IsSucceeded && res2.Data != null)
+            {
+                BigScreens = res2.Data.OrderBy(x => x.Order).ToList();
+                await Msg.Show(new MessageOption() { Content = "删除成功" });
+            }
+            else
+            {
+                await Msg.Show(new MessageOption() { Content = "删除失败" + res.ReturnMsg });
+            }
+        }
+        else
+        {
+            await Msg.Show(new MessageOption() { Content = "删除失败" + res.ReturnMsg });
+        }
+        this.StateHasChanged();
+    }
+}

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -17,9 +18,19 @@ namespace SharedPage.Model
     /// </summary>
     public class BigScreen
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public bool IsDesigner { get; set; }
-        public string? Name { get; set; }
+        [DisplayName("大屏名字")]
+        public string Name { get; set; } = "大屏名字";
+        /// <summary>
+        /// 用于表示他属于那个组的
+        /// </summary>
+        [DisplayName("所属组名")]
+        public string GroupName { get; set; } = "默认组";
+        [DisplayName("排序"),Description("在页面中的位置,越大越靠后")]
+        public int Order { get; set; }
+
+        public Css Css { get; set; } = new Css() { background_color= "#2B2C2D" ,top="1%",left="1%",width="960px",height="540px"};
         /// <summary>
         /// 整个页面多少秒请求一次
         /// </summary>
@@ -28,10 +39,15 @@ namespace SharedPage.Model
         /// 这个大屏的所有Echart图表
         /// </summary>
         public List<ComponentInfo> ChartList { get; set; } = new();
-        [JsonIgnore]
-        public List<ComponentInfo> SelectedList { get; set; } = new();
-        [JsonIgnore]
-        public ComponentInfo? Selected { get; set; }
+
+        [JsonIgnore] public List<ComponentInfo> SelectedList { get; set; } = new();
+        [JsonIgnore] public ComponentInfo? SelectedByDesigner { get; set; }
+        [JsonIgnore] public ComponentType? SelectedByToolBox { get; set; }
+        [JsonIgnore] public List<ComponentInfo> CopyList { get; set; } = new();
+        /// <summary>
+        /// 要执行刷新大屏委托
+        /// </summary>
+        [JsonIgnore] public Action<bool>? RefreshHandel { get; set; }
 
         public EDataSource? DataSet { get; set; }
 
@@ -73,7 +89,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 更新这个控件的委托
         /// </summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public Action<List<object[]>?>? SetOption { get; set; }
         [JsonIgnore]
         public MoveInfo MoveInfo { get; set; } = new();
@@ -86,13 +102,13 @@ namespace SharedPage.Model
         {
             var json = JsonSerializer.Serialize(this);
             var res = JsonSerializer.Deserialize<ComponentInfo>(json);
-            
+
             if (res != null)
             {
                 res.Id = Guid.NewGuid().ToString();
                 res.Top = Top + 10;
                 res.Left = Left + 10;
-                res.Id= Guid.NewGuid().ToString();
+                res.Id = Guid.NewGuid().ToString();
                 if (res.Top > 90)
                 {
                     res.Top = Top - 10;
@@ -129,11 +145,6 @@ namespace SharedPage.Model
         [Description("静态的数据源")]
         StaticJson
     }
-    public enum ComponentType
-    {
-        Echarts,
-        Other
-    }
 
     /// <summary>
     /// 整个屏幕的数据源
@@ -141,5 +152,37 @@ namespace SharedPage.Model
     public class EDataSource
     {
 
+    }
+    public class Css
+    {
+        [DisplayName("宽度"), Description("有效的值为: 100px  20% ")]
+        public string? width { get; set; }
+        [DisplayName("高度"), Description("有效的值为: 100px  20% ")]
+        public string? height { get; set; }
+        [DisplayName("距离顶部"), Description("有效的值为: 100px  20% ")]
+        public string? top { get; set; }
+        [DisplayName("距离左边"), Description("有效的值为: 100px  20% ")]
+        public string? left { get; set; }
+        [DisplayName("背景色"),Description("点击前面按钮选择颜色,如果需要透明度,选择颜色后在后面输入00-FF之间的值")]
+        public string? background_color { get; set; }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            //if (!string.IsNullOrWhiteSpace(width))
+            //{
+            //    sb.Append(nameof(width) + ":" + width +";"); ;
+            //}
+            ///todo 为了性能,后续可以采用全手动拼接  2.在增加颜色属性值是否有效
+            PropertyInfo[] properties = this.GetType().GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                string? value = property.GetValue(this)?.ToString();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    sb.Append(property.Name + ":" + value + ";");
+                }
+            }
+            return sb.ToString().Replace('_','-');
+        }
     }
 }

@@ -1,5 +1,8 @@
-﻿export class JsFunc {
-
+﻿
+import  "./localforage.min.js"
+import "./echarts.min.js"
+export class JsFunc {
+    //???
     static liChart = {};
     static SelectList = {};
     static ResizeListener = {};
@@ -10,12 +13,14 @@
                 var myChart = echarts.init(ele);
                 if (myChart) {
                     JsFunc.liChart[id] = myChart;
-
-                    console.log('初始化成功', JsFunc.liChart, id);
+                    console.log(id + ':初始化成功', myChart);
                 }
                 else {
-                    console.log('初始化失败', JsFunc.liChart, id);
+                    console.log(id+':初始化失败');
                 }
+            }
+            else {
+                console.log(id+'元素不存在,无法初始化');
             }
         } catch (e) {
             console.log('初始化失败', e);
@@ -30,23 +35,19 @@
                 //chart.hideLoading();
                 let opt = eval('(' + option + ')');
                 chart.setOption(opt, notMerge, lazyUpdate);
-                //  chart.setOption(option);
             }
             else {
-                console.log('没有这个chart实例', id);
+                console.log(id + ':没有这个chart实例');
             }
         } catch (e) {
-            console.log(e);
+            console.log(id + '执行setOption时候异常了', e);
         }
     }
     static dispose(id) {
         try {
             var chart = JsFunc.liChart[id];
             if (chart) {
-                console.log(chart);
-                chart.dispose();
                 if (chart.isDisposed()) {
-                    
                     chart.dispose();
                 }
                 else {
@@ -55,10 +56,10 @@
                 delete JsFunc.liChart[id];
             }
             else {
-                console.log('已经被销毁了', id);
+                console.log(id + '图表不存在,无法执行销毁');
             }
         } catch (e) {
-            console.log('chart组件销毁异常'+ id);
+            console.log(id + '图表销毁出现异常', e);
         }
     }
     static resize(id) {
@@ -67,7 +68,7 @@
                 JsFunc.liChart[id].resize();
             }
         } catch (e) {
-            console.log('resize失败', e);
+            console.log(id + 'resize异常', e);
         }
 
     }
@@ -76,17 +77,15 @@
             if (JsFunc.liChart[id]) {
                 JsFunc.ResizeListener[id] = () => { JsFunc.liChart[id].resize(); };
                 window.addEventListener("resize", JsFunc.ResizeListener[id]);
-                console.log(id, "成功");
-
             }
             else {
-                console.log(id, "添加失败,因为不存在");
+                console.log(id + ":添加addEventListener事件失败,因为图表不存在");
             }
-           
+
         } catch (e) {
-            console.log(id, "添加异常",e);
+            console.log("为" + id + '添加addEventListener事件出现异常', e);
         }
-        
+
 
     }
     static removeResizeListener(id) {
@@ -94,15 +93,15 @@
             if (JsFunc.ResizeListener[id]) {
                 window.removeEventListener("resize", JsFunc.ResizeListener[id]);
                 delete JsFunc.ResizeListener[id];
-                console.log(id,"被成功移除");
+                console.log(id, "被成功移除");
             }
             else {
-                console.log(id,"不存在");
+                console.log(id, "不存在");
             }
         } catch (e) {
-            console.log(id,"异常了",e);
+            console.log(id, "异常了", e);
         }
-     
+
     }
     static addClassForSelect(id, isCtrl) {
         if (!isCtrl) {
@@ -129,9 +128,9 @@
         var h = document.getElementById(id).clientHeight;
         return [w, h]
     }
-    
 
-  
+
+
 
 }
 

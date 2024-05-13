@@ -32,13 +32,13 @@
   margin: 0;
 }
 
-.input-n {
+.over-input {
   display: flex;
   justify-content: space-between;
   align-items: center;
   white-space: nowrap;
 }
-.input-n .form-label {
+.over-input .form-label {
   margin: 0;
 }
 
@@ -47,4 +47,17 @@
 }
 .PropPanel .accordion-body {
   padding: 5px;
+}
+
+.total-pages .listview .listview-body {
+  display: block;
+}
+.total-pages .listview-item {
+  width: 20%;
+}
+
+.main {
+  height: 100%;
+  position: relative;
+  overflow: auto;
 }

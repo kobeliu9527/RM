@@ -10,15 +10,15 @@
     <link rel="stylesheet" href="_content/SharedPage/SharedPage.bundle.scp.css">
     <!-- 组件库非样式隔离里面的 -->
     <link rel="stylesheet" href="_content/SharedPage/css/SharedPage.css">
+
     <!-- bootstarp blazor的样式 -->
     <link href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css" rel="stylesheet">
-
-    <script src="_content/SharedPage/js/echarts.min.js"></script>
-    <script type="module" src="_content/SharedPage/js/jsfunc.js"></script>
-    <script type="module" src="_content/SharedPage/js/localforage.min.js"></script>
-
-
+    <!-- .net8.0采用模块化的方式引入了,就不需要下面这些了
+        <script src="_content/SharedPage/js/echarts.min.js"></script>
+        <script type="module" src="_content/SharedPage/js/jsfunc.js"></script>
+        <script type="module" src="_content/SharedPage/js/localforage.min.js"></script>
+    -->
 
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -41,8 +41,8 @@
 
     <script src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <!--fetch后台服务,很强大,所以我不用.....-->
+    <!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
 </body>
 
 </html>

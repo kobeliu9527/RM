@@ -1,20 +1,34 @@
-﻿@implements IAsyncDisposable
-@foreach (var ChartInfo in BigScreen.ChartList)
+﻿@* 所有组件的容器 *@
+@implements IAsyncDisposable
+
+@if (@BigScreen != null)
 {
-    <SharedPage.Components.Chart @key="ChartInfo" IsDesigner="@BigScreen.IsDesigner" ChartInfo="@ChartInfo"></SharedPage.Components.Chart>
+    
+        @foreach (var ChartInfo in BigScreen.ChartList)
+        {
+            <SharedPage.Components.Chart @key="ChartInfo" IsDesigner="@IsDesigner" ChartInfo="@ChartInfo" BigScreen="@BigScreen"></SharedPage.Components.Chart>
+        }
+   
 }
 
+
+
+
 @code {
-    [Inject]
-    [NotNull]
-    public JsInterOp? JsEcharts { get; set; }
+    [Inject][NotNull] public JsInterOp? JsEcharts { get; set; }
+
+    [Parameter] public bool IsDesigner { get; set; }
+
+    [Parameter] public BigScreen? BigScreen { get; set; }
 
 
-    [CascadingParameter(Name = "BigScreen")]
-    [NotNull]
-    public BigScreen? BigScreen { get; set; }
+
+
 
     public System.Timers.Timer Timer { get; set; } = new();
+
+
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -23,7 +37,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        if (firstRender&&false)
+        if (firstRender && false)
         {
             Timer.Elapsed += async (a, b) =>
         {

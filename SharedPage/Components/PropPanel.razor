@@ -1,40 +1,41 @@
 ﻿@using System.ComponentModel
 @using System.Text.RegularExpressions
-@if (@BigScreen.Selected != null)
-{
-    <Tab>
-        <TabItem Text="基础配置">
+
+<Tab>
+    <TabItem Text="基础配置">
+        @if (@BigScreen.SelectedByDesigner != null)
+        {
             <Collapse>
                 <CollapseItems>
                     <CollapseItem Text="通用属性">
-                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Id")">
-                            <div class="input-n">
-                                <BootstrapInput @bind-Value="@(BigScreen.Selected.Id)" ShowLabel="true" Readonly="true"></BootstrapInput>
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.SelectedByDesigner,"Id")">
+                            <div class="over-input">
+                                <BootstrapInput @bind-Value="@(BigScreen.SelectedByDesigner.Id)" ShowLabel="true" Readonly="true"></BootstrapInput>
                             </div>
                         </Tooltip>
-                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Top")">
-                            <div class="input-n">
-                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.SelectedByDesigner,"Top")">
+                            <div class="over-input">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedByDesigner.Top" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             </div>
                         </Tooltip>
-                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Left")">
-                            <div class="input-n">
-                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.SelectedByDesigner,"Left")">
+                            <div class="over-input">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedByDesigner.Left" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             </div>
                         </Tooltip>
-                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Width")">
-                            <div class="input-n">
-                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.SelectedByDesigner,"Width")">
+                            <div class="over-input">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedByDesigner.Width" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             </div>
                         </Tooltip>
-                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Height")">
-                            <div class="input-n">
-                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.SelectedByDesigner,"Height")">
+                            <div class="over-input">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedByDesigner.Height" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             </div>
                         </Tooltip>
-                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.Selected,"Angle")">
-                            <div class="input-n">
-                                <BootstrapInputNumber @bind-Value="@BigScreen.Selected.Angle" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
+                        <Tooltip Delay="1000" Title="@GetPropertyDescription(@BigScreen.SelectedByDesigner,"Angle")">
+                            <div class="over-input">
+                                <BootstrapInputNumber @bind-Value="@BigScreen.SelectedByDesigner.Angle" Max="200" Min="-100" ShowLabel="true" ShowButton="true" OnValueChanged="OnValueChanged" />
                             </div>
                         </Tooltip>
                         @* <ColorPicker @bind-Value="@BigScreen.SelectedList[0].Option.backgroundColor" OnValueChanged="OnValueChangedForString"></ColorPicker> *@
@@ -46,11 +47,11 @@
                         </div>
                         <Collapse>
                             <CollapseItems>
-                                @if (@BigScreen.Selected.Option!.xAxis != null)
+                                @if (@BigScreen.SelectedByDesigner.Option!.xAxis != null)
                                 {
-                                    @foreach (var item in @BigScreen.Selected.Option!.xAxis!)
+                                    @foreach (var item in @BigScreen.SelectedByDesigner.Option!.xAxis!)
                                     {
-                                        <CollapseItem @bind-Text="item.name">
+                                        <CollapseItem @key="item" @bind-Text="item.name">
                                             <Button OnClick="()=>{DeleteXaxis(item);}" Size="Size.Small">删除这个轴</Button>
                                             <BootstrapInput @bind-Value="@item.name"></BootstrapInput>
                                             <BootstrapInput Value="@item.animationDelay" OnValueChanged="async(e)=>{await ChanedForanimationDelay(item,e);}"></BootstrapInput>
@@ -70,27 +71,58 @@
                     </CollapseItem>
                 </CollapseItems>
             </Collapse>
-        </TabItem>
-        <TabItem Text="控件树">
-            <Button>根棍下1</Button>
-            <Collapse>
-                <CollapseItems>
-                    <CollapseItem>
-                        <Button>根棍下2</Button>
-                        <Button>根棍下3</Button>
-                    </CollapseItem>
-                    <Button>根棍下4</Button>
-                    <Button>根棍下5</Button>
-                </CollapseItems>
-            </Collapse>
-        </TabItem>
-        <TabItem Text="adf3"></TabItem>
-    </Tab>
-}
-else
-{
-    <div>选定一个组件</div>
-}
+        }
+
+        else
+        {
+            <div>选定一个组件</div>
+        }
+
+    </TabItem>
+    <TabItem Text="页面配置">
+        @if (BigScreen != null)
+        {
+            <BootstrapInput @bind-Value="BigScreen.Name" ShowLabel="true"></BootstrapInput>
+            <BootstrapInput @bind-Value="BigScreen.GroupName" ShowLabel="true"></BootstrapInput>
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen,"Order")">
+                <BootstrapInput @bind-Value="BigScreen.Order" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}"></BootstrapInput>
+            </Tooltip>
+
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen.Css,"width")">
+                <div class="over-input">
+                    <BootstrapInput @bind-Value="BigScreen.Css.width" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}" />
+                </div>
+            </Tooltip>
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen.Css,"height")">
+                <div class="over-input">
+                    <BootstrapInput @bind-Value="BigScreen.Css.height" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}" />
+                </div>
+            </Tooltip>
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen.Css,"top")">
+                <div class="over-input">
+                    <BootstrapInput @bind-Value="BigScreen.Css.top" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}" />
+                </div>
+            </Tooltip>
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen.Css,"left")">
+                <div class="over-input">
+                    <BootstrapInput @bind-Value="BigScreen.Css.left" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}" />
+                </div>
+            </Tooltip>
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen.Css,"background_color")">
+                <ColorPicker @bind-Value="BigScreen.Css.background_color" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}" />
+            </Tooltip>
+
+            @*         <Collapse>
+        <CollapseItems>
+        <CollapseItem>
+
+        </CollapseItem>
+        </CollapseItems>
+        </Collapse> *@
+        }
+
+    </TabItem>
+</Tab>
 
 
 @code {
@@ -100,30 +132,39 @@ else
     [Inject]
     [NotNull]
     public JsInterOp? JsEcharts { get; set; }
-    [CascadingParameter(Name = "BigScreen")]
+    [Parameter]
     [NotNull]
     public BigScreen? BigScreen { get; set; }
 
-    [CascadingParameter(Name = "Designer")]
+    [CascadingParameter]
     [NotNull]
-    public Designer? Designer { get; set; }
-
+    public List<BigScreen>? BigScreens { get; set; }
+    [CascadingParameter]
+    [NotNull]
+    public BigScreenDesigner? DpDesigner { get; set; }
+    public string? BigScreenName { get; set; }
+    private async Task Refresh()
+    {
+        BigScreen?.RefreshHandel?.Invoke(true);
+        await Task.CompletedTask;
+    }
     public async Task OnValueChanged(double val)
     {
-        await Designer.Refresh(true);
+        await Refresh();
         await Task.CompletedTask;
     }
     public async Task OnValueChangedForString(string val)
     {
-        await Designer.Refresh(true);
+        BigScreen?.RefreshHandel?.Invoke(true);
         await Task.CompletedTask;
         TreeItem a = new();
 
     }
-    public async void DeleteXaxis(ExAxis axis)
+    public void DeleteXaxis(ExAxis axis)
     {
-        BigScreen.Selected!.Option!.xAxis!.Remove(axis);
-        await Designer.Refresh(true);
+        BigScreen.SelectedByDesigner!.Option!.xAxis!.Remove(axis);
+        BigScreen?.RefreshHandel?.Invoke(true);
+
     }
     public async void AddXaxis()
     {
@@ -131,10 +172,17 @@ else
         {
             BigScreen.SelectedList[0].Option!.xAxis = new List<ExAxis>();
         }
-        BigScreen.SelectedList[0].Option!.xAxis!.Add(new ExAxis() { name = "X轴" + (BigScreen.SelectedList[0].Option!.xAxis!.Count+1)});
-        await Designer.Refresh(true);
+        BigScreen.SelectedList[0].Option!.xAxis!.Add(new ExAxis() { name = "X轴" + (BigScreen.SelectedList[0].Option!.xAxis!.Count + 1) });
+        BigScreen?.RefreshHandel?.Invoke(true);
+        await Task.CompletedTask;
     }
-
+    /// <summary>
+    /// 反射获取对象属性的特性描述
+    /// </summary>
+    /// <param name="obj">对象实例</param>
+    /// <param name="propertyName">哪一个属性</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     static string GetPropertyDescription(object obj, string propertyName)
     {
         // 获取属性信息
@@ -171,11 +219,11 @@ else
                 else
                 {
                     axis.animationDelay = null;
-                    await Msg.Show(new MessageOption() { Content = "非法值,请输入数字或者有效的JS函数体" });
+                    await Msg.Show(new MessageOption() { Content = "非法值,请输入数字或者有效的JS函数体",Color=Color.Danger });
                     return;
                 }
             }
-            await Designer.Refresh();
+            BigScreen?.RefreshHandel?.Invoke(false);
         }
     }
     static bool IsJavaScriptFunction(string input)

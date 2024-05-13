@@ -11,30 +11,26 @@ using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace SharedPage
+namespace SharedPage.JsOp
 {
-    // This class provides an example of how JavaScript functionality can be wrapped
-    // in a .NET class for easy consumption. The associated JavaScript module is
-    // loaded on demand when first needed.
-    //
-    // This class can be registered as scoped DI service and then injected into Blazor
-    // components for use.
-
-    public class JsInterOp : IAsyncDisposable
+    /// <summary>
+    /// 
+    /// </summary>
+    public class JsHtmlToCanvas : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
         private IJSRuntime jsRun;
-        public JsInterOp(IJSRuntime jsRuntime)
+        public JsHtmlToCanvas(IJSRuntime jsRuntime)
         {
             jsRun = jsRuntime;
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/SharedPage/js/jsfunc.js").AsTask());
+                "import", "./_content/SharedPage/js/html2canvas.js").AsTask());
         }
-        public async ValueTask Init(string id)
+        public async ValueTask<string> toimg(string id)
         {
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("JsFunc.init", id);
+            return await module.InvokeAsync<string>("toimg", id);
         }
         /// <summary>
         /// 直接传对象,方法内部复制序列化,默认会合并之前的
@@ -128,7 +124,7 @@ namespace SharedPage
             try
             {
                 var module = await moduleTask.Value;
-                var s= await jsRun.InvokeAsync<T>("localforage.getItem", key);
+                var s = await jsRun.InvokeAsync<T>("localforage.getItem", key);
                 return s;
             }
             catch (JSException ex)
@@ -158,7 +154,7 @@ namespace SharedPage
                     {
                         await jsRun.InvokeVoidAsync("console.log", e);
                     }
-                  
+
                 }
                 return items;
             }

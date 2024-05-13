@@ -1,9 +1,9 @@
-﻿@page "/"
+﻿@page "/designer/{id:long}"
+@using Dp.Wasm.IServices
 @using Microsoft.JSInterop
-@layout SharedPage.Layout.BaseLayout
-
-<CascadingValue Value="this" Name="Designer">
-    <CascadingValue Value="@BigScreen" Name="BigScreen">
+@inject IBigScreenService BigScreenService
+<CascadingValue Value="this.BigScreens">
+    <CascadingValue Value="this.BigScreenDesigner">
         <div style="height:5%;display:flex;justify-content: flex-start; ">
             <div style="flex:2;display:flex">
                 <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="菜单栏" @bind-Value="@ShowMenuBox" OnInnerText="菜单栏" OnValueChanged="OnValueChangedByBool" />
@@ -14,30 +14,38 @@
                 <Button Size="Size.ExtraSmall" OnClick="DownMove">下移</Button>
                 <Button Size="Size.ExtraSmall" OnClick="UpMove">置顶</Button>
                 <Button Size="Size.ExtraSmall" OnClick="UpMove">置底</Button>
-                <Button Size="Size.ExtraSmall" OnClick="Test">ceshi</Button>
-                <Button Size="Size.ExtraSmall" OnClick="TestWrite">测试读取</Button>
+                <Button Size="Size.ExtraSmall" OnClick="Save">保存</Button>
+                <Button Size="Size.ExtraSmall" OnClick="TestRead">测试读取</Button>
             </div>
         </div>
         <div class="content" style="height:95%;overflow:hidden">
             @if (ShowMenuBox)
             {
-                <div style="flex:2">左边</div>
+                <div style="flex:2">
+                    <SharedPage.Components.BoxPanel BigScreen="BigScreen"></SharedPage.Components.BoxPanel>
+
+                </div>
             }
-            <div id="designer" style="flex:8;position:relative;overflow:auto" @onclick="async(e)=>{
+            <div  style="flex:8;position:relative;overflow:auto;background-color:#636470" @onclick="async(e)=>{
 await JsEcharts.removeClassForSelect();
 }">
-                <SharedPage.Components.Runing></SharedPage.Components.Runing>
+                <div id="designer" class="main" style="@(BigScreen.Css.ToString())" ondragover="event.preventDefault();"
+                     @ondrop="ondropFormBox">
+                    <SharedPage.Components.Runing  BigScreen="@BigScreen" IsDesigner="true"></SharedPage.Components.Runing>
+                </div>
             </div>
             @if (ShowPropertityBox)
             {
                 <div class="PropPanel" style="flex:2">
-                    <SharedPage.Components.PropPanel></SharedPage.Components.PropPanel>
+                    <SharedPage.Components.PropPanel BigScreen="@BigScreen"></SharedPage.Components.PropPanel>
                 </div>
             }
         </div>
     </CascadingValue>
 </CascadingValue>
 @code {
+    [Parameter]
+    public long id { get; set; }
     [Inject]
     [NotNull]
     public JsInterOp? JsEcharts { get; set; }
@@ -49,18 +57,31 @@ await JsEcharts.removeClassForSelect();
 
     public List<ComponentInfo> CopyList { get; set; } = new();
 
+    public List<BigScreen>? BigScreens { get; set; }
+    public BigScreenDesigner BigScreenDesigner { get; set; } = new();
     public bool ShowPropertityBox { get; set; } = true;
     public bool ShowMenuBox { get; set; } = true;
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
         base.OnInitialized();
+        var res = await JsEcharts.getItems<BigScreen>();
+        if (res != null)
+        {
+            BigScreenDesigner.BigScreens = res;
+        }
+        else
+        {
+            BigScreenDesigner.BigScreens = new();
+        }
+        BigScreenDesigner.RefreshHandel = Refresh;
+        BigScreenDesigner.SelectedChangeHandel = BigScreenChanged;
+        return;
         try
         {
             ComponentInfo chart = new ComponentInfo();
             ComponentInfo chart2 = new ComponentInfo();
             chart.ComponentType = ComponentType.Echarts;
             chart.DataName = "test";
-
             chart.Option = new EOption()
                 {
                     dataset = new EdataSet()
@@ -80,11 +101,12 @@ await JsEcharts.removeClassForSelect();
             chart.Option.tooltip = new();
             chart.Option.legend = new();
 
-
             chart2.DataName = "test";
             chart2.Top = 50;
             chart2.Option = chart.Option;
             chart2.ComponentType = ComponentType.Echarts;
+            Random r = new();
+            BigScreen.Id = r.Next(10000);
             BigScreen.ChartList.Add(chart);
             //BigScreen.ChartList.Add(chart2);
         }
@@ -93,9 +115,28 @@ await JsEcharts.removeClassForSelect();
 
             throw ex;
         }
-
     }
+    protected override async Task OnInitializedAsync()
+    {
 
+        var res = await BigScreenService.GetBigScreens();
+        if (res.IsSucceeded)
+        {
+            BigScreens = res.Data;
+        }
+        await base.OnInitializedAsync();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        //根据拿到的id,查询到整个BigScreen
+        var res = await BigScreenService.GetBigScreen(id);
+        if (res.IsSucceeded && res.Data != null)
+        {
+            BigScreen = res.Data;
+            BigScreen.RefreshHandel = Refresh;
+        }
+    }
     Random r = new();
     public void init()
     {
@@ -125,7 +166,7 @@ await JsEcharts.removeClassForSelect();
     /// </summary>
     /// <param name="isResize"></param>
     /// <returns></returns>
-    public async Task Refresh(bool isResize = false)
+    public async void Refresh(bool isResize = false)
     {
         //todo 应该调用js  this.liChart[id].resize();
         try
@@ -133,7 +174,7 @@ await JsEcharts.removeClassForSelect();
             this.StateHasChanged();
             if (BigScreen.SelectedList.Count > 0 && isResize && BigScreen.SelectedList[0].Id != null)
             {
-                await JsEcharts.SetOption(BigScreen.SelectedList[0].Id, BigScreen.SelectedList[0].Option,true);
+                await JsEcharts.SetOption(BigScreen.SelectedList[0].Id, BigScreen.SelectedList[0].Option, true);
                 await JsEcharts.Resize(BigScreen.SelectedList[0].Id);
             }
         }
@@ -141,9 +182,16 @@ await JsEcharts.removeClassForSelect();
         {
             ;
         }
-        await Task.CompletedTask;
     }
-
+    void BigScreenChanged(long id)
+    {
+        var dp = this.BigScreenDesigner.BigScreens.First(x => x.Id == id);
+        if (dp != null)
+        {
+            this.BigScreenDesigner.Selected = dp;
+            this.StateHasChanged();
+        }
+    }
     private async void DownMove(MouseEventArgs e)
     {
         if (BigScreen.SelectedList.Count == 0)
@@ -220,16 +268,71 @@ await JsEcharts.removeClassForSelect();
 
         }
     }
-    private async void Test(MouseEventArgs e)
+    private async void Save(MouseEventArgs e)
     {
-        await JsEcharts.setItem("大屏",new BigScreen());
+        //获取当前页面的缩略图,然后保存到根目录下  JsHtmlToCanvas 实现了
+        Result result = new Result() { IsSucceeded = false };
+        if (BigScreen != null)
+        {
+            result = await BigScreenService.Save(BigScreen);
+        }
+        if (result.IsSucceeded)
+        {
+            await Msg.Show(new MessageOption()
+                {
+                    Content = "保存成功",
+                    Color = Color.Success
+                });
+        }
+        else
+        {
+            await Msg.Show(new MessageOption()
+                {
+                    Content = $"保存失败:{result.ReturnMsg}",
+                    Color = Color.Danger
+                });
+        }
 
     }
-    private async void TestWrite(MouseEventArgs e)
+    private async void TestRead(MouseEventArgs e)
     {
         var ss = await JsEcharts.getItem<BigScreen>("大屏");
         await JsEcharts.Log(ss);
         await JsEcharts.Log(null);
+    }
+    void ondropFormBox(DragEventArgs e)
+    {
+        if (BigScreen.SelectedByToolBox != null)
+        {
+            switch (BigScreen.SelectedByToolBox)
+            {
+                case ComponentType.Echarts:
+                    ComponentInfo chart = new ComponentInfo();
+                    chart.ComponentType = ComponentType.Echarts;
+                    chart.DataName = "test";
+                    chart.Option = new EOption()
+                        {
+                            dataset = new EdataSet()
+                            {
+                                source = new List<object[]>() {
+            new object[] {"事件年份",   "系列1",  "系列2", "系列3" }  ,
+            new object[] {"2015",       "155",       "66",   "78" }  ,
+            new object[] {"2013",       "12",       "145",   "37" }  ,
+            new object[] {"2016",       "34",       "65",   "177" }  ,
+            new object[] {"2017",       "12",       "425",  "37" } },
+                            },
+
+                        };
+                    chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line } };
+                    chart.Option.xAxis = new() { new ExAxis() { type = EAxisType.category } };
+                    chart.Option.yAxis = new List<ExAxis>() { new ExAxis() };
+                    chart.Option.tooltip = new();
+                    chart.Option.legend = new();
+                    BigScreen.ChartList.Add(chart);
+                    break;
+            }
+        }
+        this.StateHasChanged();
     }
 }
 

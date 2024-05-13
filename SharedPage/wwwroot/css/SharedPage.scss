@@ -1,4 +1,5 @@
-﻿$Select-color: blue;//被选中后边框颜色
+﻿//开启sass编译监控: sass --watch . --no-source-map
+$Select-color: blue; //被选中后边框颜色
 /*designer*/
 .content {
     display: flex;
@@ -33,18 +34,37 @@
     margin: 0;
 }
 //自定义容器
-.input-n {
+.over-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
     white-space: nowrap;
+
     .form-label {
         margin: 0;
     }
 }
+
 .PropPanel {
     overflow: auto;
-    .accordion-body{
-        padding:5px;
+
+    .accordion-body {
+        padding: 5px;
     }
+}
+//所有页面中,重写listview
+.total-pages {
+    .listview .listview-body {
+        display: block;
+    }
+
+    .listview-item {
+        width: 20%;
+    }
+}
+.main{
+    height:100%;
+    position:relative;
+    overflow:auto;
+   
 }

@@ -1,0 +1,49 @@
+﻿@page "/Run/{id:long}"
+@using Dp.Wasm.IServices
+@inject IBigScreenService BigScreenService
+@if (BigScreen != null)
+{
+  @*   <CascadingValue Value="@BigScreen" Name="BigScreen"> *@
+
+    <div style="position:relative;height:100%;background-color:@BigScreen.Css.background_color">
+            <SharedPage.Components.Runing BigScreen="@BigScreen" IsDesigner="false"></SharedPage.Components.Runing>
+        </div>
+  @*   </CascadingValue> *@
+}
+else
+{
+    //设计一个统一他是组件
+    <span>没有获取到页面数据</span>
+}
+@code {
+    [Parameter]
+    public long id { get; set; }
+    public BigScreen? BigScreen { get; set; }
+    // [CascadingParameter(Name = "BigScreen")]
+    // public BigScreen? BigScreenList { get; set; }
+    protected override async Task OnParametersSetAsync()
+    {
+        //1.拿到id. 在级联BigScreenList中找到跟id匹配的BigScreen或者根据这个id,重新到数据库中获取
+        //这里选择第二种,知道id了查询其他的,注意这里需要带上权限,不然都可以
+        //
+        var res= await BigScreenService.GetBigScreen(id);
+        if (res.IsSucceeded)
+        {
+            BigScreen = res.Data;
+        }
+        else
+        {
+            
+        }
+        await base.OnParametersSetAsync();
+    }
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+}

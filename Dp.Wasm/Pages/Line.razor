@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
 @inject NavigationManager Navigation
-@layout BaseLayout
+
 @* @attribute [Authorize(Roles ="afafd")] *@
 
 <div style="height:5%">
@@ -39,12 +39,12 @@
     public Action<string, List<object[]>?>? SetOptionHandel { get; set; }
     protected async override Task OnInitializedAsync()
     {
-        var ctr = new ComponentInfo() {  Width=80,Height=60};
+        var ctr = new ComponentInfo() { Width = 80, Height = 60 };
         var op = new EOption();
         op.legend = new Legend();
         op.tooltip = new Etooltip();
         op.title = new() { };
-        op.xAxis = new() { new ExAxis() { type =  EAxisType.category } };
+        op.xAxis = new() { new ExAxis() { type = EAxisType.category } };
         op.yAxis = new() { new ExAxis() };
         op.series = new List<ESerieBase>()
         {

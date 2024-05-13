@@ -1,4 +1,4 @@
-﻿@using SharedPage.Page
+﻿
 @inherits SharedPage.Base.EchartsBase
 @implements IAsyncDisposable
 @if (ChartInfo != null)
@@ -33,13 +33,13 @@
     }
 }
 @code {
-    [CascadingParameter(Name = "BigScreen")]
+    [Parameter]
     [NotNull]
     public BigScreen? BigScreen { get; set; }
 
-    [CascadingParameter(Name = "Designer")]
+    [CascadingParameter]
     [NotNull]
-    public Designer? Designer { get; set; }
+    public BigScreenDesigner? DpDesigner { get; set; }
 
     [Parameter]
     [NotNull]
@@ -47,6 +47,7 @@
 
     [Parameter]
     public bool IsDesigner { get; set; }
+
     protected override Task OnInitializedAsync()
     {
 
@@ -112,9 +113,10 @@
             BigScreen.SelectedList.Clear();
             BigScreen.SelectedList.Add(ChartInfo);
         }
-        BigScreen.Selected = ChartInfo;
+        BigScreen.SelectedByDesigner = ChartInfo;
         await JsEcharts.addClassForSelect(ChartInfo.Id, e.CtrlKey);
-        await Designer.Refresh();//这里全局优化,实际是为了刷新属性面板
+        BigScreen?.RefreshHandel?.Invoke(false);//这里全局优化,实际是为了刷新属性面板
+        BigScreen?.RefreshHandel?.Invoke(false);
     }
     /// <summary>
     /// 拖动开始
@@ -125,7 +127,7 @@
     {
         ChartInfo.MoveInfo.StartX = e.ScreenX;
         ChartInfo.MoveInfo.StartY = e.ScreenY;
-        BigScreen.Selected = ChartInfo;
+        BigScreen.SelectedByDesigner = ChartInfo;
         BigScreen.SelectedList.Clear();
         BigScreen.SelectedList.Add(ChartInfo);
         await JsEcharts.addClassForSelect(ChartInfo.Id);
@@ -144,7 +146,7 @@
         var offsety = e.ScreenY - ChartInfo.MoveInfo.StartY;
         ChartInfo.Top = ChartInfo.Top + Convert.ToSingle((offsety / h * 100));
         ChartInfo.Left = ChartInfo.Left + Convert.ToSingle((offsetx / w * 100));
-        await Designer.Refresh();//这里全局优化,实际是为了刷新属性面板
+        BigScreen?.RefreshHandel?.Invoke(false);//这里全局优化,实际是为了刷新属性面板
     }
 
     async Task HandleKeyDown(KeyboardEventArgs e)
@@ -164,19 +166,19 @@
                 BigScreen.SelectedList.ForEach(x => x.Left++);
                 break;
             case "Delete":
-                if (BigScreen.Selected!=null)
+                if (BigScreen.SelectedByDesigner!=null)
                 {
-                    await JsEcharts.dispose(BigScreen.Selected.Id);
-                    BigScreen.ChartList.RemoveAll(x => x.Id == BigScreen.Selected.Id);//清除了
+                    await JsEcharts.dispose(BigScreen.SelectedByDesigner.Id);
+                    BigScreen.ChartList.RemoveAll(x => x.Id == BigScreen.SelectedByDesigner.Id);//清除了
                     BigScreen.SelectedList.Clear();
 
-                    BigScreen.Selected = null;
+                    BigScreen.SelectedByDesigner = null;
                 }
                 // BigScreen.SelectedList.ForEach(async (x) =>
                 // {
                 //     await JsEcharts.dispose(x.Id);
                 // });
-                await Designer.Refresh();
+                BigScreen?.RefreshHandel?.Invoke(false);
                 await JsEcharts.removeClassForSelect();
                 break;
             case "c":
@@ -186,16 +188,16 @@
                     var obj = BigScreen.SelectedList.Select(x => x.Clone());
                     //优化,直接放到剪贴板中
                     await JsEcharts.Copy(JsonSerializer.Serialize(obj));
-                    Designer.CopyList.Clear();
-                    Designer.CopyList.AddRange(obj);
+                    BigScreen.CopyList.Clear();
+                    BigScreen.CopyList.AddRange(obj);
                 }
                 break;
             case "v":
             case "V":
-                if (e.CtrlKey && Designer.CopyList.Count > 0)
+                if (e.CtrlKey && BigScreen.CopyList.Count > 0)
                 {
                     //1.复制一份剪贴板中的数据出来
-                    var objs = Designer.CopyList.Select(x => x.Clone()).ToList();
+                    var objs = BigScreen.CopyList.Select(x => x.Clone()).ToList();
                     if (objs != null)//当前页面有被复制对象
                     {
                         BigScreen.ChartList.AddRange(objs);//取消下面,是因为性能,我没有批量增加的方法,所以需要多次调用addClassForSelect
@@ -206,16 +208,17 @@
                     }
                     else if (true)//没有,检查剪贴板的
                     {
-                        
+
                     }
-                    await Designer.Refresh();
+                    BigScreen?.RefreshHandel?.Invoke(false);
                 }
                 break;
 
         }
         if (BigScreen.SelectedList.Count > 1)
         {
-            await Designer.Refresh();
+            
+            BigScreen?.RefreshHandel?.Invoke(false);
         }
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)

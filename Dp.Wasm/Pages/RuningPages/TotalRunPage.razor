@@ -1,0 +1,58 @@
+﻿@page "/trp"
+
+@inject NavigationManager nav
+@inject IBigScreenService BigScreenService
+<div style="height:5%"></div>
+<div style="height:95%" class="total-pages">
+    <ListView TItem="BigScreen" Items="items" GroupName="p=>p.GroupName" OnListViewItemClick="OnListViewItemClick">
+        <BodyTemplate>
+            <Card>
+                <BodyTemplate>
+                    <div>
+                        <img src="./img/dp.jpg" alt="示例图像" style="max-width:100%;height:auto" />
+                        <div class="lv-demo-desc">@context.Name</div>
+                    </div>
+                </BodyTemplate>
+            </Card>
+        </BodyTemplate>
+    </ListView>
+</div>
+
+@code {
+    [Inject]
+    [NotNull]
+    public JsInterOp? JsEcharts { get; set; }
+    [Inject]
+    [NotNull]
+    public IJSRuntime? js { get; set; }
+    public List<BigScreen>? items { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var res = await BigScreenService.GetBigScreens();
+        if (res.IsSucceeded)
+        {
+            items = res.Data;
+        }
+        else
+        {
+
+        }
+      
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+      
+        }
+    }
+    async Task OnListViewItemClick(BigScreen bs)
+    {
+        nav.NavigateTo($"Run/{bs.Id}");
+        // await js.InvokeVoidAsync("window.open", $"Run/{bs.Id}", "_blank");
+        await Task.CompletedTask;
+    }
+}

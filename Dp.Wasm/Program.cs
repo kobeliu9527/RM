@@ -10,6 +10,7 @@ using System.Timers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Components.Authorization;
 using SharedPage.JsonConvert;
+using Dp.Wasm.IServices;
 
 internal class Program
 {
@@ -29,11 +30,13 @@ internal class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
         builder.Services.AddHttpClient();
         //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-        builder.Services.AddBootstrapBlazor();
+        builder.Services.AddBootstrapBlazor(null, op =>{
+        op.IgnoreLocalizerMissing=true;
+        });
         builder.Services.AddAuthorizationCore();
         builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForWasm>();
         builder.Services.AddSingleton<JsInterOp, JsInterOp>();
-
+        builder.Services.AddSingleton<IBigScreenService, BigScreenByLocal>();
 
         await builder.Build().RunAsync();
     }

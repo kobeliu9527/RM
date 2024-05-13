@@ -1,0 +1,31 @@
+﻿<div style="height=100%;overflow:auto" class="box-panel">
+    <Tab>
+        <TabItem Text="工具箱">
+            @foreach (ComponentType item in Enum.GetValues(typeof(ComponentType)))
+            {
+                <div @key="item" @ondragstart="()=>{
+                    if (BigScreen!=null)
+                                        {
+                                        BigScreen.SelectedByToolBox=item;
+                                        }
+
+
+                }" draggable="true" @ondragend="()=>{
+         if (BigScreen!=null)
+                                        {
+                                        BigScreen.SelectedByToolBox=null;
+                                        }
+                }">
+                    <span>@item.ToString()</span>
+                </div>
+            }
+        </TabItem>
+    </Tab>
+
+</div>
+
+@code {
+    [Parameter]
+    public BigScreen? BigScreen { get; set; }
+    public List<ComponentInfo> ComponentInfos { get; set; } = new();
+}

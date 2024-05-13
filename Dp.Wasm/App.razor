@@ -4,7 +4,7 @@
 <CascadingAuthenticationState>
     <CascadingValue Value="this">
         <BootstrapBlazorRoot>
-            <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(SharedPage.Page.Designer).Assembly}">
+            <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(SharedPage.JsInterOp).Assembly}">
                 <Found Context="routeData">
                     <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(BaseLayout)">
                         <NotAuthorized>
@@ -31,12 +31,15 @@
     [Inject]
     [NotNull]
     public JsInterOp? JsEcharts { get; set; }
-
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
+            //获取数据,后期应该是一个接口,注入不同的后去方式,目前来自于本地db
+            
+            return;
             try
             {
                 hubConnection = new HubConnectionBuilder()
