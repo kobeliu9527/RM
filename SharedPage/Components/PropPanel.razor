@@ -53,8 +53,8 @@
                                     {
                                         <CollapseItem @key="item" @bind-Text="item.name">
                                             <Button OnClick="()=>{DeleteXaxis(item);}" Size="Size.Small">删除这个轴</Button>
-                                            <BootstrapInput @bind-Value="@item.name"></BootstrapInput>
-                                            <BootstrapInput Value="@item.animationDelay" OnValueChanged="async(e)=>{await ChanedForanimationDelay(item,e);}"></BootstrapInput>
+                                            <BootstrapInput @bind-Value="@item.name"></BootstrapInput>@* OnValueChanged="async(e)=>{await ChanedForanimationDelay(item,e);}" *@
+                                            <BootstrapInput @bind-Value="@item.animationDelay.RAW"></BootstrapInput>
                                             <Tooltip Delay="1000" Title="@GetPropertyDescription(item,"animationEasing")">
                                                 <Select @bind-Value="@item.animationEasing" PlaceHolder="默认值" ShowLabel="true"></Select>
                                             </Tooltip>
@@ -69,6 +69,12 @@
                     <CollapseItem Text="Y轴设置">
 
                     </CollapseItem>
+                    <CollapseItem Text="数据源设置">
+                        <Button OnClick="DataSourceSetting2">获取数据源</Button>
+                    </CollapseItem>
+                    <CollapseItem Text="序列设置">
+                        <Button>根据数据自动匹配</Button>
+                    </CollapseItem>
                 </CollapseItems>
             </Collapse>
         }
@@ -82,10 +88,10 @@
     <TabItem Text="页面配置">
         @if (BigScreen != null)
         {
-            <BootstrapInput @bind-Value="BigScreen.Name" ShowLabel="true"></BootstrapInput>
+            <BootstrapInput @bind-Value="BigScreen.DisplayName" ShowLabel="true"></BootstrapInput>
             <BootstrapInput @bind-Value="BigScreen.GroupName" ShowLabel="true"></BootstrapInput>
-            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen,"Order")">
-                <BootstrapInput @bind-Value="BigScreen.Order" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}"></BootstrapInput>
+            <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen,"OrderNum")">
+                <BootstrapInput @bind-Value="BigScreen.OrderNum" ShowLabel="true" OnValueChanged="async(e)=>{await Refresh();}"></BootstrapInput>
             </Tooltip>
 
             <Tooltip Delay="1000" Title="@GetPropertyDescription(BigScreen.Css,"width")">
@@ -128,6 +134,9 @@
 @code {
     [Inject]
     [NotNull]
+    private DialogService? DialogService { get; set; }
+    [Inject]
+    [NotNull]
     private MessageService? Msg { get; set; }
     [Inject]
     [NotNull]
@@ -150,6 +159,7 @@
     }
     public async Task OnValueChanged(double val)
     {
+
         await Refresh();
         await Task.CompletedTask;
     }
@@ -183,18 +193,33 @@
     /// <param name="propertyName">哪一个属性</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    static string GetPropertyDescription(object obj, string propertyName)
+    static string GetPropertyDescription(object? obj, string propertyName)
     {
-        // 获取属性信息
-        var property = obj.GetType().GetProperty(propertyName);
-        if (property == null)
-            throw new ArgumentException($"Property '{propertyName}' not found.");
+        try
+        {
+            if (obj != null)
+            {
+                var property = obj.GetType().GetProperty(propertyName);
+                if (property == null)
+                    throw new ArgumentException($"Property '{propertyName}' not found.");
 
-        // 获取属性的 DescriptionAttribute
-        var attribute = (Attribute.GetCustomAttribute(property, typeof(DescriptionAttribute))) as DescriptionAttribute;
+                // 获取属性的 DescriptionAttribute
+                var attribute = (Attribute.GetCustomAttribute(property, typeof(DescriptionAttribute))) as DescriptionAttribute;
 
-        // 返回属性的描述
-        return attribute == null ? string.Empty : attribute.Description;
+                // 返回属性的描述
+                return attribute == null ? string.Empty : attribute.Description;
+            }
+            else
+            {
+
+                return "NA";
+            }
+        }
+        catch (Exception ex)
+        {
+            return "NA";
+        }
+
     }
 
     Task OnvalueChanged(object o)
@@ -203,34 +228,58 @@
     }
     private async Task ChanedForanimationDelay(ExAxis axis, object? o)
     {
+        // var res = ToFanuc(o);
+        // if (res != null)
+        // {
+
+        //     await Msg.Show(new MessageOption() { Content = "设置成功", Color = Color.Success });
+        // }
+        // else
+        // {
+        //     await Msg.Show(new MessageOption() { Content = "非法值,请输入数字或者有效的JS函数体", Color = Color.Danger });
+        // }
+        // axis.animationDelay = res;
+        // await JsEcharts.Log(BigScreen);
+    }
+    private object? ToFanuc(object? o)
+    {
         var st = o?.ToString();
         if (!string.IsNullOrEmpty(st))
         {
             if (int.TryParse(o?.ToString(), out int aa))
             {
-                axis.animationDelay = aa;
+                return aa;
             }
             else
             {
                 if (IsJavaScriptFunction(st))
                 {
-                    axis.animationDelay = new JsFunc(st);
+                    return new JsFunc(st);
                 }
                 else
                 {
-                    axis.animationDelay = null;
-                    await Msg.Show(new MessageOption() { Content = "非法值,请输入数字或者有效的JS函数体",Color=Color.Danger });
-                    return;
+                    return null;
                 }
             }
-            BigScreen?.RefreshHandel?.Invoke(false);
         }
+        return null;
     }
     static bool IsJavaScriptFunction(string input)
     {
         // 使用正则表达式匹配 JavaScript 函数的特征
         string pattern = @"(?i)^\s*function\s*\([^)]*\)\s*{\s*.*\s*}\s*$";
         return Regex.IsMatch(input, pattern);
+    }
+    async void DataSourceSetting2()
+    {
+        await DialogService.ShowModal<DataSourceSetting>(new ResultDialogOption()
+            {
+                ComponentParameters = new Dictionary<string, object>
+                {
+                    [nameof(DataSourceSetting.EdataSet)] = BigScreen.SelectedByDesigner.Option.dataset
+                }
+            });
+        BigScreen?.RefreshHandel?.Invoke(true);//必须手动调用刷新
     }
 }
 @* 属性面板 *@

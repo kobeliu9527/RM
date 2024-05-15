@@ -1,0 +1,117 @@
+﻿@implements IResultDialog
+<Button OnClick="()=>{CreateContext();}">更新数据源</Button>
+<Table TItem="DynamicObject" DynamicContext="DataTableDynamicContext" ModelEqualityComparer="ModelEqualityComparer"
+       IsMultipleSelect="true" IsBordered="true" IsStriped="true" 
+       ShowToolbar="true" ShowExtendButtons="true" />
+
+@code {
+    [Parameter]
+    public EdataSet? EdataSet { get; set; }
+    [NotNull]
+    private DataTableDynamicContext? DataTableDynamicContext { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        CreateContext();
+        return base.OnInitializedAsync();
+    }
+    /// <summary>
+    /// 重要,用于判断两个行是否相同
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    private static bool ModelEqualityComparer(IDynamicObject x, IDynamicObject y)
+    {
+        return x.GetValue("Id")?.ToString() == y.GetValue("Id")?.ToString();
+    }
+    private void CreateContext()
+    {
+        if (EdataSet != null && EdataSet.source != null)
+        {
+            DataTableDynamicContext = new DataTableDynamicContext(EdataSet.source, (context, col) =>
+          {
+              col.Filterable = true;
+              var propertyName = col.GetFieldName();
+              // if (propertyName == nameof(Foo.DateTime))
+              // {
+              //     context.AddRequiredAttribute(nameof(Foo.DateTime));
+              //     // 使用 AutoGenerateColumnAttribute 设置显示名称示例
+              //     //   context.AddAutoGenerateColumnAttribute(nameof(Foo.DateTime), new KeyValuePair<string, object?>[] { new(nameof(AutoGenerateColumnAttribute.Text), Localizer[nameof(Foo.DateTime)].Value) });
+              // }
+              // else if (propertyName == nameof(Foo.Name))
+              // {
+              //     // context.AddRequiredAttribute(nameof(Foo.Name), Localizer["Name.Required"]);
+              //     // 使用 Text 设置显示名称示例
+              //     col.Text = nameof(Foo.Name);
+              // }
+              // else if (propertyName == nameof(Foo.Count))
+              // {
+              //     context.AddRequiredAttribute(nameof(Foo.Count));
+              //     // 使用 DisplayNameAttribute 设置显示名称示例
+              //     context.AddDisplayNameAttribute(nameof(Foo.Count), nameof(Foo.Count));
+              // }
+              // else if (propertyName == nameof(Foo.Complete))
+              // {
+              //     col.Filterable = true;
+              //     // 使用 DisplayAttribute 设置显示名称示例
+              //     //  context.AddDisplayAttribute(nameof(Foo.Complete), new KeyValuePair<string, object?>[] { new(nameof(DisplayAttribute.Name), Localizer[nameof(Foo.Complete)].Value) });
+              // }
+              // else if (propertyName == nameof(Foo.Id))
+              // {
+              //     col.Editable = false;
+              //     col.Visible = false;
+              // }
+          })
+                {
+                    OnDeleteAsync = items =>
+                    {
+                        // // 数据源中移除
+                        // foreach (var item in items)
+                        // {
+                        //     // var id = item.GetValue(nameof(Foo.Id));
+                        //     // if (id != null)
+                        //     // {
+                        //     //     var row = PageDataTable.Rows.Find(id);
+                        //     //     if (row != null)
+                        //     //     {
+                        //     //         PageDataTable.Rows.Remove(row);
+                        //     //     }
+                        //     // }
+                        // }
+
+                        // PageDataTable.AcceptChanges();
+                        return Task.FromResult(true);
+                    }
+                                                                                  ,
+                    OnChanged = args =>
+                    {
+                        // if (args.ChangedType == DynamicItemChangedType.Add)
+                        // {
+                        //     PageDataTable.Rows.Add();
+
+                        //     //  var item = args.Items.First();
+                        //     // item.SetValue("Id", (System.Int64)1111);
+                        //     //item.SetValue(nameof(Foo.Name), "新建值");
+                        // }
+
+                        return Task.FromResult(true);
+                    }
+                    //,
+                    //OnValueChanged=(e,r,t)=>
+                    //{
+                    //    return Task.CompletedTask;
+                    //}
+
+                };
+        }
+        // 初始化动态类型上下文实例
+        this.StateHasChanged();
+
+    }
+
+    public async Task OnClose(DialogResult result)
+    {
+     
+
+    }
+}

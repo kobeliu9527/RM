@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using EntityStore;
+using EntityStore.SystemTable;
+using Microsoft.AspNetCore.Components;
 using SharedPage.Components;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,40 +19,82 @@ namespace SharedPage.Model
     /// <summary>
     /// 表示一个大屏
     /// </summary>
-    public class BigScreen
+    [SugarTable("sys_" + nameof(BigScreen), IsCreateTableFiledSort = true)]
+    //[SugarIndex("{table}_DisplayName",
+    //                            nameof(BigScreen.DisplayName), OrderByType.Asc,
+    //                            nameof(BigScreen.ModifyTime), OrderByType.Asc,
+    //                            nameof(BigScreen.GroupName), OrderByType.Asc,
+    //                            nameof(BigScreen.Imgurl), OrderByType.Asc,
+    //                            nameof(BigScreen.OrderNum), OrderByType.Asc,
+    //                            nameof(BigScreen.Css), OrderByType.Asc,
+    //                            nameof(BigScreen.InterVal), OrderByType.Asc,
+    //                            nameof(BigScreen.CreateTime), OrderByType.Asc)]
+    //[SugarIndex("{table}_GroupName",
+    //                            nameof(BigScreen.GroupName), OrderByType.Asc,
+    //                            nameof(BigScreen.ModifyTime), OrderByType.Asc,
+    //                            nameof(BigScreen.DisplayName), OrderByType.Asc,
+    //                            nameof(BigScreen.Imgurl), OrderByType.Asc,
+    //                            nameof(BigScreen.OrderNum), OrderByType.Asc,
+    //                            nameof(BigScreen.Css), OrderByType.Asc,
+    //                            nameof(BigScreen.InterVal), OrderByType.Asc,
+    //                            nameof(BigScreen.CreateTime), OrderByType.Asc)]
+    public class BigScreen : EntityBaseIdTime
     {
-        public long Id { get; set; }
-        public bool IsDesigner { get; set; }
-        [DisplayName("大屏名字")]
-        public string Name { get; set; } = "大屏名字";
+        /// <summary>
+        /// 大屏名字
+        /// </summary>
+        [DisplayName("大屏名字"), SugarColumn(Length = Constants.NameLen)]
+        public string DisplayName { get; set; } = "大屏名字";
+        /// <summary>
+        /// 缩略图路径
+        /// </summary>
+        [DisplayName("缩略图路径"), Description("在保存一个页面的时候,获取到当时的页面图像,保存下来,上传到服务器,名字为这个页面的id"), SugarColumn(Length = 50)]
+        public string Imgurl { get; set; } = "./img/dp.jpg";
         /// <summary>
         /// 用于表示他属于那个组的
         /// </summary>
         [DisplayName("所属组名")]
         public string GroupName { get; set; } = "默认组";
-        [DisplayName("排序"),Description("在页面中的位置,越大越靠后")]
-        public int Order { get; set; }
-
-        public Css Css { get; set; } = new Css() { background_color= "#2B2C2D" ,top="1%",left="1%",width="960px",height="540px"};
         /// <summary>
-        /// 整个页面多少秒请求一次
+        /// 在页面中的位置,越大越靠后
         /// </summary>
-        public int InterVal { get; set; } = 5000;
+        [DisplayName("排序"), Description("在页面中的位置,越大越靠后")]
+        public int OrderNum { get; set; }
+        /// <summary>
+        /// 设计的时候,画布的布局,运行时候全屏,只会用到背景色
+        /// </summary>
+        [SugarColumn(IsJson = true,ColumnDataType = StaticConfig.CodeFirst_BigString)]
+        public Css Css { get; set; } = new Css() { background_color = "#2B2C2D", top = "1%", left = "1%", width = "960px", height = "540px" };
+        /// <summary>
+        /// 整个页面后台多少秒请求一次
+        /// </summary>
+        public int InterVal { get; set; } = 5;
         /// <summary>
         /// 这个大屏的所有Echart图表
         /// </summary>
+        [SugarColumn(IsJson = true,ColumnDataType = StaticConfig.CodeFirst_BigString)]
         public List<ComponentInfo> ChartList { get; set; } = new();
+        /// <summary>
+        /// 表示哪些组可以看到这个屏幕
+        /// </summary>
+        [Navigate(typeof(BigScreenRoleReview), nameof(BigScreenRoleReview.BigScreenId), nameof(BigScreenRoleReview.RoleId))]
+        public List<Role> ReviewRoles { get; set; }
+        /// <summary>
+        /// 表示哪些组编辑
+        /// </summary>
+        [Navigate(typeof(BigScreenRoleDesigner), nameof(BigScreenRoleDesigner.BigScreenId), nameof(BigScreenRoleDesigner.RoleId))]
+        public List<Role> DesignerRoles { get; set; }
 
-        [JsonIgnore] public List<ComponentInfo> SelectedList { get; set; } = new();
-        [JsonIgnore] public ComponentInfo? SelectedByDesigner { get; set; }
-        [JsonIgnore] public ComponentType? SelectedByToolBox { get; set; }
-        [JsonIgnore] public List<ComponentInfo> CopyList { get; set; } = new();
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public List<ComponentInfo> SelectedList { get; set; } = new();
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public ComponentInfo? SelectedByDesigner { get; set; }
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public ComponentType SelectedByToolBox { get; set; }
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public bool IsSelectedByToolBox { get; set; }
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public List<ComponentInfo> CopyList { get; set; } = new();
         /// <summary>
         /// 要执行刷新大屏委托
         /// </summary>
-        [JsonIgnore] public Action<bool>? RefreshHandel { get; set; }
-
-        public EDataSource? DataSet { get; set; }
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public Action<bool>? RefreshHandel { get; set; }
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public EDataSource? DataSet { get; set; }
 
 
     }
@@ -90,7 +135,7 @@ namespace SharedPage.Model
         /// 更新这个控件的委托
         /// </summary>
         [JsonIgnore]
-        public Action<List<object[]>?>? SetOption { get; set; }
+        public Action<DataTable?>? SetOption { get; set; }
         [JsonIgnore]
         public MoveInfo MoveInfo { get; set; } = new();
 
@@ -145,7 +190,40 @@ namespace SharedPage.Model
         [Description("静态的数据源")]
         StaticJson
     }
-
+    /// <summary>
+    /// 大屏观看关系表
+    /// </summary>
+    [SugarTable("sys_" + nameof(BigScreenRoleReview))]
+    public class BigScreenRoleReview : EntityBase
+    {
+        /// <summary>
+        /// 大屏id
+        /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
+        public long BigScreenId { get; set; }
+        /// <summary>
+        /// 角色id
+        /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
+        public long RoleId { get; set; }
+    }
+    /// <summary>
+    /// 大屏设计权限关系表
+    /// </summary>
+    [SugarTable("sys_" + nameof(BigScreenRoleDesigner))]
+    public class BigScreenRoleDesigner : EntityBase
+    {
+        /// <summary>
+        /// 大屏id
+        /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
+        public long BigScreenId { get; set; }
+        /// <summary>
+        /// 角色id
+        /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]//中间表可以不是主键
+        public long RoleId { get; set; }
+    }
     /// <summary>
     /// 整个屏幕的数据源
     /// </summary>
@@ -163,7 +241,7 @@ namespace SharedPage.Model
         public string? top { get; set; }
         [DisplayName("距离左边"), Description("有效的值为: 100px  20% ")]
         public string? left { get; set; }
-        [DisplayName("背景色"),Description("点击前面按钮选择颜色,如果需要透明度,选择颜色后在后面输入00-FF之间的值")]
+        [DisplayName("背景色"), Description("点击前面按钮选择颜色,如果需要透明度,选择颜色后在后面输入00-FF之间的值")]
         public string? background_color { get; set; }
         public override string ToString()
         {
@@ -182,7 +260,7 @@ namespace SharedPage.Model
                     sb.Append(property.Name + ":" + value + ";");
                 }
             }
-            return sb.ToString().Replace('_','-');
+            return sb.ToString().Replace('_', '-');
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Dp.Server.Server.SignalR;
+﻿using Dp.Server.Server.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 

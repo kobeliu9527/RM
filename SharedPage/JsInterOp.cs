@@ -47,7 +47,7 @@ namespace SharedPage
         public async ValueTask SetOption(string id, object? option, bool notMerge = false, bool lazyUpdate = false)
         {
             var module = await moduleTask.Value;
-            var json = option.Serialize2();
+            var json = option.SerializeForJsFun();
             await module.InvokeVoidAsync("JsFunc.setOption", id, json, notMerge, lazyUpdate);
         }
         public async ValueTask dispose(string id)

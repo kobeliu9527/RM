@@ -7,13 +7,14 @@
                     if (BigScreen!=null)
                                         {
                                         BigScreen.SelectedByToolBox=item;
+                                        BigScreen.IsSelectedByToolBox=true;
                                         }
 
 
                 }" draggable="true" @ondragend="()=>{
          if (BigScreen!=null)
                                         {
-                                        BigScreen.SelectedByToolBox=null;
+                                        BigScreen.IsSelectedByToolBox=false;
                                         }
                 }">
                     <span>@item.ToString()</span>

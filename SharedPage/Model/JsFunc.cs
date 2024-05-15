@@ -11,11 +11,21 @@ namespace SharedPage.Model
     /// </summary>
     public record JsFunc
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public JsFunc() { }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="raw"></param>
         public JsFunc(string raw)
         {
             RAW = raw;
         }
-        public string? RAW { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string RAW { get; set; } = "";
     }
 }

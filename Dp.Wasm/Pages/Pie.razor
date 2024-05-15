@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
+@using System.Data
 @inject NavigationManager Navigation
 @layout BaseLayout
 @* @attribute [Authorize(Roles ="afafd")] *@
@@ -40,7 +41,7 @@
     public JsInterOp? JsEcharts { get; set; }
     private HubConnection? hubConnection;
     public string ss { get; set; } = "aaa";
-    public Action<string, List<object[]>?>? SetOptionHandel { get; set; }
+    public Action<string, DataTable?>? SetOptionHandel { get; set; }
     protected async override Task OnInitializedAsync()
     {
         var ctr = new ComponentInfo();
@@ -52,12 +53,11 @@
         {
             new SeriePie()
             {
-                roseType="area",animationDelay=new JsFunc() { RAW = "function (idx) {return idx * 5000 ;}" },
+                roseType="area",
             }
         };
         op.dataset.sourceHeader = false;
         ctr.Option = op;
-        BigScreen.IsDesigner = false;
         BigScreen.ChartList.Add(ctr);
         await base.OnInitializedAsync();
     }
@@ -66,7 +66,7 @@
         SetOptionHandel = SetOption;
         await base.OnAfterRenderAsync(firstRender);
     }
-    public void SetOption(string id, List<object[]>? option)
+    public void SetOption(string id, DataTable? option)
     {
         var chart = BigScreen.ChartList.Find(x => x.Id == id);
         chart?.SetOption?.Invoke(option);
@@ -75,7 +75,7 @@
     {
         try
         {
-            var ss = System.Text.Json.JsonSerializer.Deserialize<List<object[]>>(val);
+            var ss = System.Text.Json.JsonSerializer.Deserialize<DataTable>(val);
             BigScreen.ChartList[0].Option.dataset.source = ss;
             await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
         }
@@ -99,14 +99,14 @@
     }
     private async void RequestData()
     {
-        await Task.Delay(100);
-        Random r = new Random();
-        var src = new List<object[]>()
-                {
-                    new object[] {"直接访问", r.Next(1000).ToString(), "23", "45" }  ,
-                    new object[] {"联盟广告", r.Next(1000).ToString(), "23", "45" }  ,
-                    new object[] {"搜索引擎", r.Next(1000).ToString(), "23", "45" }  ,
-                };
-        SetOption(BigScreen.ChartList[0].Id, src);
+        // await Task.Delay(100);
+        // Random r = new Random();
+        // var src = new List<object[]>()
+        //         {
+        //             new object[] {"直接访问", r.Next(1000).ToString(), "23", "45" }  ,
+        //             new object[] {"联盟广告", r.Next(1000).ToString(), "23", "45" }  ,
+        //             new object[] {"搜索引擎", r.Next(1000).ToString(), "23", "45" }  ,
+        //         };
+        // SetOption(BigScreen.ChartList[0].Id, src);
     }
 }

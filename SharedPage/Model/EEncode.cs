@@ -1,5 +1,11 @@
-﻿namespace SharedPage.Model
+﻿using EntityStore.JsonConvert;
+using System.Text.Json.Serialization;
+
+namespace SharedPage.Model
 {
+    /// <summary>
+    /// 定义 data 的哪个维度被编码成什么,这个是基类
+    /// </summary>
     public class EEncode
     {
         /// <summary>
@@ -21,8 +27,8 @@
         /// <summary>
         /// 指定数据项的名称使用第三个维度在饼图等图表中有用，可以使这个名字显示在图例（legend）中。 itemName: 3,
         /// </summary>
-        ///
-        public int? itemName { get; set; }
+        [JsonConverter(typeof(objectConverter))]
+        public object? itemName { get; set; }
         /// <summary>
         /// 指定数据项的组 ID (groupId)。当全局过渡动画功能开启时，setOption 前后拥有相同 groupId 的数据项会进行动画过渡。 itemGroupId: 4,
         /// </summary>
@@ -34,5 +40,12 @@
         /// </summary>
         ///
         public int? itemChildGroupId { get; set; }
+
+        ///
+        public List<object>? x { get; set; }
+        ///
+        public int? y { get; set; }
+        [JsonConverter(typeof(objectConverter))]
+        public object? value { get; set; }
     }
 }

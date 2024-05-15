@@ -1,8 +1,11 @@
-﻿using EntityStore;
+﻿using BootstrapBlazor.Components;
+using EntityStore;
 using Microsoft.AspNetCore.Components;
+using NetTaste;
 using SharedPage;
 using SharedPage.Model;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Json;
 
 namespace Dp.Wasm.IServices
 {
@@ -12,7 +15,16 @@ namespace Dp.Wasm.IServices
         /// 
         /// </summary>
         Task<Result<BigScreen>> GetBigScreen(long id);
+        /// <summary>
+        /// 获取当前用户能够查看的所有的屏幕
+        /// </summary>
+        /// <returns></returns>
         Task<Result<List<BigScreen>>> GetBigScreens();
+        /// <summary>
+        /// 保存(更新)一个对象,所以必须要有id
+        /// </summary>
+        /// <param name="bs"></param>
+        /// <returns></returns>
         Task<Result> Save(BigScreen bs);
         Task<Result<long>> Insert(BigScreen bs);
         Task<Result> Delete(long id);
@@ -27,6 +39,7 @@ namespace Dp.Wasm.IServices
         {
             this.JsOp = JsOp;
         }
+        /// <inheritdoc/>
         public async Task<Result<BigScreen>> GetBigScreen(long id)
         {
             var res = new Result<BigScreen>();
@@ -108,21 +121,103 @@ namespace Dp.Wasm.IServices
             return result;
         }
     }
-    public class BigScreenByDb //: IBigScreenService
+    /// <summary>
+    /// 通过http请求获取数据
+    /// </summary>
+    public class BigScreenByHttp : IBigScreenService
     {
-        public Task<Result<BigScreen>> GetBigScreen(long id)
+        private readonly IHttpClientFactory httpClientFactory;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpClientFactory"></param>
+        public BigScreenByHttp(IHttpClientFactory httpClientFactory)
         {
-            throw new NotImplementedException();
+            this.httpClientFactory = httpClientFactory;
+        }
+        /// <inheritdoc/>
+        public async Task<Result<BigScreen>> GetBigScreen(long id)
+        {
+            try
+            {
+                using HttpClient http = httpClientFactory.CreateClient("http");
+                var response = await http.PostAsJsonAsync<long>($"api/{nameof(BigScreen)}/{nameof(GetBigScreen)}", id);
+                response.EnsureSuccessStatusCode();
+                var ss = await response.Content.ReadFromJsonAsync<Result<BigScreen>>();
+                return ss ?? new Result<BigScreen>().Fail();
+            }
+            catch (Exception ex)
+            {
+                return new Result<BigScreen>().HasException(ex);
+            }
+
+        }
+        /// <inheritdoc/>
+        public async Task<Result<List<BigScreen>>> GetBigScreens()
+        {
+            try
+            {
+                using HttpClient http = httpClientFactory.CreateClient("http");
+                var response = await http.PostAsJsonAsync<int>($"api/{nameof(BigScreen)}/{nameof(GetBigScreens)}", 0);
+                response.EnsureSuccessStatusCode();
+                var ss = await response.Content.ReadFromJsonAsync<Result<List<BigScreen>>>();
+                return ss ?? new Result<List<BigScreen>>().Fail();
+            }
+            catch (Exception ex)
+            {
+                return new Result<List<BigScreen>>().HasException(ex);
+            }
+
+
         }
 
-        public Task<Result<List<BigScreen>>> GetBigScreens()
+        public async Task<Result> Save(BigScreen bs)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using HttpClient http = httpClientFactory.CreateClient("http");
+                var response = await http.PostAsJsonAsync<BigScreen>($"api/{nameof(BigScreen)}/{nameof(Save)}", bs);
+                response.EnsureSuccessStatusCode();
+                var res = await response.Content.ReadFromJsonAsync<Result>();
+                return res ?? new Result().Fail();
+            }
+            catch (Exception ex)
+            {
+                return new Result().HasException(ex);
+            }
         }
-
-        public Task<Result> Save(BigScreen bs)
+        /// <inheritdoc/>
+        public async Task<Result<long>> Insert(BigScreen bs)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using HttpClient http = httpClientFactory.CreateClient("http");
+                var response = await http.PostAsJsonAsync<BigScreen>($"api/{nameof(BigScreen)}/{nameof(Insert)}", bs);
+                response.EnsureSuccessStatusCode();
+                var res = await response.Content.ReadFromJsonAsync<Result<long>>();
+                return res ?? new Result<long>().Fail();
+            }
+            catch (Exception ex)
+            {
+                return new Result<long>().HasException(ex);
+            }
+        }
+        /// <inheritdoc/>
+
+        public async Task<Result> Delete(long id)
+        {
+            try
+            {
+                using HttpClient http = httpClientFactory.CreateClient("http");
+                var response = await http.PostAsJsonAsync<long>($"api/{nameof(BigScreen)}/{nameof(Delete)}", id);
+                response.EnsureSuccessStatusCode();
+                var res = await response.Content.ReadFromJsonAsync<Result>();
+                return res ?? new Result().Fail();
+            }
+            catch (Exception ex)
+            {
+                return new Result().HasException(ex);
+            }
         }
     }
 }

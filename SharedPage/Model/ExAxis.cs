@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using EntityStore.JsonConvert;
+using SharedPage.JsonConvert;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace SharedPage.Model
 {
@@ -7,6 +10,7 @@ namespace SharedPage.Model
     /// </summary>
     public class ExAxis
     {
+
         /// <summary>
         /// id              
         /// </summary>
@@ -145,12 +149,13 @@ namespace SharedPage.Model
         /// <summary>
         /// 初始动画的缓动效果。
         /// </summary>
-        [DisplayName("初始动画效果"),Description("图表初始化时候的动画效果")]
+        [DisplayName("初始动画效果"), Description("图表初始化时候的动画效果")]
         public EanimationEasing? animationEasing { get; set; }
         /// <summary>
         /// number Function 初始动画的延迟，支持回调函数，可以通过每个数据返回不同的 delay 时间实现更戏剧的初始动画效果。如下示例：(越往后的数据延迟越大): function(idx) {  return idx * 100; }
         /// </summary>
-        public object? animationDelay { get; set; }
+        public JsFunc animationDelay { get; set; } = new JsFunc("0");
+
         /// <summary>
         /// number Function 数据更新动画的时长。支持回调函数，可以通过每个数据返回不同的时长实现更戏剧的更新动画效果：
         /// </summary>

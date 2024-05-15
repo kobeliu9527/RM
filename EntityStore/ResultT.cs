@@ -54,7 +54,25 @@
             ReturnMsg += err;
             return this;//fail
         }
-
-
+        /// <summary>
+        /// 根据结果返回
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Result<T> SetResult(T obj)
+        {
+            if (obj != null)
+            {
+                this.Data = obj;
+                this.IsSucceeded = true;
+            }
+            else
+            {
+                this.Data = default;
+                this.IsSucceeded = false;
+            }
+            return this;
+        }
     }
 }

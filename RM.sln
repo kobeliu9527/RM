@@ -63,6 +63,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{6A8B581B-B3E0-4573-9B61-54E8618E4294}"
 	ProjectSection(SolutionItems) = preProject
 		index.html = index.html
+		sqlsugar.md = sqlsugar.md
 		TextFile1.txt = TextFile1.txt
 	EndProjectSection
 EndProject

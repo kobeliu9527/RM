@@ -5,8 +5,14 @@ using System.Text.Json.Serialization;
 
 namespace SharedPage.Model
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SeriePie : ESerieBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonConverter(typeof(EnumConvert<ESeriesType>))]
         public override ESeriesType type { get; set; } = ESeriesType.pie;
         /// <summary>
@@ -25,6 +31,7 @@ namespace SharedPage.Model
         ///
         [JsonInclude]
         public string? roseType { get; set; }
+      
         ///
         public override List<object>? data { get; set; } //= new List<object>()
                 //{

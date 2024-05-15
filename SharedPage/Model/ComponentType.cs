@@ -2,7 +2,7 @@
 {
     public enum ComponentType
     {
-        Echarts,
+        Line,
         Pie,
         Other
     }

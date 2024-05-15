@@ -1,0 +1,1 @@
+占位符 普通表：{table}  分表：{split_table} 数据库{db} 分表{split_table}

@@ -14,7 +14,7 @@ using Dp.Wasm.IServices;
 
 internal class Program
 {
-    public static string aaa="1111111111111111";
+    public static string aaa = "1111111111111111";
     private static async Task Main(string[] args)
     {
         Test();
@@ -28,15 +28,22 @@ internal class Program
         //var Appsetting = Configuration.GetSection(nameof(Appsettings)).Get<Appsettings>()!;
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
-        builder.Services.AddHttpClient();
+        var ss = builder.HostEnvironment.BaseAddress;
+        
+        builder.Services.AddHttpClient("http", op =>
+        {
+            op.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+        });
         //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-        builder.Services.AddBootstrapBlazor(null, op =>{
-        op.IgnoreLocalizerMissing=true;
+        builder.Services.AddBootstrapBlazor(null, op =>
+        {
+            op.IgnoreLocalizerMissing = true;
         });
         builder.Services.AddAuthorizationCore();
         builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForWasm>();
         builder.Services.AddSingleton<JsInterOp, JsInterOp>();
-        builder.Services.AddSingleton<IBigScreenService, BigScreenByLocal>();
+        //builder.Services.AddSingleton<IBigScreenService, BigScreenByLocal>(); 
+        builder.Services.AddSingleton<IBigScreenService, BigScreenByHttp>(); 
 
         await builder.Build().RunAsync();
     }
@@ -44,12 +51,12 @@ internal class Program
     private static void Test()
     {
 
-      
-     
-    //EOption option = new EOption();
-    //    JsonSerializerOptions op = new JsonSerializerOptions() {
-    //        Converters = { new ListConvert () }
-    //    };
-    //    var s=JsonSerializer.Serialize(option,op);
+
+
+        //EOption option = new EOption();
+        //    JsonSerializerOptions op = new JsonSerializerOptions() {
+        //        Converters = { new ListConvert () }
+        //    };
+        //    var s=JsonSerializer.Serialize(option,op);
     }
 }

@@ -1,4 +1,5 @@
-﻿
+﻿@using System.Data
+
 @inherits SharedPage.Base.EchartsBase
 @implements IAsyncDisposable
 @if (ChartInfo != null)
@@ -7,7 +8,8 @@
     {
         switch (@ChartInfo.ComponentType)
         {
-            case ComponentType.Echarts:
+            case ComponentType.Line:
+            case ComponentType.Pie:
                 <div class="dragbox" tabindex="0" style="position:absolute; height:@ChartInfo.Height%;width:@ChartInfo.Width%;top:@ChartInfo.Top%;left:@ChartInfo.Left%" draggable="true"
                 @onclick:stopPropagation @oncontextmenu:stopPropagation @oncontextmenu:preventDefault
                      @ondragstart="HandleDragStart"
@@ -54,7 +56,7 @@
         return base.OnInitializedAsync();
     }
     Random r = new();
-    public async void SetOption1(List<object[]>? src)
+    public async void SetOption1(DataTable? src)
     {
         if (ChartInfo != null && ChartInfo.Option != null && ChartInfo.Option.dataset != null)
         {
@@ -63,36 +65,36 @@
             await InvokeAsync(this.StateHasChanged);
         }
     }
-    public async void SetOption(List<object[]>? src)
+    public async void SetOption(DataTable? src)
     {
-        if (ChartInfo != null && ChartInfo.Option != null && ChartInfo.Option.dataset != null)
-        {
-            if (ChartInfo.Option.dataset.source.Count > 10)
-            {
-                ChartInfo.Option.dataset.source.RemoveAt(0);
-            }
+        // if (ChartInfo != null && ChartInfo.Option != null && ChartInfo.Option.dataset != null)
+        // {
+        //     if (ChartInfo.Option.dataset.source.Count > 10)
+        //     {
+        //         ChartInfo.Option.dataset.source.RemoveAt(0);
+        //     }
 
-            ChartInfo.Option.dataset.source.Add(src.Last());
-            await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
-            await InvokeAsync(this.StateHasChanged);
-        }
+        //     ChartInfo.Option.dataset.source.Add(src.Last());
+        //     await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+        //     await InvokeAsync(this.StateHasChanged);
+        // }
     }
     public async void AddData(object[] data)
     {
 
-        ChartInfo.Option?.dataset?.source?.Add(data);
-        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+        // ChartInfo.Option?.dataset?.source?.Add(data);
+        // await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
     }
     public async void RemoveData()
     {
-        ChartInfo.Option?.dataset?.source?.RemoveAt(0);
-        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+        // ChartInfo.Option?.dataset?.source?.RemoveAt(0);
+        // await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
     }
     public async void RemoveAndAddData(object[] data)
     {
-        ChartInfo.Option?.dataset?.source?.RemoveAt(0);
-        ChartInfo.Option?.dataset?.source?.Add(data);
-        await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
+        // ChartInfo.Option?.dataset?.source?.RemoveAt(0);
+        // ChartInfo.Option?.dataset?.source?.Add(data);
+        // await JsEcharts.SetOption(ChartInfo.Id, ChartInfo.Option);
     }
     /// <summary>
     /// 组件被单击后

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.SignalR.Client
 @using System.Text.Json
+@using System.Data
 @inject NavigationManager Navigation
 
 @* @attribute [Authorize(Roles ="afafd")] *@
@@ -36,7 +37,7 @@
     [NotNull]
     public JsInterOp? JsEcharts { get; set; }
     private HubConnection? hubConnection;
-    public Action<string, List<object[]>?>? SetOptionHandel { get; set; }
+    public Action<string, DataTable?>? SetOptionHandel { get; set; }
     protected async override Task OnInitializedAsync()
     {
         var ctr = new ComponentInfo() { Width = 80, Height = 60 };
@@ -58,7 +59,6 @@
         };
         op.dataset.sourceHeader = true;
         ctr.Option = op;
-        BigScreen.IsDesigner = false;
         BigScreen.ChartList.Add(ctr);
         await base.OnInitializedAsync();
     }
@@ -67,7 +67,7 @@
         SetOptionHandel = SetOption;
         await base.OnAfterRenderAsync(firstRender);
     }
-    public void SetOption(string id, List<object[]>? option)
+    public void SetOption(string id, DataTable? option)
     {
         var chart = BigScreen.ChartList.Find(x => x.Id == id);
         chart?.SetOption?.Invoke(option);
@@ -76,7 +76,7 @@
     {
         try
         {
-            var ss = System.Text.Json.JsonSerializer.Deserialize<List<object[]>>(val);
+            var ss = System.Text.Json.JsonSerializer.Deserialize<DataTable>(val);
             BigScreen.ChartList[0].Option.dataset.source = ss;
             await JsEcharts.SetOption(BigScreen.ChartList[0].Id, BigScreen.ChartList[0].Option);
         }
@@ -100,19 +100,19 @@
     }
     private async void RequestData()
     {
-        await Task.Delay(100);
-        Random r = new Random();
-        var src = new List<object[]>()
-                {
-                    new object[] {"直接访问",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {"联盟广告",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {"搜索引擎",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {"搜索引擎1", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {"搜索引擎2", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {"搜索引擎3", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {"搜索引擎4", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                    new object[] {r.Next(1000).ToString(), r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
-                };
-        SetOption(BigScreen.ChartList[0].Id, src);
+        // await Task.Delay(100);
+        // Random r = new Random();
+        // var src = new List<object[]>()
+        //         {
+        //             new object[] {"直接访问",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {"联盟广告",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {"搜索引擎",  r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {"搜索引擎1", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {"搜索引擎2", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {"搜索引擎3", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {"搜索引擎4", r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //             new object[] {r.Next(1000).ToString(), r.Next(1000).ToString(), r.Next(1000).ToString(),r.Next(1000).ToString() }  ,
+        //         };
+        // SetOption(BigScreen.ChartList[0].Id, src);
     }
 }

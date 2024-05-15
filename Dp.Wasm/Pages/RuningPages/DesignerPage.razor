@@ -1,6 +1,7 @@
 ﻿@page "/designer/{id:long}"
 @using Dp.Wasm.IServices
 @using Microsoft.JSInterop
+@using System.Data
 @inject IBigScreenService BigScreenService
 <CascadingValue Value="this.BigScreens">
     <CascadingValue Value="this.BigScreenDesigner">
@@ -26,12 +27,12 @@
 
                 </div>
             }
-            <div  style="flex:8;position:relative;overflow:auto;background-color:#636470" @onclick="async(e)=>{
+            <div style="flex:8;position:relative;overflow:auto;background-color:#636470" @onclick="async(e)=>{
 await JsEcharts.removeClassForSelect();
 }">
                 <div id="designer" class="main" style="@(BigScreen.Css.ToString())" ondragover="event.preventDefault();"
                      @ondrop="ondropFormBox">
-                    <SharedPage.Components.Runing  BigScreen="@BigScreen" IsDesigner="true"></SharedPage.Components.Runing>
+                    <SharedPage.Components.Runing @key="@BigScreen" BigScreen="@BigScreen" IsDesigner="true"></SharedPage.Components.Runing>
                 </div>
             </div>
             @if (ShowPropertityBox)
@@ -53,7 +54,7 @@ await JsEcharts.removeClassForSelect();
     [NotNull]
     private MessageService? Msg { get; set; }
 
-    public BigScreen BigScreen { get; set; } = new() { InterVal = 1000, IsDesigner = true };
+    public BigScreen BigScreen { get; set; } = new() { InterVal = 1000 };
 
     public List<ComponentInfo> CopyList { get; set; } = new();
 
@@ -64,35 +65,41 @@ await JsEcharts.removeClassForSelect();
     protected override async void OnInitialized()
     {
         base.OnInitialized();
-        var res = await JsEcharts.getItems<BigScreen>();
-        if (res != null)
-        {
-            BigScreenDesigner.BigScreens = res;
-        }
-        else
-        {
-            BigScreenDesigner.BigScreens = new();
-        }
-        BigScreenDesigner.RefreshHandel = Refresh;
-        BigScreenDesigner.SelectedChangeHandel = BigScreenChanged;
+        // var res = await JsEcharts.getItems<BigScreen>();
+        // if (res != null)
+        // {
+        //     BigScreenDesigner.BigScreens = res;
+        // }
+        // else
+        // {
+        //     BigScreenDesigner.BigScreens = new();
+        // }
+        // BigScreenDesigner.RefreshHandel = Refresh;
+        // BigScreenDesigner.SelectedChangeHandel = BigScreenChanged;
         return;
         try
         {
+            DataTable table = new DataTable("SampleTable");
+            table.Columns.Add("列1", typeof(int));
+            table.Columns.Add("列2", typeof(string));
+            table.Columns.Add("列3", typeof(DateTime));
+            table.Columns.Add("列4", typeof(bool));
+            table.Columns.Add("列5", typeof(double));
+
+            table.Rows.Add(1, "行1", DateTime.Now, true, 1.1);
+            table.Rows.Add(2, "行2", DateTime.Now.AddDays(1), false, 2.2);
+            table.Rows.Add(3, "行3", DateTime.Now.AddDays(2), true, 3.3);
+            table.Rows.Add(4, "行4", DateTime.Now.AddDays(3), false, 4.4);
             ComponentInfo chart = new ComponentInfo();
             ComponentInfo chart2 = new ComponentInfo();
-            chart.ComponentType = ComponentType.Echarts;
+            chart.ComponentType = ComponentType.Line;
             chart.DataName = "test";
             chart.Option = new EOption()
                 {
                     dataset = new EdataSet()
                     {
-                        source = new List<object[]>() {
-            new object[] {"事件年份",   "系列1",  "系列2", "系列3" }  ,
-            new object[] {"2015",       "155",       "66",   "78" }  ,
-            new object[] {"2013",       "12",       "145",   "37" }  ,
-            new object[] {"2016",       "34",       "65",   "177" }  ,
-            new object[] {"2017",       "12",       "425",  "37" } },
-                    },
+                        source = table
+                    }
 
                 };
             chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line } };
@@ -104,7 +111,7 @@ await JsEcharts.removeClassForSelect();
             chart2.DataName = "test";
             chart2.Top = 50;
             chart2.Option = chart.Option;
-            chart2.ComponentType = ComponentType.Echarts;
+            chart2.ComponentType = ComponentType.Line;
             Random r = new();
             BigScreen.Id = r.Next(10000);
             BigScreen.ChartList.Add(chart);
@@ -119,11 +126,11 @@ await JsEcharts.removeClassForSelect();
     protected override async Task OnInitializedAsync()
     {
 
-        var res = await BigScreenService.GetBigScreens();
-        if (res.IsSucceeded)
-        {
-            BigScreens = res.Data;
-        }
+        // var res = await BigScreenService.GetBigScreens();
+        // if (res.IsSucceeded)
+        // {
+        //     BigScreens = res.Data;
+        // }
         await base.OnInitializedAsync();
     }
     protected override async Task OnParametersSetAsync()
@@ -135,6 +142,7 @@ await JsEcharts.removeClassForSelect();
         {
             BigScreen = res.Data;
             BigScreen.RefreshHandel = Refresh;
+            await JsEcharts.Log(BigScreen);
         }
     }
     Random r = new();
@@ -174,6 +182,7 @@ await JsEcharts.removeClassForSelect();
             this.StateHasChanged();
             if (BigScreen.SelectedList.Count > 0 && isResize && BigScreen.SelectedList[0].Id != null)
             {
+                await JsEcharts.Log(BigScreen.SelectedList[0]);
                 await JsEcharts.SetOption(BigScreen.SelectedList[0].Id, BigScreen.SelectedList[0].Option, true);
                 await JsEcharts.Resize(BigScreen.SelectedList[0].Id);
             }
@@ -302,35 +311,19 @@ await JsEcharts.removeClassForSelect();
     }
     void ondropFormBox(DragEventArgs e)
     {
-        if (BigScreen.SelectedByToolBox != null)
+        DataTable table = new DataTable("SampleTable");
+        table.Columns.Add("产品", typeof(string));
+        table.Columns.Add("总产量", typeof(int));
+        table.Columns.Add("ok的", typeof(int));
+        table.Columns.Add("Ng的", typeof(int));
+        table.Columns.Add("时间", typeof(DateTime));
+        table.Rows.Add("ping", 10, 100, 3, DateTime.Now.AddHours(1));
+        table.Rows.Add("yifu", 20, 200, 53, DateTime.Now.AddHours(1));
+        table.Rows.Add("shuage", null, 300, null, DateTime.Now.AddHours(1));
+        table.Rows.Add("??", 40, 400, 3, DateTime.Now.AddHours(1));
+        if (BigScreen.IsSelectedByToolBox)
         {
-            switch (BigScreen.SelectedByToolBox)
-            {
-                case ComponentType.Echarts:
-                    ComponentInfo chart = new ComponentInfo();
-                    chart.ComponentType = ComponentType.Echarts;
-                    chart.DataName = "test";
-                    chart.Option = new EOption()
-                        {
-                            dataset = new EdataSet()
-                            {
-                                source = new List<object[]>() {
-            new object[] {"事件年份",   "系列1",  "系列2", "系列3" }  ,
-            new object[] {"2015",       "155",       "66",   "78" }  ,
-            new object[] {"2013",       "12",       "145",   "37" }  ,
-            new object[] {"2016",       "34",       "65",   "177" }  ,
-            new object[] {"2017",       "12",       "425",  "37" } },
-                            },
-
-                        };
-                    chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line } };
-                    chart.Option.xAxis = new() { new ExAxis() { type = EAxisType.category } };
-                    chart.Option.yAxis = new List<ExAxis>() { new ExAxis() };
-                    chart.Option.tooltip = new();
-                    chart.Option.legend = new();
-                    BigScreen.ChartList.Add(chart);
-                    break;
-            }
+            BigScreen.ChartList.Add(BigScreen.SelectedByToolBox.ToComponent());
         }
         this.StateHasChanged();
     }

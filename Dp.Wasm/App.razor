@@ -31,14 +31,20 @@
     [Inject]
     [NotNull]
     public JsInterOp? JsEcharts { get; set; }
-    
+    [Inject]
+    [NotNull]
+    private IThemeProvider? ThemeProvider { get; set; }
+    [Inject]
+    public IJSRuntime? jSRuntime  { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
+        var theme =await jSRuntime.InvokeAsync<string>("localStorage.getItem","theme");
+        await ThemeProvider.SetThemeAsync(theme);
+      
         if (firstRender)
         {
             //获取数据,后期应该是一个接口,注入不同的后去方式,目前来自于本地db
-            
             return;
             try
             {

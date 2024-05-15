@@ -137,6 +137,7 @@ builder.Services.AddSwaggerGen(options =>
         [scheme] = new string[0]
     });
 });
+
 builder.Services.AddHttpContextAccessor();//不确定有什么用,应该可以关闭
 
 builder.Services.AddSingleton<ISqlSugarClient>(s =>

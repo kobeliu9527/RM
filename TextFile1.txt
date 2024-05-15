@@ -1,1 +1,2 @@
 开启sass编译监控: sass --watch . --no-source-map
+占位符 普通表：{table}  分表：{split_table} 数据库{db}

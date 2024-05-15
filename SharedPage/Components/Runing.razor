@@ -51,29 +51,7 @@
             new object[] {"2013", r.Next(166), r.Next(400), r.Next(100) }  ,
             new object[] {"2017", r.Next(166), r.Next(400), r.Next(100) } };
             source.Data.Add("test", s);
-            if (source != null)
-            {
-                foreach (var chart in BigScreen.ChartList)
-                {
-                    if (chart != null)
-                    {
-                        if (chart.InterVal == 0)//说明是统一处理的
-                        {
-                            if (chart.ComponentType == ComponentType.Echarts)
-                            {
-                                if (chart.Option != null)
-                                {
-                                    if (source.Data.TryGetValue(chart.DataName, out var data))
-                                    {
-                                        chart.Option.dataset.source = data;
-                                        await JsEcharts.SetOption(chart.Id, chart.Option);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+           
         };
             Timer.Interval = BigScreen.InterVal;
             Timer.Start();

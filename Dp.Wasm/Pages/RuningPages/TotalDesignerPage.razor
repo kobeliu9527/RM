@@ -3,9 +3,13 @@
 @using SharedPage.JsOp
 @inject NavigationManager nav
 @inject IBigScreenService BigScreenService
-<div id="aaaa" style="height:5%">
+<div id="aaaa" style="height:5%;display:flex">
+    <div style="display:inline-block">
+        <ThemeProvider DarkModeText="dark" LightModeText="light"></ThemeProvider>
+    </div>
     <Button OnClick="CreateDpSc">新建大屏</Button>
     <Button OnClick="JsHtmlToCanvas">JsHtmlToCanvas</Button>
+    <Button>asf</Button>
 </div>
 <div style="height:95%" class="total-pages">
     <ListView TItem="BigScreen" Items="BigScreens" GroupName="p=>p.GroupName" OnListViewItemClick="OnListViewItemClick">
@@ -13,18 +17,23 @@
             <Card>
                 <BodyTemplate>
                     <div>
-                        <img src="./img/dp.jpg" alt="示例图像" style="max-width:100%;height:auto" onerror="(e)=>{e. }"/>
-                        <div class="lv-demo-desc">@context.Name</div>
+                        <img src="@context.Imgurl" alt="示例图像" style="max-width:100%;height:auto" @onerror="async(e)=>{
+await onerror(context);
+}" />
+
+                        <div class="lv-demo-desc">@context.DisplayName</div>
                         <Button OnClick="(e)=>{ Delete(context.Id);}" StopPropagation="true">删除</Button>
                     </div>
                 </BodyTemplate>
             </Card>
         </BodyTemplate>
     </ListView>
+
 </div>
 
 
 @code {
+
     [Inject]
     public IJSRuntime? jSRuntime { get; set; }
     [Inject]
@@ -37,7 +46,7 @@
         var res = await BigScreenService.GetBigScreens();
         if (res.IsSucceeded && res.Data != null)
         {
-            BigScreens = res.Data.OrderBy(x => x.Order).ToList();
+            BigScreens = res.Data.OrderBy(x => x.OrderNum).ToList();
         }
     }
     async Task OnListViewItemClick(BigScreen bs)
@@ -51,7 +60,7 @@
         var res = await BigScreenService.GetBigScreens();
         if (res.IsSucceeded && res.Data != null)
         {
-            BigScreens = res.Data.OrderBy(x => x.Order).ToList();
+            BigScreens = res.Data.OrderBy(x => x.OrderNum).ToList();
         }
         this.StateHasChanged();
     }
@@ -69,7 +78,7 @@
             var res2 = await BigScreenService.GetBigScreens();
             if (res2.IsSucceeded && res2.Data != null)
             {
-                BigScreens = res2.Data.OrderBy(x => x.Order).ToList();
+                BigScreens = res2.Data.OrderBy(x => x.OrderNum).ToList();
                 await Msg.Show(new MessageOption() { Content = "删除成功" });
             }
             else
@@ -82,5 +91,10 @@
             await Msg.Show(new MessageOption() { Content = "删除失败" + res.ReturnMsg });
         }
         this.StateHasChanged();
+    }
+    async Task onerror(BigScreen bs)
+    {
+        bs.Imgurl = "./img/dp.jpg";
+        await BigScreenService.Save(bs);
     }
 }
