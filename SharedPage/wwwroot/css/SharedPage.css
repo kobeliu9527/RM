@@ -4,23 +4,6 @@
   display: flex;
 }
 
-/*.left {
-    flex: 1;
-}
-
-.middle {
-    flex: 2;
-    height: 100%;
-}
-
-.right {
-    flex: 1;
-    max-height: 100%;
-    border: 2px solid black;
-}*/
-/*.dragbox {
-    cursor: pointer;
-}*/
 .selected {
   border: 2px solid blue;
 }
@@ -40,6 +23,9 @@
 }
 .over-input .form-label {
   margin: 0;
+}
+.over-input .switch-core {
+  width: 60px !important;
 }
 
 .PropPanel {

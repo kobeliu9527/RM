@@ -1,17 +1,24 @@
-﻿@implements IResultDialog
+﻿@using System.Data
+@implements IResultDialog
 <Button OnClick="()=>{CreateContext();}">更新数据源</Button>
 <Table TItem="DynamicObject" DynamicContext="DataTableDynamicContext" ModelEqualityComparer="ModelEqualityComparer"
        IsMultipleSelect="true" IsBordered="true" IsStriped="true" 
        ShowToolbar="true" ShowExtendButtons="true" />
 
 @code {
-    [Parameter]
-    public EdataSet? EdataSet { get; set; }
+    [Parameter][NotNull]
+    public EOption? EOption { get; set; }
     [NotNull]
     private DataTableDynamicContext? DataTableDynamicContext { get; set; }
     protected override Task OnInitializedAsync()
     {
         CreateContext();
+        DataSet a = new DataSet();
+        
+        foreach (var item in a.Tables)
+        {
+            
+        }
         return base.OnInitializedAsync();
     }
     /// <summary>
@@ -22,13 +29,14 @@
     /// <returns></returns>
     private static bool ModelEqualityComparer(IDynamicObject x, IDynamicObject y)
     {
+        return false;
         return x.GetValue("Id")?.ToString() == y.GetValue("Id")?.ToString();
     }
     private void CreateContext()
     {
-        if (EdataSet != null && EdataSet.source != null)
+        if (EOption.dataset != null && EOption.dataset.source != null)
         {
-            DataTableDynamicContext = new DataTableDynamicContext(EdataSet.source, (context, col) =>
+            DataTableDynamicContext = new DataTableDynamicContext(EOption.dataset.source, (context, col) =>
           {
               col.Filterable = true;
               var propertyName = col.GetFieldName();

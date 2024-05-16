@@ -54,10 +54,13 @@
                                         <CollapseItem @key="item" @bind-Text="item.name">
                                             <Button OnClick="()=>{DeleteXaxis(item);}" Size="Size.Small">删除这个轴</Button>
                                             <BootstrapInput @bind-Value="@item.name"></BootstrapInput>@* OnValueChanged="async(e)=>{await ChanedForanimationDelay(item,e);}" *@
-                                            <BootstrapInput @bind-Value="@item.animationDelay.RAW"></BootstrapInput>
                                             <Tooltip Delay="1000" Title="@GetPropertyDescription(item,"animationEasing")">
-                                                <Select @bind-Value="@item.animationEasing" PlaceHolder="默认值" ShowLabel="true"></Select>
+                                                <div class="over-input">
+                                                    <Select @bind-Value="@item.animationEasing" PlaceHolder="默认值" ShowLabel="true"></Select>
+                                                </div>
                                             </Tooltip>
+                                            <JsInput @bind-JsFuncNumString="item.animationDelay" DisplayText="动画延迟"></JsInput>
+                                           <SharedPage.Components.Cfg.AxisLineCfg @bind-Value="item.axisLine"></SharedPage.Components.Cfg.AxisLineCfg>
                                         </CollapseItem>
                                     }
                                 }
@@ -276,8 +279,10 @@
             {
                 ComponentParameters = new Dictionary<string, object>
                 {
-                    [nameof(DataSourceSetting.EdataSet)] = BigScreen.SelectedByDesigner.Option.dataset
-                }
+                    [nameof(DataSourceSetting.EOption)] = BigScreen.SelectedByDesigner.Option
+                },
+                IsDraggable = true,
+                Title = ""
             });
         BigScreen?.RefreshHandel?.Invoke(true);//必须手动调用刷新
     }

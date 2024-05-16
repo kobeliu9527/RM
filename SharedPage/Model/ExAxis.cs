@@ -116,7 +116,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 坐标轴轴线相关设置。
         /// </summary>
-        public EAxisLine? axisLine { get; set; }
+        public axisLine? axisLine { get; set; }
         /// <summary>
         /// 坐标轴刻度相关设置。
         /// </summary>
@@ -154,7 +154,7 @@ namespace SharedPage.Model
         /// <summary>
         /// number Function 初始动画的延迟，支持回调函数，可以通过每个数据返回不同的 delay 时间实现更戏剧的初始动画效果。如下示例：(越往后的数据延迟越大): function(idx) {  return idx * 100; }
         /// </summary>
-        public JsFunc animationDelay { get; set; } = new JsFunc("0");
+        public JsFuncNumString? animationDelay { get; set; }
 
         /// <summary>
         /// number Function 数据更新动画的时长。支持回调函数，可以通过每个数据返回不同的时长实现更戏剧的更新动画效果：

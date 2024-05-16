@@ -63,7 +63,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 设计的时候,画布的布局,运行时候全屏,只会用到背景色
         /// </summary>
-        [SugarColumn(IsJson = true,ColumnDataType = StaticConfig.CodeFirst_BigString)]
+        [SugarColumn(IsJson = true, ColumnDataType = StaticConfig.CodeFirst_BigString)]
         public Css Css { get; set; } = new Css() { background_color = "#2B2C2D", top = "1%", left = "1%", width = "960px", height = "540px" };
         /// <summary>
         /// 整个页面后台多少秒请求一次
@@ -72,7 +72,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 这个大屏的所有Echart图表
         /// </summary>
-        [SugarColumn(IsJson = true,ColumnDataType = StaticConfig.CodeFirst_BigString)]
+        [SugarColumn(IsJson = true, ColumnDataType = StaticConfig.CodeFirst_BigString)]
         public List<ComponentInfo> ChartList { get; set; } = new();
         /// <summary>
         /// 表示哪些组可以看到这个屏幕
@@ -94,7 +94,10 @@ namespace SharedPage.Model
         /// 要执行刷新大屏委托
         /// </summary>
         [JsonIgnore, SugarColumn(IsIgnore = true)] public Action<bool>? RefreshHandel { get; set; }
-        [JsonIgnore, SugarColumn(IsIgnore = true)] public EDataSource? DataSet { get; set; }
+        /// <summary>
+        /// 整个页面的数据源
+        /// </summary>
+        [JsonIgnore, SugarColumn(IsIgnore = true)] public DataSet? DataSet { get; set; }
 
 
     }
@@ -105,6 +108,9 @@ namespace SharedPage.Model
     {
         [DisplayName("组件Id"), Description("一定要确保全局唯一")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// 
+        /// </summary>
         [DisplayName("组件类型"), Description("组件类型")]
         public ComponentType ComponentType { get; set; }
         [DisplayName("配置项"), Description("如果为Echart组件,所对应的Option")]
@@ -126,10 +132,10 @@ namespace SharedPage.Model
         public int InterVal { get; set; } = 0;
 
         [DisplayName("数据来源"), Description("数据来源")]
-        public DataSourceType DataSourceType { get; set; }
+        public DataSourceFrom DataSourceType { get; set; }
 
-        [DisplayName("数据源名字"), Description("数据在统一请求的时候,一次返回多个数据集,用这个标识取哪一个")]
-        public string DataName { get; set; } = "";
+        [DisplayName("数据源名字"), Description("数据在统一请求的时候,一次返回多个数据集,用这个标识取哪一个,目前只支持数字序号,后续增加Name方案")]
+        public int DataName { get; set; } 
 
         /// <summary>
         /// 更新这个控件的委托
@@ -173,22 +179,27 @@ namespace SharedPage.Model
         public double MoveX { get; set; }
         public double MoveY { get; set; }
     }
-    public enum DataSourceType
-    {
-        /// <summary>
-        /// 来自于存储过程
+    /// <summary>
+    /// 数据来源于哪里
+    /// </summary>
+    public enum DataSourceFrom
+    {   /// <summary>
+        /// 系统Api
         /// </summary>
-        StoreProcess,
+        SystemApi,
         /// <summary>
-        /// 来自于Api接口;需要能对接上EdataSet
+        /// 其他Api,需要接口地址和参数
         /// </summary>
-        [Description("web Api 的接口")]
-        WebApi,
+        OtherApi,
         /// <summary>
         /// 静态的
         /// </summary>
         [Description("静态的数据源")]
-        StaticJson
+        StaticJson,
+        /// <summary>
+        /// 
+        /// </summary>
+        Sql
     }
     /// <summary>
     /// 大屏观看关系表

@@ -1,0 +1,51 @@
+﻿<div class="cfg">
+    <div class="over-input">
+        <Switch Value="@(Value!=null)" ShowInnerText="true" OffInnerText="默认" OnInnerText="自定义" OnValueChanged="OnValueChanged" ShowLabel="true" DisplayText="@DisplayText"></Switch>
+    </div>
+
+    @if (Value != null)
+    {
+        <JsInput @bind-JsFuncNumString=Value.symbol DisplayText="坐标轴箭头设置"></JsInput>
+    }
+</div>
+
+@code
+{
+    [Parameter]
+    public string DisplayText { get; set; } = "";
+    /// <summary>
+    ///
+    /// </summary>
+    [Parameter]
+    public bool IsShow { get; set; }
+    [Parameter]
+    public axisLine? Value { get; set; }
+    [Parameter]
+    public EventCallback<axisLine?> ValueChanged { get; set; }
+
+    public axisLine? ChangerHander
+    {
+        get { return Value; }
+        set
+        {
+            Value = value;
+            if (ValueChanged.HasDelegate)
+            {
+                ValueChanged.InvokeAsync(Value);
+            }
+        }
+    }
+    async Task OnValueChanged(bool res)
+    {
+        if (res)
+        {
+            ChangerHander = new();
+        }
+        else
+        {
+            ChangerHander = null;
+        }
+        await Task.CompletedTask;
+    }
+
+}

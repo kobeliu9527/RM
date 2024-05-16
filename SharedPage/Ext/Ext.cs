@@ -24,7 +24,7 @@ namespace SharedPage.Ext
         };
         static JsonSerializerOptions OpForJsFun = new JsonSerializerOptions()
         {
-            Converters = { new JsFuncConverter() },
+            Converters = { new JsFuncNumStringConverter()},
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
         static Ext()
@@ -129,7 +129,7 @@ namespace SharedPage.Ext
 
 
         /// <summary>
-        /// 
+        /// 根据类型生成一个组件
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -140,7 +140,6 @@ namespace SharedPage.Ext
             switch (type)
             {
                 case ComponentType.Line:
-                    chart.DataName = "test";
                     chart.Option = new EOption()
                     {
                         dataset = new EdataSet()

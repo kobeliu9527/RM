@@ -1,4 +1,5 @@
 ﻿
+using SharedPage.Ext;
 using SharedPage.Model;
 using System;
 using System.Collections.Generic;
@@ -35,59 +36,70 @@ namespace SharedPage.JsonConvert
             }
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class JsFunc2Converter : JsonConverter<string>
+    public class JsNumStringConverter : JsonConverter<JsNumString>
     {
-        public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override JsNumString? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            switch (reader.TokenType)
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, JsNumString value, JsonSerializerOptions options)
+        {
+            if (decimal.TryParse(value.RAW, out decimal res))
             {
-                case JsonTokenType.None:
+                writer.WriteRawValue(value.RAW, true);
+            }
+            else
+            {
+                writer.WriteStringValue(value.RAW);
+            }
+        }
+    }
+    /// <summary>
+    /// 取消函数和数字类型的引号:
+    /// </summary>
+    public class JsFuncNumStringConverter : JsonConverter<JsFuncNumString>
+    {
+        public override JsFuncNumString? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, JsFuncNumString value, JsonSerializerOptions options)
+        {
+            switch (value.JsType)
+            {
+                case JsType.Num:
+                    writer.WriteRawValue(value.RAW, true);
                     break;
-                case JsonTokenType.StartObject:
+                case JsType.String:
+                    writer.WriteStringValue(value.RAW);
                     break;
-                case JsonTokenType.EndObject:
+                case JsType.Function:
+                    writer.WriteRawValue(value.RAW, true);
                     break;
-                case JsonTokenType.StartArray:
+                case JsType.Array:
+                    writer.WriteRawValue(value.RAW, true);
                     break;
-                case JsonTokenType.EndArray:
+                case JsType.Object:
+                    writer.WriteRawValue(value.RAW, true);
                     break;
-                case JsonTokenType.PropertyName:
-                    break;
-                case JsonTokenType.Comment:
-                    break;
-                case JsonTokenType.String:
-                    break;
-                case JsonTokenType.Number:
-                    break;
-                case JsonTokenType.True:
-                    break;
-                case JsonTokenType.False:
-                    break;
-                case JsonTokenType.Null:
+                case JsType.StringArray:
+                    if (value.RAW.StartsWith("[") && value.RAW.EndsWith("]"))
+                    {
+                        writer.WriteRawValue(value.RAW, true);
+                    }
+                    else
+                    {
+                        writer.WriteStringValue(value.RAW);
+                    }
                     break;
                 default:
                     break;
             }
-            return null;
-        }
-
-        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
-        {
-            if (value != null)
-            {
-                writer.WriteRawValue(value);
-            }
-            else
-            {
-                writer.WriteNullValue();
-            }
 
         }
     }
-
 
 
 }

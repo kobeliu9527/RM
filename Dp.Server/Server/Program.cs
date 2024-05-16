@@ -144,6 +144,7 @@ internal partial class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
+        //app.UseWebAssemblyDebugging();
         if (app.Environment.IsDevelopment())
         {
             app.UseWebAssemblyDebugging();
@@ -153,10 +154,10 @@ internal partial class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        if (!app.Environment.IsDevelopment())
-        {
-            app.UseResponseCompression();
-        }
+        //if (!app.Environment.IsDevelopment())
+        //{
+        //    app.UseResponseCompression();
+        //}
         app.UseSwagger(options =>
         {
             options.RouteTemplate = "api/{documentName}/swagger.{json|yaml}";
@@ -252,7 +253,7 @@ internal partial class Program
 
     private static void Testt()
     {
-       
+     
           JsonSerializerOptions op = new JsonSerializerOptions()
         {
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
@@ -262,7 +263,7 @@ internal partial class Program
             Converters = { new EntityStore.DataTableJsonConverter(),new JsFuncConverter()}
         };
         ExAxis exAxis = new ExAxis();
-        exAxis.animationDelay = new JsFunc("");
+        exAxis.animationDelay = new  ("");
         var ss = exAxis.SerializeForJsFun();
 
 

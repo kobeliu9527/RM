@@ -41,7 +41,7 @@ export class JsFunc {
                 console.log(id + ':没有这个chart实例');
             }
         } catch (e) {
-            console.log(id + '执行setOption时候异常了', e);
+            console.log(id + '执行setOption时候异常了',  e);
         }
     }
     static dispose(id) {
