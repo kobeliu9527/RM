@@ -58,14 +58,14 @@ namespace SharedPage.JsonConvert
     /// <summary>
     /// 
     /// </summary>
-    public class JsFuncNumStringConverter : JsonConverter<JsFuncNumString>
+    public class JsFuncNumStringConverter : JsonConverter<JsVal>
     {
-        public override JsFuncNumString? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override JsVal? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public override void Write(Utf8JsonWriter writer, JsFuncNumString value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, JsVal value, JsonSerializerOptions options)
         {
             switch (value.JsType)
             {

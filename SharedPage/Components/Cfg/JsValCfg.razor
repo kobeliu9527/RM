@@ -1,0 +1,185 @@
+﻿@inherits CfgBase<JsVal?>
+<div class="cfg">
+    <div class="over-input">
+        <Switch @bind-Value="IsShow" DisplayText="@DisplayText" ShowLabel="true" ShowInnerText="true"
+                OnValueChanged="ShowChanged"
+                OffInnerText="默认值" OnInnerText="自定义"></Switch>
+
+        @if (IsShow && ValueHander != null)
+        {
+            <Select @bind-Value="ValueHander.JsType" Items="Items" OnSelectedItemChanged="OnSelectedItemChanged"> </Select>
+        }
+        <PopConfirmButton Size="Size.ExtraSmall" Placement="Placement.Top"
+                          Color="Color.Secondary"
+                          ConfirmIcon="fa-solid fa-triangle-exclamation text-danger"
+                          ConfirmButtonColor="Color.Secondary"
+                          OnConfirm="DefaultValue"
+                          Text="默认"
+                          Content="确认恢复默认值?" />
+        <Tooltip Title="@HelpInfo" CustomClass="is-invalid">
+            <i style="color:@IsOk()" class="fas fa-circle-question" />
+        </Tooltip>
+    </div>
+    @if (IsShow && ValueHander != null)
+    {
+        switch (ValueHander.JsType)
+        {
+            case JsType.String:
+                <BootstrapInput Value="@ValueHander.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
+                break;
+            case JsType.Bool:
+                <Checkbox Value="@ValueHander.GetBool()" OnValueChanged="OnValueChangedForRawBool"></Checkbox>
+                break;
+            case JsType.Array:
+                <Textarea Value="@ValueHander.RAW" placeholder="[]" OnValueChanged="OnValueChangedForRaw"></Textarea>
+                break;
+            case JsType.Object:
+                <Textarea Value="@ValueHander.RAW" placeholder="{}" OnValueChanged="OnValueChangedForRaw"></Textarea>
+                break;
+            case JsType.Num:
+                <BootstrapInputNumber Value="@ValueHander.GetNum()" OnValueChanged="OnValueChangedForRawNum"></BootstrapInputNumber>
+                break;
+            case JsType.Function:
+                <Textarea Value="@ValueHander.RAW" OnValueChanged="OnValueChangedForRaw" placeholder=" function(value) {return value.min - 20;}" rows="4" />
+                break;
+            default:
+                <BootstrapInput Value="@ValueHander.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
+                break;
+        }
+    }
+</div>
+@code {
+    public List<SelectedItem> Items { get; set; } = new List<SelectedItem>();
+    private SelectedItem SelectedItem = new SelectedItem();
+    [Parameter, EditorRequired]
+    public List<JsType> JsTypes { get; set; } = new();
+
+    public string IsOk()
+    {
+        return ValueHander == null ? "green" : ValueHander.IsOk() ? "green" : "black";
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Items = JsTypes.Select(x => new SelectedItem(x.ToString(), x.GetDescription())).ToList();
+    }
+    /// <summary>
+    /// 控制用默认值还是自定义,如果自定义会show自定义界面
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    async Task ShowChanged(bool val)
+    {
+        if (ValueHander == null)
+        {
+            var t = JsTypes.First();
+            ValueHander = new JsVal(t);
+        }
+        await Task.CompletedTask;
+    }
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    async Task OnValueChangedForRaw(string val)
+    {
+        if (ValueHander != null)
+        {
+            //todu  应该要判断值是否合法
+            var obj = new JsVal(val, Value.JsType);
+            if (obj.IsOk())
+            {
+                //ValueHander = obj;
+                ValueHander.RAW = val;
+                IsSucessed = "Green";
+                Update();
+            }
+            else
+            {
+                IsSucessed = "black";
+                await Msg.Warning("失败", "输入的值不正确,请检查");
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+    async Task OnValueChangedForRawNum(decimal val)
+    {
+        if (ValueHander != null)
+        {
+            //todu  应该要判断值是否合法
+            var obj = new JsVal(val.ToString(), Value.JsType);
+            if (obj.IsOk())
+            {
+                ValueHander.RAW = val.ToString();
+                IsSucessed = "Green";
+                Update();
+            }
+            else
+            {
+                IsSucessed = "black";
+                await Msg.Warning("失败", "输入的值不正确,请检查");
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+    async Task OnValueChangedForRawBool(bool val)
+    {
+        if (ValueHander != null)
+        {
+            //todu  应该要判断值是否合法
+            var obj = new JsVal(val.ToString(), Value.JsType);
+            if (obj.IsOk())
+            {
+                ValueHander.RAW = val.ToString();
+                IsSucessed = "Green";
+                Update();
+            }
+            else
+            {
+                IsSucessed = "black";
+                await Msg.Warning("失败", "输入的值不正确,请检查");
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+    /// <summary>
+    /// 当改变数据类型的时候,重新初始化初始值
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    async Task OnSelectedItemChanged(SelectedItem val)
+    {
+        //判断当值的值是不是合法的
+        if (ValueHander != null)//一定会进来
+        {
+            switch (ValueHander.JsType)
+            {
+                case JsType.Num:
+                    ValueHander.RAW = "0";
+                    break;
+                case JsType.Bool:
+                    ValueHander.RAW = "true";
+                    break;
+                case JsType.String:
+                    ValueHander.RAW = "";
+                    break;
+                case JsType.Object:
+                    ValueHander.RAW = "{}";
+                    break;
+                case JsType.Array:
+                    ValueHander.RAW = "[]";
+                    break;
+                case JsType.Function:
+                    ValueHander.RAW = "function(value) {return value.min - 20;}";
+                    break;
+            }
+            IsSucessed = "green";
+        }
+
+        await Task.CompletedTask;
+    }
+}

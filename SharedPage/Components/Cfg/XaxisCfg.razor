@@ -2,34 +2,32 @@
 @inherits CfgBase<ExAxis>
 <div class="cfg axis">
     <div class="over-input">
-        <Switch @bind-Value="IsShow" DisplayText="@(Value?.name)" ShowInnerText="true" OffInnerText="详情" OnInnerText="详情"></Switch>
+        <Switch @bind-Value="IsShow" DisplayText="@(Value?.name?.RAW)" ShowInnerText="true" OffInnerText="详情" OnInnerText="详情"></Switch>
         <Button OnClick="DeletexAxis" Size="Size.ExtraSmall">删除此轴</Button>
     </div>
     @if (IsShow && Value != null)
     {
-        <div class="over-input">
-            <BootstrapInput @bind-Value="@Value.name" ShowLabel="true" OnValueChanged="async(e)=>{if (string.IsNullOrEmpty(e))
-                                                                    {
-                                                                        Value.name=null;
-                                                                    } await Task.CompletedTask;}"></BootstrapInput>
+        @*     <div class="over-input"> *@
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.String}" @bind-Value="@Value.name" DisplayText="轴名称" HelpInfo="@Value.GetPropertyDescription("name")"></JsValCfg>
+        <div class="cfg">
+            <div class="over-input">
+                <Select @bind-Value="@Value.position" ShowLabel="true" PlaceHolder="默认"></Select>
+            </div>
         </div>
-        @* <StringCfg @bind-Value="@Value.name" JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function}"></StringCfg> *@
-        <div class="over-input">
-            <Select @bind-Value="@Value.position" ShowLabel="true" PlaceHolder="默认"></Select>
+        <div class="cfg">
+            <div class="over-input">
+                <Select @bind-Value="@Value.type" ShowLabel="true" DisplayText="轴类型" PlaceHolder="默认"></Select>
+            </div>
         </div>
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.Num}" @bind-Value="Value.gridIndex" DisplayText="所属Grid" HelpInfo="x轴所在的grid的索引默认位于第一个grid"></JsValCfg>
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.Num}" @bind-Value="Value.alignTicks" DisplayText="所属Grid" HelpInfo="x轴所在的grid的索引默认位于第一个grid"></JsValCfg>
 
-        <div class="over-input">
-            <Select @bind-Value="@Value.type" ShowLabel="true" PlaceHolder="默认"></Select>
-        </div>
-        <NumCfg @bind-Value="Value.gridIndex" DisplayText="所属Grid"></NumCfg>
-        @* <BoolCfg @bind-Value="Value.alignTicks" DisplayText="自动对齐"></BoolCfg> *@
-        <StringCfg JsTypes="new List<JsType>(){ JsType.Array,JsType.Bool}" @bind-Value="@Value.alignTicks" DisplayText="自动对齐" HelpInfo="@Value.GetPropertyDescription("boundaryGap")"></StringCfg>
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.Array,JsType.Bool}" @bind-Value="@Value.alignTicks" DisplayText="自动对齐" HelpInfo="@Value.GetPropertyDescription("boundaryGap")"></JsValCfg>
 
-        <AxisLine @bind-Value="Value.axisLine" DisplayText="轴线配置"></AxisLine>
-        <StringCfg JsTypes="new List<JsType>(){ JsType.Array,JsType.Bool}" @bind-Value="Value.boundaryGap" DisplayText="@Value.GetPropertyDisplayName("boundaryGap")" HelpInfo="@Value.GetPropertyDescription("boundaryGap")"></StringCfg>
-        <StringCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function}" @bind-Value="Value.min" DisplayText="@Value.GetPropertyDisplayName("min")" HelpInfo="@Value.GetPropertyDescription("min")"></StringCfg>
-        <StringCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function,JsType.Object,JsType.Array}" @bind-Value="Value.max" DisplayText="@Value.GetPropertyDisplayName("max")" HelpInfo="@Value.GetPropertyDescription("max")"></StringCfg>
-
+        <AxisLineCfg @bind-Value="Value.axisLine" DisplayText="轴线配置"></AxisLineCfg>
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.Array,JsType.Bool}" @bind-Value="Value.boundaryGap" DisplayText="@Value.GetPropertyDisplayName("boundaryGap")" HelpInfo="@Value.GetPropertyDescription("boundaryGap")"></JsValCfg>
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function}" @bind-Value="Value.min" DisplayText="@Value.GetPropertyDisplayName("min")" HelpInfo="@Value.GetPropertyDescription("min")"></JsValCfg>
+        <JsValCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function,JsType.Object,JsType.Array}" @bind-Value="Value.max" DisplayText="@Value.GetPropertyDisplayName("max")" HelpInfo="@Value.GetPropertyDescription("max")"></JsValCfg>
 
 
     }

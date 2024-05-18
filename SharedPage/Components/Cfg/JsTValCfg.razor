@@ -1,55 +1,65 @@
-﻿@inherits CfgBase<JsFuncNumString?>
+﻿@typeparam T where T : Enum
+@inherits CfgBase<JsVal?>
 <div class="cfg">
     <div class="over-input">
         <Switch @bind-Value="IsShow" DisplayText="@DisplayText" ShowLabel="true" ShowInnerText="true"
                 OnValueChanged="ShowChanged"
                 OffInnerText="默认值" OnInnerText="自定义"></Switch>
-        @if (IsShow && Value != null)
+        @if (IsShow && ValueHander != null)
         {
-            <Select @bind-Value="Value.JsType" Items="Items" OnSelectedItemChanged="OnSelectedItemChanged"> </Select>
+            <MultiSelect @bind-Value="@SelectedEnumValues" OnSelectedItemsChanged="OnSelectedItemsChanged" />
         }
+        <PopConfirmButton Size="Size.ExtraSmall" Placement="Placement.Top"
+                          Color="Color.Secondary"
+                          ConfirmIcon="fa-solid fa-triangle-exclamation text-danger"
+                          ConfirmButtonColor="Color.Secondary"
+                          OnConfirm="DefaultValue"
+                          Text="默认"
+                          Content="确认恢复默认值?" />
         <Tooltip Title="@HelpInfo" CustomClass="is-invalid">
-            <i style="color:@IsSucessed" class="fas fa-circle-question" />
+            <i style="color:@IsOk()" class="fas fa-circle-question" />
         </Tooltip>
     </div>
-    @if (IsShow && Value != null)
-    {
-        switch (Value.JsType)
-        {
-            case JsType.String:
-                <BootstrapInput Value="@Value.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
-                break;
-            case JsType.Bool:
-                <Checkbox Value="@Value.GetBool()" OnValueChanged="OnValueChangedForRawBool"></Checkbox>
-                break;
-            case JsType.Array:
-                <Textarea Value="@Value.RAW" placeholder="[]" OnValueChanged="OnValueChangedForRaw"></Textarea>
-                break;
-            case JsType.Object:
-                <Textarea Value="@Value.RAW" placeholder="{}" OnValueChanged="OnValueChangedForRaw"></Textarea>
-                break;
-            case JsType.Num:
-                <BootstrapInputNumber Value="@Value.GetNum()" OnValueChanged="OnValueChangedForRawNum"></BootstrapInputNumber>
-                break;
-            case JsType.Function:
-                <Textarea Value="@Value.RAW" OnValueChanged="OnValueChangedForRaw" placeholder=" function(value) {return value.min - 20;}" rows="4" />
-                break;
-            default:
-                <BootstrapInput Value="@Value.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
-                break;
-        }
-    }
 </div>
 @code {
     public List<SelectedItem> Items { get; set; } = new List<SelectedItem>();
+    public List<T> SelectedEnumValues { get; set; } = new();
     private SelectedItem SelectedItem = new SelectedItem();
     [Parameter, EditorRequired]
     public List<JsType> JsTypes { get; set; } = new();
+    public string IsOk()
+    {
+        return ValueHander == null ? "green" : ValueHander.IsOk() ? "green" : "black";
+    }
     protected override Task OnInitializedAsync()
     {
-        Items = JsTypes.Select(x => new SelectedItem(x.ToString(), x.GetDescription())).ToList();
-        IsSucessed = Value == null ? "green" : Value.IsOk() ? "green" : "black";
+
+        if (Value != null)
+        {   //未实现,因为不好反序列化回来
+            var sss = Value.RAW.Replace("[", "").Replace("]", "").Replace("\\", "").Replace("\"", "").Replace(" ", "");
+            string[] stringValues = sss.Split(',');
+
+            var enumType = typeof(T);
+            foreach (var stringValue in stringValues)
+            {
+                if (Enum.TryParse(enumType, stringValue, out object? enumValue))
+                {
+                    SelectedEnumValues.Add((T)enumValue);
+                }
+            }
+        }
+
         return base.OnInitializedAsync();
+    }
+    async Task OnSelectedItemsChanged(IEnumerable<SelectedItem> items)
+    {
+        if (ValueHander != null)
+        {
+            ValueHander.RAW = JsonSerializer.Serialize(items.Select(x => x.Value));
+            Update();
+           
+        }
+        await Task.CompletedTask;
     }
     // private async Task OnItemChanged(IEnumerable<SelectedItem> values, SelectedItem val)
     // {
@@ -73,15 +83,9 @@
     /// <returns></returns>
     async Task ShowChanged(bool val)
     {
-
         if (val)//选中默认
         {
-            if (ValueHander == null)
-            {
-
-            }
-            var t = JsTypes.First();
-            Value = new JsFuncNumString(t);
+            ValueHander = new JsVal(JsType.Array);
         }
         else
         {
@@ -100,7 +104,7 @@
         if (Value != null)
         {
             //todu  应该要判断值是否合法
-            var obj = new JsFuncNumString(val, Value.JsType);
+            var obj = new JsVal(val, Value.JsType);
             if (obj.IsOk())
             {
                 ValueHander = obj;
@@ -113,7 +117,7 @@
                 await Msg.Warning("失败", "输入的值不正确,请检查");
             }
         }
-        this.StateHasChanged();
+  
         await Task.CompletedTask;
     }
     async Task OnValueChangedForRawNum(decimal val)
@@ -121,7 +125,7 @@
         if (Value != null)
         {
             //todu  应该要判断值是否合法
-            var obj = new JsFuncNumString(val.ToString(), Value.JsType);
+            var obj = new JsVal(val.ToString(), Value.JsType);
             if (obj.IsOk())
             {
                 ValueHander = obj;
@@ -134,7 +138,7 @@
                 await Msg.Warning("失败", "输入的值不正确,请检查");
             }
         }
-        this.StateHasChanged();
+     
         await Task.CompletedTask;
     }
     async Task OnValueChangedForRawBool(bool val)
@@ -142,7 +146,7 @@
         if (Value != null)
         {
             //todu  应该要判断值是否合法
-            var obj = new JsFuncNumString(val.ToString(), Value.JsType);
+            var obj = new JsVal(val.ToString(), Value.JsType);
             if (obj.IsOk())
             {
                 ValueHander = obj;
@@ -155,7 +159,7 @@
                 await Msg.Warning("失败", "输入的值不正确,请检查");
             }
         }
-        this.StateHasChanged();
+  
         await Task.CompletedTask;
     }
     async Task<bool> OnBeforeSelectedItemChange(SelectedItem val)
@@ -203,7 +207,7 @@
             ValueHander = Value;
             IsSucessed = "green";
         }
-        this.StateHasChanged();
+      
         await Task.CompletedTask;
     }
 }

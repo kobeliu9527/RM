@@ -181,11 +181,11 @@
         {
             BigScreen.SelectedList[0].Option!.xAxis = new List<ExAxis>();
         }
-        BigScreen.SelectedList[0].Option!.xAxis!.Add(new ExAxis() { name = "X轴" + (BigScreen.SelectedList[0].Option!.xAxis!.Count + 1) });
+        BigScreen.SelectedList[0].Option!.xAxis!.Add(new ExAxis() { name = new JsVal("X轴" + (BigScreen.SelectedList[0].Option!.xAxis!.Count + 1), JsType.String) });
         BigScreen?.RefreshHandel?.Invoke(true);
         await Task.CompletedTask;
     }
-    
+
 
     Task OnvalueChanged(object o)
     {

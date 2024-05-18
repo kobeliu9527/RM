@@ -68,21 +68,21 @@ namespace SharedPage.Model
     /// <summary>
     /// 
     /// </summary>
-    public class JsFuncNumString
+    public class JsVal
     {
         /// <summary>
         /// 
         /// </summary>
         public JsType JsType { get; set; } = JsType.String;
-        public JsFuncNumString()
+        public JsVal()
         {
-                
+
         }
         /// <summary>
         /// 处理参数为数字和字符串的时候自动识别
         /// </summary>
         /// <param name="raw"></param>
-        public JsFuncNumString(string raw)
+        public JsVal(string raw)
         {
             RAW = raw;
         }
@@ -90,16 +90,37 @@ namespace SharedPage.Model
         /// 
         /// </summary>
         /// <param name="type"></param>
-        public JsFuncNumString(JsType type)
+        public JsVal(JsType type)
         {
             JsType = type;
+            switch (JsType)
+            {
+                case JsType.Num:
+                    RAW = "0";
+                    break;
+                case JsType.String:
+                    RAW = "";
+                    break;
+                case JsType.Object:
+                    RAW = "{}";
+                    break;
+                case JsType.Array:
+                    RAW = "[]";
+                    break;
+                case JsType.Bool:
+                    RAW = "false";
+                    break;
+                case JsType.Function:
+                    RAW = "function(value) {return value.min - 20;}";
+                    break;
+            }
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="raw"></param>
         /// <param name="type"></param>
-        public JsFuncNumString(string raw, JsType type)
+        public JsVal(string raw, JsType type)
         {
             RAW = raw;
             JsType = type;

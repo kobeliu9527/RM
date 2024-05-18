@@ -25,11 +25,11 @@
     [Parameter]
     public bool IsShow { get; set; }
     [Parameter]
-    public JsFuncNumString? JsFuncNumString { get; set; }
+    public JsVal? JsFuncNumString { get; set; }
     [Parameter]
-    public EventCallback<JsFuncNumString?> JsFuncNumStringChanged { get; set; }
+    public EventCallback<JsVal?> JsFuncNumStringChanged { get; set; }
 
-    public JsFuncNumString? ValueJsFuncNumString
+    public JsVal? ValueJsFuncNumString
     {
         get { return JsFuncNumString; }
         set
@@ -45,7 +45,7 @@
     {
         if (res)
         {
-            ValueJsFuncNumString = new JsFuncNumString("null") { JsType = JsType.String };
+            ValueJsFuncNumString = new JsVal("null") { JsType = JsType.String };
         }
         else
         {

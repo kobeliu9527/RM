@@ -62,6 +62,27 @@ namespace SharedPage.Components.Cfg
             }
         }
         /// <summary>
+        /// 通知父级组件,值发生了变化
+        /// </summary>
+        public void Notify()
+        {
+            if (ValueChanged.HasDelegate)
+            {
+                ValueChanged.InvokeAsync(Value);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task DefaultValue()
+        {
+            ValueHander = default(T);
+            IsShow = false;
+            Update();
+            await Task.CompletedTask;
+        }
+        /// <summary>
         /// 显示要配置的项目的名称
         /// </summary>
         [Parameter, EditorRequired]
@@ -81,6 +102,12 @@ namespace SharedPage.Components.Cfg
         public void Update()
         {
             BigScreen?.RefreshHandel?.Invoke(true);
+        }
+        protected override Task OnInitializedAsync()
+        {
+            IsShow = ValueHander != null;
+
+            return base.OnInitializedAsync();
         }
     }
 }

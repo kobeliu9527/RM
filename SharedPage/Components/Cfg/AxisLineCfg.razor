@@ -1,55 +1,43 @@
-﻿<div class="cfg">
+﻿@inherits CfgBase<axisLine?>
+<div class="cfg">
     <div class="over-input">
-        <Switch Value="@(Value!=null)" ShowInnerText="true" OffInnerText="默认" OnInnerText="自定义" OnValueChanged="OnValueChanged" ShowLabel="true" DisplayText="@DisplayText"></Switch>
+        <Switch @bind-Value="IsShow" ShowInnerText="true" OffInnerText="默认" OnInnerText="自定义"
+                OnValueChanged="ShowChanged" ShowLabel="true" DisplayText="@DisplayText"></Switch>
+        <Tooltip Title="@HelpInfo" CustomClass="is-invalid">
+            <i style="color:@IsOk()" class="fas fa-circle-question" />
+        </Tooltip>
     </div>
 
-    @if (Value != null)
+    @if (IsShow && ValueHander != null)
     {
-        <JsInputForMutEnum T="symbol" @bind-Value="Value.symbol" DisplayText="坐标轴箭头设置"></JsInputForMutEnum>
+        <JsTValCfg T="symbol" @bind-Value="ValueHander.symbol" DisplayText="轴端形状" JsTypes="new List<JsType>()"></JsTValCfg>
     }
 </div>
 
 @code
 {
-    [CascadingParameter]
-    [NotNull]
-    public BigScreen? BigScreen { get; set; }
-    [Parameter]
-    public string DisplayText { get; set; } = "轴线设置:";
-    /// <summary>
-    ///
-    /// </summary>
-    [Parameter]
-    public bool IsShow { get; set; }
-    [Parameter]
-    public axisLine? Value { get; set; }
-    [Parameter]
-    public EventCallback<axisLine?> ValueChanged { get; set; }
-
-    public axisLine? ChangerHander
+    public string IsOk()
     {
-        get { return Value; }
-        set
-        {
-            Value = value;
-            if (ValueChanged.HasDelegate)
-            {
-                ValueChanged.InvokeAsync(Value);
-            }
-        }
+        return ValueHander == null ? "green" : "black";
     }
-    async Task OnValueChanged(bool res)
+    async Task ShowChanged(bool val)
     {
-        if (res)
+        if (val)//选中默认
         {
-            ChangerHander = new();
+            ValueHander = new();
         }
         else
         {
-            ChangerHander = null;
+            ValueHander = null;
+            Update();
         }
-        BigScreen?.RefreshHandel?.Invoke(true);
         await Task.CompletedTask;
     }
+
+
+
+
+
+
 
 }

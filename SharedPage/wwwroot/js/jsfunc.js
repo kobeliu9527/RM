@@ -13,7 +13,7 @@ export class JsFunc {
                 var myChart = echarts.init(ele);
                 if (myChart) {
                     JsFunc.liChart[id] = myChart;
-                    console.log(id + ':初始化成功');
+                   // console.log(id + ':初始化成功');
                 }
                 else {
                     console.log(id+':初始化失败');
@@ -34,7 +34,7 @@ export class JsFunc {
                 //chart.showLoading(); 
                 //chart.hideLoading();
                 let opt = eval('(' + option + ')');
-                console.log(opt, notMerge, lazyUpdate);
+              //  console.log(opt, notMerge, lazyUpdate);
                 chart.setOption(opt, notMerge, lazyUpdate);
             }
             else {

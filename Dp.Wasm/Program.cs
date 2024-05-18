@@ -48,21 +48,16 @@ internal class Program
         builder.Services.AddAuthorizationCore();
         builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForWasm>();
         builder.Services.AddSingleton<JsInterOp, JsInterOp>();
-        //builder.Services.AddSingleton<IBigScreenService, BigScreenByLocal>(); 
-        builder.Services.AddSingleton<IBigScreenService, BigScreenByHttp>(); 
+        builder.Services.AddSingleton<IBigScreenService, BigScreenByLocal>(); 
+       // builder.Services.AddSingleton<IBigScreenService, BigScreenByHttp>(); 
 
         await builder.Build().RunAsync();
     }
 
     private static void Test()
     {
-
-
-
-        //EOption option = new EOption();
-        //    JsonSerializerOptions op = new JsonSerializerOptions() {
-        //        Converters = { new ListConvert () }
-        //    };
-        //    var s=JsonSerializer.Serialize(option,op);
+        int? a = 33;
+        var ss=default(int?);
+        var sss = ss;
     }
 }
