@@ -6,11 +6,11 @@
         <BootstrapBlazorRoot>
             <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new System.Reflection.Assembly[]{typeof(SharedPage.JsInterOp).Assembly}">
                 <Found Context="routeData">
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(BaseLayout)">
-                        <NotAuthorized>
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(BaseLayout)">
+                        @* <NotAuthorized>
                             <span>没有权限,即将跳转..</span>
-                        </NotAuthorized>
-                    </AuthorizeRouteView>
+                        </NotAuthorized> *@
+                    </RouteView>
                     <FocusOnNavigate RouteData="@routeData" Selector="h1" />
                 </Found>
                 <NotFound>

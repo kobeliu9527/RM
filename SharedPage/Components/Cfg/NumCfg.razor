@@ -1,0 +1,27 @@
+﻿@inherits CfgBase<int?>
+<div class="cfg">
+    <div class="over-input">
+        <Switch @bind-Value="IsShow" DisplayText="@DisplayText" ShowLabel="true" ShowInnerText="true"
+                OnValueChanged="ShowChanged"
+                OffInnerText="默认值" OnInnerText="自定义"></Switch>
+
+        <BootstrapInputNumber IsDisabled="@(!IsShow)" Value="@Value" Color="Color.Success" OnValueChanged="OnValueChanged" />
+    </div>
+</div>
+@code {
+    async Task ShowChanged(bool val)
+    {
+        if (!val)
+        {
+            ValueHander = null;
+            Update();
+        }
+        await Task.CompletedTask;
+    }
+    async Task OnValueChanged(int? val)
+    {
+        ValueHander = val;
+        Update();
+        await Task.CompletedTask;
+    }
+}

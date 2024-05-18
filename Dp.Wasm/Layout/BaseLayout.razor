@@ -12,20 +12,20 @@
     protected async override Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        BigScreen = await JsEcharts.getItem<BigScreen>("测试大屏");
+        // BigScreen = await JsEcharts.getItem<BigScreen>("测试大屏");
        
     }
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            BigScreen = await JsEcharts.getItem<BigScreen>("测试大屏");
-        }
-        if (BigScreen!=null)
-        {
-            ;
-        }
+        // if (firstRender)
+        // {
+        //     BigScreen = await JsEcharts.getItem<BigScreen>("测试大屏");
+        // }
+        // if (BigScreen!=null)
+        // {
+        //     ;
+        // }
      
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Components.Authorization;
 using SharedPage.JsonConvert;
 using Dp.Wasm.IServices;
+using BootstrapBlazor.Components;
 
 internal class Program
 {
@@ -38,6 +39,11 @@ internal class Program
         builder.Services.AddBootstrapBlazor(null, op =>
         {
             op.IgnoreLocalizerMissing = true;
+        });
+        builder.Services.Configure<BootstrapBlazorOptions>(options =>
+        {
+            options.ToastDelay = 4000;
+            options.ToastPlacement = Placement.TopCenter;
         });
         builder.Services.AddAuthorizationCore();
         builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationStateProviderForWasm>();

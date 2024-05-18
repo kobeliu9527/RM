@@ -3,8 +3,10 @@ using SharedPage.JsonConvert;
 using SharedPage.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -22,9 +24,15 @@ namespace SharedPage.Ext
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             WriteIndented = true,
         };
+        static JsonSerializerOptions opjc = new JsonSerializerOptions()
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = false,
+        };
         static JsonSerializerOptions OpForJsFun = new JsonSerializerOptions()
         {
-            Converters = { new JsFuncNumStringConverter()},
+            Converters = { new JsFuncNumStringConverter() },
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
         static Ext()
@@ -53,6 +61,16 @@ namespace SharedPage.Ext
         public static string Serialize<T>(this T obj)
         {
             return System.Text.Json.JsonSerializer.Serialize(obj, op);
+        }
+        /// <summary>
+        /// 转义后,为null不会序列化
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string SerializeJinChou<T>(this T obj)
+        {
+            return System.Text.Json.JsonSerializer.Serialize(obj, opjc);
         }
         /// <summary>
         /// 为echart的函数准备的转换器
@@ -158,7 +176,7 @@ namespace SharedPage.Ext
                     };
                     chart.Option.series = new List<ESerieBase>() { new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line }, new SeriePie() { type = ESeriesType.line } };
                     chart.Option.xAxis = new() { new ExAxis() { type = EAxisType.category } };
-                    chart.Option.yAxis = new List<ExAxis>() { new ExAxis() };
+                    chart.Option.yAxis = new List<ExAxis>() { new ExAxis() { type = EAxisType.value } };
                     chart.Option.tooltip = new();
                     chart.Option.legend = new();
                     break;
@@ -192,6 +210,86 @@ namespace SharedPage.Ext
                     break;
             }
             return chart;
+        }
+
+        /// <summary>
+        /// 反射获取对象属性的特性描述
+        /// </summary>
+        /// <param name="obj">对象实例</param>
+        /// <param name="propertyName">哪一个属性</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static string GetPropertyDescription(this object? obj, string propertyName)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    var property = obj.GetType().GetProperty(propertyName);
+                    if (property == null)
+                        throw new ArgumentException($"Property '{propertyName}' not found.");
+
+                    // 获取属性的 DescriptionAttribute
+                    var attribute = (Attribute.GetCustomAttribute(property, typeof(DescriptionAttribute))) as DescriptionAttribute;
+
+                    // 返回属性的描述
+                    return attribute == null ? string.Empty : attribute.Description;
+                }
+                else
+                {
+
+                    return "NA";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "NA";
+            }
+
+        }
+        /// <summary>
+        /// 获取DisplayName
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public static string GetPropertyDisplayName<T>(this T instance, string propertyName)
+        {
+            if (instance == null)
+            {
+                return "";
+            }
+            Type type = instance.GetType();
+
+            try
+            {
+                var property = type.GetProperty(propertyName);
+
+                if (property == null)
+                {
+                    return propertyName;
+                }
+
+                var displayNameAttribute = property.GetCustomAttribute<DisplayNameAttribute>();
+
+                return displayNameAttribute != null ? displayNameAttribute.DisplayName : propertyName;
+            }
+            catch (Exception)
+            {
+                return propertyName;
+            }
+        }
+        /// <summary>
+        /// 获取枚举的描述
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetDescription(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
+            return attribute == null ? value.ToString() : attribute.Description;
         }
     }
 }

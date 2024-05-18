@@ -1,25 +1,61 @@
 @charset "UTF-8";
-/*designer*/
-.content {
+.dp-header {
+  height: 5%;
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 1px solid;
+}
+
+.dp-content {
+  height: 95%;
+  overflow: hidden;
   display: flex;
 }
-
-.selected {
-  border: 2px solid blue;
+.dp-content .listview .listview-body {
+  display: block;
 }
-
-/*designer*/
-/*重写BootstarpBlazor库的样式*/
-.bb .tabs .tabs-body {
+.dp-content .listview-item {
+  width: 20%;
+}
+.dp-content .dp-left {
+  flex: 2;
+}
+.dp-content .dp-middle {
+  flex: 8;
+  position: relative;
+  overflow: auto;
+  background-color: #345678;
+}
+.dp-content .dp-middle .runing {
+  height: 100%;
+  position: relative;
+  overflow: auto;
+}
+.dp-content .dp-right {
+  flex: 2;
+  overflow: auto;
+}
+.dp-content .dp-right .tabs .tabs-body {
   padding: 0;
   margin: 0;
 }
+.dp-content .dp-right .accordion-body {
+  padding: 0px;
+}
 
+.selected {
+  /*border: 2px solid $Select-color;*/
+  background: linear-gradient(to left, #c8ff00, #c8ff00) left top no-repeat, linear-gradient(to bottom, #c8ff00, #c8ff00) left top no-repeat, linear-gradient(to left, #c8ff00, #c8ff00) right top no-repeat, linear-gradient(to bottom, #c8ff00, #c8ff00) right top no-repeat, linear-gradient(to left, #c8ff00, #c8ff00) left bottom no-repeat, linear-gradient(to bottom, #c8ff00, #c8ff00) left bottom no-repeat, linear-gradient(to left, #c8ff00, #c8ff00) right bottom no-repeat, linear-gradient(to left, #c8ff00, #c8ff00) right bottom no-repeat;
+  background-size: 1px 10px, 10px 1px;
+}
+
+/*重写BootstarpBlazor库的样式*/
 .over-input {
   display: flex;
   justify-content: space-between;
   align-items: center;
   white-space: nowrap;
+  margin-bottom: 1px;
 }
 .over-input .form-label {
   margin: 0;
@@ -27,23 +63,70 @@
 .over-input .switch-core {
   width: 60px !important;
 }
-
-.PropPanel {
-  overflow: auto;
-}
-.PropPanel .accordion-body {
-  padding: 5px;
+.over-input input {
+  padding: 2px !important;
 }
 
-.total-pages .listview .listview-body {
-  display: block;
+.cfg {
+  padding-left: 10px;
+  font-size: 1rem;
 }
-.total-pages .listview-item {
-  width: 20%;
+.cfg .cfg {
+  font-size: 0.95rem;
+}
+.cfg .cfg .cfg {
+  font-size: 0.9rem;
+}
+.cfg .cfg .cfg .cfg {
+  font-size: 0.85rem;
+}
+.cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.8rem;
+}
+.cfg .cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.75rem;
+}
+.cfg .cfg .cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.7rem;
+}
+.cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.65rem;
+}
+.cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.6rem;
+}
+.cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.55rem;
+}
+.cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg .cfg {
+  font-size: 0.5rem;
+}
+.cfg:nth-child(1) {
+  border-color: red;
+}
+.cfg:nth-child(2) {
+  border-color: blue;
+}
+.cfg:nth-child(3) {
+  border-color: green;
+}
+.cfg:nth-child(4) {
+  border-color: orange;
+}
+.cfg:nth-child(5) {
+  border-color: purple;
+}
+.cfg:nth-child(6) {
+  border-color: yellow;
+}
+.cfg > .jsinput {
+  margin-left: 5px;
 }
 
-.main {
-  height: 100%;
-  position: relative;
-  overflow: auto;
+.axis {
+  border-bottom: 2px solid;
+}
+
+.jsinput {
+  border-top: 2px solid #7d0f0f;
 }

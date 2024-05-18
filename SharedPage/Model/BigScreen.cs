@@ -64,7 +64,7 @@ namespace SharedPage.Model
         /// 设计的时候,画布的布局,运行时候全屏,只会用到背景色
         /// </summary>
         [SugarColumn(IsJson = true, ColumnDataType = StaticConfig.CodeFirst_BigString)]
-        public Css Css { get; set; } = new Css() { background_color = "#2B2C2D", top = "1%", left = "1%", width = "960px", height = "540px" };
+        public Css Css { get; set; } = new Css() { background_color = "#123456", top = "5px", left = "5px", width = "960px", height = "540px" };
         /// <summary>
         /// 整个页面后台多少秒请求一次
         /// </summary>

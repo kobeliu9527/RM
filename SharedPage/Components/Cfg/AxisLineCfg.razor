@@ -5,14 +5,17 @@
 
     @if (Value != null)
     {
-        <JsInput @bind-JsFuncNumString=Value.symbol DisplayText="坐标轴箭头设置"></JsInput>
+        <JsInputForMutEnum T="symbol" @bind-Value="Value.symbol" DisplayText="坐标轴箭头设置"></JsInputForMutEnum>
     }
 </div>
 
 @code
 {
+    [CascadingParameter]
+    [NotNull]
+    public BigScreen? BigScreen { get; set; }
     [Parameter]
-    public string DisplayText { get; set; } = "";
+    public string DisplayText { get; set; } = "轴线设置:";
     /// <summary>
     ///
     /// </summary>
@@ -45,6 +48,7 @@
         {
             ChangerHander = null;
         }
+        BigScreen?.RefreshHandel?.Invoke(true);
         await Task.CompletedTask;
     }
 

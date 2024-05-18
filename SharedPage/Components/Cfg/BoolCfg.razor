@@ -1,0 +1,50 @@
+﻿@inherits CfgBase<bool?>
+<div class="cfg">
+    <div class="over-input">
+        <span>@DisplayText</span>
+        <div>
+            <RadioList Items="@Items" @bind-Value="@SelectedItem" OnSelectedChanged="@OnItemChanged" IsButton="true" IsVertical="false"></RadioList>
+
+        </div>
+        @*  <Switch @bind-Value="IsShow" DisplayText="@DisplayText" ShowLabel="true" ShowInnerText="true"
+        OnValueChanged="OnValueChanged"
+        OffInnerText="默认值" OnInnerText="自定义"></Switch>
+
+        <Checkbox IsDisabled="@(!IsShow)" Value="@Value" Color="Color.Success" OnStateChanged="OnStateChanged" /> *@
+    </div>
+</div>
+@code {
+    public List<SelectedItem> Items { get; set; } = new List<SelectedItem>() { new SelectedItem("1", "是"), new SelectedItem("2", "否"), new SelectedItem("3", "默认") };
+    private SelectedItem SelectedItem;
+    private async Task OnItemChanged(IEnumerable<SelectedItem> values, SelectedItem val)
+    {
+        if (val.Text == "是")
+        {
+            ValueHander = true;
+        }
+        else if (val.Text == "否")
+        {
+            ValueHander = true;
+        }
+        else
+        {
+            ValueHander = true;
+        }
+        await Task.CompletedTask;
+    }
+    async Task OnValueChanged(bool val)
+    {
+        if (!val)
+        {
+            ValueHander = null;
+            Update();
+        }
+        await Task.CompletedTask;
+    }
+    async Task OnStateChanged(CheckboxState s, bool? val)
+    {
+        ValueHander = s == CheckboxState.Checked;
+        Update();
+        await Task.CompletedTask;
+    }
+}

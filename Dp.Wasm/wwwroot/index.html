@@ -7,6 +7,9 @@
     <ThemeLoader></ThemeLoader>
     <title>Dp.Wasm</title>
     <base href="/" />
+    <link href="css/Loading.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/app.css" />
+
     <!-- 组件库样式隔离里面 -->
     <link rel="stylesheet" href="_content/SharedPage/SharedPage.bundle.scp.css">
     <!-- 组件库非样式隔离里面的 -->
@@ -21,7 +24,6 @@
         <script type="module" src="_content/SharedPage/js/localforage.min.js"></script>
     -->
 
-    <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="Dp.Wasm.styles.css" rel="stylesheet" />
     <link href="manifest.webmanifest" rel="manifest" />
@@ -31,7 +33,23 @@
 
 <body>
     <div id="app">
-        加载中...........
+        <div class="loading">
+            <div class="pl">
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__dot"></div>
+                <div class="pl__text">Loading…</div>
+            </div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">

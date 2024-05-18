@@ -1,6 +1,7 @@
 ﻿using SharedPage.JsonConvert;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -41,7 +42,9 @@ namespace SharedPage.Model
     [JsonConverter(typeof(EnumConvert<EPosition>))]
     public enum EPosition
     {
+        [Description("上面")]
         top,
+        [Description("下面")]
         bottom
     }
     [JsonConverter(typeof(EnumConvert<ENameLocation>))]
@@ -131,6 +134,27 @@ namespace SharedPage.Model
         bounceIn,
         bounceOut,
         bounceInOut
+    }
+
+    [JsonConverter(typeof(EnumConvert<symbol>))]
+    public enum symbol
+    {
+        [Description("无")]
+        none,
+        [Description("圆")]
+        circle,
+        [Description("矩形")]
+        rect,
+        [Description("矩形圆")]
+        roundRect,
+        [Description("三角形")]
+        triangle,
+        [Description("菱形")]
+        diamond,
+        [Description("大头")]
+        pin,
+        [Description("箭头")]
+        arrow
     }
 
 }

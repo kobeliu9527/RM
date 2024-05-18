@@ -1,0 +1,68 @@
+﻿@inherits CfgBase<EOption>
+<div class="cfg">
+    <div class="over-input">
+        <span>Y轴配置:</span>
+        <PopConfirmButton OnConfirm="DelsteAllAxis" Size="Size.ExtraSmall" Color="Color.Danger" Content="确认删除所有X轴?">不配置</PopConfirmButton>
+        @* <Switch Value="@(Value.yAxis.Count>0)" OnValueChanged="OnValueChanged" ShowLabel="true" DisplayText="@DisplayText" ShowInnerText="true" OffInnerText="不配置" OnInnerText="自定义"></Switch> *@
+        <Button OnClick="AddyAxis" Size="Size.ExtraSmall">新增轴</Button>
+    </div>
+    @if (Value?.yAxis != null && Value?.yAxis.Count > 0)
+    {
+        @* <Collapse>
+            <CollapseItems > *@
+                @foreach (var item in Value.yAxis)
+                {
+                    @* <CollapseItem Text="@item.name"> *@
+                        <XaxisCfg @key="item" Value="@item" xAxes="Value.yAxis"></XaxisCfg>
+                    @* </CollapseItem> *@
+                }
+          @*   </CollapseItems>
+        </Collapse> *@
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public override string DisplayText { get; set; } = "坐标轴配置";
+    async Task OnValueChanged(bool res)
+    {
+        if (ValueHander != null)
+        {
+            if (!res)
+            {
+                ValueHander.yAxis = null;
+                BigScreen?.RefreshHandel?.Invoke(true);
+                return;
+            }
+            BigScreen?.RefreshHandel?.Invoke(false);
+        }
+        await Task.CompletedTask;
+    }
+    async Task AddyAxis(MouseEventArgs e)
+    {
+        if (ValueHander != null)
+        {
+            if (ValueHander.yAxis == null)
+            {
+                ValueHander.yAxis = new();
+            }
+            ValueHander.yAxis.Add(new ExAxis());
+            IsShow = true;
+            await JsOp.Log(BigScreen.SelectedByDesigner);
+        }
+        BigScreen?.RefreshHandel?.Invoke(true);
+
+        await Task.CompletedTask;
+    }
+    async Task DelsteAllAxis()
+    {
+        if (ValueHander != null)
+        {
+            ValueHander.yAxis = null;
+            BigScreen?.RefreshHandel?.Invoke(true);
+        }
+
+        await Task.CompletedTask;
+    }
+}

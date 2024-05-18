@@ -16,27 +16,27 @@ namespace SharedPage.Model
         /// </summary>
         public string? id { get; set; }
         /// <summary>
-        /// 是否显示
+        /// 是否显示:控制整个 x 轴，包括轴线、刻度线、刻度标签等都会被隐藏。
         /// </summary>
-        public bool? show { get; set; }
+        [DisplayName("是否显示")]public bool? show { get; set; }
         /// <summary>
         /// 表示这个轴在哪个grid上,默认第一个
         /// </summary>
-        public int? gridIndex { get; set; }
+        [DisplayName("是否显示"),Description("表示这个轴在哪个grid上,默认第一个")] public int? gridIndex { get; set; }
         /// <summary>
         /// 在多个 x 轴为数值轴的时候，可以开启该配置项自动对齐刻度。只对'value'和'log'类型的轴有效。
         /// </summary>
-        public bool? alignTicks { get; set; }
+        [DisplayName("刻度对齐")] public bool? alignTicks { get; set; }
         /// <summary>
         /// 默认 grid 中的第一个 x 轴在 grid 的下方（'bottom'），第二个 x 轴视第一个 x 轴的位置放在另一侧。
         /// 注：若未将 xAxis.axisLine.onZero 设为 false , 则该项无法生效
         /// </summary>
-        public EPosition? position { get; set; }
+        [DisplayName("位置"), Description("若未将 xAxis.axisLine.onZero 设为 false , 则该项无法生效")] public EPosition? position { get; set; }
         /// <summary>
         /// X 轴相对于默认位置的偏移，在相同的 position 上有多个 X 轴的时候有用。
         ///注：若未将 xAxis.axisLine.onZero 设为 false , 则该项无法生效
         /// </summary>
-        public int? offset { get; set; }
+        [DisplayName("轴线偏移"), Description("")] public int? offset { get; set; }
         /// <summary>
         /// 类型
         /// </summary>
@@ -44,7 +44,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 坐标轴名称。
         /// </summary>
-        public string? name { get; set; }
+        [DisplayName("轴名称")]public string? name { get; set; }
         /// <summary>
         /// 坐标轴名称显示位置。
         /// </summary>
@@ -72,15 +72,18 @@ namespace SharedPage.Model
         /// <summary>
         /// boolean Array ['20%', '20%']坐标轴两边留白策略，类目轴和非类目轴的设置和表现不一样。        类目轴中 boundaryGap 可以配置为 true 和 false。默认为 true，这时候刻度只是作为分隔线，标签和数据点都会在两个刻度之间的带(band)中间。非类目轴，包括时间，数值，对数轴，boundaryGap是一个两个值的数组，分别表示数据最小值和最大值的延伸范围，可以直接设置数值或者相对的百分比，在设置 min 和 max 后无效。 示例：https://echarts.apache.org/zh/option.html#xAxis.boundaryGap
         /// </summary>
-        public object? boundaryGap { get; set; }
+        [DisplayName("留白"),Description("坐标轴两边留白策略，类目轴和非类目轴的设置和表现不一样。")]
+        public JsFuncNumString? boundaryGap { get; set; }
         /// <summary>
         /// number string Function坐标轴刻度最小值。 可以设置成特殊值 'dataMin'，此时取数据在该轴上的最小值作为最小刻度。不设置时会自动计算最小值保证坐标轴刻度的均匀分布。在类目轴中，也可以设置为类目的序数（如类目轴 data: ['类A', '类B', '类C'] 中，序数 2 表示 '类C'。也可以设置为负数，如 -3）。当设置成 function 形式时，可以根据计算得出的数据最大最小值设定坐标轴的最小值。如：min: function(value){return value.min - 20;} 其中 value 是一个包含 min 和 max 的对象，分别表示数据的最大最小值，这个函数可返回坐标轴的最小值，也可返回 null/undefined 来表示“自动计算最小值”（返回 null/undefined 从 v4.8.0 开始支持）。
         /// </summary>
-        public object? min { get; set; }
+        [DisplayName("最小刻度"), Description("number string Function坐标轴刻度最小值。 可以设置成特殊值 'dataMin'，此时取数据在该轴上的最小值作为最小刻度。不设置时会自动计算最小值保证坐标轴刻度的均匀分布。在类目轴中，也可以设置为类目的序数（如类目轴 data: ['类A', '类B', '类C'] 中，序数 2 表示 '类C'。也可以设置为负数，如 -3）。当设置成 function 形式时，可以根据计算得出的数据最大最小值设定坐标轴的最小值。如：min: function(value){return value.min - 20;} 其中 value 是一个包含 min 和 max 的对象，分别表示数据的最大最小值，这个函数可返回坐标轴的最小值，也可返回 null/undefined 来表示“自动计算最小值”（返回 null/undefined 从 v4.8.0 开始支持）")] 
+        public JsFuncNumString? min { get; set; }
         /// <summary>
         /// 参考min
         /// </summary>
-        public object? max { get; set; }
+        [DisplayName("最大刻度"), Description("number string Function坐标轴刻度最大值。 可以设置成特殊值 'dataMin'，此时取数据在该轴上的最小值作为最小刻度。不设置时会自动计算最小值保证坐标轴刻度的均匀分布。在类目轴中，也可以设置为类目的序数（如类目轴 data: ['类A', '类B', '类C'] 中，序数 2 表示 '类C'。也可以设置为负数，如 -3）。当设置成 function 形式时，可以根据计算得出的数据最大最小值设定坐标轴的最小值。如：min: function(value){return value.min - 20;} 其中 value 是一个包含 min 和 max 的对象，分别表示数据的最大最小值，这个函数可返回坐标轴的最小值，也可返回 null/undefined 来表示“自动计算最小值”（返回 null/undefined 从 v4.8.0 开始支持）")] 
+        public JsFuncNumString? max { get; set; }
         /// <summary>
         /// 只在数值轴中（type: 'value'）有效。        是否是脱离 0 值比例。设置成 true 后坐标刻度不会强制包含零刻度。在双数值轴的散点图中比较有用。在设置 min 和 max 之后该配置项无效
         /// </summary>
@@ -116,7 +119,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 坐标轴轴线相关设置。
         /// </summary>
-        public axisLine? axisLine { get; set; }
+        [DisplayName("轴线配置")]public axisLine? axisLine { get; set; }
         /// <summary>
         /// 坐标轴刻度相关设置。
         /// </summary>

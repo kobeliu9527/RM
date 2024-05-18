@@ -10,6 +10,7 @@ using SharedPage.Ext;
 using SharedPage.JsonConvert;
 using SharedPage.Model;
 using SqlSugar;
+using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -34,7 +35,7 @@ internal partial class Program
             op.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs);
             op.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             op.JsonSerializerOptions.Converters.Add(new EntityStore.DataTableJsonConverter());
-         
+            op.JsonSerializerOptions.WriteIndented=false;
             op.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
         });
@@ -253,20 +254,6 @@ internal partial class Program
 
     private static void Testt()
     {
-     
-          JsonSerializerOptions op = new JsonSerializerOptions()
-        {
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
-            ReferenceHandler = ReferenceHandler.IgnoreCycles,
-            WriteIndented = true,
-            DefaultIgnoreCondition= JsonIgnoreCondition.WhenWritingNull,
-            Converters = { new EntityStore.DataTableJsonConverter(),new JsFuncConverter()}
-        };
-        ExAxis exAxis = new ExAxis();
-        exAxis.animationDelay = new  ("");
-        var ss = exAxis.SerializeForJsFun();
-
-
-
+       
     }
 }

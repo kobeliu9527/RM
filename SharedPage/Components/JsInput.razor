@@ -1,4 +1,4 @@
-﻿<div class="jsinput">
+﻿<div class="cfg">
     <div class="over-input">
         <Switch Value="@(JsFuncNumString!=null)" ShowInnerText="true" OffInnerText="默认" OnInnerText="自定义" OnValueChanged="OnValueChanged" ShowLabel="true" DisplayText="@DisplayText"></Switch>
     </div>
@@ -12,3 +12,91 @@
         <BootstrapInput @bind-Value="JsFuncNumString.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
     }
 </div>
+@code
+{
+    [CascadingParameter]
+    [NotNull]
+    public BigScreen? BigScreen { get; set; }
+    [Parameter]
+    public string DisplayText { get; set; } = "";
+    /// <summary>
+    ///
+    /// </summary>
+    [Parameter]
+    public bool IsShow { get; set; }
+    [Parameter]
+    public JsFuncNumString? JsFuncNumString { get; set; }
+    [Parameter]
+    public EventCallback<JsFuncNumString?> JsFuncNumStringChanged { get; set; }
+
+    public JsFuncNumString? ValueJsFuncNumString
+    {
+        get { return JsFuncNumString; }
+        set
+        {
+            JsFuncNumString = value;
+            if (JsFuncNumStringChanged.HasDelegate)
+            {
+                JsFuncNumStringChanged.InvokeAsync(JsFuncNumString);
+            }
+        }
+    }
+    async Task OnValueChanged(bool res)
+    {
+        if (res)
+        {
+            ValueJsFuncNumString = new JsFuncNumString("null") { JsType = JsType.String };
+        }
+        else
+        {
+            ValueJsFuncNumString = null;
+            BigScreen?.RefreshHandel?.Invoke(true);
+        }
+
+        await Task.CompletedTask;
+    }
+    async Task OnValueChangedForRaw(string res)
+    {
+        if (JsFuncNumString != null)
+        {
+            switch (JsFuncNumString.JsType)
+            {
+                case JsType.Num:
+                    if (!decimal.TryParse(res, out decimal num))
+                    {
+                        JsFuncNumString.RAW = "0";
+                    }
+                    break;
+                case JsType.Object:
+                    if (res.StartsWith("{") && res.EndsWith("}"))
+                    {
+
+                    }
+                    else
+                    {
+                        JsFuncNumString.RAW = "{}";
+                    }
+                    break;
+                case JsType.String:
+                    break;
+                case JsType.Function:
+                    break;
+                case JsType.Array:
+                    if (res.StartsWith("[") && res.EndsWith("]"))
+                    {
+
+                    }
+                    else
+                    {
+                        JsFuncNumString.RAW = "[]";
+                    }
+                    break;
+             
+                default:
+                    break;
+            }
+        }
+        BigScreen?.RefreshHandel?.Invoke(true);
+        await Task.CompletedTask;
+    }
+}

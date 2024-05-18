@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,7 +66,7 @@ namespace SharedPage.Model
         public string RAW { get; set; } = "";
     }
     /// <summary>
-    /// 适配函数和数字和字符串,如果是函数,必须要有function,如果是确实是数字的字符串用@符号
+    /// 
     /// </summary>
     public class JsFuncNumString
     {
@@ -78,17 +79,74 @@ namespace SharedPage.Model
         {
             RAW = raw;
         }
+        public JsFuncNumString(JsType type)
+        {
+            JsType = type;
+        }
+        public JsFuncNumString(string raw, JsType type)
+        {
+            RAW = raw;
+            JsType = type;
+        }
         /// <summary>
         /// 
         /// </summary>
         public string RAW { get; set; } = "";
+
+        public bool IsOk()
+        {
+            switch (this.JsType)
+            {
+                case JsType.Num:
+                    if (decimal.TryParse(RAW, out decimal num))
+                    {
+                        return true;
+                    }
+                    break;
+                case JsType.String:
+                    return true;
+                case JsType.Function:
+                    if (RAW.IndexOf("function", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        return true;
+                    }
+                    break;
+                case JsType.Array:
+                    if (RAW.StartsWith("[") && RAW.EndsWith("]"))
+                    {
+                        return true;
+                    }
+                    break;
+                case JsType.Object:
+                    if (RAW.StartsWith("{") && RAW.EndsWith("}"))
+                    {
+                        return true;
+                    }
+                    break;
+                case JsType.Bool:
+                    if (bool.TryParse(RAW, out bool B))
+                    {
+                        return true;
+                    }
+                    break;
+                case JsType.StringArray:
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
     }
     public enum JsType
     {
         /// <summary>
+        /// 
+        /// </summary>
+        Bool,
+        /// <summary>
         /// 数字
         /// </summary>
-        Num,
+        [Description("数字")] Num,
         /// <summary>
         /// 字符串
         /// </summary>
@@ -96,7 +154,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 函数
         /// </summary>
-        Function,
+        [Description("函数")] Function,
         /// <summary>
         /// 数组
         /// </summary>

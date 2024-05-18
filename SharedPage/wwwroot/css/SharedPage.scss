@@ -1,43 +1,32 @@
 ﻿//开启sass编译监控: sass --watch . --no-source-map
 $Select-color: blue; //被选中后边框颜色
-/*designer*/
-.content {
+// 定义基础字体大小
+$base-font-size: 1rem;
+$step-size: 0.05rem; // 定义每一级减少的字体大小
+$border-color: #c8ff00; // 选中状态下四角边框颜色
+$border-size: 1px 10px, 10px 1px; // 选中状态下边框大小
+@mixin adjust-font-size($level) {
+    font-size: $base-font-size - $step-size * $level;
+
+    .cfg {
+        @if $level < 10 { // 设置最大嵌套层数为10，可以根据需要调整
+            @include adjust-font-size($level + 1);
+        }
+    }
+}
+//头部整体
+.dp-header {
+    height: 5%;
     display: flex;
+    justify-content: flex-start;
+    border-bottom:1px solid 
 }
-.selected {
-    border: 2px solid $Select-color;
-}
-/*designer*/
-/*重写BootstarpBlazor库的样式*/
-.bb .tabs .tabs-body {
-    padding: 0;
-    margin: 0;
-}
-//自定义容器
-.over-input {
+//整个内容区域
+.dp-content {
+    height: 95%;
+    overflow: hidden;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    white-space: nowrap;
 
-    .form-label {
-        margin: 0;
-    }
-
-    .switch-core{
-        width:60px !important;
-    }
-}
-
-.PropPanel {
-    overflow: auto;
-
-    .accordion-body {
-        padding: 5px;
-    }
-}
-//所有页面中,重写listview
-.total-pages {
     .listview .listview-body {
         display: block;
     }
@@ -45,10 +34,111 @@ $Select-color: blue; //被选中后边框颜色
     .listview-item {
         width: 20%;
     }
+
+    .dp-left {
+        flex: 2;
+    }
+
+    .dp-middle {
+        flex: 8;
+        position: relative;
+        overflow: auto;
+        background-color: #345678;
+
+        .runing { //绘制区域
+            height: 100%;
+            position: relative;
+            overflow: auto;
+        }
+    }
+
+    .dp-right {
+        flex: 2;
+        overflow: auto;
+
+        .tabs .tabs-body {
+            padding: 0;
+            margin: 0;
+        }
+
+        .accordion-body {
+            padding: 0px;
+        }
+    }
 }
-.main{
-    height:100%;
-    position:relative;
-    overflow:auto;
-   
+
+
+.selected {
+    //为选中的元素添加边框
+    /*border: 2px solid $Select-color;*/
+    background: linear-gradient(to left, $border-color, $border-color) left top no-repeat, linear-gradient(to bottom, $border-color, $border-color) left top no-repeat, linear-gradient(to left, $border-color, $border-color) right top no-repeat, linear-gradient(to bottom, $border-color, $border-color) right top no-repeat, linear-gradient(to left, $border-color, $border-color) left bottom no-repeat, linear-gradient(to bottom, $border-color, $border-color) left bottom no-repeat, linear-gradient(to left, $border-color, $border-color) right bottom no-repeat, linear-gradient(to left, $border-color, $border-color) right bottom no-repeat;
+    background-size: $border-size;
+}
+
+/*重写BootstarpBlazor库的样式*/
+
+//自定义容器
+.over-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+    margin-bottom: 1px;
+
+    .form-label {
+        margin: 0;
+    }
+
+    .switch-core {
+        width: 60px !important;
+    }
+
+    input {
+        padding: 2px !important;
+    }
+}
+
+
+//所有页面中,重写listview,让一行放5个
+
+//配置框的样式
+.cfg {
+    padding-left: 10px;
+    @include adjust-font-size(0);
+
+    &:nth-child(1) {
+        border-color: red;
+    }
+
+    &:nth-child(2) {
+        border-color: blue;
+    }
+
+    &:nth-child(3) {
+        border-color: green;
+    }
+
+    &:nth-child(4) {
+        border-color: orange;
+    }
+
+    &:nth-child(5) {
+        border-color: purple;
+    }
+
+    &:nth-child(6) {
+        border-color: yellow;
+    }
+
+    > .jsinput {
+        margin-left: 5px;
+    }
+}
+
+.axis {
+    border-bottom: 2px solid;
+}
+
+.jsinput {
+    border-top: 2px solid #7d0f0f;
 }

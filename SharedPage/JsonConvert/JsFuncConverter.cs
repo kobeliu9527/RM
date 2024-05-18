@@ -56,7 +56,7 @@ namespace SharedPage.JsonConvert
         }
     }
     /// <summary>
-    /// 取消函数和数字类型的引号:
+    /// 
     /// </summary>
     public class JsFuncNumStringConverter : JsonConverter<JsFuncNumString>
     {
@@ -93,6 +93,9 @@ namespace SharedPage.JsonConvert
                     {
                         writer.WriteStringValue(value.RAW);
                     }
+                    break;
+                case JsType.Bool:
+                    writer.WriteRawValue(value.RAW.ToLower(), true);
                     break;
                 default:
                     break;

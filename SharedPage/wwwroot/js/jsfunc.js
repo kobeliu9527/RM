@@ -34,7 +34,7 @@ export class JsFunc {
                 //chart.showLoading(); 
                 //chart.hideLoading();
                 let opt = eval('(' + option + ')');
-                console.log(opt);
+                console.log(opt, notMerge, lazyUpdate);
                 chart.setOption(opt, notMerge, lazyUpdate);
             }
             else {

@@ -3,7 +3,15 @@
 @using SharedPage.JsOp
 @inject NavigationManager nav
 @inject IBigScreenService BigScreenService
-<div id="aaaa" style="height:5%;display:flex">
+@* <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <NotAuthorized>
+        111111
+    </NotAuthorized>
+    <Authorized>
+        22222
+    </Authorized>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView> *@
+<div class="dp-header">
     <div style="display:inline-block">
         <ThemeProvider DarkModeText="dark" LightModeText="light"></ThemeProvider>
     </div>
@@ -11,7 +19,7 @@
     <Button OnClick="JsHtmlToCanvas">JsHtmlToCanvas</Button>
     <Button>asf</Button>
 </div>
-<div style="height:95%" class="total-pages">
+<div class="dp-content">
     <ListView TItem="BigScreen" Items="BigScreens" GroupName="p=>p.GroupName" OnListViewItemClick="OnListViewItemClick">
         <BodyTemplate>
             <Card>
@@ -28,7 +36,6 @@ await onerror(context);
             </Card>
         </BodyTemplate>
     </ListView>
-
 </div>
 
 

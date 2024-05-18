@@ -3,47 +3,48 @@
 @using Microsoft.JSInterop
 @using System.Data
 @inject IBigScreenService BigScreenService
-<CascadingValue Value="this.BigScreens">
-    <CascadingValue Value="this.BigScreenDesigner">
-        <div style="height:5%;display:flex;justify-content: flex-start; ">
-            <div style="flex:2;display:flex">
-                <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="菜单栏" @bind-Value="@ShowMenuBox" OnInnerText="菜单栏" OnValueChanged="OnValueChangedByBool" />
-                <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="属性框" @bind-Value="@ShowPropertityBox" OnValueChanged="OnValueChangedByBool" />
-            </div>
-            <div style="flex:10">
-                <Button Size="Size.ExtraSmall" OnClick="UpMove">上移</Button>
-                <Button Size="Size.ExtraSmall" OnClick="DownMove">下移</Button>
-                <Button Size="Size.ExtraSmall" OnClick="UpMove">置顶</Button>
-                <Button Size="Size.ExtraSmall" OnClick="UpMove">置底</Button>
-                <Button Size="Size.ExtraSmall" OnClick="Save">保存</Button>
-                <Button Size="Size.ExtraSmall" OnClick="TestRead">测试读取</Button>
-            </div>
+<CascadingValue Value="this.BigScreen">
+    <div class="dp-header">
+        <div style="flex:2;display:flex">
+            <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="菜单栏" @bind-Value="@ShowMenuBox" OnInnerText="菜单栏" OnValueChanged="OnValueChangedByBool" />
+            <Switch OnColor="Color.Primary" ShowInnerText="true" DisplayText="属性框" @bind-Value="@ShowPropertityBox" OnValueChanged="OnValueChangedByBool" />
         </div>
-        <div class="content" style="height:95%;overflow:hidden">
-            @if (ShowMenuBox)
-            {
-                <div style="flex:2">
-                    <SharedPage.Components.BoxPanel BigScreen="BigScreen"></SharedPage.Components.BoxPanel>
-
-                </div>
-            }
-            <div style="flex:8;position:relative;overflow:auto;background-color:#636470" @onclick="async(e)=>{
+        <div style="flex:10">
+            <Button Size="Size.ExtraSmall" OnClick="UpMove">上移</Button>
+            <Button Size="Size.ExtraSmall" OnClick="DownMove">下移</Button>
+            <Button Size="Size.ExtraSmall" OnClick="UpMove">置顶</Button>
+            <Button Size="Size.ExtraSmall" OnClick="UpMove">置底</Button>
+            <Button Size="Size.ExtraSmall" OnClick="Save">保存</Button>
+            <Button Size="Size.ExtraSmall" OnClick="TestRead">测试读取</Button>
+        </div>
+        <div style="display:inline-block">
+            <ThemeProvider DarkModeText="dark" LightModeText="light">主题</ThemeProvider>
+        </div>
+    </div>
+    <div class="dp-content">
+        @if (ShowMenuBox)
+        {
+            <div class="dp-left">
+                <SharedPage.Components.BoxPanel BigScreen="BigScreen"></SharedPage.Components.BoxPanel>
+            </div>
+        }
+        <div class="dp-middle" @onclick="async(e)=>{
 await JsEcharts.removeClassForSelect();
 }">
-                <div id="designer" class="main" style="@(BigScreen.Css.ToString())" ondragover="event.preventDefault();"
-                     @ondrop="ondropFormBox">
-                    <SharedPage.Components.Runing @key="@BigScreen" BigScreen="@BigScreen" IsDesigner="true"></SharedPage.Components.Runing>
-                </div>
+            <div id="designer" class="runing" style="@(BigScreen.Css.ToString())" ondragover="event.preventDefault();"
+                 @ondrop="ondropFormBox">
+                <SharedPage.Components.Runing @key="@BigScreen" BigScreen="@BigScreen" IsDesigner="true"></SharedPage.Components.Runing>
             </div>
-            @if (ShowPropertityBox)
-            {
-                <div class="PropPanel" style="flex:2">
-                    <SharedPage.Components.PropPanel BigScreen="@BigScreen"></SharedPage.Components.PropPanel>
-                </div>
-            }
         </div>
-    </CascadingValue>
+        @if (ShowPropertityBox)
+        {
+            <div class="dp-right">
+                <SharedPage.Components.PropPanel BigScreen="@BigScreen"></SharedPage.Components.PropPanel>
+            </div>
+        }
+    </div>
 </CascadingValue>
+
 @code {
     [Parameter]
     public long id { get; set; }
@@ -59,7 +60,7 @@ await JsEcharts.removeClassForSelect();
     public List<ComponentInfo> CopyList { get; set; } = new();
 
     public List<BigScreen>? BigScreens { get; set; }
-    public BigScreenDesigner BigScreenDesigner { get; set; } = new();
+
     public bool ShowPropertityBox { get; set; } = true;
     public bool ShowMenuBox { get; set; } = true;
     protected override async void OnInitialized()
@@ -108,7 +109,7 @@ await JsEcharts.removeClassForSelect();
             chart.Option.tooltip = new();
             chart.Option.legend = new();
 
-            chart2.DataName =2;
+            chart2.DataName = 2;
             chart2.Top = 50;
             chart2.Option = chart.Option;
             chart2.ComponentType = ComponentType.Line;
@@ -192,15 +193,7 @@ await JsEcharts.removeClassForSelect();
             ;
         }
     }
-    void BigScreenChanged(long id)
-    {
-        var dp = this.BigScreenDesigner.BigScreens.First(x => x.Id == id);
-        if (dp != null)
-        {
-            this.BigScreenDesigner.Selected = dp;
-            this.StateHasChanged();
-        }
-    }
+
     private async void DownMove(MouseEventArgs e)
     {
         if (BigScreen.SelectedList.Count == 0)

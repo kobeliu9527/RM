@@ -1,0 +1,106 @@
+﻿@inherits CfgBase<JsFuncNumString?>
+<div class="cfg">
+    <div class="over-input">
+        <Switch @bind-Value="IsShow" DisplayText="@DisplayText" ShowLabel="true" ShowInnerText="true"
+                OnValueChanged="ShowChanged"
+                OffInnerText="默认值" OnInnerText="自定义"></Switch>
+
+        <Tooltip Title="@HelpInfo" CustomClass="is-invalid">
+            <i class="fas fa-circle-question" />
+        </Tooltip>
+    </div>
+    @if (IsShow && Value != null)
+    {
+        <div class="over-input">
+            <Select @bind-Value="Value.JsType" Items="Items" ShowLabel="true" DisplayText="数据类型" SwalContent="强制使用"
+                    SwalTitle="不支持的数据类型" Context="neirong"> </Select>
+        </div>
+        <BootstrapInput @bind-Value="Value.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
+    }
+</div>
+@code {
+    public List<SelectedItem> Items { get; set; } = new List<SelectedItem>();
+    private SelectedItem SelectedItem = new SelectedItem();
+    [Parameter, EditorRequired]
+    public List<JsType> JsTypes { get; set; } = new();
+    protected override Task OnInitializedAsync()
+    {
+        Items = JsTypes.Select(x => new SelectedItem(x.ToString(), x.GetDescription())).ToList();
+        return base.OnInitializedAsync();
+    }
+    // private async Task OnItemChanged(IEnumerable<SelectedItem> values, SelectedItem val)
+    // {
+    //     if (val.Text == "自定义")
+    //     {
+    //         if (ValueHander == null)
+    //         {
+    //             Value = new JsFuncNumString("") { };
+    //         }
+    //     }
+    //     else
+    //     {
+    //         ValueHander = null;
+    //     }
+    //     await Task.CompletedTask;
+    // }
+    async Task ShowChanged(bool val)
+    {
+        if (val)//选中默认
+        {
+            if (ValueHander == null)
+            {
+                var t = JsTypes.First();
+                Value = new JsFuncNumString(t);
+            }
+        }
+        else
+        {
+            ValueHander = null;
+            Update();
+        }
+        await Task.CompletedTask;
+    }
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    async Task OnValueChangedForRaw(string val)
+    {
+        if (Value != null)
+        {
+            //todu  应该要判断值是否合法
+            var obj = new JsFuncNumString(val, Value.JsType);
+            if (obj.IsOk())
+            {
+                ValueHander = new JsFuncNumString(val) { JsType = Value.JsType };
+                Update();
+            }
+            else
+            {
+                await Msg.Warning("失败", "输入的值不正确,请检查");
+            }
+        }
+        await Task.CompletedTask;
+    }
+    async Task<bool> OnBeforeSelectedItemChange(SelectedItem val)
+    {
+        //判断选中的是否在JsTypes中
+        await Task.Delay(10);
+        var ss = Enum.Parse<JsType>(val.Value);
+        if (Value != null)
+        {
+            if (JsTypes.Contains(ss))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        return true;
+
+    }
+    async Task OnSelectedItemChanged(SelectedItem val) { await Task.CompletedTask; }
+}
