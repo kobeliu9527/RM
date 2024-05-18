@@ -26,7 +26,7 @@ namespace SharedPage.Model
         /// <summary>
         /// 在多个 x 轴为数值轴的时候，可以开启该配置项自动对齐刻度。只对'value'和'log'类型的轴有效。
         /// </summary>
-        [DisplayName("刻度对齐")] public bool? alignTicks { get; set; }
+        [DisplayName("刻度对齐")] public JsFuncNumString? alignTicks { get; set; }
         /// <summary>
         /// 默认 grid 中的第一个 x 轴在 grid 的下方（'bottom'），第二个 x 轴视第一个 x 轴的位置放在另一侧。
         /// 注：若未将 xAxis.axisLine.onZero 设为 false , 则该项无法生效

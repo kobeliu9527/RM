@@ -47,7 +47,7 @@ namespace SharedPage.Components.Cfg
         [Parameter]
         public EventCallback<T?> ValueChanged { get; set; }
         /// <summary>
-        /// 
+        /// 更新这个值的时候,同时会更新双向绑定他的对象的值
         /// </summary>
         public T? ValueHander
         {
@@ -71,6 +71,10 @@ namespace SharedPage.Components.Cfg
         /// </summary>
         [Parameter]
         public string HelpInfo { get; set; } = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string IsSucessed { get; set; } = "black";
         /// <summary>
         /// 委托更新主页面
         /// </summary>

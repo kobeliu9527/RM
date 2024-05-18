@@ -22,11 +22,13 @@
             <Select @bind-Value="@Value.type" ShowLabel="true" PlaceHolder="默认"></Select>
         </div>
         <NumCfg @bind-Value="Value.gridIndex" DisplayText="所属Grid"></NumCfg>
-        <BoolCfg @bind-Value="Value.alignTicks" DisplayText="自动对齐"></BoolCfg>
+        @* <BoolCfg @bind-Value="Value.alignTicks" DisplayText="自动对齐"></BoolCfg> *@
+        <StringCfg JsTypes="new List<JsType>(){ JsType.Array,JsType.Bool}" @bind-Value="@Value.alignTicks" DisplayText="自动对齐" HelpInfo="@Value.GetPropertyDescription("boundaryGap")"></StringCfg>
+
         <AxisLine @bind-Value="Value.axisLine" DisplayText="轴线配置"></AxisLine>
         <StringCfg JsTypes="new List<JsType>(){ JsType.Array,JsType.Bool}" @bind-Value="Value.boundaryGap" DisplayText="@Value.GetPropertyDisplayName("boundaryGap")" HelpInfo="@Value.GetPropertyDescription("boundaryGap")"></StringCfg>
         <StringCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function}" @bind-Value="Value.min" DisplayText="@Value.GetPropertyDisplayName("min")" HelpInfo="@Value.GetPropertyDescription("min")"></StringCfg>
-        <StringCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function}" @bind-Value="Value.max" DisplayText="@Value.GetPropertyDisplayName("max")" HelpInfo="@Value.GetPropertyDescription("max")"></StringCfg>
+        <StringCfg JsTypes="new List<JsType>(){ JsType.Num,JsType.String,JsType.Function,JsType.Object,JsType.Array}" @bind-Value="Value.max" DisplayText="@Value.GetPropertyDisplayName("max")" HelpInfo="@Value.GetPropertyDescription("max")"></StringCfg>
 
 
 

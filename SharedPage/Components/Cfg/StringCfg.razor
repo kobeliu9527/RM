@@ -4,18 +4,40 @@
         <Switch @bind-Value="IsShow" DisplayText="@DisplayText" ShowLabel="true" ShowInnerText="true"
                 OnValueChanged="ShowChanged"
                 OffInnerText="默认值" OnInnerText="自定义"></Switch>
-
+        @if (IsShow && Value != null)
+        {
+            <Select @bind-Value="Value.JsType" Items="Items" OnSelectedItemChanged="OnSelectedItemChanged"> </Select>
+        }
         <Tooltip Title="@HelpInfo" CustomClass="is-invalid">
-            <i class="fas fa-circle-question" />
+            <i style="color:@IsSucessed" class="fas fa-circle-question" />
         </Tooltip>
     </div>
     @if (IsShow && Value != null)
     {
-        <div class="over-input">
-            <Select @bind-Value="Value.JsType" Items="Items" ShowLabel="true" DisplayText="数据类型" SwalContent="强制使用"
-                    SwalTitle="不支持的数据类型" Context="neirong"> </Select>
-        </div>
-        <BootstrapInput @bind-Value="Value.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
+        switch (Value.JsType)
+        {
+            case JsType.String:
+                <BootstrapInput Value="@Value.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
+                break;
+            case JsType.Bool:
+                <Checkbox Value="@Value.GetBool()" OnValueChanged="OnValueChangedForRawBool"></Checkbox>
+                break;
+            case JsType.Array:
+                <Textarea Value="@Value.RAW" placeholder="[]" OnValueChanged="OnValueChangedForRaw"></Textarea>
+                break;
+            case JsType.Object:
+                <Textarea Value="@Value.RAW" placeholder="{}" OnValueChanged="OnValueChangedForRaw"></Textarea>
+                break;
+            case JsType.Num:
+                <BootstrapInputNumber Value="@Value.GetNum()" OnValueChanged="OnValueChangedForRawNum"></BootstrapInputNumber>
+                break;
+            case JsType.Function:
+                <Textarea Value="@Value.RAW" OnValueChanged="OnValueChangedForRaw" placeholder=" function(value) {return value.min - 20;}" rows="4" />
+                break;
+            default:
+                <BootstrapInput Value="@Value.RAW" OnValueChanged="OnValueChangedForRaw"></BootstrapInput>
+                break;
+        }
     }
 </div>
 @code {
@@ -26,6 +48,7 @@
     protected override Task OnInitializedAsync()
     {
         Items = JsTypes.Select(x => new SelectedItem(x.ToString(), x.GetDescription())).ToList();
+        IsSucessed = Value == null ? "green" : Value.IsOk() ? "green" : "black";
         return base.OnInitializedAsync();
     }
     // private async Task OnItemChanged(IEnumerable<SelectedItem> values, SelectedItem val)
@@ -43,15 +66,22 @@
     //     }
     //     await Task.CompletedTask;
     // }
+    /// <summary>
+    /// 控制用默认值还是自定义,如果自定义会show自定义界面
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
     async Task ShowChanged(bool val)
     {
+
         if (val)//选中默认
         {
             if (ValueHander == null)
             {
-                var t = JsTypes.First();
-                Value = new JsFuncNumString(t);
+
             }
+            var t = JsTypes.First();
+            Value = new JsFuncNumString(t);
         }
         else
         {
@@ -73,14 +103,59 @@
             var obj = new JsFuncNumString(val, Value.JsType);
             if (obj.IsOk())
             {
-                ValueHander = new JsFuncNumString(val) { JsType = Value.JsType };
+                ValueHander = obj;
+                IsSucessed = "Green";
                 Update();
             }
             else
             {
+                IsSucessed = "black";
                 await Msg.Warning("失败", "输入的值不正确,请检查");
             }
         }
+        this.StateHasChanged();
+        await Task.CompletedTask;
+    }
+    async Task OnValueChangedForRawNum(decimal val)
+    {
+        if (Value != null)
+        {
+            //todu  应该要判断值是否合法
+            var obj = new JsFuncNumString(val.ToString(), Value.JsType);
+            if (obj.IsOk())
+            {
+                ValueHander = obj;
+                IsSucessed = "Green";
+                Update();
+            }
+            else
+            {
+                IsSucessed = "black";
+                await Msg.Warning("失败", "输入的值不正确,请检查");
+            }
+        }
+        this.StateHasChanged();
+        await Task.CompletedTask;
+    }
+    async Task OnValueChangedForRawBool(bool val)
+    {
+        if (Value != null)
+        {
+            //todu  应该要判断值是否合法
+            var obj = new JsFuncNumString(val.ToString(), Value.JsType);
+            if (obj.IsOk())
+            {
+                ValueHander = obj;
+                IsSucessed = "Green";
+                Update();
+            }
+            else
+            {
+                IsSucessed = "black";
+                await Msg.Warning("失败", "输入的值不正确,请检查");
+            }
+        }
+        this.StateHasChanged();
         await Task.CompletedTask;
     }
     async Task<bool> OnBeforeSelectedItemChange(SelectedItem val)
@@ -102,5 +177,33 @@
         return true;
 
     }
-    async Task OnSelectedItemChanged(SelectedItem val) { await Task.CompletedTask; }
+    async Task OnSelectedItemChanged(SelectedItem val)
+    {
+        //判断当值的值是不是合法的
+        if (Value != null)//一定会进来
+        {
+            switch (Value.JsType)
+            {
+                case JsType.Num:
+                    Value.RAW = "0";
+                    break;
+                case JsType.String:
+                    Value.RAW = "";
+                    break;
+                case JsType.Object:
+                    Value.RAW = "{}";
+                    break;
+                case JsType.Array:
+                    Value.RAW = "[]";
+                    break;
+                case JsType.Function:
+                    Value.RAW = "function(value) {return value.min - 20;}";
+                    break;
+            }
+            ValueHander = Value;
+            IsSucessed = "green";
+        }
+        this.StateHasChanged();
+        await Task.CompletedTask;
+    }
 }
